@@ -1,0 +1,8 @@
+﻿c,see
+u,you
+cu,see you
+iw,i want
+cih,may i please have some
+fd,food
+nd,need
+wtr,water

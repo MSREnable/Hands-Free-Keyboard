@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KeyboardLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" FontSize="36">
+  <Row>
+    <Group>
+      <Conditional>
+        <Char Caption="1" ShowHints="false" />
+        <Char Caption="2" ShowHints="false" />
+        <Char Caption="3" ShowHints="false" />
+        <Char Caption="4" ShowHints="false" />
+        <Char Caption="5" ShowHints="false" />
+        <Char Caption="6" ShowHints="false" />
+        <Char Caption="7" ShowHints="false" />
+        <Char Caption="8" ShowHints="false" />
+        <Char Caption="9" ShowHints="false" />
+        <Char Caption="0" ShowHints="false" />
+        <Gap />
+        <State Caption="*!?" StateName="Numeric" FontSize="22" Vocal="Special Keys" Style="Enable.Button.Special" KeyHeight="1.333" />
+      </Conditional>
+      <Conditional Name="Numeric">
+        <Char Caption="HOME" FontSize="22" Value="{HOME}" ShiftValue="+{HOME}" Vocal="Home" ShowHints="false" />
+        <Char Caption="←" FontSize="60" Value="{LEFT}" ShiftValue="+{LEFT}" Vocal="Left" ShowHints="false" />
+        <Char Caption="UNDO" FontSize="22" Value="^z" Vocal="Undo" ShowHints="false" />
+        <Char Caption="REDO" FontSize="22" Value="^y{END}" Vocal="Redo" ShowHints="false" />
+        <Char Caption="→" FontSize="60" Value="{RIGHT}" ShiftValue="+{RIGHT}" Vocal="Right" ShowHints="false" />
+        <Char Caption="END" FontSize="22" Value="{END}" ShiftValue="+{END}" Vocal="End" ShowHints="false" />
+        <Char Caption="," Vocal="Comma" ShowHints="false" />
+        <Char Caption="." Vocal="Full Stop" ShowHints="false" />
+        <Char Caption="?" Vocal="Question Mark" ShowHints="false" />
+        <Char Caption="!" Vocal="Exclamation Mark" ShowHints="false" />
+        <Gap />
+        <State Caption="123" FontSize="22" Vocal="Numeric Keys" Style="Enable.Button.Special" KeyHeight="1.333" />
+      </Conditional>
+    </Group>
+  </Row>
+  <Row>
+    <Char Caption="q" />
+    <Char Caption="w" />
+    <Char Caption="e" />
+    <Char Caption="r" />
+    <Char Caption="t" />
+    <Char Caption="y" />
+    <Char Caption="u" />
+    <Char Caption="i" />
+    <Char Caption="o" />
+    <Char Caption="p" />
+    <Gap />
+    <Char Caption="BACK" Value="{BACKSPACE}" FontSize="22" Vocal="Backspace" Style="Enable.Button.Special" TopOffset="0.333" KeyHeight="1.333" />
+  </Row>
+  <Row>
+    <Gap KeyWidth="0.5" Style="Enable.GapRectangle.Normal" />
+    <Char Caption="a" />
+    <Char Caption="s" />
+    <Char Caption="d" />
+    <Char Caption="f" />
+    <Char Caption="g" />
+    <Char Caption="h" />
+    <Char Caption="j" />
+    <Char Caption="k" />
+    <Char Caption="l" />
+    <Gap KeyWidth="0.5" Style="Enable.GapRectangle.Normal" />
+    <Gap />
+    <Char Caption="&#160;WORD&#160;" Value="{DELWORD}" ShiftValue="{DELWORD}" FontSize="22" IsStrikethrough="true" Vocal="Delete Word" Style="Enable.Button.Special" TopOffset="0.666" KeyHeight="1.333" />
+  </Row>
+  <Row>
+    <Toggle Caption="SHIFT" StateName="Shift" FontSize="22" SetVocal="Shift" UnsetVocal="Unshift"  Style="Enable.ToggleButton.Special" />
+    <Char Caption="z" />
+    <Char Caption="x" />
+    <Char Caption="c" />
+    <Char Caption="v" />
+    <Char Caption="b" />
+    <Char Caption="n" />
+    <Char Caption="m" />
+    <Char Caption="SPACE" FontSize="22" Value=" " KeyWidth="2" Vocal="Space"  Style="Enable.Button.Special" />
+    <Gap />
+    <Gap />
+  </Row>
+</KeyboardLayout>

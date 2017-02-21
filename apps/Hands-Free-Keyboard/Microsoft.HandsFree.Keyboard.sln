@@ -1,0 +1,182 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 14.0.23023.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Keyboard", "Microsoft.HandsFree.Keyboard\Microsoft.HandsFree.Keyboard.csproj", "{88970B0B-9B03-4182-A462-274BEAC7C0B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Keyboard.Controls", "Microsoft.HandsFree.Keyboard.Controls\Microsoft.HandsFree.Keyboard.Controls.csproj", "{B2A94AA2-337B-40DD-96DD-AAA29A142518}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Keyboard.Controls.Harness", "Microsoft.HandsFree.Keyboard.Controls.Harness\Microsoft.HandsFree.Keyboard.Controls.Harness.csproj", "{9013EC21-A642-4F90-A30E-03C76F8B28E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.LanguageHelpers", "..\..\lib\Microsoft.HandsFree.LanguageHelpers\Microsoft.HandsFree.LanguageHelpers.csproj", "{8EF6F456-D2FE-4680-B4B0-7EC2E71AD3D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.Api", "Microsoft.HandsFree.Prediction.Api\Microsoft.HandsFree.Prediction.Api.csproj", "{1EFB1B1E-2273-4F75-B445-2228563AC66A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.Engine", "Microsoft.HandsFree.Prediction.Engine\Microsoft.HandsFree.Prediction.Engine.csproj", "{FCEB1432-B24F-4290-8BCF-A625D497E298}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.Lucene", "Microsoft.HandsFree.Prediction.Lucene\Microsoft.HandsFree.Prediction.Lucene.csproj", "{86C0529E-76DE-4709-84A0-30ECD3662717}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.ArcReactor", "..\..\lib\Microsoft.HandsFree.ArcReactor\Microsoft.HandsFree.ArcReactor.csproj", "{78D160D0-1315-40A3-B3FB-A776AB084888}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6ED05273-BCE6-403D-8B27-81F426FFFA1E}"
+	ProjectSection(SolutionItems) = preProject
+		Default.testsettings = Default.testsettings
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.Measurer", "Microsoft.HandsFree.Prediction.Measurer\Microsoft.HandsFree.Prediction.Measurer.csproj", "{66FDD0F0-E6AB-4A9C-91CB-3CD22B1948E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.Historic.Test", "Microsoft.HandsFree.Prediction.Historic.Test\Microsoft.HandsFree.Prediction.Historic.Test.csproj", "{A6E78DC4-8205-4B27-8A0B-C75AB7E4B4F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.Historic", "Microsoft.HandsFree.Prediction.Historic\Microsoft.HandsFree.Prediction.Historic.csproj", "{71773989-31ED-43D7-A1AA-9561889CD047}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.SlackClient", "Microsoft.HandsFree.SlackClient\Microsoft.HandsFree.SlackClient.csproj", "{7D7B49C0-4188-420C-B26E-885E621A0656}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Settings.Test", "..\..\lib\Microsoft.HandsFree.Settings.Test\Microsoft.HandsFree.Settings.Test.csproj", "{1AD363BF-1174-42A2-A40B-D391BFD53F43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.Engine.Test", "Microsoft.HandsFree.Prediction.Engine.Test\Microsoft.HandsFree.Prediction.Engine.Test.csproj", "{DF23D5CE-51D3-4906-90E8-768FD5879245}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.Lucene.Test", "Microsoft.HandsFree.Prediction.Lucene.Test\Microsoft.HandsFree.Prediction.Lucene.Test.csproj", "{72882535-8E24-4142-9E20-6AB308E77B22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.Lucene.Internals", "Microsoft.HandsFree.Prediction.Lucene.Internals\Microsoft.HandsFree.Prediction.Lucene.Internals.csproj", "{B82717EC-17C5-4941-B043-762B73D0FAD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.WarAndPeaceSentenceMaker", "Microsoft.HandsFree.Prediction.WarAndPeaceSentenceMaker\Microsoft.HandsFree.Prediction.WarAndPeaceSentenceMaker.csproj", "{F24F6331-1131-4678-87D7-480EBB7A9676}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Keyboard.Model", "Microsoft.HandsFree.Keyboard.Model\Microsoft.HandsFree.Keyboard.Model.csproj", "{33535E67-5757-4FD2-96A9-5CF70447F0BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Keyboard.ConcreteImplementations", "Microsoft.HandsFree.Keyboard.ConcreteImplementations\Microsoft.HandsFree.Keyboard.ConcreteImplementations.csproj", "{E8DEEF16-AC54-4253-B776-BCB3561A0D3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Keyboard.UserInterface", "Microsoft.HandsFree.Keyboard.UserInterface\Microsoft.HandsFree.Keyboard.UserInterface.csproj", "{974E9D64-D70D-4996-A906-88B211540BF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Keyboard.Alternative", "Microsoft.HandsFree.Keyboard.Alternative\Microsoft.HandsFree.Keyboard.Alternative.csproj", "{825887D3-A30F-4F64-ADFE-79669CE08939}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.Test", "Microsoft.HandsFree.Prediction.Test\Microsoft.HandsFree.Prediction.Test.csproj", "{E5C6E4E2-A152-4425-9BE7-13E4F52BFA95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Keyboard.Special", "Microsoft.HandsFree.Keyboard.Special\Microsoft.HandsFree.Keyboard.Special.csproj", "{8ABB1D59-72B5-4D57-9489-310957716C56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Keyboard.Settings", "Microsoft.HandsFree.Keyboard.Settings\Microsoft.HandsFree.Keyboard.Settings.csproj", "{E4C1EFC6-5688-4B54-8A4E-72E43563CD87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Keyboard.OnScreenKeyboard", "Microsoft.HandsFree.Keyboard.OnScreenKeyboard\Microsoft.HandsFree.Keyboard.OnScreenKeyboard.csproj", "{F5461392-1D6B-42B3-88DF-6997C952179F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Keyboard.Model.Test", "Microsoft.HandsFree.Keyboard.Model.Test\Microsoft.HandsFree.Keyboard.Model.Test.csproj", "{CD9CB14A-D17A-4932-BBF7-4D880BF4C144}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Helpers", "..\..\lib\Microsoft.HandsFree.Helpers\Microsoft.HandsFree.Helpers.csproj", "{1A916246-705D-4192-B396-8165A96319AC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88970B0B-9B03-4182-A462-274BEAC7C0B8}.Debug|x64.ActiveCfg = Debug|x64
+		{88970B0B-9B03-4182-A462-274BEAC7C0B8}.Debug|x64.Build.0 = Debug|x64
+		{88970B0B-9B03-4182-A462-274BEAC7C0B8}.Release|x64.ActiveCfg = Release|x64
+		{88970B0B-9B03-4182-A462-274BEAC7C0B8}.Release|x64.Build.0 = Release|x64
+		{B2A94AA2-337B-40DD-96DD-AAA29A142518}.Debug|x64.ActiveCfg = Debug|x64
+		{B2A94AA2-337B-40DD-96DD-AAA29A142518}.Debug|x64.Build.0 = Debug|x64
+		{B2A94AA2-337B-40DD-96DD-AAA29A142518}.Release|x64.ActiveCfg = Release|x64
+		{B2A94AA2-337B-40DD-96DD-AAA29A142518}.Release|x64.Build.0 = Release|x64
+		{9013EC21-A642-4F90-A30E-03C76F8B28E4}.Debug|x64.ActiveCfg = Debug|x64
+		{9013EC21-A642-4F90-A30E-03C76F8B28E4}.Debug|x64.Build.0 = Debug|x64
+		{9013EC21-A642-4F90-A30E-03C76F8B28E4}.Release|x64.ActiveCfg = Release|x64
+		{9013EC21-A642-4F90-A30E-03C76F8B28E4}.Release|x64.Build.0 = Release|x64
+		{8EF6F456-D2FE-4680-B4B0-7EC2E71AD3D1}.Debug|x64.ActiveCfg = Debug|x64
+		{8EF6F456-D2FE-4680-B4B0-7EC2E71AD3D1}.Debug|x64.Build.0 = Debug|x64
+		{8EF6F456-D2FE-4680-B4B0-7EC2E71AD3D1}.Release|x64.ActiveCfg = Release|x64
+		{8EF6F456-D2FE-4680-B4B0-7EC2E71AD3D1}.Release|x64.Build.0 = Release|x64
+		{1EFB1B1E-2273-4F75-B445-2228563AC66A}.Debug|x64.ActiveCfg = Debug|x64
+		{1EFB1B1E-2273-4F75-B445-2228563AC66A}.Debug|x64.Build.0 = Debug|x64
+		{1EFB1B1E-2273-4F75-B445-2228563AC66A}.Release|x64.ActiveCfg = Release|x64
+		{1EFB1B1E-2273-4F75-B445-2228563AC66A}.Release|x64.Build.0 = Release|x64
+		{FCEB1432-B24F-4290-8BCF-A625D497E298}.Debug|x64.ActiveCfg = Debug|x64
+		{FCEB1432-B24F-4290-8BCF-A625D497E298}.Debug|x64.Build.0 = Debug|x64
+		{FCEB1432-B24F-4290-8BCF-A625D497E298}.Release|x64.ActiveCfg = Release|x64
+		{FCEB1432-B24F-4290-8BCF-A625D497E298}.Release|x64.Build.0 = Release|x64
+		{86C0529E-76DE-4709-84A0-30ECD3662717}.Debug|x64.ActiveCfg = Debug|x64
+		{86C0529E-76DE-4709-84A0-30ECD3662717}.Debug|x64.Build.0 = Debug|x64
+		{86C0529E-76DE-4709-84A0-30ECD3662717}.Release|x64.ActiveCfg = Release|x64
+		{86C0529E-76DE-4709-84A0-30ECD3662717}.Release|x64.Build.0 = Release|x64
+		{78D160D0-1315-40A3-B3FB-A776AB084888}.Debug|x64.ActiveCfg = Debug|x64
+		{78D160D0-1315-40A3-B3FB-A776AB084888}.Debug|x64.Build.0 = Debug|x64
+		{78D160D0-1315-40A3-B3FB-A776AB084888}.Release|x64.ActiveCfg = Debug|x64
+		{78D160D0-1315-40A3-B3FB-A776AB084888}.Release|x64.Build.0 = Debug|x64
+		{66FDD0F0-E6AB-4A9C-91CB-3CD22B1948E0}.Debug|x64.ActiveCfg = Debug|x64
+		{66FDD0F0-E6AB-4A9C-91CB-3CD22B1948E0}.Debug|x64.Build.0 = Debug|x64
+		{66FDD0F0-E6AB-4A9C-91CB-3CD22B1948E0}.Release|x64.ActiveCfg = Release|x64
+		{66FDD0F0-E6AB-4A9C-91CB-3CD22B1948E0}.Release|x64.Build.0 = Release|x64
+		{A6E78DC4-8205-4B27-8A0B-C75AB7E4B4F0}.Debug|x64.ActiveCfg = Debug|x64
+		{A6E78DC4-8205-4B27-8A0B-C75AB7E4B4F0}.Debug|x64.Build.0 = Debug|x64
+		{A6E78DC4-8205-4B27-8A0B-C75AB7E4B4F0}.Release|x64.ActiveCfg = Release|x64
+		{A6E78DC4-8205-4B27-8A0B-C75AB7E4B4F0}.Release|x64.Build.0 = Release|x64
+		{71773989-31ED-43D7-A1AA-9561889CD047}.Debug|x64.ActiveCfg = Debug|x64
+		{71773989-31ED-43D7-A1AA-9561889CD047}.Debug|x64.Build.0 = Debug|x64
+		{71773989-31ED-43D7-A1AA-9561889CD047}.Release|x64.ActiveCfg = Release|x64
+		{71773989-31ED-43D7-A1AA-9561889CD047}.Release|x64.Build.0 = Release|x64
+		{7D7B49C0-4188-420C-B26E-885E621A0656}.Debug|x64.ActiveCfg = Debug|x64
+		{7D7B49C0-4188-420C-B26E-885E621A0656}.Debug|x64.Build.0 = Debug|x64
+		{7D7B49C0-4188-420C-B26E-885E621A0656}.Release|x64.ActiveCfg = Release|x64
+		{7D7B49C0-4188-420C-B26E-885E621A0656}.Release|x64.Build.0 = Release|x64
+		{1AD363BF-1174-42A2-A40B-D391BFD53F43}.Debug|x64.ActiveCfg = Debug|x64
+		{1AD363BF-1174-42A2-A40B-D391BFD53F43}.Debug|x64.Build.0 = Debug|x64
+		{1AD363BF-1174-42A2-A40B-D391BFD53F43}.Release|x64.ActiveCfg = Release|x64
+		{1AD363BF-1174-42A2-A40B-D391BFD53F43}.Release|x64.Build.0 = Release|x64
+		{DF23D5CE-51D3-4906-90E8-768FD5879245}.Debug|x64.ActiveCfg = Debug|x64
+		{DF23D5CE-51D3-4906-90E8-768FD5879245}.Debug|x64.Build.0 = Debug|x64
+		{DF23D5CE-51D3-4906-90E8-768FD5879245}.Release|x64.ActiveCfg = Release|x64
+		{DF23D5CE-51D3-4906-90E8-768FD5879245}.Release|x64.Build.0 = Release|x64
+		{72882535-8E24-4142-9E20-6AB308E77B22}.Debug|x64.ActiveCfg = Debug|x64
+		{72882535-8E24-4142-9E20-6AB308E77B22}.Debug|x64.Build.0 = Debug|x64
+		{72882535-8E24-4142-9E20-6AB308E77B22}.Release|x64.ActiveCfg = Release|x64
+		{72882535-8E24-4142-9E20-6AB308E77B22}.Release|x64.Build.0 = Release|x64
+		{B82717EC-17C5-4941-B043-762B73D0FAD3}.Debug|x64.ActiveCfg = Debug|x64
+		{B82717EC-17C5-4941-B043-762B73D0FAD3}.Debug|x64.Build.0 = Debug|x64
+		{B82717EC-17C5-4941-B043-762B73D0FAD3}.Release|x64.ActiveCfg = Release|x64
+		{B82717EC-17C5-4941-B043-762B73D0FAD3}.Release|x64.Build.0 = Release|x64
+		{F24F6331-1131-4678-87D7-480EBB7A9676}.Debug|x64.ActiveCfg = Debug|x64
+		{F24F6331-1131-4678-87D7-480EBB7A9676}.Debug|x64.Build.0 = Debug|x64
+		{F24F6331-1131-4678-87D7-480EBB7A9676}.Release|x64.ActiveCfg = Release|x64
+		{F24F6331-1131-4678-87D7-480EBB7A9676}.Release|x64.Build.0 = Release|x64
+		{33535E67-5757-4FD2-96A9-5CF70447F0BA}.Debug|x64.ActiveCfg = Debug|x64
+		{33535E67-5757-4FD2-96A9-5CF70447F0BA}.Debug|x64.Build.0 = Debug|x64
+		{33535E67-5757-4FD2-96A9-5CF70447F0BA}.Release|x64.ActiveCfg = Release|x64
+		{33535E67-5757-4FD2-96A9-5CF70447F0BA}.Release|x64.Build.0 = Release|x64
+		{E8DEEF16-AC54-4253-B776-BCB3561A0D3A}.Debug|x64.ActiveCfg = Debug|x64
+		{E8DEEF16-AC54-4253-B776-BCB3561A0D3A}.Debug|x64.Build.0 = Debug|x64
+		{E8DEEF16-AC54-4253-B776-BCB3561A0D3A}.Release|x64.ActiveCfg = Release|x64
+		{E8DEEF16-AC54-4253-B776-BCB3561A0D3A}.Release|x64.Build.0 = Release|x64
+		{974E9D64-D70D-4996-A906-88B211540BF4}.Debug|x64.ActiveCfg = Debug|x64
+		{974E9D64-D70D-4996-A906-88B211540BF4}.Debug|x64.Build.0 = Debug|x64
+		{974E9D64-D70D-4996-A906-88B211540BF4}.Release|x64.ActiveCfg = Release|x64
+		{974E9D64-D70D-4996-A906-88B211540BF4}.Release|x64.Build.0 = Release|x64
+		{825887D3-A30F-4F64-ADFE-79669CE08939}.Debug|x64.ActiveCfg = Debug|x64
+		{825887D3-A30F-4F64-ADFE-79669CE08939}.Debug|x64.Build.0 = Debug|x64
+		{825887D3-A30F-4F64-ADFE-79669CE08939}.Release|x64.ActiveCfg = Release|x64
+		{825887D3-A30F-4F64-ADFE-79669CE08939}.Release|x64.Build.0 = Release|x64
+		{E5C6E4E2-A152-4425-9BE7-13E4F52BFA95}.Debug|x64.ActiveCfg = Debug|x64
+		{E5C6E4E2-A152-4425-9BE7-13E4F52BFA95}.Debug|x64.Build.0 = Debug|x64
+		{E5C6E4E2-A152-4425-9BE7-13E4F52BFA95}.Release|x64.ActiveCfg = Release|x64
+		{E5C6E4E2-A152-4425-9BE7-13E4F52BFA95}.Release|x64.Build.0 = Release|x64
+		{8ABB1D59-72B5-4D57-9489-310957716C56}.Debug|x64.ActiveCfg = Debug|x64
+		{8ABB1D59-72B5-4D57-9489-310957716C56}.Debug|x64.Build.0 = Debug|x64
+		{8ABB1D59-72B5-4D57-9489-310957716C56}.Release|x64.ActiveCfg = Release|x64
+		{8ABB1D59-72B5-4D57-9489-310957716C56}.Release|x64.Build.0 = Release|x64
+		{E4C1EFC6-5688-4B54-8A4E-72E43563CD87}.Debug|x64.ActiveCfg = Debug|x64
+		{E4C1EFC6-5688-4B54-8A4E-72E43563CD87}.Debug|x64.Build.0 = Debug|x64
+		{E4C1EFC6-5688-4B54-8A4E-72E43563CD87}.Release|x64.ActiveCfg = Release|x64
+		{E4C1EFC6-5688-4B54-8A4E-72E43563CD87}.Release|x64.Build.0 = Release|x64
+		{F5461392-1D6B-42B3-88DF-6997C952179F}.Debug|x64.ActiveCfg = Debug|x64
+		{F5461392-1D6B-42B3-88DF-6997C952179F}.Debug|x64.Build.0 = Debug|x64
+		{F5461392-1D6B-42B3-88DF-6997C952179F}.Release|x64.ActiveCfg = Release|x64
+		{F5461392-1D6B-42B3-88DF-6997C952179F}.Release|x64.Build.0 = Release|x64
+		{CD9CB14A-D17A-4932-BBF7-4D880BF4C144}.Debug|x64.ActiveCfg = Debug|x64
+		{CD9CB14A-D17A-4932-BBF7-4D880BF4C144}.Debug|x64.Build.0 = Debug|x64
+		{CD9CB14A-D17A-4932-BBF7-4D880BF4C144}.Release|x64.ActiveCfg = Release|x64
+		{CD9CB14A-D17A-4932-BBF7-4D880BF4C144}.Release|x64.Build.0 = Release|x64
+		{1A916246-705D-4192-B396-8165A96319AC}.Debug|x64.ActiveCfg = Debug|x64
+		{1A916246-705D-4192-B396-8165A96319AC}.Debug|x64.Build.0 = Debug|x64
+		{1A916246-705D-4192-B396-8165A96319AC}.Release|x64.ActiveCfg = Release|x64
+		{1A916246-705D-4192-B396-8165A96319AC}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

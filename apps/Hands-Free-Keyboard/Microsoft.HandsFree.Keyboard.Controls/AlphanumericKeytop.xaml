@@ -1,0 +1,24 @@
+<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="Microsoft.HandsFree.Keyboard.Controls.AlphanumericKeytop"
+	x:Name="UserControl"
+	d:DesignWidth="54.564" d:DesignHeight="64.227">
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Button Grid.RowSpan="3" x:Name="TheKeytop" Click="Character_Button_Click" Focusable="False">
+            <TextBlock TextDecorations="{Binding TextDecorations, ElementName=UserControl}" Text="{Binding EffectiveKeytop, ElementName=UserControl}"/>
+        </Button>
+        <Viewbox Grid.Row="2" VerticalAlignment="Bottom">
+            <TextBlock x:Name="PrimarySuggestion" IsHitTestVisible="False" Foreground="Aquamarine"/>
+        </Viewbox>
+    </Grid>
+</UserControl>

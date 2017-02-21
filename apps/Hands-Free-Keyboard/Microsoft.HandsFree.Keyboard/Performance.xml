@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PerformanceStatistics xmlns="">
+  <Statistic CPM="37" WPM="5" Error="12" Variance="17.5" Precision="12.3" Saccade="12.0"/>
+  <Statistic CPM="37" WPM="5" Error="12" Variance="17.5" Precision="12.3" Saccade="12.0"/>
+  <Statistic CPM="37" WPM="5" Error="12" Variance="17.5" Precision="12.3" Saccade="12.0"/>
+  <Statistic CPM="37" WPM="5" Error="12" Variance="17.5" Precision="12.3" Saccade="12.0"/>
+  <Statistic CPM="37" WPM="5" Error="12" Variance="17.5" Precision="12.3" Saccade="12.0"/>
+</PerformanceStatistics>

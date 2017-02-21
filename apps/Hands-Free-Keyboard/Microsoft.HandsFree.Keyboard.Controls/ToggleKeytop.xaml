@@ -1,0 +1,14 @@
+<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="Microsoft.HandsFree.Keyboard.Controls.ToggleKeytop"
+	x:Name="UserControl"
+	d:DesignWidth="54.564" d:DesignHeight="64.227">
+
+	<Grid x:Name="LayoutRoot">
+        <ToggleButton x:Name="TheKeytop" Content="{Binding Keytop, ElementName=UserControl}" Checked="OnChecked" Unchecked="OnChecked" Focusable="False"/>
+    </Grid>
+</UserControl>

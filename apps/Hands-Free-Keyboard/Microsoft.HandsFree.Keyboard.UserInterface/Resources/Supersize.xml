@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KeyboardLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" FontSize="40">
+  <Row Height="1.25">
+    <Gap KeyWidth="0.5"/>
+    <Group>
+      <Conditional>
+        <Char Caption="q" />
+        <Char Caption="w" />
+        <Char Caption="e" />
+        <Char Caption="r" />
+        <Char Caption="t" />
+        <Char Caption="y" />
+        <Char Caption="u" />
+        <Char Caption="i" />
+        <Char Caption="o" />
+        <Char Caption="p" />
+      </Conditional>
+      <Conditional Name="Numeric">
+        <Char Caption="1"/>
+        <Char Caption="2"/>
+        <Char Caption="3"/>
+        <Char Caption="4"/>
+        <Char Caption="5"/>
+        <Char Caption="6"/>
+        <Char Caption="7"/>
+        <Char Caption="8"/>
+        <Char Caption="9"/>
+        <Char Caption="0"/>
+      </Conditional>
+    </Group>
+  </Row>
+  <Row Height="1.25">
+    <Group>
+      <Conditional>
+        <State Caption="123" FontSize="24" Vocal="Numeric Keys" StateName="Numeric"/>
+        <Char Caption="a" />
+        <Char Caption="s" />
+        <Char Caption="d" />
+        <Char Caption="f" />
+        <Char Caption="g" />
+        <Char Caption="h" />
+        <Char Caption="j" />
+        <Char Caption="k" />
+        <Char Caption="l" />
+        <Gap KeyWidth="0.25"/>
+      </Conditional>
+      <Conditional Name="Numeric">
+        <State Caption="ABC" FontSize="24" Vocal="Alphabetic Keys"/>
+        <Char Caption="!"  Vocal="Exclamation Mark" />
+        <Char Caption="@"  Vocal="At" />
+        <Char Caption="#"  Vocal="Hash" />
+        <Char Caption="$"  Vocal="Dollar" />
+        <Char Caption="%"  Vocal="Percent" />
+        <Char Caption="&amp;"  Vocal="Ampersand" />
+        <Char Caption="*"  Vocal="Star" />
+        <Char Caption="("  Vocal="Open Parenthesis" />
+        <Char Caption=")"  Vocal="Close Parenthesis" />
+        <Gap KeyWidth="0.25" />
+      </Conditional>
+    </Group>
+    <Gap KeyWidth="0.25"/>
+  </Row>
+  <Row Height="1.25">
+    <Gap KeyWidth="0.5"/>
+    <Group>
+      <Conditional>
+        <Toggle Caption="&#xE110;" StateName="Shift" SetVocal="Shift" UnsetVocal="Unshift" />
+        <Char Caption="z" />
+        <Char Caption="x" />
+        <Char Caption="c" />
+        <Char Caption="v" />
+        <Char Caption="b" />
+        <Char Caption="n" />
+        <Char Caption="m" />
+        <Char Caption="␣" Value=" " Vocal="Space" />
+        <Char Caption="" Value="{BACKSPACE}" Vocal="Backspace" />
+      </Conditional>
+      <Conditional Name="Numeric">
+        <Char Caption="?" Vocal="Question Mark" />
+        <Char Caption="-" Vocal="Dash"/>
+        <Char Caption="'" Vocal="Apostrophe"/>
+        <Char Caption="&quot;" Vocal="Quotes"/>
+        <Char Caption="/" Vocal="Slash"/>
+        <Char Caption="£" Vocal="Proper Money"/>
+        <Char Caption=";" Vocal="Colon"/>
+        <Char Caption=":" Vocal="Semicolon"/>
+        <Char Caption="," Value=", " Vocal="Comma" />
+        <Char Caption="." Value=". " Vocal="Full Stop" />
+      </Conditional>
+    </Group>
+  </Row>
+</KeyboardLayout>

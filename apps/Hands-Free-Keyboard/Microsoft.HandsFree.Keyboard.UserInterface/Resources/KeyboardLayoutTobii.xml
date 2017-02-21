@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KeyboardLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" FontSize="40">
+  <Row>
+    <Group>
+      <Conditional>
+        <State KeyHeight="3" KeyWidth="0.5" Caption="&lt;" StateName="Function"/>
+        <Gap KeyWidth="0.5"/>
+        <Toggle Caption="&#xE110;" StateName="Shift" />
+        <Char Caption="q" />
+        <Char Caption="w" />
+        <Char Caption="e" />
+        <Char Caption="r" />
+        <Char Caption="t" />
+        <Char Caption="y" />
+        <Char Caption="u" />
+        <Char Caption="i" />
+        <Char Caption="o" />
+        <Char Caption="p" />
+        <Char Caption="" Value="{BACKSPACE}" Multiplier="1.5" />
+        <Gap KeyWidth="0.5"/>
+        <State KeyHeight="3" KeyWidth="0.5" Caption="&gt;" StateName="Function"/>
+      </Conditional>
+      <Conditional Name="Function">
+        <State KeyHeight="3" KeyWidth="0.5" Caption="&lt;"/>
+        <Gap KeyWidth="0.5"/>
+        <Toggle Caption="&#xE110;" StateName="Shift" />
+        <Char Caption="F1" Value="{F1}" />
+        <Char Caption="F2" Value="{F2}" />
+        <Char Caption="F3" Value="{F3}" />
+        <Char Caption="F4" Value="{F4}" />
+        <Char Caption="F5" Value="{F5}" />
+        <Char Caption="F6" Value="{F6}" />
+        <Char Caption="F7" Value="{F7}" />
+        <Char Caption="F8" Value="{F8}" />
+        <Char Caption="F9" Value="{F9}" />
+        <Char Caption="F10" Value="{F10}" />
+        <Char Caption="" Value="{BACKSPACE}" Multiplier="1.5" />
+        <Gap KeyWidth="0.5"/>
+        <State KeyHeight="3" KeyWidth="0.5" Caption="&gt;"/>
+      </Conditional>
+    </Group>
+  </Row>
+  <Row>
+    <Group>
+      <Conditional>
+        <Gap />
+        <Toggle Caption="ctrl" StateName="Control" />
+        <Char Caption="a" />
+        <Char Caption="s" />
+        <Char Caption="d" />
+        <Char Caption="f" />
+        <Char Caption="g" />
+        <Char Caption="h" />
+        <Char Caption="j" />
+        <Char Caption="k" />
+        <Char Caption="l" />
+        <Char Caption="!" />
+        <Char Caption="" Value="{ENTER}" FontSize="60"/>
+        <Gap />
+      </Conditional>
+      <Conditional Name="Function">
+        <Gap />
+        <Toggle Caption="ctrl" StateName="Control" />
+        <Char Caption="Esc" Value="{ESC}" />
+        <Char Caption="⇥" Value="{TAB}" />
+        <Char Caption="Home" FontSize="20" Value="{HOME}" ShiftValue="+{HOME}" />
+        <Char Caption="Ins" Value="{INS}" />
+        <Gap/><!--<Char Caption="Web"  FontSize="30" Value="{WEB}" />-->
+        <Gap/><!--<Char Caption="Search" FontSize="20" Value="{SEARCH}" />-->
+        <Char Caption="↑" Value="{UP}" />
+        <Char Caption="Prt Scr" FontSize="30" Value="{PRTSC}"/>
+        <Char Caption="Pg Up" FontSize="30" Value="{PGUP}" />
+        <Char Caption="F11" Value="{F11}" />
+        <Char Caption="" Value="{ENTER}" FontSize="60"/>
+        <Gap />
+      </Conditional>
+    </Group>
+  </Row>
+  <Row>
+    <Group>
+      <Conditional>
+        <Gap />
+        <Toggle Caption="alt" StateName="Alt" />
+        <Char Caption="z" />
+        <Char Caption="x" />
+        <Char Caption="c" />
+        <Char Caption="v" />
+        <Char Caption="b" />
+        <Char Caption="n" />
+        <Char Caption="m" />
+        <Char Caption="," />
+        <Char Caption="." />
+        <Char Caption="?" />
+        <Char Caption="␣" Value=" " />
+        <Gap />
+      </Conditional>
+      <Conditional Name="Function">
+        <Gap />
+        <Toggle Caption="alt" StateName="Alt" />
+        <Gap/><!--<Char Caption="Win" Value="{WIN}" />-->
+        <Gap/><!--<Char Caption="Alt Gr" FontSize="30" Value="{ALTGR}" />-->
+        <Char Caption="End" Value="{END}" ShiftValue="+{END}" />
+        <Char Caption="Del" Value="{DEL}" />
+        <Toggle Caption="" StateName="Fold" /><!--<Char Caption="Mail" Value="{MAIL}" />-->
+        <Char Caption="←" Value="{LEFT}" ShiftValue="+{LEFT}"/>
+        <Char Caption="↓" Value="{DOWN}" />
+        <Char Caption="→" Value="{RIGHT}" ShiftValue="+{RIGHT}" />
+        <Char Caption="Pg Dn" FontSize="30" Value="{PGDN}" />
+        <Char Caption="F12" Value="{F12}" />
+        <Char Caption="␣" FontSize="24" Value=" " />
+        <Gap />
+      </Conditional>
+    </Group>
+  </Row>
+</KeyboardLayout>

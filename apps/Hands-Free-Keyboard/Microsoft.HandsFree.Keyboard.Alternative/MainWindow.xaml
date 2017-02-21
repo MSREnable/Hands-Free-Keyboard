@@ -1,0 +1,60 @@
+<Window x:Class="Microsoft.HandsFree.Keyboard.Alternative.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Microsoft.HandsFree.Keyboard.Alternative"
+        xmlns:ui="clr-namespace:Microsoft.HandsFree.Keyboard.UserInterface;assembly=Microsoft.HandsFree.Keyboard.UserInterface"
+        xmlns:settings="clr-namespace:Microsoft.HandsFree.Settings;assembly=Microsoft.HandsFree.Settings"
+        mc:Ignorable="d"
+        FontFamily="Segoe UI Symbol"
+        Background="Black"
+        Foreground="White"
+        Loaded="Window_Loaded" 
+        Closed="Window_Closed"
+        FontSize="24"
+        Title="Talk 37+" 
+        Height="350" 
+        Width="525">
+    <Grid>
+        <TabControl Background="Black">
+            <TabItem Header="Keyboard">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="85"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <ui:SpeechPanel Grid.Row="1" x:Name="TheSpeechPanel"/>
+                    <ui:SuggestionPanel Grid.Row="3"/>
+                    <ui:KeyboardPanel Grid.Row="5"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Settings">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <!--<settings:SettingsControl DataContext="{Binding Settings}" />-->
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Settings">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <!--<settings:SettingsControl DataContext="{Binding Settings}" />-->
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

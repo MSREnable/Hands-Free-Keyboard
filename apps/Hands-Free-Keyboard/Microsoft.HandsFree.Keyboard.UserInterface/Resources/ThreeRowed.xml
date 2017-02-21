@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KeyboardLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" FontSize="40">
+  <!--Row>
+    <Gap KeyWidth="0.25"/>
+    <Group>
+      <Conditional>
+        <Char Caption="1" ShiftCaption="!" ShiftVocal="Exclamation Mark" />
+        <Char Caption="2" ShiftCaption="@" ShiftVocal="At" />
+        <Char Caption="3" ShiftCaption="#" ShiftVocal="Hash" />
+        <Char Caption="4" ShiftCaption="$" ShiftVocal="Dollar" />
+        <Char Caption="5" ShiftCaption="%" ShiftVocal="Percent" />
+        <Char Caption="6" ShiftCaption="^" ShiftVocal="Circumflex" />
+        <Char Caption="7" ShiftCaption="&amp;" ShiftVocal="Ampersand" />
+        <Char Caption="8" ShiftCaption="*" ShiftVocal="Star" />
+        <Char Caption="9" ShiftCaption="(" ShiftVocal="Open Parenthesis" />
+        <Char Caption="0" ShiftCaption=")" ShiftVocal="Close Parenthesis" />
+        <Gap KeyWidth="0.5" />
+        <State Caption="*!?" StateName="Numeric" FontSize="24" Vocal="Special Keys" />
+      </Conditional>
+      <Conditional Name="Numeric">
+        <Char Caption="home" FontSize="30" Value="{HOME}" Vocal="Home" />
+        <Char Caption="←" FontSize="60" Value="{LEFT}" Vocal="Left" />
+        <Char Caption="undo" FontSize="30" Value="^z" Vocal="Undo" />
+        <Char Caption="redo" FontSize="30" Value="^y{END}" Vocal="Redo" />
+        <Char Caption="→" FontSize="60" Value="{RIGHT}" Vocal="Right" />
+        <Char Caption="end" FontSize="30" Value="{END}" ShiftValue="{END}" Vocal="End" />
+        <Char Caption="," Vocal="Comma" />
+        <Char Caption="." Vocal="Full Stop" />
+        <Char Caption="?" Vocal="Question Mark" />
+        <Char Caption="!" Vocal="Exclamation Mark" />
+        <Gap KeyWidth="0.5" />
+        <State Caption="123" FontSize="24" Vocal="Numeric Keys" />
+      </Conditional>
+    </Group>
+  </Row-->
+  <Row>
+    <Group>
+      <Conditional>
+        <Gap KeyWidth="0.25"/>
+        <Char Caption="q" />
+        <Char Caption="w" />
+        <Char Caption="e" />
+        <Char Caption="r" />
+        <Char Caption="t" />
+        <Char Caption="y" />
+        <Char Caption="u" />
+        <Char Caption="i" />
+        <Char Caption="o" />
+        <Char Caption="p" />
+        <Gap KeyWidth="0.5"/>
+        <State Caption="123" FontSize="24" Vocal="Numeric Keys" StateName="Numeric"/>
+      </Conditional>
+      <Conditional Name="Numeric">
+        <Char Caption="1"/>
+        <Char Caption="2"/>
+        <Char Caption="3"/>
+        <Char Caption="4"/>
+        <Char Caption="5"/>
+        <Char Caption="6"/>
+        <Char Caption="7"/>
+        <Char Caption="8"/>
+        <Char Caption="9"/>
+        <Char Caption="0"/>
+        <Gap KeyWidth="0.75"/>
+        <State Caption="ABC" FontSize="24" Vocal="Alphabetic Keys"/>
+      </Conditional>
+    </Group>
+  </Row>
+  <Row>
+    <Group>
+      <Conditional>
+        <Gap KeyWidth="0.5" />
+        <Char Caption="a" />
+        <Char Caption="s" />
+        <Char Caption="d" />
+        <Char Caption="f" />
+        <Char Caption="g" />
+        <Char Caption="h" />
+        <Char Caption="j" />
+        <Char Caption="k" />
+        <Char Caption="l" />
+        <Gap KeyWidth="0.25"/>
+      </Conditional>
+      <Conditional Name="Numeric">
+        <Char Caption="!"  Vocal="Exclamation Mark" />
+        <Char Caption="@"  Vocal="At" />
+        <Char Caption="#"  Vocal="Hash" />
+        <Char Caption="$"  Vocal="Dollar" />
+        <Char Caption="%"  Vocal="Percent" />
+        <Char Caption="&amp;"  Vocal="Ampersand" />
+        <Char Caption="*"  Vocal="Star" />
+        <Char Caption="("  Vocal="Open Parenthesis" />
+        <Char Caption=")"  Vocal="Close Parenthesis" />
+        <Gap KeyWidth="0.75" />
+      </Conditional>
+    </Group>
+    <Char Caption="&#xE10D;" FontSize="64" Value="^y{END}" Vocal="Redo" />
+    <Char Caption="&#xE10E;" FontSize="64" Value="^z" Vocal="Undo" />
+  </Row>
+  <Row>
+    <Group>
+      <Conditional>
+        <Toggle Caption="&#xE110;" StateName="Shift" SetVocal="Shift" UnsetVocal="Unshift" />
+        <Char Caption="z" />
+        <Char Caption="x" />
+        <Char Caption="c" />
+        <Char Caption="v" />
+        <Char Caption="b" />
+        <Char Caption="n" />
+        <Char Caption="m" />
+        <Char Caption="," Value=", " Vocal="Comma" />
+        <Char Caption="." Value=". " Vocal="Full Stop" />
+        <Char Caption="space" FontSize="24" Value=" " Vocal="Space" />
+        <Gap KeyWidth="0.75"/>
+      </Conditional>
+      <Conditional Name="Numeric">
+        <Char Caption="?" Vocal="Question Mark" />
+        <Char Caption="-" Vocal="Dash"/>
+        <Char Caption="'" Vocal="Apostrophe"/>
+        <Char Caption="&quot;" Vocal="Quotes"/>
+        <Char Caption="/" Vocal="Slash"/>
+        <Char Caption="£" Vocal="Proper Money"/>
+        <Char Caption=";" Vocal="Colon"/>
+        <Char Caption=":" Vocal="Semicolon"/>
+        <Char Caption="," Value=", " Vocal="Comma" />
+        <Char Caption="." Value=". " Vocal="Full Stop" />
+        <Char Caption="space" FontSize="24" Value=" " Vocal="Space" />
+        <Gap KeyWidth="0.75"/>
+      </Conditional>
+    </Group>
+  </Row>
+</KeyboardLayout>

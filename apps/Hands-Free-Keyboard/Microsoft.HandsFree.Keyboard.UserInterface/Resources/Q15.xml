@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KeyboardLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" FontSize="40">
+  <Row>
+    <Action Caption="done" Action="SpeakCommand"/>
+    <Gap KeyWidth="0.25" />
+    
+    <Action Caption="q w" Action="SendAmbiguousKeys"/>
+    <Action Caption="e r" Action="SendAmbiguousKeys"/>
+    <Action Caption="t y" Action="SendAmbiguousKeys"/>
+    <Action Caption="u i" Action="SendAmbiguousKeys"/>
+    <Action Caption="o p" Action="SendAmbiguousKeys"/>
+    
+    <Gap KeyWidth="0.25" />
+    <Char Caption="" Value="{BACKSPACE}" Multiplier="0.75"/>
+  </Row>
+  <Row>
+    <Action Caption="want" Action="SpeakCommand"/>
+    <Gap KeyWidth="0.25" />
+    
+    <Action Caption="a s" Action="SendAmbiguousKeys"/>
+    <Action Caption="d f" Action="SendAmbiguousKeys"/>
+    <Action Caption="g h" Action="SendAmbiguousKeys"/>
+    <Action Caption="j k" Action="SendAmbiguousKeys"/>
+    <Action Caption="l" Action="SendAmbiguousKeys"/>
+    
+    <Gap KeyWidth="0.25" />
+    <Char Caption="&#xE106;&#10;word" Value="+^{LEFT}{DEL}" ShiftValue="+^{LEFT}{DEL}" FontSize="24" Vocal="Delete Word" />
+  </Row>
+  <Row>
+    <Action Caption="stop" Action="SpeakCommand"/>
+    <Gap KeyWidth="0.25" />
+
+    <Action Caption="z x" Action="SendAmbiguousKeys"/>
+    <Action Caption="c v" Action="SendAmbiguousKeys"/>
+    <Char Caption="␣" Value=" "/>
+    <Action Caption="b n" Action="SendAmbiguousKeys"/>
+    <Action Caption="m" Action="SendAmbiguousKeys"/>
+
+    <Gap KeyWidth="0.25" />
+    <Action Caption="help" Action="SpeakCommand"/>
+  </Row>
+</KeyboardLayout>

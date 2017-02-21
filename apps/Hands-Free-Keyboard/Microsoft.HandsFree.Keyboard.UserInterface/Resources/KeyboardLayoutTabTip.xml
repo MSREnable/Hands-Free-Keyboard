@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KeyboardLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" FontSize="40">
+  <Row>
+    <Group>
+      <Conditional>
+        <Char Caption="q" />
+        <Char Caption="w" />
+        <Char Caption="e" />
+        <Char Caption="r" />
+        <Char Caption="t" />
+        <Char Caption="y" />
+        <Char Caption="u" />
+        <Char Caption="i" />
+        <Char Caption="o" />
+        <Char Caption="p" />
+        <Char KeyWidth="2" Caption="" Value="{BACKSPACE}" Multiplier="1.5"/>
+      </Conditional>
+      <Conditional Name="Numeric">
+        <Char Caption="Tab" Value="{TAB}" />
+        <Char Caption="!" />
+        <Char Caption="@" />
+        <Char Caption="#" />
+        <Char Caption="$" />
+        <Char Caption="%" />
+        <Char Caption="&amp;" />
+        <Gap KeyWidth="0.5"/>
+        <Char Caption="1" />
+        <Char Caption="2" />
+        <Char Caption="3" />
+        <Gap KeyWidth="0.5"/>
+        <Char Caption="" Value="{BACKSPACE}"  Multiplier="1.5" />
+      </Conditional>
+      <Conditional Name="NumericEx">
+        <Char Caption="Tab" Value="{TAB}" />
+        <Char Caption="•" />
+        <Char Caption="©" />
+        <Char Caption="€" />
+        <Char Caption="£" />
+        <Char Caption="µ" />
+        <Char Caption="½" />
+        <Gap KeyWidth="0.5"/>
+        <Char Caption="1" />
+        <Char Caption="2" />
+        <Char Caption="3" />
+        <Gap KeyWidth="0.5"/>
+        <Char Caption="" Value="{BACKSPACE}" Multiplier="1.5" />
+      </Conditional>
+      <Conditional Name="Smiley">
+        <Char Caption="Tab" Value="{TAB}" />
+        <Char Caption="😃" />
+        <Char Caption="😉" />
+        <Char Caption="😄" />
+        <Char Caption="😇" />
+        <Char Caption="😌" />
+        <Char Caption="😏" />
+        <Char Caption="😓" />
+        <Char Caption="😘" />
+        <Char Caption="😝" />
+        <Char Caption="😢" />
+        <Char Caption="" Value="{BACKSPACE}" Multiplier="1.5" />
+      </Conditional>
+    </Group>
+  </Row>
+  <Row>
+    <Group>
+      <Conditional>
+        <Gap KeyWidth="0.25" />
+        <Char Caption="a" />
+        <Char Caption="s" />
+        <Char Caption="d" />
+        <Char Caption="f" />
+        <Char Caption="g" />
+        <Char Caption="h" />
+        <Char Caption="j" />
+        <Char Caption="k" />
+        <Char Caption="l" />
+        <Char Caption="'" />
+        <Char KeyWidth="1.75" Caption="Enter" Value="{ENTER}"/>
+      </Conditional>
+      <Conditional Name="Numeric">
+        <State Caption="&lt;" StateName="NumericEx" />
+        <Char Caption="(" />
+        <Char Caption=")" />
+        <Char Caption="-" />
+        <Char Caption="_" />
+        <Char Caption="=" />
+        <Char Caption="+" />
+        <Gap KeyWidth="0.5"/>
+        <Char Caption="4" />
+        <Char Caption="5" />
+        <Char Caption="6" />
+        <Gap KeyWidth="0.5"/>
+        <Char KeyHeight="2" Caption="" Value="{ENTER}"/>
+      </Conditional>
+      <Conditional Name="NumericEx">
+        <State Caption="&lt;" StateName="Numeric" />
+        <Char Caption="&lt;" />
+        <Char Caption="&gt;" />
+        <Char Caption="[" />
+        <Char Caption="]" />
+        <Char Caption="{" ShiftValue="{" />
+        <Char Caption="}" ShiftValue="}" />
+        <Gap KeyWidth="0.5"/>
+        <Char Caption="4" />
+        <Char Caption="5" />
+        <Char Caption="6" />
+        <Gap KeyWidth="0.5"/>
+        <Char KeyHeight="2" Caption="" Value="{ENTER}"/>
+      </Conditional>
+      <Conditional Name="Smiley">
+        <Gap/><!--<State Caption="&lt;" StateName="Smiley" />-->
+        <Char Caption="😊" />
+        <Char Caption="😁" />
+        <Char Caption="😅" />
+        <Char Caption="😈" />
+        <Char Caption="😍" />
+        <Char Caption="😐" />
+        <Char Caption="😔" />
+        <Char Caption="😚" />
+        <Char Caption="😠" />
+        <Char Caption="😣" />
+        <Char Caption="Enter" Value="{ENTER}"/>
+      </Conditional>
+    </Group>
+  </Row>
+  <Row>
+    <Group>
+      <Conditional>
+        <Toggle Caption="&#xE110;" StateName="Shift" />
+        <Char Caption="z" />
+        <Char Caption="x" />
+        <Char Caption="c" />
+        <Char Caption="v" />
+        <Char Caption="b" />
+        <Char Caption="n" />
+        <Char Caption="m" />
+        <Char Caption="," />
+        <Char Caption="." />
+        <Char Caption="?" />
+        <Toggle Caption="&#xE110;" StateName="Shift" />
+      </Conditional>
+      <Conditional Name="Numeric">
+        <State Caption="&gt;" StateName="NumericEx" />
+        <Char Caption="\" />
+        <Char Caption=";" />
+        <Char Caption=":" />
+        <Char Caption="&quot;" />
+        <Char Caption="*" />
+        <Char Caption="/" />
+        <Gap KeyWidth="0.5"/>
+        <Char Caption="7" />
+        <Char Caption="8" />
+        <Char Caption="9" />
+        <Gap KeyWidth="1.5"/>
+      </Conditional>
+      <Conditional Name="NumericEx">
+        <State Caption="&gt;" StateName="Numeric" />
+        <Char Caption="|" />
+        <Char Caption="¦" />
+        <Char Caption="¶" />
+        <Char Caption="°" />
+        <Char Caption="~" />
+        <Char Caption="^" />
+        <Gap KeyWidth="0.5"/>
+        <Char Caption="7" />
+        <Char Caption="8" />
+        <Char Caption="9" />
+        <Gap KeyWidth="1.5"/>
+      </Conditional>
+      <Conditional Name="Smiley">
+        <Gap  /><!--<State Caption="&gt;" StateName="Smiley1" />-->
+        <Char Caption="😞" />
+        <Char Caption="😂" />
+        <Char Caption="😆" />
+        <Char Caption="😋" />
+        <Char Caption="😎" />
+        <Char Caption="😒" />
+        <Char Caption="😖" />
+        <Char Caption="😜" />
+        <Char Caption="😡" />
+        <Char Caption="😤" />
+        <Char Caption="" Value=" " />
+      </Conditional>
+    </Group>
+  </Row>
+  <Row>
+    <Group>
+      <Conditional>
+        <State Caption="&amp;123" FontSize="30" StateName="Numeric" />
+        <Toggle Caption="Ctrl" StateName="Control" />
+        <State Caption="😊" StateName="Smiley" />
+        <Char KeyWidth="6" Caption="" Value=" " />
+        <Char Caption="←" FontSize="60" Value="{LEFT}" ShiftValue="+{LEFT}" />
+        <Char Caption="→" FontSize="60" Value="{RIGHT}" ShiftValue="+{RIGHT}" />
+      </Conditional>
+      <Conditional Name="Numeric">
+        <State Caption="&amp;123" FontSize="30" />
+        <Toggle Caption="Ctrl" StateName="Control" />
+        <State Caption="😊" StateName="Smiley" />
+        <Char Caption="←" FontSize="60" Value="{LEFT}" ShiftValue="+{LEFT}" />
+        <Char Caption="→" FontSize="60" Value="{RIGHT}" ShiftValue="+{RIGHT}" />
+        <Char KeyWidth="2" Caption="" Value=" " />
+        <Gap KeyWidth="0.5"/>
+        <Char KeyWidth="2" Caption="0" />
+        <Char Caption="." />
+        <Gap KeyWidth="0.5"/>
+      </Conditional>
+      <Conditional Name="NumericEx">
+        <State Caption="&amp;123" FontSize="30" />
+        <Toggle Caption="Ctrl" StateName="Control" />
+        <State Caption="😊" StateName="Smiley" />
+        <Char Caption="←" FontSize="60" Value="{LEFT}" ShiftValue="+{LEFT}" />
+        <Char Caption="→" FontSize="60" Value="{RIGHT}" ShiftValue="+{RIGHT}" />
+        <Char KeyWidth="2" Caption="" Value=" " />
+        <Gap KeyWidth="0.5"/>
+        <Char KeyWidth="2" Caption="0" />
+        <Char Caption="." />
+        <Gap KeyWidth="0.5"/>
+      </Conditional>
+    </Group>
+    <Toggle Caption="" StateName="Fold" />
+  </Row>
+</KeyboardLayout>

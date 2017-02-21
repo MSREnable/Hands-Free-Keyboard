@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KeyboardLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" FontSize="30">
+  
+  <Row>
+    <Action Caption="done" Action="SpeakCommand" KeyWidth="2"/>
+    <Gap KeyWidth="0.25" />
+    
+    <Action Caption="q w e r t" Action="SendAmbiguousKeys" KeyWidth="2"/>
+    <Action Caption="y u i o p" Action="SendAmbiguousKeys" KeyWidth="2"/>
+    
+    <Gap KeyWidth="0.25" />
+    <Char Caption="" Value="{BACKSPACE}" Multiplier="0.75" KeyWidth="2"/>
+  </Row>
+  
+  <Row>
+    <Action Caption="want" Action="SpeakCommand" KeyWidth="2"/>
+    <Gap KeyWidth="0.25" />
+    
+    <Action Caption="a s d f g" Action="SendAmbiguousKeys" KeyWidth="2"/>
+    <Action Caption="h j k l" Action="SendAmbiguousKeys" KeyWidth="2"/>
+    
+    <Gap KeyWidth="0.25" />
+    <Action Caption="like" Action="SpeakCommand" KeyWidth="2"/>
+  </Row>
+  
+  <Row>
+    <Action Caption="stop" Action="SpeakCommand" KeyWidth="2"/>
+    <Gap KeyWidth="0.25" />
+
+    <Action Caption="z x c v" Action="SendAmbiguousKeys" KeyWidth="2"/>
+    <Action Caption="b n m" Action="SendAmbiguousKeys" KeyWidth="2"/>
+
+    <Gap KeyWidth="0.25" />
+    <Action Caption="help" Action="SpeakCommand" KeyWidth="2"/>
+  </Row>
+  
+  <Row>
+    <Action Caption="bye" Action="SpeakCommand" KeyWidth="2"/>
+    <Gap KeyWidth="0.25" />
+
+    <Char Caption="␣" Value=" " KeyWidth="4"/>
+
+    <Gap KeyWidth="0.25" />
+    <Action Caption="thanks" Action="SpeakCommand" KeyWidth="2"/>
+  </Row>
+  
+</KeyboardLayout>

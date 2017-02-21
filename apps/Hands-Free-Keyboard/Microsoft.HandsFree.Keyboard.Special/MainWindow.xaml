@@ -1,0 +1,22 @@
+<Window x:Class="Microsoft.HandsFree.Keyboard.Special.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Microsoft.HandsFree.Keyboard.Special"
+        xmlns:ui="clr-namespace:Microsoft.HandsFree.Keyboard.UserInterface;assembly=Microsoft.HandsFree.Keyboard.UserInterface"
+        mc:Ignorable="d"
+        WindowState="Maximized"
+        FontSize="72"
+        Title="Special" Height="350" Width="525">
+    <Grid>
+        <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <UniformGrid>
+                <ui:SpeakingKeytop Grid.Row="0" Grid.Column="0" Keytop="Yes"/>
+                <ui:SpeakingKeytop Grid.Row="0" Grid.Column="1" Keytop="No"/>
+                <ui:SpeakingKeytop Grid.Row="1" Grid.Column="0" Keytop="Help"/>
+                <ui:SpeakingKeytop Grid.Row="1" Grid.Column="1" Keytop="I Love You"/>
+            </UniformGrid>
+        </Viewbox>
+    </Grid>
+</Window>

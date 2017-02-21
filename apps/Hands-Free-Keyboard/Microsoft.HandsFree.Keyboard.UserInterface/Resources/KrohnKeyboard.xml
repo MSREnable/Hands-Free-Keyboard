@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KeyboardLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" FontSize="40">
+  <Row>
+    <Char Caption="esc" Value="{ESC}" />
+    <Gap KeyWidth="0.5"/>
+    <Char Caption="" Value="{BACKSPACE}" />
+    <Gap KeyWidth="0.5"/>
+    <Group>
+      <Conditional>
+        <Char Caption="1" ShiftCaption="!" ShiftVocal="Exclamation Mark" />
+        <Char Caption="2" ShiftCaption="@" ShiftVocal="At" />
+        <Char Caption="3" ShiftCaption="#" ShiftVocal="Hash" />
+        <Char Caption="4" ShiftCaption="$" ShiftVocal="Dollar" />
+        <Char Caption="5" ShiftCaption="%" ShiftVocal="Percent" />
+        <Char Caption="6" ShiftCaption="^" ShiftVocal="Circumflex" />
+        <Char Caption="7" ShiftCaption="&amp;" ShiftVocal="Ampersand" />
+        <Char Caption="8" ShiftCaption="*" ShiftVocal="Star" />
+        <Char Caption="9" ShiftCaption="(" ShiftVocal="Open Parenthesis" />
+        <Char Caption="0" ShiftCaption=")" ShiftVocal="Close Parenthesis" />
+        <Gap KeyWidth="0.5" />
+        <State Caption="*!?" StateName="Numeric" FontSize="24" Vocal="Special Keys" />
+      </Conditional>
+      <Conditional Name="Numeric">
+        <Char Caption="home" FontSize="30" Value="{HOME}" ShiftValue="+{HOME}" Vocal="Home" />
+        <Char Caption="←" FontSize="60" Value="{LEFT}" Vocal="Left" ShiftValue="+{LEFT}"/>
+        <Char Caption="undo" FontSize="30" Value="^z" Vocal="Undo" />
+        <Char Caption="redo" FontSize="30" Value="^y{END}" Vocal="Redo" />
+        <Char Caption="→" FontSize="60" Value="{RIGHT}" Vocal="Right" ShiftValue="+{RIGHT}" />
+        <Char Caption="end" FontSize="30" Value="{END}" ShiftValue="+{END}" Vocal="End" />
+        <Char Caption="," Vocal="Comma" />
+        <Char Caption="." Vocal="Full Stop" />
+        <Char Caption="?" Vocal="Question Mark" />
+        <Char Caption="!" Vocal="Exclamation Mark" />
+        <Gap KeyWidth="0.5" />
+        <State Caption="123" FontSize="24" Vocal="Numeric Keys" />
+      </Conditional>
+    </Group>
+    <Gap KeyWidth="0.5" />
+    <Char Caption="" Value="{BACKSPACE}" Vocal="Backspace" />
+  </Row>
+  <Row>
+    <Toggle Caption="ctrl" StateName="Control" SetVocal="Control"/>
+    <Gap KeyWidth="0.5"/>
+    <Char Caption="del&#10;word" Value="+^{LEFT}{DEL}" FontSize="24" />
+    <Gap KeyWidth="0.5"/>
+    <Char Caption="q" />
+    <Char Caption="w" />
+    <Char Caption="e" />
+    <Char Caption="r" />
+    <Char Caption="t" />
+    <Char Caption="y" />
+    <Char Caption="u" />
+    <Char Caption="i" />
+    <Char Caption="o" />
+    <Char Caption="p" />
+    <Gap KeyWidth="2"/>
+    <Char Caption="del&#10;word" Value="+^{LEFT}{DEL}" ShiftValue="+^{LEFT}{DEL}" FontSize="24" Vocal="Delete Word" />
+  </Row>
+  <Row>
+    <Toggle Caption="alt" StateName="Alt" SetVocal="Alt" />
+    <Gap KeyWidth="2.25" />
+    <Char Caption="a" />
+    <Char Caption="s" />
+    <Char Caption="d" />
+    <Char Caption="f" />
+    <Char Caption="g" />
+    <Char Caption="h" />
+    <Char Caption="j" />
+    <Char Caption="k" />
+    <Char Caption="l" />
+    <Gap KeyWidth="2.75"/>
+    <Char Caption="" Value="{ENTER}" FontSize="60" Vocal="Enter" />
+  </Row>
+  <Row>
+    <Toggle Caption="&#xE110;" StateName="Shift" SetVocal="Shift" UnsetVocal="Unshift" />
+    <Gap KeyWidth="0.5" />
+    <Char Caption="space" FontSize="24" Value=" " Vocal="Space" />
+    <Gap KeyWidth="1.25" />
+    <Char Caption="z" />
+    <Char Caption="x" />
+    <Char Caption="c" />
+    <Char Caption="v" />
+    <Char Caption="b" />
+    <Char Caption="n" />
+    <Char Caption="m" />
+    <Gap KeyWidth="2.75"/>
+    <Char Caption="space" FontSize="24" Value=" " Vocal="Space" />
+    <Gap KeyWidth="0.5"/>
+    <Toggle Caption="" StateName="Fold" SetVocal="Fold" />
+  </Row>
+</KeyboardLayout>

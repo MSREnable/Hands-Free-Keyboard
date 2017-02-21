@@ -1,0 +1,17 @@
+<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="Microsoft.HandsFree.Keyboard.Controls.SpecialKeytop"
+	x:Name="UserControl"
+	d:DesignWidth="54.564" d:DesignHeight="64.227">
+
+    <Grid x:Name="LayoutRoot">
+        <Button x:Name="TheKeytop" Click="Character_Button_Click" Focusable="False" Content="{Binding Keytop, ElementName=UserControl}"/>
+        <Viewbox MaxWidth="{Binding ActualWidth, ElementName=TheText, Mode=OneWay}" Margin="10,0">
+            <TextBlock x:Name="TheText" Text="{Binding SizedKeytop, ElementName=UserControl}" IsHitTestVisible="False" TextAlignment="Center"/>
+        </Viewbox>
+    </Grid>
+</UserControl>

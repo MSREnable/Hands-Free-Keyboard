@@ -1,0 +1,22 @@
+<Window x:Class="Microsoft.HandsFree.Keyboard.ConcreteImplementations.HandsFreeMessageBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Microsoft.HandsFree.Keyboard"
+        mc:Ignorable="d"
+        Title="HandsFreeMessageBox" Height="300" Width="300" SizeToContent="Height" FontSize="24" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" WindowStyle="None">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.ColumnSpan="2" x:Name="TheTextBlock" Text="Message goes here!" TextWrapping="Wrap"/>
+        <Button Grid.Row="1" Content="Yes" Height="100" Click="OnYes"/>
+        <Button Grid.Row="1" Grid.Column="1" Content="No" Height="100" Click="OnNo"/>
+    </Grid>
+</Window>
