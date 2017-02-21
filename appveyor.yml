@@ -1,0 +1,111 @@
+os: Visual Studio 2015
+
+# fetch repository as zip archive
+shallow_clone: true
+
+environment:
+  storage_container: install
+  storage_account_name: msrenable
+  storage_access_key:
+    secure: E4Oi7tZZ3aZiJ9QU2NRLGDupumiSSWtGMn4EbFnwmNzkBROHwMGn5xd+tmTgqoAXC8jSMSGxhnyTIn/VWM+NLfLivrs5htJf9GM9CMbE+84xrTHEOn1pMi6VqAGjKCPr
+  publisher: Microsoft
+  clickonce_base_url: http://msrenable.blob.core.windows.net/install
+  project_name: Hands-Free-Keyboard
+  config: Debug
+  app_name: Microsoft.HandsFree.Keyboard
+  app_sln: apps\Hands-Free-Keyboard\Microsoft.HandsFree.Keyboard.sln
+  app_path: apps\Hands-Free-Keyboard\Microsoft.HandsFree.Keyboard
+  app_title: Hands-Free Keyboard
+  app_icon: media\HandsFreeKeyboard.ico
+
+init:
+  - ps: $timestamps = @()
+  - ps: $timestamps += "$(Get-Date -Format o) - Begin init"
+  - ps: Update-AppveyorBuild -Version "1.0.$env:appveyor_build_number"
+  - ps: $timestamps += "$(Get-Date -Format o) - End init"
+
+install:
+  - ps: $timestamps += "$(Get-Date -Format o) - Begin install"
+
+before_build:
+  - ps: $timestamps += "$(Get-Date -Format o) - Begin before_build"
+  - ps: new-item -ItemType directory -Path source
+  - ps: $table = get-childitem . -directory -exclude @("packages","external", "source")
+  - ps: copy-item $table source -force -recurse
+  - ps: $timestamps += "$(Get-Date -Format o) - Restore $env:app_sln"
+  - ps: nuget restore "$env:app_sln"
+  - ps: $timestamps += "$(Get-Date -Format o) - End before_build"
+
+build:
+  project: $(project_name).proj
+
+cache:
+  - packages -> **\packages.config
+
+assembly_info:
+  patch: true
+  file: AssemblyInfo.cs
+  assembly_version: $(appveyor_build_version)
+  assembly_file_version: $(appveyor_build_version)
+  assembly_informational_version: $(appveyor_repo_branch)
+
+configuration:
+  - Release
+
+after_build:
+  - ps: $timestamps += "$(Get-Date -Format o) - Begin after_build"
+  - ps: $timestamps += "$(Get-Date -Format o) - NuGet Pack HandsFreeKeyboard"
+  - ps: nuget pack $env:app_path\HandsFreeKeyboard.nuspec -OutputDirectory $env:app_path\bin\$env:config -Verbosity Detailed -Version $env:appveyor_build_version
+  - ps: .\external\squirrel\squirrel --releasify $env:app_path\bin\$env:config\HandsFreeKeyboard.$env:appveyor_build_version.nupkg --releaseDir=$env:appveyor_build_folder\install\$env:app_name
+  - ps: $timestamps += "$(Get-Date -Format o) - End after_build"
+
+artifacts:
+  - path: publish
+    name: $(project_name)-publish-$(appveyor_build_version)
+  - path: source
+    name: $(project_name)-source-$(appveyor_build_version)
+  - path: install
+    name: $(project_name)-install-$(appveyor_build_version)
+
+deploy:
+  - provider: AzureBlob
+    storage_account_name: $(storage_account_name)
+    storage_access_key: $(storage_access_key)
+    container: $(storage_container)
+    folder: $(project_name)-$(appveyor_repo_branch)
+    artifact: $(project_name)-publish-$(appveyor_build_version)
+  - provider: AzureBlob
+    storage_account_name: $(storage_account_name)
+    storage_access_key: $(storage_access_key)
+    container: $(storage_container)
+    folder: $(project_name)-$(appveyor_repo_branch)
+    artifact: $(project_name)-source-$(appveyor_build_version)
+  - provider: AzureBlob
+    storage_account_name: $(storage_account_name)
+    storage_access_key: $(storage_access_key)
+    container: $(storage_container)
+    folder: $(project_name)-$(appveyor_repo_branch)\$(appveyor_build_version)\squirrel
+    artifact: $(project_name)-install-$(appveyor_build_version)
+    unzip: true
+  - provider: AzureBlob
+    storage_account_name: $(storage_account_name)
+    storage_access_key: $(storage_access_key)
+    container: $(storage_container)
+    folder: $(project_name)-$(appveyor_repo_branch)\latest
+    artifact: $(project_name)-install-$(appveyor_build_version)
+    unzip: true
+
+before_deploy:
+  - ps: $timestamps += "$(Get-Date -Format o) - before_deploy"
+
+after_deploy:
+  - ps: $timestamps += "$(Get-Date -Format o) - after_deploy"
+  - ps: foreach ($timestamp in $timestamps) { Write-Output "$timestamp" }
+
+notifications:
+  - provider: Email
+    to:
+      - eyegazebuild@microsoft.com
+    subject: 'Build {{branch}}: {{status}}'
+
+test: off
