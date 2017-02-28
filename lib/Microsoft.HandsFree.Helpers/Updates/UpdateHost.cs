@@ -16,8 +16,6 @@ namespace Microsoft.HandsFree.Helpers.Updates
     /// </summary>
     public class UpdateHost
     {
-        const string UpdateUrlFormat = "http://msrenable.blob.core.windows.net/install/EnablingTech-{0}/latest/Microsoft.HandsFree.Keyboard";
-
         const ShortcutLocation NormalShortcutLocations = ShortcutLocation.Desktop | ShortcutLocation.StartMenu;
         const ShortcutLocation AutoStartShortcutLocations = NormalShortcutLocations | ShortcutLocation.Startup;
         ShortcutLocation ShortcutLocations => _isAutoStart ? AutoStartShortcutLocations : NormalShortcutLocations;
@@ -45,13 +43,13 @@ namespace Microsoft.HandsFree.Helpers.Updates
 
         static string AssemblyName = EntryAssembly.FullName.Split(new[] { ',' }, 2)[0];
 
+        static string ProductName = AssemblyName.Substring(AssemblyName.LastIndexOf('.') + 1);
+
         static string Branch = AssemblyInformationalVersion.InformationalVersion;
 
-        static string UpdateUrl = $"http://msrenable.blob.core.windows.net/install/EnablingTech-{Branch}/latest/{AssemblyName}";
+        static string UpdateUrl = $"http://msrenable.blob.core.windows.net/install/Hands-Free-{ProductName}-{Branch}/latest/{AssemblyName}";
 
         UpdateManager _updateManager = new UpdateManager(UpdateUrl);
-
-        static string DeleteMeLoggingPath = SettingsDirectory.GetDefaultSettingsFilePath("DeleteMeUpdateLogging.txt");
 
         UpdateHost(bool isAutoStart, TimeSpan pollInterval)
         {
