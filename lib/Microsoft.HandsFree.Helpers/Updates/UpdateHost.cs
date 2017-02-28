@@ -47,7 +47,7 @@ namespace Microsoft.HandsFree.Helpers.Updates
 
         static string Branch = AssemblyInformationalVersion.InformationalVersion;
 
-        static string UpdateUrl = $"http://msrenable.blob.core.windows.net/install/Hands-Free-{ProductName}-{Branch}/latest/{AssemblyName}";
+        static string UpdateUrl = $"https://msrenable.blob.core.windows.net/install/Hands-Free-{ProductName}-{Branch}/latest/{AssemblyName}";
 
         UpdateManager _updateManager = new UpdateManager(UpdateUrl);
 
