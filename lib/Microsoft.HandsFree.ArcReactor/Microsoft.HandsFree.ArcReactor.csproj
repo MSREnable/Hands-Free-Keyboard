@@ -25,6 +25,30 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.HandsFree.Filters, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.Filters.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.HandsFree.Mouse, Version=1.0.4.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.Mouse.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.HandsFree.MVVM, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.MVVM.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.HandsFree.Sensors, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.Sensors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.HandsFree.Settings, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.Settings.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.HandsFree.Win32, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.Win32.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ReflectaClient, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\ReflectaClient.1.0.0\lib\net461\ReflectaClient.dll</HintPath>
@@ -66,6 +90,23 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\external\TyQt-0.7.6-win64\tyc.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="msvcp110.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="msvcr110.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tobii.EyeX.Client.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tobii.EyeX.Client.Net20.dll" />
+    <Content Include="Tobii.Gaze.Core.Net.dll" />
+    <Content Include="TobiiGazeCore64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="vccorlib110.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

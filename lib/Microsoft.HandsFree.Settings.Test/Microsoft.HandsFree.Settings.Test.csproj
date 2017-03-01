@@ -38,27 +38,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.HandsFree.Filters, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.3\lib\net461\Microsoft.HandsFree.Filters.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.Filters.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.HandsFree.Mouse, Version=1.0.3.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.3\lib\net461\Microsoft.HandsFree.Mouse.dll</HintPath>
+    <Reference Include="Microsoft.HandsFree.Mouse, Version=1.0.4.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.Mouse.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.HandsFree.MVVM, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.3\lib\net461\Microsoft.HandsFree.MVVM.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.MVVM.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.HandsFree.Sensors, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.3\lib\net461\Microsoft.HandsFree.Sensors.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.Sensors.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.HandsFree.Settings, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.3\lib\net461\Microsoft.HandsFree.Settings.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.Settings.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.HandsFree.Win32, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.3\lib\net461\Microsoft.HandsFree.Win32.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.Win32.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
