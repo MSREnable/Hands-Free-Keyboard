@@ -53,7 +53,7 @@ namespace Microsoft.HandsFree.Keyboard.Settings
         /// The activation delay multipler to use for the top ranked suggestion.
         /// </summary>
         [SettingDescription("First Suggestion Gaze Delay Multiplier", 0.0, 5.0, 0.1)]
-                public double FirstSuggestionDelayMultiplier
+        public double FirstSuggestionDelayMultiplier
         {
             get { return _firstSuggestionDelayMultiplier; }
             set { SetProperty(ref _firstSuggestionDelayMultiplier, value); }
@@ -102,6 +102,13 @@ namespace Microsoft.HandsFree.Keyboard.Settings
         [SettingDescription("Display training sentences")]
         public bool IsTrainingMode { get { return _isTrainingMode; } set { SetProperty(ref _isTrainingMode, value); } }
         bool _isTrainingMode;
+
+        /// <summary>
+        /// Should the autoreating of letters be prevented.
+        /// </summary>
+        [SettingDescription("Stop alphabetic keys autorepeating")]
+        public bool IsNoAlphaAutorepeat { get { return _isNoAlphaAutorepeat; } set { SetProperty(ref _isNoAlphaAutorepeat, value); } }
+        bool _isNoAlphaAutorepeat;
 
         /// <summary>
         /// Has the EULA been seen and accepted.
