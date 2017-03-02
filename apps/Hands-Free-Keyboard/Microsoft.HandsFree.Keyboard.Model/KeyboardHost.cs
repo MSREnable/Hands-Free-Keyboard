@@ -662,8 +662,19 @@ namespace Microsoft.HandsFree.Keyboard.Model
                 originalText.Substring(suggestion.ReplacementStart + suggestion.ReplacementLength);
 
             var slice = new TextSlice(replacementText, suggestion.ReplacementStart + insert.Length);
-            _editor.TextSlice = slice;
-            TextSlice = slice;
+            if (slice != TextSlice)
+            {
+                // Normally selecting a prediction will change the text.
+                _editor.TextSlice = slice;
+                TextSlice = slice;
+            }
+            else
+            {
+                // Sometimes the prediction is just what we typed, but we still want to fire off the prediction engine
+                // which usually runs as a side-effect of the text changing. (This is probably the same as detecting that
+                // _isAutoSpaceNeeded changed as a side-effect of this method.)
+                SetTextHint(slice);
+            }
 
             // Release the Shift key if it had been pressed.
             ShiftToggleState.IsChecked = false;
