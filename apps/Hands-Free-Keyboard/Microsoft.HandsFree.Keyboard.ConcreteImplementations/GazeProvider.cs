@@ -97,7 +97,7 @@ namespace Microsoft.HandsFree.Keyboard.ConcreteImplementations
                 var multiplier = Controls.HandsFree.GetMultiplier(element);
                 var repeatMultiplier = Controls.HandsFree.GetRepeatMultiplier(element);
 
-                clickParams.MouseUpDelay = (uint)(clickParams.MouseDownDelay + 
+                clickParams.MouseUpDelay = (uint)(clickParams.MouseDownDelay +
                                             Math.Round(multiplier * (AppSettings.Instance.Keyboard.GazeClickDelay - GazeMouse.DefaultMouseDownDelay)));
                 clickParams.RepeatMouseDownDelay = double.IsNaN(repeatMultiplier) ?
                     uint.MaxValue :
@@ -115,7 +115,8 @@ namespace Microsoft.HandsFree.Keyboard.ConcreteImplementations
                     // ...use the probability to select the delay...
                     var delay = GetMouseUpDelayFromProbability(probability);
                     clickParams.MouseUpDelay = (uint)(clickParams.MouseDownDelay + Math.Round(target.Multiplier * delay));
-                    clickParams.RepeatMouseDownDelay = (uint)(clickParams.MouseUpDelay + 
+                    clickParams.RepeatMouseDownDelay = 
+                        AppSettings.Instance.Keyboard.IsNoAlphaAutorepeat ? uint.MaxValue : (uint)(clickParams.MouseUpDelay +
                                                         (AppSettings.Instance.Keyboard.GazeClickDelay - GazeMouse.DefaultMouseDownDelay));
                 }
                 else
@@ -125,7 +126,7 @@ namespace Microsoft.HandsFree.Keyboard.ConcreteImplementations
                     clickParams.MouseUpDelay = (uint)(clickParams.MouseDownDelay + Math.Round(target.Multiplier * delay));
                     clickParams.RepeatMouseDownDelay = double.IsNaN(target.RepeatMultiplier) ?
                         uint.MaxValue :
-                        (uint)(clickParams.MouseUpDelay + 
+                        (uint)(clickParams.MouseUpDelay +
                                 target.RepeatMultiplier * (AppSettings.Instance.Keyboard.GazeClickDelay - GazeMouse.DefaultMouseDownDelay));
                 }
             }
