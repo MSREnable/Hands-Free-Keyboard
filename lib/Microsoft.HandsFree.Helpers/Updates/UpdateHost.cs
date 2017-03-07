@@ -136,7 +136,7 @@ namespace Microsoft.HandsFree.Helpers.Updates
                 }
                 else
                 {
-                    TelemetryMessage.Telemetry.TraceEvent(TraceEventType.Information, IdMapper.GetId(UpdateTelemetryAction.PollFoundUpate), entry.Version.ToString());
+                    TelemetryMessage.Telemetry.TraceEvent(TraceEventType.Information, IdMapper.GetId(UpdateTelemetryAction.PollFoundUpdate), entry.Version.ToString());
 
                     AvailableUpdate = entry.Version.Version;
                     IsUpdateAvailable = true;

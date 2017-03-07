@@ -10,7 +10,7 @@
         /// <summary>
         /// Performed update poll, found update waiting.
         /// </summary>
-        PollFoundUpate,
+        PollFoundUpdate,
 
         /// <summary>
         /// Creating shortcut for application.
