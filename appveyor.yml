@@ -35,7 +35,8 @@ before_build:
   - ps: $timestamps += "$(Get-Date -Format o) - Restore $env:app_sln"
   - ps: nuget restore "$env:app_sln"
   - ps: $timestamps += "$(Get-Date -Format o) - Begin Download Squirrel"
-  - ps: $source = ((curl https://api.github.com/repos/Squirrel/Squirrel.Windows/releases/latest).Content | ConvertFrom-JSON).assets.browser_download_url
+  #- ps: $source = ((curl https://api.github.com/repos/Squirrel/Squirrel.Windows/releases/latest).Content | ConvertFrom-JSON).assets.browser_download_url
+  - ps: $source = "https://github.com/Squirrel/Squirrel.Windows/releases/download/1.4.4/Squirrel.Windows-1.4.4.zip"
   - ps: $destination = "squirrel.zip"
   - ps: Invoke-WebRequest $source -OutFile $destination
   - ps: $timestamps += "$(Get-Date -Format o) - End Download Squirrel"
