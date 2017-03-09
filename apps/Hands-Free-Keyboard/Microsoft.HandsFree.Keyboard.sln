@@ -16,8 +16,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Predict
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.Prediction.Lucene", "Microsoft.HandsFree.Prediction.Lucene\Microsoft.HandsFree.Prediction.Lucene.csproj", "{86C0529E-76DE-4709-84A0-30ECD3662717}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HandsFree.ArcReactor", "..\..\lib\Microsoft.HandsFree.ArcReactor\Microsoft.HandsFree.ArcReactor.csproj", "{78D160D0-1315-40A3-B3FB-A776AB084888}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6ED05273-BCE6-403D-8B27-81F426FFFA1E}"
 	ProjectSection(SolutionItems) = preProject
 		Default.testsettings = Default.testsettings
@@ -95,10 +93,6 @@ Global
 		{86C0529E-76DE-4709-84A0-30ECD3662717}.Debug|x64.Build.0 = Debug|x64
 		{86C0529E-76DE-4709-84A0-30ECD3662717}.Release|x64.ActiveCfg = Release|x64
 		{86C0529E-76DE-4709-84A0-30ECD3662717}.Release|x64.Build.0 = Release|x64
-		{78D160D0-1315-40A3-B3FB-A776AB084888}.Debug|x64.ActiveCfg = Debug|x64
-		{78D160D0-1315-40A3-B3FB-A776AB084888}.Debug|x64.Build.0 = Debug|x64
-		{78D160D0-1315-40A3-B3FB-A776AB084888}.Release|x64.ActiveCfg = Debug|x64
-		{78D160D0-1315-40A3-B3FB-A776AB084888}.Release|x64.Build.0 = Debug|x64
 		{66FDD0F0-E6AB-4A9C-91CB-3CD22B1948E0}.Debug|x64.ActiveCfg = Debug|x64
 		{66FDD0F0-E6AB-4A9C-91CB-3CD22B1948E0}.Debug|x64.Build.0 = Debug|x64
 		{66FDD0F0-E6AB-4A9C-91CB-3CD22B1948E0}.Release|x64.ActiveCfg = Release|x64

@@ -38,6 +38,10 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.HandsFree.ArcReactor, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\..\..\packages\Microsoft.HandsFree.ArcReactor.1.0.0\lib\net461\Microsoft.HandsFree.ArcReactor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.HandsFree.Filters, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <HintPath>..\..\..\packages\Microsoft.HandsFree.Mouse.1.0.4\lib\net461\Microsoft.HandsFree.Filters.dll</HintPath>
       <Private>True</Private>
@@ -64,6 +68,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="ReflectaClient, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\..\..\packages\ReflectaClient.1.0.0\lib\net461\ReflectaClient.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Remoting" />
@@ -99,10 +107,6 @@
     <Compile Include="WavePlayer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\lib\Microsoft.HandsFree.ArcReactor\Microsoft.HandsFree.ArcReactor.csproj">
-      <Project>{78d160d0-1315-40a3-b3fb-a776ab084888}</Project>
-      <Name>Microsoft.HandsFree.ArcReactor</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\lib\Microsoft.HandsFree.Helpers\Microsoft.HandsFree.Helpers.csproj">
       <Project>{1a916246-705d-4192-b396-8165a96319ac}</Project>
       <Name>Microsoft.HandsFree.Helpers</Name>
@@ -138,6 +142,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Microsoft.HandsFree.ArcReactor.Arduino\arcreactor-2016.09.12.1327.hex" />
+    <None Include="Microsoft.HandsFree.ArcReactor.Arduino_Gen2\arcreactor_gen2-2016.11.10.1409.hex" />
     <None Include="packages.config" />
     <None Include="Resources\AfterSpeaking.wav" />
   </ItemGroup>
@@ -205,12 +211,14 @@
     <None Include="Resources\fUgh.wav" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LICENSE.txt" />
     <Content Include="msvcp110.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="msvcr110.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="README.txt" />
     <Content Include="Tobii.EyeX.Client.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -219,6 +227,7 @@
     <Content Include="TobiiGazeCore64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="tyc.exe" />
     <Content Include="vccorlib110.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
