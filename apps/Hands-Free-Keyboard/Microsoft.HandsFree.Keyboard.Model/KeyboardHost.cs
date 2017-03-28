@@ -979,6 +979,32 @@ namespace Microsoft.HandsFree.Keyboard.Model
             var statePrefix = CharacterState();
             var sendKeys = spacePrefix + statePrefix + keys;
 
+            // Handle punctuation cases.
+            if (key.Length == 1 &&
+                char.IsPunctuation(key[0]))
+            {
+                switch (Settings.Keyboard.PunctuationSpacing)
+                {
+                    case PredictionSpacingBehavior.Always:
+                        sendKeys += ' ';
+                        break;
+
+                    case PredictionSpacingBehavior.AddAndRemoveIfUnwanted:
+                        sendKeys += ' ';
+                        _isAutoSpaceAdded = true;
+                        break;
+
+                    case PredictionSpacingBehavior.AddIfNeeded:
+                        _isAutoSpaceNeeded = true;
+                        break;
+
+                    default:
+                    case PredictionSpacingBehavior.Never:
+                        Debug.Assert(Settings.Keyboard.PunctuationSpacing == PredictionSpacingBehavior.Never);
+                        break;
+                }
+            }
+
             TextSlice = _editor.Interpret(sendKeys);
 
             if (keys == "{BACKSPACE}")

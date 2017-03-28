@@ -118,6 +118,13 @@ namespace Microsoft.HandsFree.Keyboard.Settings
         bool _isEulaAccepted;
 
         /// <summary>
+        /// Behavior for adding space after punctuation.
+        /// </summary>
+        [SettingDescription("Behavior for adding spaces after punctuation")]
+        public PredictionSpacingBehavior PunctuationSpacing { get { return _punctuationSpacing; } set { SetProperty(ref _punctuationSpacing, value); } }
+        PredictionSpacingBehavior _punctuationSpacing = PredictionSpacingBehavior.AddIfNeeded;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public KeyboardSettings()
