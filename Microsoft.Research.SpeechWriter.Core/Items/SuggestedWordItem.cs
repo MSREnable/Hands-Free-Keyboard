@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Research.RankWriter.Library.Items
+﻿namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     /// <summary>
     /// A word in the suggestion list.

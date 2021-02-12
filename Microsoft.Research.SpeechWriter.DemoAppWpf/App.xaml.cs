@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Microsoft.Research.RankWriter.AltTestHost
+namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 {
     /// <summary>
     /// Interaction logic for App.xaml

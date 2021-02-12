@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Microsoft.Research.RankWriter.Library.Test
+namespace Microsoft.Research.SpeechWriter.Core.Test
 {
     public class StringTokensTest
     {

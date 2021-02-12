@@ -1,7 +1,7 @@
 ﻿<Application
-    x:Class="Microsoft.Research.RankWriter.UwpHost.App"
+    x:Class="Microsoft.Research.SpeechWriter.DemoAppUwp.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Microsoft.Research.RankWriter.UwpHost">
+    xmlns:local="using:Microsoft.Research.SpeechWriter.DemoAppUwp">
 
 </Application>

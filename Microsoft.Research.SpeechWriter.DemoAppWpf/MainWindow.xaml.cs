@@ -1,11 +1,11 @@
-﻿using Microsoft.Research.RankWriter.Library;
-using Microsoft.Research.RankWriter.Library.Items;
+﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.Core.Items;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Speech.Synthesis;
 using System.Windows;
 
-namespace Microsoft.Research.RankWriter.AltTestHost
+namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Research.RankWriter.Library.Automation
+﻿namespace Microsoft.Research.SpeechWriter.Core.Automation
 {
     /// <summary>
     /// Names for the lists targetted by an ApplicationRobotAction.

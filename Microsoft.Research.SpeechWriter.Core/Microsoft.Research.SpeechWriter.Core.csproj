@@ -7,27 +7,27 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>C:\github.com\MSREnable\PeteA\Playground\PeteAnsell.Tile.Library\Microsoft.Research.RankWriter.Library\Microsoft.Research.RankWriter.Library.xml</DocumentationFile>
+    <DocumentationFile>C:\github.com\MSREnable\PeteA\Playground\Microsoft.Research.Tile.Core\Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.xml</DocumentationFile>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>C:\github.com\MSREnable\PeteA\Playground\PeteAnsell.Tile.Library\Microsoft.Research.RankWriter.Library\Microsoft.Research.RankWriter.Library.xml</DocumentationFile>
+    <DocumentationFile>C:\github.com\MSREnable\PeteA\Playground\Microsoft.Research.Tile.Core\Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.xml</DocumentationFile>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\github.com\MSREnable\PeteA\Playground\PeteAnsell.Tile.Library\Microsoft.Research.RankWriter.Library\Microsoft.Research.RankWriter.Library.xml</DocumentationFile>
+    <DocumentationFile>C:\github.com\MSREnable\PeteA\Playground\Microsoft.Research.Tile.Core\Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DocumentationFile>C:\github.com\MSREnable\PeteA\Playground\PeteAnsell.Tile.Library\Microsoft.Research.RankWriter.Library\Microsoft.Research.RankWriter.Library.xml</DocumentationFile>
+    <DocumentationFile>C:\github.com\MSREnable\PeteA\Playground\Microsoft.Research.Tile.Core\Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>Microsoft.Research.RankWriter.Library.Test</_Parameter1>
+      <_Parameter1>Microsoft.Research.SpeechWriter.Core.Test</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Microsoft.Research.RankWriter.Library
+namespace Microsoft.Research.SpeechWriter.Core
 {
     internal class TokenPredictorDatabase
     {

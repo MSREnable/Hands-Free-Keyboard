@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Microsoft.Research.RankWriter.Library
+namespace Microsoft.Research.SpeechWriter.Core
 {
     internal class TokenPredictorInfo
     {

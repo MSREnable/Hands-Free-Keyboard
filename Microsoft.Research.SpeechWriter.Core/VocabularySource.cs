@@ -1,8 +1,8 @@
-﻿using Microsoft.Research.RankWriter.Library.Items;
+﻿using Microsoft.Research.SpeechWriter.Core.Items;
 using System.Collections.Generic;
 using System.Windows.Input;
 
-namespace Microsoft.Research.RankWriter.Library
+namespace Microsoft.Research.SpeechWriter.Core
 {
     /// <summary>
     /// A source containing an ordered list of vocabulary items.

@@ -1,8 +1,8 @@
-﻿using Microsoft.Research.RankWriter.Library.Items;
+﻿using Microsoft.Research.SpeechWriter.Core.Items;
 using System;
 using Windows.UI.Xaml.Data;
 
-namespace Microsoft.Research.RankWriter.UwpHost
+namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 {
     public class TemplateOpacityCoverter : IValueConverter
     {

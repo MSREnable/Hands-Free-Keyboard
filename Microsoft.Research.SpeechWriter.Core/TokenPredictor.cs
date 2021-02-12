@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Microsoft.Research.RankWriter.Library
+namespace Microsoft.Research.SpeechWriter.Core
 {
     /// <summary>
     /// Token sequence predictor.

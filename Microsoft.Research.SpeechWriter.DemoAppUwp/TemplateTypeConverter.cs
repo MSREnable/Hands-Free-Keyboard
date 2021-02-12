@@ -4,7 +4,7 @@ using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace Microsoft.Research.RankWriter.UwpHost
+namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 {
     public class TemplateTypeConverter : IValueConverter
     {

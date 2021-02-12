@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.Research.RankWriter.Library\Microsoft.Research.RankWriter.Library.csproj" />
+    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.csproj" />
   </ItemGroup>
 
 </Project>

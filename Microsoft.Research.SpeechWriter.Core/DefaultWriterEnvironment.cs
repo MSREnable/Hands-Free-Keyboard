@@ -1,10 +1,10 @@
-﻿using Microsoft.Research.RankWriter.Library.Properties;
+﻿using Microsoft.Research.SpeechWriter.Core.Properties;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
-namespace Microsoft.Research.RankWriter.Library
+namespace Microsoft.Research.SpeechWriter.Core
 {
     /// <summary>
     /// Default implementation of IWriterEnvironment.

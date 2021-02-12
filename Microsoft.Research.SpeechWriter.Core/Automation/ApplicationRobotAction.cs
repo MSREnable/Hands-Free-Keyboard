@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows.Input;
 
-namespace Microsoft.Research.RankWriter.Library.Automation
+namespace Microsoft.Research.SpeechWriter.Core.Automation
 {
     /// <summary>
     /// Description of the next step towards the target.

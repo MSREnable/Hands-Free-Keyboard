@@ -1,10 +1,10 @@
-﻿using Microsoft.Research.RankWriter.Library.Automation;
+﻿using Microsoft.Research.SpeechWriter.Core.Automation;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Microsoft.Research.RankWriter.Library.Test
+namespace Microsoft.Research.SpeechWriter.Core.Test
 {
     public class ApplicationRobotTest
     {

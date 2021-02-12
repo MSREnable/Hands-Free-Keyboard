@@ -1,8 +1,8 @@
-﻿using Microsoft.Research.RankWriter.Library.Items;
+﻿using Microsoft.Research.SpeechWriter.Core.Items;
 using NUnit.Framework;
 using System.Windows.Input;
 
-namespace Microsoft.Research.RankWriter.Library.Test
+namespace Microsoft.Research.SpeechWriter.Core.Test
 {
     class ForcedCoverage
     {

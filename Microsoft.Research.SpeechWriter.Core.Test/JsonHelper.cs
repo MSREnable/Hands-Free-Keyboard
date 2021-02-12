@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 
-namespace Microsoft.Research.RankWriter.Library.Test
+namespace Microsoft.Research.SpeechWriter.Core.Test
 {
     /// <summary>
     /// Helper for JSON serialization.

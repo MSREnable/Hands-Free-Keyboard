@@ -1,9 +1,9 @@
-﻿using Microsoft.Research.RankWriter.Library.Items;
+﻿using Microsoft.Research.SpeechWriter.Core.Items;
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Microsoft.Research.RankWriter.AltTestHost
+namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 {
     public class TemplateOpacityCoverter : IValueConverter
     {

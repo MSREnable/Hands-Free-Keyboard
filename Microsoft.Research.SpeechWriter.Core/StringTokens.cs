@@ -1,9 +1,9 @@
-﻿using Microsoft.Research.RankWriter.Library.Properties;
+﻿using Microsoft.Research.SpeechWriter.Core.Properties;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace Microsoft.Research.RankWriter.Library
+namespace Microsoft.Research.SpeechWriter.Core
 {
     /// <summary>
     /// Mapping between strings and integer tokens.

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.RankWriter.Library", "Microsoft.Research.RankWriter.Library\Microsoft.Research.RankWriter.Library.csproj", "{B20B47F7-52D1-48EF-8ACB-BD44BB78F023}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.Core", "Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.csproj", "{B20B47F7-52D1-48EF-8ACB-BD44BB78F023}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.RankWriter.Library.Test", "Microsoft.Research.RankWriter.Library.Test\Microsoft.Research.RankWriter.Library.Test.csproj", "{8A91FBD6-405E-4939-815F-ABAC8F64FBE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.Core.Test", "Microsoft.Research.SpeechWriter.Core.Test\Microsoft.Research.SpeechWriter.Core.Test.csproj", "{8A91FBD6-405E-4939-815F-ABAC8F64FBE4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.RankWriter.AltTestHost", "Microsoft.Research.RankWriter.AltTestHost\Microsoft.Research.RankWriter.AltTestHost.csproj", "{A85AEE21-3B49-4DC2-B3A1-47A7BC9C1AFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.DemoAppWpf", "Microsoft.Research.SpeechWriter.DemoAppWpf\Microsoft.Research.SpeechWriter.DemoAppWpf.csproj", "{A85AEE21-3B49-4DC2-B3A1-47A7BC9C1AFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Research.RankWriter.UwpHost", "Microsoft.Research.RankWriter.UwpHost\Microsoft.Research.RankWriter.UwpHost.csproj", "{853DE33F-80B9-4036-9B24-C9CA7A98E00B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Research.SpeechWriter.DemoAppUwp", "Microsoft.Research.SpeechWriter.DemoAppUwp\Microsoft.Research.SpeechWriter.DemoAppUwp.csproj", "{853DE33F-80B9-4036-9B24-C9CA7A98E00B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

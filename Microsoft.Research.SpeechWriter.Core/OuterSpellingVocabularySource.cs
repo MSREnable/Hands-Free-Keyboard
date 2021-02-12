@@ -1,10 +1,10 @@
-﻿using Microsoft.Research.RankWriter.Library.Items;
+﻿using Microsoft.Research.SpeechWriter.Core.Items;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace Microsoft.Research.RankWriter.Library
+namespace Microsoft.Research.SpeechWriter.Core
 {
     /// <summary>
     /// Outer spelling vocabulary source.

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Microsoft.Research.RankWriter.Library.Items
+namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     /// <summary>
     /// Complete word.

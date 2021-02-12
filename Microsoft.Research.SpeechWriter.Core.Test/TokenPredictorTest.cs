@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace Microsoft.Research.RankWriter.Library.Test
+namespace Microsoft.Research.SpeechWriter.Core.Test
 {
     public class TokenPredictorTest
     {

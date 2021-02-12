@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Input;
 
-namespace Microsoft.Research.RankWriter.Library.Test
+namespace Microsoft.Research.SpeechWriter.Core.Test
 {
     public class CommandTest
     {

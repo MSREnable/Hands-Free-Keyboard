@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace Microsoft.Research.RankWriter.Library
+namespace Microsoft.Research.SpeechWriter.Core
 {
     /// <summary>
     /// Token command carrying a word.
