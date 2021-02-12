@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Microsoft.Research.SpeechWriter.DemoAppWpf"
         xmlns:lib="clr-namespace:Microsoft.Research.SpeechWriter.Core.Items;assembly=Microsoft.Research.SpeechWriter.Core"
         mc:Ignorable="d"
-        Title="MainWindow" Height="580" Width="1030">
+        Title="SpeechWriter DemoApp WPF" Height="580" Width="1030">
 
     <Window.Resources>
 
