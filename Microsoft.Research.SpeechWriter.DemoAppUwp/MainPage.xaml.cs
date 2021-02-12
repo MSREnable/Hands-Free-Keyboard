@@ -322,7 +322,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             _model.MaxNextSuggestionsCount = (int)(e.NewSize.Height) / 110;
         }
 
-        private void OnClickHidden(object sender, RoutedEventArgs e)
+        private void OnClickKirk(object sender, RoutedEventArgs e)
         {
             ShowDemo("SPACE",
                 "THE FINAL FRONTIER",
@@ -332,6 +332,16 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 "TO SEEK OUT NEW LIFE",
                 "AND NEW CIVILIZATIONS",
                 "TO BOLDLY GO WHERE NO MAN HAS GONE BEFORE");
+        }
+
+        private void OnClickPicard(object sender, RoutedEventArgs e)
+        {
+            ShowDemo("THESE ARE THE VOYAGES OF THE STARSHIP ENTERPRISE",
+                "ITS CONTINUING MISSION",
+                "TO EXPLORE STRANGE NEW WORLDS",
+                "TO SEEK OUT NEW LIFE",
+                "AND NEW CIVILIZATIONS",
+                "TO BOLDLY GO WHERE NO ONE HAS GONE BEFORE");
         }
 
         private async void OnPaste(object sender, RoutedEventArgs e)

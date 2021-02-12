@@ -220,7 +220,8 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="X" Click="OnClickHidden"/>
+        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="X" Click="OnClickKirk"/>
+        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="C" Click="OnClickPicard"/>
         <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="V" Click="OnPaste"/>
 
         <Canvas x:Name="TargetPanel">
