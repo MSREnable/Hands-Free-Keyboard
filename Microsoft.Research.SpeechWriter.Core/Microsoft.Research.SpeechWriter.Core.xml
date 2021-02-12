@@ -1,0 +1,724 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Research.RankWriter.Library</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Research.RankWriter.Library.ApplicationModel">
+            <summary>
+            Exported application model.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.ApplicationModel.#ctor(Microsoft.Research.RankWriter.Library.IWriterEnvironment)">
+            <summary>
+            Constructor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.ApplicationModel.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.ApplicationModel.Environment">
+            <summary>
+            The environment.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.ApplicationModel.MaxNextSuggestionsCount">
+            <summary>
+            The maximum number of next word suggestions to make.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.ApplicationModel.SelectedItems">
+            <summary>
+            The currently selected items.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.ApplicationModel.TailItems">
+            <summary>
+            The open items that can be closed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.ApplicationModel.SuggestionLists">
+            <summary>
+            Next word suggestion list. (Several individual words, one of which may be used next.)
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.ApplicationModel.SuggestionInterstitials">
+            <summary>
+            Items between suggestion lists.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.ApplicationModel.RunOnSuggestions">
+            <summary>
+            Following words suggestions. (Sequence of several words that may all be used next.)
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.ApplicationModel.HeadItems">
+            <summary>
+            Combined lists.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobot">
+            <summary>
+            Class for finding actions to achieve a given goal within an instance of an ApplicationModel.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobot.GetRandom(Microsoft.Research.RankWriter.Library.ApplicationModel,System.Random)">
+            <summary>
+            Pick a random item to press.
+            </summary>
+            <param name="model">The model to act against.</param>
+            <param name="random">The source of randomness.</param>
+            <returns>A valid but random action to take.</returns>
+            <remarks>Current implementations assumes child suggestions lists are finite.</remarks>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobot.FindNextAction(Microsoft.Research.RankWriter.Library.ApplicationModel,System.Boolean,System.String[])">
+            <summary>
+            Get the next action to achieve the given goal.
+            </summary>
+            <param name="model">The model to act against.</param>
+            <param name="complete">Finish by presssing a Stop button and returning IsComplete true in the action, otherwise don't press Stop button and return null.</param>
+            <param name="words">The words to be spoken.</param>
+            <returns>The next action to take.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobot.GetNextCompletionAction(Microsoft.Research.RankWriter.Library.ApplicationModel,System.String[])">
+            <summary>
+            Get the next action to achieve the given goal and press a Stop button to complete,
+            </summary>
+            <param name="model">The model to act against.</param>
+            <param name="words">The words to be spoken.</param>
+            <returns>The next action to take with IsComplete set true if this is the action to complete the goal.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobot.GetNextEstablishingAction(Microsoft.Research.RankWriter.Library.ApplicationModel,System.String[])">
+            <summary>
+            Get the next action to achieve the given goal.
+            </summary>
+            <param name="model">The model to act against.</param>
+            <param name="words">The words to be spoken.</param>
+            <returns>The next action to take or null if no action is needed..</returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotAction">
+            <summary>
+            Description of the next step towards the target.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotAction.Target">
+            <summary>
+            The list in the application model that is targetted.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotAction.Index">
+            <summary>
+            The item within the targetted list that needs to be executed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotAction.SubIndex">
+            <summary>
+            For the suggestions list of lists only, the item within the selected list that need to be executed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotAction.IsComplete">
+            <summary>
+            This action results in completion of the sought sequence.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotAction.GetItem(Microsoft.Research.RankWriter.Library.ApplicationModel)">
+            <summary>
+            Get the model item.
+            </summary>
+            <param name="model">The model to select from.</param>
+            <returns>The item from the model.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotAction.ExecuteItem(Microsoft.Research.RankWriter.Library.ApplicationModel)">
+            <summary>
+            Execute the model item.
+            </summary>
+            <param name="model">THe model to execute from.</param>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotActionTarget">
+            <summary>
+            Names for the lists targetted by an ApplicationRobotAction.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotActionTarget.Head">
+            <summary>
+            An item from the Head list.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotActionTarget.Tail">
+            <summary>
+            An item from teh Tail list.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotActionTarget.Interstitial">
+            <summary>
+            An item from the Interstitual list.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Research.RankWriter.Library.Automation.ApplicationRobotActionTarget.Suggestion">
+            <summary>
+            An item from the SuggestionList.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Command`1">
+            <summary>
+            Base class for command items.
+            </summary>
+        </member>
+        <member name="E:Microsoft.Research.RankWriter.Library.Command`1.CanExecuteChanged">
+            <summary>
+            Occurs when changes occur that affect whether or not the command should execute.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Command`1.CanExecute(System.Object)">
+            <summary>
+            Defines the method that determines whether the command can execute in its current state.
+            </summary>
+            <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
+            <returns>true if this command can be executed; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Command`1.Execute(System.Object)">
+            <summary>
+            Defines the method to be called when the command is invoked.
+            </summary>
+            <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.DefaultWriterEnvironment">
+            <summary>
+            Default implementation of IWriterEnvironment.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.DefaultWriterEnvironment.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.DefaultWriterEnvironment.Instance">
+            <summary>
+            Singleton.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.GhostStopItem">
+            <summary>
+            Start item.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.GhostWordItem">
+            <summary>
+            Selected word item.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.HeadStartItem">
+            <summary>
+            Start item.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.HeadWordItem">
+            <summary>
+            Selected word item.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.InterstitialGapItem">
+            <summary>
+            Gap between word items.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Items.InterstitialGapItem.ToString">
+            <summary>
+            ToString.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.InterstitialNonItem">
+            <summary>
+            Non-item for gaps.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Items.InterstitialNonItem.ToString">
+            <summary>
+            ToString.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.InterstitialSpellingItem">
+            <summary>
+            Word spelling item.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Items.InterstitialSpellingItem.ToString">
+            <summary>
+            ToString.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.InterstitialUnicodeItem">
+            <summary>
+            Unicode item.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingBackspaceItem">
+            <summary>
+            Backspace spelling error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingBackspaceItem.Prefix">
+            <summary>
+            The word prefix.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingBackspaceItem.ToString">
+            <summary>
+            ToString.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingItem">
+            <summary>
+            A symbol in the suggestion list.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingItem.Prefix">
+            <summary>
+            The word prefix.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingItem.Symbol">
+            <summary>
+            The symbol to be added.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingItem.ToString">
+            <summary>
+            ToString.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingSequenceItem">
+            <summary>
+            A symbol in the suggestion list.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingSequenceItem.Prefix">
+            <summary>
+            The word prefix.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingSequenceItem.Symbol">
+            <summary>
+            The symbol to be added.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingSequenceItem.ToString">
+            <summary>
+            ToString.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingWordItem">
+            <summary>
+            Complete word.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingWordItem.Word">
+            <summary>
+            The word to be committed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Items.SuggestedSpellingWordItem.ToString">
+            <summary>
+            ToString.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.SuggestedUnicodeItem">
+            <summary>
+            Unicode item.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Items.SuggestedUnicodeItem.Prefix">
+            <summary>
+            The spelled prefix.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Items.SuggestedUnicodeItem.Symbol">
+            <summary>
+            The character value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Items.SuggestedUnicodeItem.ToString">
+            <summary>
+            ToString.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.SuggestedWordItem">
+            <summary>
+            A word in the suggestion list.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.SuggestedWordSequenceItem">
+            <summary>
+            A word in the suggestion list.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.TailStopItem">
+            <summary>
+            Start item.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Items.WordItem">
+            <summary>
+            Whole word item.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Items.WordItem.Word">
+            <summary>
+            The text of the word.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.Items.WordItem.ToString">
+            <summary>
+            String.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.IWordCommand">
+            <summary>
+            Token command carrying a word.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.IWordCommand.Word">
+            <summary>
+            The text of an underlying word.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.IWriterEnvironment">
+            <summary>
+            Environmental objects for writer.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.IWriterEnvironment.GetOrderedSeedWords">
+            <summary>
+            Dictionary of words, listed from most likely to least likely.
+            </summary>
+            <returns>List of words.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.IWriterEnvironment.GetSeedSentences">
+            <summary>
+            List of sentences, comprising a sequence of words.
+            </summary>
+            <returns>List of list of words.</returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.NonLinearIntegerRangeVocabularySource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.OuterSpellingVocabularySource">
+            <summary>
+            Outer spelling vocabulary source.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.PredictiveVocabularySource">
+            <summary>
+            A source containing an ordered list of vocabulary items.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.PredictiveVocabularySource.PersistantPredictor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.PredictiveVocabularySource.TemporaryPredictor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.PredictiveVocabularySource.GetIndexToken(System.Int32)">
+            <summary>
+            Get the non-zero token for at a given index within the source.
+            </summary>
+            <param name="index">Index of item, such that 0 &gt;= index &gt; Count.</param>
+            <returns>The token at the give index</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.PredictiveVocabularySource.GetTokenIndex(System.Int32)">
+            <summary>
+            Get the position index of the given token with the source.
+            </summary>
+            <param name="token">The non-zero token.</param>
+            <returns>The corresponding index position.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.PredictiveVocabularySource.GetTopIndices(System.Int32[],System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Gets the top ranked item indexes within a slice of the source.
+            </summary>
+            <param name="context">The tokens before item to be suggested.</param>
+            <param name="minIndex">The minimum index value to return.</param>
+            <param name="limIndex">The limit index value.</param>
+            <param name="count">The number of indices to attempt to return.</param>
+            <returns>A list of indices in reverse rank order (most likely to least likely) such that each
+            index i maintains minIndex &gt;= i &gt; limIndex.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.PredictiveVocabularySource.GetTokens">
+            <summary>
+            Get token values in an order that will roughly correspond to their likelyhood without any context.
+            </summary>
+            <returns>An enumeration of integer tokens.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.PredictiveVocabularySource.CreateSuggestionList(System.Int32)">
+            <summary>
+            Get the item sequence that corresponds to the given index.
+            </summary>
+            <param name="index">The index within the source.</param>
+            
+            <returns>The vocabulary item corresponding to the index.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.PredictiveVocabularySource.GetSequenceItem(System.Collections.Generic.IEnumerable{System.Int32})">
+            <summary>
+            Get follow in compound item.
+            </summary>
+            <param name="tokenSequence">The sequence of tokens.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.PredictiveVocabularySource.AddSequence(System.Collections.Generic.IList{System.Int32},System.Int32)">
+            <summary>
+            Add the next step of the sequence.
+            </summary>
+            <param name="sequence"></param>
+            <param name="increment"></param>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Properties.Resources.SentencesSeed">
+             <summary>
+               Looks up a localized string similar to OH YOU WICKED LITTLE THING
+            REALLY DINAH OUGHT TO HAVE TAUGHT YOU BETTER MANNERS
+            YOU OUGHT DINAH YOU KNOW YOU OUGHT
+            DO YOU KNOW WHAT TO MORROW IS KITTY
+            YOU&apos;D HAVE GUESSED IF YOU&apos;D BEEN UP IN THE WINDOW WITH ME ONLY DINAH WAS MAKING YOU TIDY SO YOU COULDN&apos;T
+            I WAS WATCHING THE BOYS GETTING IN STICKS FOR THE BONFIRE AND IT WANTS PLENTY OF STICKS KITTY
+            ONLY IT GOT SO COLD AND IT SNOWED SO THEY HAD TO LEAVE OFF
+            WE&apos;LL GO AND SEE THE BONFIRE TOMORROW
+            DO YOU KNOW I WAS SO ANGRY WHEN I SAW ALL THE MISCHIEF YO [rest of string was truncated]&quot;;.
+             </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.Properties.Resources.WordCountList">
+             <summary>
+               Looks up a localized string similar to I	0.028827635000
+            to	0.028536368000
+            and	0.023919919000
+            the	0.020040810000
+            a	0.017797183000
+            you	0.016308453000
+            me	0.009974232000
+            it	0.009224581000
+            my	0.008140354000
+            in	0.008120637000
+            that	0.008052657000
+            for	0.007817605000
+            of	0.007474334000
+            but	0.007415574000
+            so	0.006810462000
+            have	0.006671428000
+            is	0.006197572000
+            be	0.006049194000
+            on	0.006030548000
+            with	0.005696160000
+            if	0.005331618000
+            was	0.005186025000
+            get	0.004963820000
+            just	0.004930721000
+            we	0.004861050000
+            at	0.004777995000
+            do	0. [rest of string was truncated]&quot;;.
+             </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.SpellingVocabularySource">
+            <summary>
+            The spelling source.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.SpellingVocabularySource.Context">
+            <summary>
+            The spelling context.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.SpellingVocabularySource.Count">
+            <summary>
+            The number of items within the source.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.SpellingVocabularySource.GetIndexToken(System.Int32)">
+            <summary>
+            Get the non-zero token for at a given index within the source.
+            </summary>
+            <param name="index">Index of item, such that 0 &gt;= index &gt; Count.</param>
+            <returns>The token at the give index</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.SpellingVocabularySource.GetOrderedVocabularyListTokens">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.StringTokens">
+            <summary>
+            Mapping between strings and integer tokens.
+            </summary>
+            <remarks>
+            There is a tacit assumption that words with higher token values are to be ranked higher than those with a lower token value.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.StringTokens.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.StringTokens.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Initializing constructor.
+            </summary>
+            <param name="enumerable">Strings in reverse rank order.</param>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.StringTokens.TokenStart">
+            <summary>
+            The minimum value for a valid token.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.StringTokens.TokenLimit">
+            <summary>
+            The current limit value of the contiguos token values.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.StringTokens.Item(System.Int32)">
+            <summary>
+            Get string from token.
+            </summary>
+            <param name="token">The token.</param>
+            <returns>The string.</returns>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.StringTokens.Item(System.String)">
+            <summary>
+            Get token from string.
+            </summary>
+            <param name="str">The string.</param>
+            <returns>The token.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.StringTokens.Create(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Create a default set of English word tokens.
+            </summary>
+            <returns>A StringTokens object.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.StringTokens.GetString(System.Int32)">
+            <summary>
+            Get string from token.
+            </summary>
+            <param name="token">The token.</param>
+            <returns>The string.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.StringTokens.GetToken(System.String)">
+            <summary>
+            Get token from string.
+            </summary>
+            <param name="str">The string.</param>
+            <returns>The token.</returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.TokenPredictor">
+            <summary>
+            Token sequence predictor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.TokenPredictor.AddSequenceTail(System.Collections.Generic.IList{System.Int32},System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="sequence"></param>
+            <param name="increment">Signed increment to apply.</param>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.UnicodeVocabularySource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.VocabularySource">
+            <summary>
+            A source containing an ordered list of vocabulary items.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.VocabularySource.Environment">
+            <summary>
+            The environment.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.VocabularySource.CreateSuggestionList(System.Int32)">
+            <summary>
+            Get the suggestion list stemming from the indexed item.
+            </summary>
+            <param name="index">The index within the source.</param>
+            <returns>The suggestions list.</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.VocabularySource.CreatePriorInterstitial(System.Int32)">
+            <summary>
+            Get an item that comes before the specified item and the immediately preceeding item.
+            </summary>
+            <param name="index">Index of item, 0 &lt;= index &lt;= Count. 0 for item before first,
+            Count for item after last.
+            </param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Research.RankWriter.Library.WordVocabularySource">
+            <summary>
+            The word source.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.WordVocabularySource.MaxRunOnSuggestionsCount">
+            <summary>
+            The maximum number of run on word suggestions to make.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.WordVocabularySource.SelectedItems">
+            <summary>
+            The currently selected items.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.WordVocabularySource.RunOnSuggestions">
+            <summary>
+            Following words suggestions. (Sequence of several words that may all be used next.)
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.RankWriter.Library.WordVocabularySource.Count">
+            <summary>
+            The number of items within the source.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.WordVocabularySource.GetIndexToken(System.Int32)">
+            <summary>
+            Get the non-zero token for at a given index within the source.
+            </summary>
+            <param name="index">Index of item, such that 0 &gt;= index &gt; Count.</param>
+            <returns>The token at the give index</returns>
+        </member>
+        <member name="M:Microsoft.Research.RankWriter.Library.WordVocabularySource.GetOrderedVocabularyListTokens">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
