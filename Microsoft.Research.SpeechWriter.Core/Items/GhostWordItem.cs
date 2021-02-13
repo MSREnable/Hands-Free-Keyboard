@@ -12,7 +12,7 @@
 
         internal override void Execute(WordVocabularySource source)
         {
-            source.TransferRunOnToSuccessors(this);
+            source.TakeGhostWord(this);
         }
     }
 }

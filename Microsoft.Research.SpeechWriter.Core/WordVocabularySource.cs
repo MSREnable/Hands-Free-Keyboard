@@ -205,8 +205,8 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             AddWords(words);
 
-            ResetSuggestionsView();
             SetRunOnSuggestions();
+            ResetSuggestionsView();
         }
 
         internal void SetRunOnSuggestions()
@@ -234,8 +234,13 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             while (!done);
 
-            SetSuggestionsView();
             ContinueRunOnSuggestions();
+        }
+
+        internal void TakeGhostWord(ICommand runOn)
+        {
+            TransferRunOnToSuccessors(runOn);
+            SetSuggestionsView();
         }
 
         internal string[] TokensToWords(IEnumerable<int> tokens)

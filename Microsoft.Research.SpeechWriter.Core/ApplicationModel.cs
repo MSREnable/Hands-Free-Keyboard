@@ -125,6 +125,22 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         public ReadOnlyObservableCollection<ICommand> HeadItems { get; }
 
+        /// <summary>
+        /// Event occurring afer every model update.
+        /// </summary>
+        public event EventHandler<ApplicationModelUpdateEventArgs> ApplicationModelUpdate
+        {
+            add { _applicationModelUpdate += value; }
+            remove { _applicationModelUpdate -= value; }
+        }
+        private event EventHandler<ApplicationModelUpdateEventArgs> _applicationModelUpdate;
+
+        private void RaiseApplicationModelUpdateEvent()
+        {
+            var e = new ApplicationModelUpdateEventArgs();
+            _applicationModelUpdate?.Invoke(this, e);
+        }
+
         internal void SetSuggestionsView(VocabularySource source, int lowerBound, int upperLimit)
         {
             Debug.Assert(!(source is SpellingVocabularySource));
@@ -192,6 +208,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 EmitInterstitial(Math.Min(previousIndex + 1, Source.Count - maxItemCount), Source.Count);
             }
+
+            RaiseApplicationModelUpdateEvent();
 
             void EmitInterstitial(int min, int lim)
             {

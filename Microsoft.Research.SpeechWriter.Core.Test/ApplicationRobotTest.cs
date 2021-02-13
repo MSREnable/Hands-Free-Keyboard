@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
@@ -14,6 +15,26 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 
             var count = 0;
             var errorCount = 0;
+
+            var hasNotified = false;
+
+            void OnNotifyCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            {
+                Assert.IsFalse(hasNotified, "No changes after model update notification");
+            }
+
+            void OnApplicationModelUpdated(object sender, ApplicationModelUpdateEventArgs e)
+            {
+                Assert.IsFalse(hasNotified, "No previous model update notification");
+                hasNotified = true;
+            }
+
+            var collections = new INotifyCollectionChanged[] { model.HeadItems, model.TailItems, model.SuggestionInterstitials, model.SuggestionLists };
+            foreach (var collection in collections)
+            {
+                collection.CollectionChanged += OnNotifyCollectionChanged;
+            }
+            model.ApplicationModelUpdate += OnApplicationModelUpdated;
 
             bool done;
             do
@@ -39,7 +60,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                     action = ApplicationRobot.GetNextCompletionAction(model, words);
                 }
 
+                hasNotified = false;
                 action.ExecuteItem(model);
+                Assert.IsTrue(hasNotified);
 
                 count++;
                 done = action.IsComplete;
@@ -64,6 +87,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 #endif
             }
             while (!done);
+
+            foreach (var collection in collections)
+            {
+                collection.CollectionChanged -= OnNotifyCollectionChanged;
+            }
+            model.ApplicationModelUpdate -= OnApplicationModelUpdated;
+
 
             // Check there is but one action needed to re-establish text.
             var reestablishAction = ApplicationRobot.GetNextEstablishingAction(model, words);

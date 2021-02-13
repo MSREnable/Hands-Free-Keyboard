@@ -59,6 +59,16 @@
             Combined lists.
             </summary>
         </member>
+        <member name="E:Microsoft.Research.SpeechWriter.Core.ApplicationModel.ApplicationModelUpdate">
+            <summary>
+            Event occurring afer every model update.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Research.SpeechWriter.Core.ApplicationModelUpdateEventArgs">
+            <summary>
+            Model update details.
+            </summary>
+        </member>
         <member name="T:Microsoft.Research.SpeechWriter.Core.Automation.ApplicationRobot">
             <summary>
             Class for finding actions to achieve a given goal within an instance of an ApplicationModel.
