@@ -17,6 +17,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             var errorCount = 0;
 
             var hasNotified = false;
+            var expectedIsComplete = false;
 
             void OnNotifyCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
@@ -27,6 +28,15 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             {
                 Assert.IsFalse(hasNotified, "No previous model update notification");
                 hasNotified = true;
+
+                if (e.IsComplete)
+                {
+                    expectedIsComplete = true;
+                }
+                else
+                {
+                    expectedIsComplete = false;
+                }
             }
 
             var collections = new INotifyCollectionChanged[] { model.HeadItems, model.TailItems, model.SuggestionInterstitials, model.SuggestionLists };
@@ -62,10 +72,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 
                 hasNotified = false;
                 action.ExecuteItem(model);
-                Assert.IsTrue(hasNotified);
+                Assert.IsTrue(hasNotified, "We should have seen a notification");
+                Assert.AreEqual(isGood && expectedIsComplete, isGood && action.IsComplete, "IsComplete in action and notification should match");
 
                 count++;
-                done = action.IsComplete;
+                done = isGood && action.IsComplete;
 
 #if false
                 if (9900 <= count)
@@ -83,7 +94,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                 }
 #else
                 Assert.IsTrue(count < 10000, "Clicking ends in reasonable time");
-                Assert.IsTrue(isGood || !isGood);
 #endif
             }
             while (!done);

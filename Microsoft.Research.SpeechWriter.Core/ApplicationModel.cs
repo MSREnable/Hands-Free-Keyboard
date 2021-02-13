@@ -26,6 +26,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private readonly ObservableCollection<ICommand> _combined = new ObservableCollection<ICommand>();
 
+        private int _previousWordsLengthNotified;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -41,13 +43,13 @@ namespace Microsoft.Research.SpeechWriter.Core
             SuggestionLists = new ReadOnlyObservableCollection<IEnumerable<ICommand>>(_nextSuggestions);
             SuggestionInterstitials = new ReadOnlyObservableCollection<ICommand>(_suggestionInterstitials);
 
-            Source = _wordSource;
-            _wordSource.ResetSuggestionsView();
-
             HeadItems = new ReadOnlyObservableCollection<ICommand>(_combined);
             LoadCombined(null, null);
             ((INotifyCollectionChanged)SelectedItems).CollectionChanged += LoadCombined;
             ((INotifyCollectionChanged)RunOnSuggestions).CollectionChanged += LoadCombined;
+
+            Source = _wordSource;
+            _wordSource.ResetSuggestionsView();
 
             void LoadCombined(object sender, NotifyCollectionChangedEventArgs e)
             {
@@ -87,7 +89,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 if (_maxNextSuggestinosCount != value)
                 {
                     _maxNextSuggestinosCount = value;
-                    SetSuggestionsView(Source, _lowerBound, _upperLimit);
+                    SetSuggestionsView(Source, _lowerBound, _upperLimit, false);
                 }
             }
         }
@@ -135,13 +137,41 @@ namespace Microsoft.Research.SpeechWriter.Core
         }
         private event EventHandler<ApplicationModelUpdateEventArgs> _applicationModelUpdate;
 
-        private void RaiseApplicationModelUpdateEvent()
+        private void RaiseApplicationModelUpdateEvent(bool isComplete)
         {
-            var e = new ApplicationModelUpdateEventArgs();
+            var words = new List<string>();
+            int nextPreviousWordsLength;
+
+            Debug.Assert(HeadItems[0] is HeadStartItem);
+            if (isComplete)
+            {
+                for (var i = 1; i < HeadItems.Count && HeadItems[i] is GhostWordItem; i++)
+                {
+                    words.Add(HeadItems[i].ToString());
+                }
+                Debug.Assert(HeadItems.Count == words.Count + 2);
+                Debug.Assert(HeadItems[HeadItems.Count - 1] is GhostStopItem);
+
+                nextPreviousWordsLength = 0;
+            }
+            else
+            {
+                for (var i = 1; i < HeadItems.Count && HeadItems[i] is HeadWordItem; i++)
+                {
+                    words.Add(HeadItems[i].ToString());
+                }
+
+                nextPreviousWordsLength = words.Count;
+            }
+
+
+            var e = new ApplicationModelUpdateEventArgs(words, _previousWordsLengthNotified, isComplete);
+            _previousWordsLengthNotified = nextPreviousWordsLength;
+
             _applicationModelUpdate?.Invoke(this, e);
         }
 
-        internal void SetSuggestionsView(VocabularySource source, int lowerBound, int upperLimit)
+        internal void SetSuggestionsView(VocabularySource source, int lowerBound, int upperLimit, bool isComplete)
         {
             Debug.Assert(!(source is SpellingVocabularySource));
 
@@ -149,10 +179,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             _lowerBound = lowerBound;
             _upperLimit = upperLimit;
 
-            ResetSuggestionsView();
+            ResetSuggestionsView(isComplete);
         }
 
-        private void ResetSuggestionsView()
+        private void ResetSuggestionsView(bool isComplete)
         {
             var maxItemCount = Math.Min(Source.Count, MaxNextSuggestionsCount - 1);
             var rankedIndices = Source.GetTopIndices(_lowerBound, _upperLimit, maxItemCount);
@@ -209,7 +239,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 EmitInterstitial(Math.Min(previousIndex + 1, Source.Count - maxItemCount), Source.Count);
             }
 
-            RaiseApplicationModelUpdateEvent();
+            RaiseApplicationModelUpdateEvent(isComplete);
 
             void EmitInterstitial(int min, int lim)
             {

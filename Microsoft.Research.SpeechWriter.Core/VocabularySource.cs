@@ -43,12 +43,17 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void ResetSuggestionsView()
         {
-            _model.SetSuggestionsView(_model.Source, 0, _model.Source.Count);
+            _model.SetSuggestionsView(_model.Source, 0, _model.Source.Count, false);
         }
 
         internal void SetSuggestionsView()
         {
-            _model.SetSuggestionsView(this, 0, Count);
+            _model.SetSuggestionsView(this, 0, Count, false);
+        }
+
+        internal void SetSuggestionsViewComplete()
+        {
+            _model.SetSuggestionsView(this, 0, Count, true);
         }
     }
 }

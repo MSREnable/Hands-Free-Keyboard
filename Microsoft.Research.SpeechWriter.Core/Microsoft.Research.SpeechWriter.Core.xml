@@ -69,6 +69,24 @@
             Model update details.
             </summary>
         </member>
+        <member name="P:Microsoft.Research.SpeechWriter.Core.ApplicationModelUpdateEventArgs.Words">
+            <summary>
+            The list of head words.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Research.SpeechWriter.Core.ApplicationModelUpdateEventArgs.PreviousWordsLength">
+            <summary>
+            The number of words that was prevoiusly in the Words collection.
+            </summary>
+            <remarks>If this is less than the length of Words, words have been added.
+            If it is greater words have been deleted. If it is the same, nothing has
+            been added or removed.</remarks>
+        </member>
+        <member name="P:Microsoft.Research.SpeechWriter.Core.ApplicationModelUpdateEventArgs.IsComplete">
+            <summary>
+            This is the final notification about the current utterance.
+            </summary>
+        </member>
         <member name="T:Microsoft.Research.SpeechWriter.Core.Automation.ApplicationRobot">
             <summary>
             Class for finding actions to achieve a given goal within an instance of an ApplicationModel.

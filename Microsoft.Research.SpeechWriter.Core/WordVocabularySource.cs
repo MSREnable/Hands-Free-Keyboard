@@ -290,7 +290,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _model.Environment.SaveUtterance(utterance.ToArray());
 
             InitializeUtterance();
-            SetSuggestionsView();
+            SetSuggestionsViewComplete();
         }
 
         internal void TransferSuccessorsToRunOn(ICommand selected)

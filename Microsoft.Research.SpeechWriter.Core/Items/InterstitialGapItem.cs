@@ -24,7 +24,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
 
         internal override void Execute(VocabularySource source)
         {
-            _model.SetSuggestionsView(source, _lowerBound, _upperLimit);
+            _model.SetSuggestionsView(source, _lowerBound, _upperLimit, false);
         }
 
         /// <summary>
