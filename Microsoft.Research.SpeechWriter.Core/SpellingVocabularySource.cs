@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
 
@@ -18,6 +19,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private readonly Dictionary<int, int> _tokenToIndex = new Dictionary<int, int>();
 
+        private readonly SortedSet<string> _characterSet;
+
         private readonly WordVocabularySource _wordVocabularySource;
 
         private readonly OuterSpellingVocabularySource _outerSpellingVocabularySource;
@@ -32,6 +35,8 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             _wordVocabularySource = wordVocabularySource;
             _outerSpellingVocabularySource = outerSpellingVocabularySource;
+
+            _characterSet = new SortedSet<string>(Environment);
 
             foreach (var word in _wordVocabularySource.Words)
             {
@@ -58,17 +63,40 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void AddNewWord(string word)
         {
+            var needToRepopuplate = false;
+
             var sequence = new List<int>(word.Length + 2);
             sequence.Add(0);
-            foreach (var ch in word.ToCharArray())
+            for (var index = 0; index < word.Length;)
             {
-                sequence.Add(ch);
+                int utf32;
+
+                var ch = word[index];
+                if (char.GetUnicodeCategory(ch) != UnicodeCategory.Surrogate)
+                {
+                    utf32 = ch;
+                    index++;
+                }
+                else
+                {
+                    utf32 = char.ConvertToUtf32(word, index);
+                    index += 2;
+                }
+
+                sequence.Add(utf32);
+                if (_characterSet.Add(char.ConvertFromUtf32(utf32)))
+                {
+                    needToRepopuplate = true;
+                }
             }
             sequence.Add(0);
 
             PersistantPredictor.AddSequence(sequence, SeedSequenceWeight);
 
-            PopulateVocabularyList();
+            if (needToRepopuplate)
+            {
+                PopulateVocabularyList();
+            }
         }
 
         private void PopulateVocabularyList()
@@ -106,16 +134,15 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <returns></returns>
         private IEnumerable<int> GetOrderedVocabularyListTokens()
         {
-            var characterSet = new SortedSet<string>(Environment);
             foreach (var token in PersistantPredictor.Tokens)
             {
-                characterSet.Add(((char)token).ToString());
+                _characterSet.Add(char.ConvertFromUtf32(token));
             }
-            characterSet.Remove(((char)0).ToString());
+            _characterSet.Remove(((char)0).ToString());
 
-            foreach (var token in characterSet)
+            foreach (var token in _characterSet)
             {
-                yield return token[0];
+                yield return char.ConvertToUtf32(token, 0);
             }
         }
 
@@ -213,9 +240,15 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
-        internal void AddSpellingToken(char token)
+        internal void AddSpellingToken(int token)
         {
             Context.Add(token);
+
+            if(_characterSet.Add(char.ConvertFromUtf32(token)))
+            {
+                PopulateVocabularyList();
+            }
+
             _outerSpellingVocabularySource.SetSuggestionsView();
         }
 

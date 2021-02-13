@@ -107,9 +107,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void AddSymbol(string symbol)
         {
-            var ch = (char)char.ConvertToUtf32(symbol, 0);
+            var ch = char.ConvertToUtf32(symbol, 0);
             _spellingVocabularySource.AddSpellingToken(ch);
-            SetSuggestionsView();
         }
     }
 }

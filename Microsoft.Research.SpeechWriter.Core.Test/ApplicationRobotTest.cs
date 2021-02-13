@@ -142,20 +142,20 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("THIS IS THE DAWNING OF THE AGE OF AQUARIUS", 29, 1, 129, 52);
+            MultiTest("THIS IS THE DAWNING OF THE AGE OF AQUARIUS", 29, 1, 122, 52);
         }
 
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("THE QUICK BROWN FOX JUMPS OVER A LAZY DOG", 37, 1, 177, 87);
+            MultiTest("THE QUICK BROWN FOX JUMPS OVER A LAZY DOG", 37, 1, 179, 87);
         }
 
         [Test]
         public void HelloWorldTest()
         {
             // TODO: Find out why entering HELLO WORLD predicts HELLO WORLD HELLO WORLD as the next sentence.
-            MultiTest("HELLO WORLD", 8, 1, 51, 8);
+            MultiTest("HELLO WORLD", 8, 1, 46, 8);
         }
 
         [Test]
@@ -167,19 +167,19 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 87, 1, 64, 570);
+            MultiTest("공유하 고 즐기십시오", 89, 1, 65, 543);
         }
 
         [Test]
         public void ShareAndEnjoyCantoneseTest()
         {
-            MultiTest("分享 同 享受", 49, 1, 33, 479);
+            MultiTest("分享 同 享受", 50, 1, 33, 177);
         }
 
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 142, 1, 106, 665);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 138, 1, 95, 623);
         }
 
         [Test]
