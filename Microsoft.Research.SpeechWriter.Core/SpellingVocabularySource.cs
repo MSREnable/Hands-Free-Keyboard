@@ -12,6 +12,8 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// </summary>
     public class SpellingVocabularySource : PredictiveVocabularySource
     {
+        private const int SeedSequenceWeight = 1;
+
         private readonly List<int> _vocabularyList = new List<int>();
 
         private readonly Dictionary<int, int> _tokenToIndex = new Dictionary<int, int>();
@@ -41,7 +43,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
                 sequence.Add(0);
 
-                PersistantPredictor.AddSequence(sequence, 1);
+                PersistantPredictor.AddSequence(sequence, SeedSequenceWeight);
             }
 
             PopulateVocabularyList();
@@ -64,7 +66,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             sequence.Add(0);
 
-            PersistantPredictor.AddSequence(sequence, 1);
+            PersistantPredictor.AddSequence(sequence, SeedSequenceWeight);
 
             PopulateVocabularyList();
         }

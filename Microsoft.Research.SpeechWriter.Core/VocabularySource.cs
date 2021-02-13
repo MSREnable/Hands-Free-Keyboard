@@ -9,7 +9,7 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// </summary>
     public abstract class VocabularySource
     {
-        private readonly ApplicationModel _model;
+        internal readonly ApplicationModel _model;
 
         internal VocabularySource(ApplicationModel model)
         {

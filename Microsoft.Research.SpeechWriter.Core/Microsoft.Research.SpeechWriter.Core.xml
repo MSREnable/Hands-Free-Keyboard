@@ -199,6 +199,18 @@
             Singleton.
             </summary>
         </member>
+        <member name="M:Microsoft.Research.SpeechWriter.Core.DefaultWriterEnvironment.Microsoft#Research#SpeechWriter#Core#IWriterEnvironment#SaveUtterance(System.String[])">
+            <summary>
+            Persist an utterance.
+            </summary>
+            <param name="words">The words of the utterance.</param>
+        </member>
+        <member name="M:Microsoft.Research.SpeechWriter.Core.DefaultWriterEnvironment.Microsoft#Research#SpeechWriter#Core#IWriterEnvironment#RecallUtterances">
+            <summary>
+            Recall persisted utterances.
+            </summary>
+            <returns>The collection of utterances.</returns>
+        </member>
         <member name="T:Microsoft.Research.SpeechWriter.Core.Items.GhostStopItem">
             <summary>
             Start item.
@@ -409,6 +421,18 @@
             List of sentences, comprising a sequence of words.
             </summary>
             <returns>List of list of words.</returns>
+        </member>
+        <member name="M:Microsoft.Research.SpeechWriter.Core.IWriterEnvironment.SaveUtterance(System.String[])">
+            <summary>
+            Persist an utterance.
+            </summary>
+            <param name="words">The words of the utterance.</param>
+        </member>
+        <member name="M:Microsoft.Research.SpeechWriter.Core.IWriterEnvironment.RecallUtterances">
+            <summary>
+            Recall persisted utterances.
+            </summary>
+            <returns>The collection of utterances.</returns>
         </member>
         <member name="T:Microsoft.Research.SpeechWriter.Core.NonLinearIntegerRangeVocabularySource">
             <summary>

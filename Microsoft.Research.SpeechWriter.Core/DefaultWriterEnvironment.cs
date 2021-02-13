@@ -49,32 +49,49 @@ namespace Microsoft.Research.SpeechWriter.Core
                         yield return str;
                     }
                 }
-        }
+            }
 
-        bool IsValidChar(char ch)
-        {
-            return char.IsLetter(ch) || ch == '-' || ch == '\'' || ch == '/';
-        }
+            bool IsValidChar(char ch)
+            {
+                return char.IsLetter(ch) || ch == '-' || ch == '\'' || ch == '/';
+            }
 #else
             return new string[0];
 #endif
         }
 
         IEnumerable<IEnumerable<string>> IWriterEnvironment.GetSeedSentences()
-    {
-#if true
-        using (var reader = new StringReader(Resources.SentencesSeed))
         {
-            for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
+#if true
+            using (var reader = new StringReader(Resources.SentencesSeed))
             {
-                var words = line.Split(' ');
+                for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
+                {
+                    var words = line.Split(' ');
 
-                yield return words;
+                    yield return words;
+                }
             }
-        }
 #else
         return new string[][] { };
 #endif
+        }
+
+        /// <summary>
+        /// Persist an utterance.
+        /// </summary>
+        /// <param name="words">The words of the utterance.</param>
+        void IWriterEnvironment.SaveUtterance(string[] words)
+        {
+        }
+
+        /// <summary>
+        /// Recall persisted utterances.
+        /// </summary>
+        /// <returns>The collection of utterances.</returns>
+        IEnumerable<string[]> IWriterEnvironment.RecallUtterances()
+        {
+            return new string[0][];
+        }
     }
-}
 }

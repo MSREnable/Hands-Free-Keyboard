@@ -12,6 +12,10 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// </summary>
     public class WordVocabularySource : PredictiveVocabularySource
     {
+        private const int SeedSequenceWeight = 1;
+        private const int PersistedSequenceWeight = 100;
+        private const int LiveSequenceWeight = 10000;
+
         private readonly StringTokens _tokens;
 
         private readonly List<int> _vocabularyList = new List<int>();
@@ -45,7 +49,22 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
                 sequence.Add(0);
 
-                PersistantPredictor.AddSequence(sequence, 1);
+                PersistantPredictor.AddSequence(sequence, SeedSequenceWeight);
+            }
+
+            var utterances = model.Environment.RecallUtterances();
+            foreach(var utterance in utterances)
+            {
+                var sequence = new List<int>(new[] { 0 });
+                foreach (var word in utterance)
+                {
+                    var token = _tokens.GetToken(word);
+                    Debug.Assert(token != 0);
+                    sequence.Add(token);
+                }
+                sequence.Add(0);
+
+                PersistantPredictor.AddSequence(sequence, PersistedSequenceWeight);
             }
 
             PopulateVocabularyList();
@@ -149,7 +168,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             ClearIncrement();
 
             var selected = GetSelectedTokens();
-            AddSequence(selected, 10000);
+            AddSequence(selected, LiveSequenceWeight);
         }
 
         internal void AddSuggestedWord(string word)
@@ -164,7 +183,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _selectedItems.Add(item);
 
             var selection = GetSelectedTokens();
-            AddSequence(selection, 10000);
+            AddSequence(selection, LiveSequenceWeight);
 
             SetRunOnSuggestions();
             SetSuggestionsView();
@@ -178,7 +197,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _selectedItems.Add(item);
 
                 var selection = GetSelectedTokens();
-                AddSequence(selection, 10000);
+                AddSequence(selection, LiveSequenceWeight);
             }
         }
 
@@ -209,7 +228,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _selectedItems.Add(selected);
 
                 var selection = GetSelectedTokens();
-                AddSequence(selection, 10000);
+                AddSequence(selection, LiveSequenceWeight);
 
                 done = ReferenceEquals(item, runOn);
             }
@@ -243,7 +262,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             var selection = GetSelectedTokens();
 
-            RollbackAndAddSequence(selection, 100);
+            RollbackAndAddSequence(selection, PersistedSequenceWeight);
 
             while (1 < _selectedItems.Count)
             {
@@ -252,14 +271,18 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             _runOnSuggestions.Clear();
             selection.RemoveAt(0);
+            var utterance = new List<string>();
             foreach (var token in selection)
             {
                 var word = _tokens.GetString(token);
+                utterance.Add(word);
                 var item = new GhostWordItem(this, word);
                 _runOnSuggestions.Add(item);
             }
             var tail = new GhostStopItem(this, TokensToWords(selection));
             _runOnSuggestions.Add(tail);
+
+            _model.Environment.SaveUtterance(utterance.ToArray());
 
             InitializeUtterance();
             SetSuggestionsView();

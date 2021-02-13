@@ -18,5 +18,17 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         /// <returns>List of list of words.</returns>
         IEnumerable<IEnumerable<string>> GetSeedSentences();
+
+        /// <summary>
+        /// Persist an utterance.
+        /// </summary>
+        /// <param name="words">The words of the utterance.</param>
+        void SaveUtterance(string[] words);
+
+        /// <summary>
+        /// Recall persisted utterances.
+        /// </summary>
+        /// <returns>The collection of utterances.</returns>
+        IEnumerable<string[]> RecallUtterances();
     }
 }
