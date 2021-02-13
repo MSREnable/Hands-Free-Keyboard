@@ -353,6 +353,11 @@
             The spelled prefix.
             </summary>
         </member>
+        <member name="P:Microsoft.Research.SpeechWriter.Core.Items.SuggestedUnicodeItem.Code">
+            <summary>
+            The numeric value.
+            </summary>
+        </member>
         <member name="P:Microsoft.Research.SpeechWriter.Core.Items.SuggestedUnicodeItem.Symbol">
             <summary>
             The character value.

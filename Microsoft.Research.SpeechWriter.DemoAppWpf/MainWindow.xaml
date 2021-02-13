@@ -100,7 +100,7 @@
                 <Border BorderBrush="Black" BorderThickness="1" Background="LightSteelBlue" Margin="5,2">
                     <TextBlock Text="{Binding Symbol}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
                 </Border>
-                <TextBlock Text="{Binding Code}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
+                <TextBlock Text="{Binding Code, StringFormat={}&amp;#{0};}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
             </StackPanel>
         </DataTemplate>
 

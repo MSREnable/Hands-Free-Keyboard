@@ -10,7 +10,7 @@
         {
             Prefix = source.Prefix;
 
-            Symbol = char.ConvertFromUtf32(code);
+            Code = code;
         }
 
         /// <summary>
@@ -19,9 +19,14 @@
         public string Prefix { get; }
 
         /// <summary>
+        /// The numeric value.
+        /// </summary>
+        public int Code { get; }
+
+        /// <summary>
         /// The character value.
         /// </summary>
-        public string Symbol { get; }
+        public string Symbol => char.ConvertFromUtf32(Code);
 
         internal override void Execute(OuterSpellingVocabularySource source)
         {
