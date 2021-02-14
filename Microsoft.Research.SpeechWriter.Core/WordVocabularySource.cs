@@ -53,7 +53,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             var utterances = model.Environment.RecallUtterances();
-            foreach(var utterance in utterances)
+            foreach (var utterance in utterances)
             {
                 var sequence = new List<int>(new[] { 0 });
                 foreach (var word in utterance)
@@ -306,6 +306,22 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 index--;
                 item = _selectedItems[index];
+            }
+
+            // TODO: This is very bad, the Stop item should not carry the list, etc., etc., etc.
+            if (_runOnSuggestions.Count != 0 && _runOnSuggestions[_runOnSuggestions.Count - 1] is GhostStopItem)
+            {
+                _runOnSuggestions.RemoveAt(_runOnSuggestions.Count - 1);
+
+                var stopWords = new List<string>();
+                foreach(var ghost in _runOnSuggestions)
+                {
+                    Debug.Assert(ghost is GhostWordItem);
+                    stopWords.Add(ghost.ToString());
+                }
+
+                var ghostStop = new GhostStopItem(this, stopWords.ToArray());
+                _runOnSuggestions.Add(ghostStop);
             }
 
             SetSuggestionsView();

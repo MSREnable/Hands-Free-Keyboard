@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Automation;
+using Microsoft.Research.SpeechWriter.Core.Items;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -201,25 +202,25 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("IZZY WIZZY LETS GET BUSY", 29, 1, 88, 155);
+            MultiTest("IZZY WIZZY LETS GET BUSY", 29, 1, 88, 171);
         }
 
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 89, 1, 65, 543);
+            MultiTest("공유하 고 즐기십시오", 89, 1, 65, 513);
         }
 
         [Test]
         public void ShareAndEnjoyCantoneseTest()
         {
-            MultiTest("分享 同 享受", 50, 1, 33, 177);
+            MultiTest("分享 同 享受", 50, 1, 33, 186);
         }
 
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 138, 1, 95, 623);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 138, 1, 95, 617);
         }
 
         [Test]
@@ -284,6 +285,39 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                 Assert.IsTrue(count < 200);
             }
             while (!action.IsComplete);
+        }
+
+        private void Establish(ApplicationModel model, params string[] words)
+        {
+            var action = ApplicationRobot.GetNextEstablishingAction(model, words);
+            while (action != null)
+            {
+                action.ExecuteItem(model);
+                action = ApplicationRobot.GetNextEstablishingAction(model, words);
+            }
+        }
+
+        [Test]
+        public void HelloWordNotIsTest()
+        {
+            var model = new ApplicationModel();
+            Establish(model, "HELLO", "WORLD");
+
+            Assert.IsInstanceOf<HeadWordItem>(model.HeadItems[1]);
+            Assert.AreEqual("HELLO", model.HeadItems[1].ToString());
+            model.HeadItems[1].Execute(null);
+
+            Assert.IsInstanceOf<GhostWordItem>(model.HeadItems[2]);
+            Assert.AreEqual("WORLD", model.HeadItems[2].ToString());
+            Assert.IsInstanceOf<GhostStopItem>(model.HeadItems[3]);
+            model.HeadItems[3].Execute(null);
+
+            Assert.IsInstanceOf<HeadStartItem>(model.HeadItems[0]);
+            Assert.IsInstanceOf<GhostWordItem>(model.HeadItems[1]);
+            Assert.AreEqual("HELLO", model.HeadItems[1].ToString());
+            Assert.IsInstanceOf<GhostWordItem>(model.HeadItems[2]);
+            Assert.AreEqual("WORLD", model.HeadItems[2].ToString());
+            Assert.IsInstanceOf<GhostStopItem>(model.HeadItems[3]);
         }
     }
 }
