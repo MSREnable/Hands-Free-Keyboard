@@ -1,20 +1,15 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
-using Microsoft.Research.SpeechWriter.Core.Items;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.SpeechSynthesis;
-using Windows.System;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -46,7 +41,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(0);
 
-        private readonly Queue<string> _speech = new Queue<string>();
+        private readonly Queue<ApplicationModelUpdateEventArgs> _speech = new Queue<ApplicationModelUpdateEventArgs>();
 
         private readonly SemaphoreSlim _mediaReady = new SemaphoreSlim(1);
 
@@ -62,7 +57,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
             SizeChanged += MainWindow_SizeChanged;
 
-            ((INotifyCollectionChanged)_model.SelectedItems).CollectionChanged += OnCollectionChanged;
+            _model.ApplicationModelUpdate += OnCollectionChanged;
 
             TheMediaElement.MediaEnded += (s, e) => _mediaReady.Release();
 
@@ -277,41 +272,87 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
         }
 
-        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null)
-            {
-                foreach (HeadWordItem item in e.NewItems)
-                {
-                    Debug.WriteLine(item);
+        private int sent;
 
-                    lock (_speech)
-                    {
-                        _speech.Enqueue(item.ToString());
-                    }
-                    _semaphore.Release();
-                }
+        private void OnCollectionChanged(object sender, ApplicationModelUpdateEventArgs e)
+        {
+            lock (_speech)
+            {
+                _speech.Enqueue(e);
+                Debug.WriteLine($"Sending item {++sent}");
             }
+            _semaphore.Release();
         }
 
         private async Task ConsumeSpeechAsync()
         {
+            var received = 0;
+
+            var spokenDepth = 0;
+
             for (; ; )
             {
-                await _semaphore.WaitAsync();
-
-                string word;
-                lock (_speech)
+                ApplicationModelUpdateEventArgs e;
+                do
                 {
-                    word = _speech.Dequeue();
+                    Debug.WriteLine($"Waiting for {received + 1}");
+                    await _semaphore.WaitAsync();
+
+                    lock (_speech)
+                    {
+                        e = _speech.Dequeue();
+                    }
+
+                    Debug.WriteLine($"Got item {++received}");
+                }
+                while (spokenDepth == e.Words.Count &&
+                    !e.IsComplete);
+
+                string text;
+
+                if (e.Words.Count < spokenDepth)
+                {
+                    Debug.Assert(!e.IsComplete);
+
+                    text = "Uh-oh";
+                    spokenDepth = e.Words.Count;
+                }
+                else
+                {
+                    if (spokenDepth < e.Words.Count)
+                    {
+                        text = e.Words[spokenDepth];
+                        spokenDepth++;
+                        while (spokenDepth < e.Words.Count)
+                        {
+                            text += " " + e.Words[spokenDepth];
+                            spokenDepth++;
+                        }
+                    }
+                    else
+                    {
+                        text = null;
+                    }
+
+                    if (e.IsComplete)
+                    {
+                        spokenDepth = 0;
+                    }
                 }
 
-                await _mediaReady.WaitAsync();
+                Debug.WriteLine($"Saying \"{text}\"");
 
-                var stream = await _synthesizer.SynthesizeTextToStreamAsync(word.ToLower());
-                TheMediaElement.AutoPlay = true;
-                TheMediaElement.SetSource(stream, stream.ContentType);
-                TheMediaElement.Play();
+                if (text != null)
+                {
+                    Debug.WriteLine("Waiting for media");
+                    await _mediaReady.WaitAsync();
+                    Debug.WriteLine("Media ready");
+
+                    var stream = await _synthesizer.SynthesizeTextToStreamAsync(text.ToLower());
+                    TheMediaElement.AutoPlay = true;
+                    TheMediaElement.SetSource(stream, stream.ContentType);
+                    TheMediaElement.Play();
+                }
             }
         }
 
