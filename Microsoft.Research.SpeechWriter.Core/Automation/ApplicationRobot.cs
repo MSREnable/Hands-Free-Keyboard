@@ -182,10 +182,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
                             if (complete &&
                                 more &&
-                                enumerator.Current is SuggestedSpellingWordItem &&
+                                enumerator.Current is SuggestedWordItem &&
                                 enumerator.Current.ToString() == targetWord)
                             {
-                                action = ApplicationRobotAction.CreateSuggestionAndComplete(index, subIndex + 1);
+                                action = ApplicationRobotAction.CreateSuggestion(index, subIndex + 1);
                             }
                             else
                             {

@@ -35,7 +35,28 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         public static DependencyProperty MoveToHeightProperty = DependencyProperty.Register(nameof(MoveToHeight), typeof(double), typeof(MainPage),
             new PropertyMetadata(0.0));
 
-        private readonly ApplicationModel _model = new ApplicationModel();
+        private class EmptyEnvironment : DefaultWriterEnvironment, IWriterEnvironment
+        {
+            /// <summary>
+            /// Dictionary of words, listed from most likely to least likely.
+            /// </summary>
+            /// <returns>List of words.</returns>
+            public IEnumerable<string> GetOrderedSeedWords()
+            {
+                return new string[0];
+            }
+
+            /// <summary>
+            /// List of sentences, comprising a sequence of words.
+            /// </summary>
+            /// <returns>List of list of words.</returns>
+            public IEnumerable<IEnumerable<string>> GetSeedSentences()
+            {
+                return new string[][] { };
+            }
+        }
+
+        private readonly ApplicationModel _model = new ApplicationModel(/*new EmptyEnvironment()*/);
 
         private readonly SpeechSynthesizer _synthesizer = new SpeechSynthesizer();
 
@@ -54,8 +75,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             this.InitializeComponent();
 
             TemplateTypeConverter.LoadTemplates(Resources);
-
-            // _model = new ApplicationModel();
 
             SizeChanged += MainWindow_SizeChanged;
 
@@ -419,24 +438,31 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private async void OnApplicationTutorReady(object sender, ApplicationModelUpdateEventArgs e)
         {
-            if (e.IsComplete && string.Join(' ', e.Words) == _tutorScript[0])
+            if (_tutorScript != null)
             {
-                if (_tutorScript.Count == 1)
+                if (e.IsComplete && string.Join(' ', e.Words) == _tutorScript[0])
                 {
-                    _tutorScript = null;
-                    _model.ApplicationModelUpdate -= OnApplicationTutorReady;
+                    if (_tutorScript.Count == 1)
+                    {
+                        _tutorScript = null;
+                        _model.ApplicationModelUpdate -= OnApplicationTutorReady;
 
-                    TargetOutline.Visibility = Visibility.Collapsed;
+                        TargetOutline.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        _tutorScript.RemoveAt(0);
+                        await ShowNextTutorStepAsync();
+                    }
                 }
                 else
                 {
-                    _tutorScript.RemoveAt(0);
                     await ShowNextTutorStepAsync();
                 }
             }
             else
             {
-                await ShowNextTutorStepAsync();
+                _model.ApplicationModelUpdate -= OnApplicationTutorReady;
             }
         }
 

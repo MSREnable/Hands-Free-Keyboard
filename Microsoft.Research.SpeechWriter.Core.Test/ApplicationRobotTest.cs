@@ -20,6 +20,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             var hasNotified = false;
             var expectedIsComplete = false;
 
+            var actionIsComplete = false;
+            var isGood = false;
+
             void OnNotifyCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
                 Assert.IsFalse(hasNotified, "No changes after model update notification");
@@ -29,6 +32,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             {
                 Assert.IsFalse(hasNotified, "No previous model update notification");
                 hasNotified = true;
+
+                Assert.AreEqual(isGood && actionIsComplete, isGood && e.IsComplete);
 
                 if (e.IsComplete)
                 {
@@ -50,7 +55,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             bool done;
             do
             {
-                bool isGood;
                 ApplicationRobotAction action;
 
                 if (errorCount < 100 && random.NextDouble() < errorRate)
@@ -72,6 +76,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                 }
 
                 hasNotified = false;
+                actionIsComplete = action.IsComplete;
                 action.ExecuteItem(model);
                 Assert.IsTrue(hasNotified, "We should have seen a notification");
                 Assert.AreEqual(isGood && expectedIsComplete, isGood && action.IsComplete, "IsComplete in action and notification should match");
@@ -169,7 +174,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             Assert.AreEqual(expectedEmptyClicks, actualEmptyClicks);
 
             var errorModel = new ApplicationModel();
-            model.MaxNextSuggestionsCount = 9;
+            errorModel.MaxNextSuggestionsCount = 9;
             var actualClicksWithRandomErrors = CountClicks(errorModel, words, 0.2);
             Assert.AreEqual(expectedClicksWithRandomErrors, actualClicksWithRandomErrors);
         }
@@ -183,13 +188,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("THIS IS THE DAWNING OF THE AGE OF AQUARIUS", 29, 1, 122, 52);
+            MultiTest("THIS IS THE DAWNING OF THE AGE OF AQUARIUS", 29, 1, 117, 52);
         }
 
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("THE QUICK BROWN FOX JUMPS OVER A LAZY DOG", 37, 1, 179, 87);
+            MultiTest("THE QUICK BROWN FOX JUMPS OVER A LAZY DOG", 37, 1, 178, 87);
         }
 
         [Test]
@@ -202,25 +207,25 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("IZZY WIZZY LETS GET BUSY", 29, 1, 88, 171);
+            MultiTest("IZZY WIZZY LETS GET BUSY", 27, 1, 80, 69);
         }
 
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 89, 1, 65, 513);
+            MultiTest("공유하 고 즐기십시오", 89, 1, 65, 512);
         }
 
         [Test]
         public void ShareAndEnjoyCantoneseTest()
         {
-            MultiTest("分享 同 享受", 50, 1, 33, 186);
+            MultiTest("分享 同 享受", 50, 1, 33, 177);
         }
 
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 138, 1, 95, 617);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 137, 1, 94, 613);
         }
 
         [Test]

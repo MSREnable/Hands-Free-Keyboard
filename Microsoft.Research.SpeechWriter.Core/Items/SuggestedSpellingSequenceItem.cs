@@ -11,6 +11,14 @@
             : base(source)
         {
             _tokens = tokens;
+
+            var prefix = source.Prefix;
+            for (var i = 0; i < tokens.Length - 1; i++)
+            {
+                var ch = tokens[i];
+                prefix += char.ConvertFromUtf32(ch);
+            }
+            Prefix = prefix;
         }
 
         /// <summary>
@@ -21,7 +29,7 @@
         /// <summary>
         /// The symbol to be added.
         /// </summary>
-        public string Symbol => ((char)_tokens[_tokens.Length - 1]).ToString();
+        public string Symbol => char.ConvertFromUtf32(_tokens[_tokens.Length - 1]);
 
         internal override void Execute(SpellingVocabularySource source)
         {
