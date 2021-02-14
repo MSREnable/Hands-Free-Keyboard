@@ -162,6 +162,36 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
 
+        <Storyboard x:Name="TutorMoveStoryboard">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Left)">
+                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToX, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Top)">
+                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToY, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Height)">
+                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToHeight, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Width)">
+                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToWidth, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
 
     </Page.Resources>
 
@@ -224,9 +254,10 @@
         <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="X" Click="OnClickKirk"/>
         <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="C" Click="OnClickPicard"/>
         <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="V" Click="OnPaste"/>
+        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="T" Click="OnClickTutor"/>
 
         <Canvas x:Name="TargetPanel">
-            <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" Visibility="Collapsed"/>
+            <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>
         </Canvas>
     </Grid>
 </Page>

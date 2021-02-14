@@ -47,6 +47,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private bool _demoMode;
 
+        private List<string> _tutorScript;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -121,52 +123,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                     {
                         var action = ApplicationRobot.GetNextCompletionAction(Model, words);
 
-                        UIElement target;
-                        switch (action.Target)
-                        {
-                            case ApplicationRobotActionTarget.Head:
-                                {
-                                    var control = HeadItemsContainer.ItemsPanelRoot;
-                                    target = control.Children[action.Index];
-                                }
-                                break;
-
-                            case ApplicationRobotActionTarget.Tail:
-                                {
-                                    var control = TailItemsContainer.ItemsPanelRoot;
-                                    target = control.Children[action.Index];
-                                }
-                                break;
-
-                            case ApplicationRobotActionTarget.Interstitial:
-                                {
-                                    var control = SuggestionInterstitialsContainer.ItemsPanelRoot;
-                                    target = control.Children[action.Index];
-                                }
-                                break;
-
-                            default:
-                            case ApplicationRobotActionTarget.Suggestion:
-                                {
-                                    var control = SuggestionListsContainer.ItemsPanelRoot;
-                                    var intermediateTarget = (ContentPresenter)control.Children[action.Index];
-                                    var nextLevel = (ItemsControl)VisualTreeHelper.GetChild(intermediateTarget, 0);
-                                    var nextPanel = nextLevel.ItemsPanelRoot;
-                                    target = nextPanel.Children[action.SubIndex];
-                                }
-                                break;
-
-                        }
-                        var targetControl = (ContentPresenter)target;
-                        var transform = targetControl.TransformToVisual(TargetPanel);
-                        var targetPoint = transform.TransformPoint(new Windows.Foundation.Point(0, 0));
-
-                        MoveToCenterX = targetPoint.X + targetControl.ActualWidth / 2;
-                        MoveToCenterY = targetPoint.Y + targetControl.ActualHeight / 2;
-                        MoveToX = targetPoint.X;
-                        MoveToY = targetPoint.Y;
-                        MoveToWidth = targetControl.ActualWidth;
-                        MoveToHeight = targetControl.ActualHeight;
+                        SetupStoryboardForAction(action);
 
                         await PlayStoryboardAsync(MoveRectangle);
 
@@ -187,6 +144,56 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 _demoMode = false;
                 TargetOutline.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void SetupStoryboardForAction(ApplicationRobotAction action)
+        {
+            UIElement target;
+            switch (action.Target)
+            {
+                case ApplicationRobotActionTarget.Head:
+                    {
+                        var control = HeadItemsContainer.ItemsPanelRoot;
+                        target = control.Children[action.Index];
+                    }
+                    break;
+
+                case ApplicationRobotActionTarget.Tail:
+                    {
+                        var control = TailItemsContainer.ItemsPanelRoot;
+                        target = control.Children[action.Index];
+                    }
+                    break;
+
+                case ApplicationRobotActionTarget.Interstitial:
+                    {
+                        var control = SuggestionInterstitialsContainer.ItemsPanelRoot;
+                        target = control.Children[action.Index];
+                    }
+                    break;
+
+                default:
+                case ApplicationRobotActionTarget.Suggestion:
+                    {
+                        var control = SuggestionListsContainer.ItemsPanelRoot;
+                        var intermediateTarget = (ContentPresenter)control.Children[action.Index];
+                        var nextLevel = (ItemsControl)VisualTreeHelper.GetChild(intermediateTarget, 0);
+                        var nextPanel = nextLevel.ItemsPanelRoot;
+                        target = nextPanel.Children[action.SubIndex];
+                    }
+                    break;
+
+            }
+            var targetControl = (ContentPresenter)target;
+            var transform = targetControl.TransformToVisual(TargetPanel);
+            var targetPoint = transform.TransformPoint(new Windows.Foundation.Point(0, 0));
+
+            MoveToCenterX = targetPoint.X + targetControl.ActualWidth / 2;
+            MoveToCenterY = targetPoint.Y + targetControl.ActualHeight / 2;
+            MoveToX = targetPoint.X;
+            MoveToY = targetPoint.Y;
+            MoveToWidth = targetControl.ActualWidth;
+            MoveToHeight = targetControl.ActualHeight;
         }
 
         private static bool GetAs<T>(Timeline timeline, out T value)
@@ -387,6 +394,63 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private async void OnPaste(object sender, RoutedEventArgs e)
         {
+            var script = await GetClipboardContentAsync();
+
+            if (script.Count != 0)
+            {
+                ShowDemo(script.ToArray());
+            }
+        }
+
+        private async void OnClickTutor(object sender, RoutedEventArgs e)
+        {
+            _demoMode = false;
+
+            var script = await GetClipboardContentAsync();
+            if (script.Count != 0)
+            {
+                _tutorScript = script;
+                TargetOutline.Visibility = Visibility.Visible;
+
+                _model.ApplicationModelUpdate += OnApplicationTutorReady;
+                _ = ShowNextTutorStepAsync();
+            }
+        }
+
+        private async void OnApplicationTutorReady(object sender, ApplicationModelUpdateEventArgs e)
+        {
+            if (e.IsComplete && string.Join(' ', e.Words) == _tutorScript[0])
+            {
+                if (_tutorScript.Count == 1)
+                {
+                    _tutorScript = null;
+                    _model.ApplicationModelUpdate -= OnApplicationTutorReady;
+
+                    TargetOutline.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    _tutorScript.RemoveAt(0);
+                    await ShowNextTutorStepAsync();
+                }
+            }
+            else
+            {
+                await ShowNextTutorStepAsync();
+            }
+        }
+
+        private async Task ShowNextTutorStepAsync()
+        {
+            await Task.Delay(50);
+            var words = _tutorScript[0].Split(' ');
+            var action = ApplicationRobot.GetNextCompletionAction(_model, words);
+            SetupStoryboardForAction(action);
+            _ = PlayStoryboardAsync(TutorMoveStoryboard);
+        }
+
+        private static async Task<List<string>> GetClipboardContentAsync()
+        {
             var view = Clipboard.GetContent();
             var text = await view.GetTextAsync();
             var upper = text.ToUpper();
@@ -428,10 +492,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 }
             }
 
-            if (script.Count != 0)
-            {
-                ShowDemo(script.ToArray());
-            }
+            return script;
         }
     }
 }
