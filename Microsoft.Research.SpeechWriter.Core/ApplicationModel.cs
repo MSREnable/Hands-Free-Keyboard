@@ -199,6 +199,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 if (previousIndex + 1 == index)
                 {
+                    // Item contiguous with previous one, so allow it to dictate its interstitial.
                     var interstitialItem = Source.CreatePriorInterstitial(index);
                     _suggestionInterstitials.Add(interstitialItem ?? new InterstitialNonItem());
                 }
@@ -206,14 +207,19 @@ namespace Microsoft.Research.SpeechWriter.Core
                 {
                     if (previousIndex != -1)
                     {
+                        // Not the first item, so items that are displayed adjacent to one another, but are not actually contiguous.
                         EmitInterstitial(previousIndex + 1, index);
                     }
                     else if (_lowerBound < index)
                     {
+                        // First item, but within the bounds of the items being displayed, so need interstitial to start of bounds.
                         EmitInterstitial(_lowerBound, index);
                     }
                     else
                     {
+                        Debug.Assert(index <= _lowerBound);
+
+                        // First item of bounded area, so emit interstitial from start to this item.
                         var interstitialItem = new InterstitialGapItem(this, Source, 0, Math.Max(_lowerBound, maxItemCount));
                         _suggestionInterstitials.Add(interstitialItem);
                     }
@@ -227,15 +233,20 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             if (previousIndex + 1 == Source.Count)
             {
+                // Last item in source, so allow it to dictate the final interstitial.
                 var interstitial = Source.CreatePriorInterstitial(previousIndex + 1);
                 _suggestionInterstitials.Add(interstitial);
             }
             else if (previousIndex + 1 < _upperLimit)
             {
+                // Last item of bounded items, but not necessary last in source.
                 EmitInterstitial(previousIndex + 1, _upperLimit);
             }
             else
             {
+                Debug.Assert(_upperLimit < Source.Count);
+
+                // Last item was last of bounded items, but not of source, so emit interstitial to end.
                 EmitInterstitial(Math.Min(previousIndex + 1, Source.Count - maxItemCount), Source.Count);
             }
 
@@ -243,9 +254,24 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             void EmitInterstitial(int min, int lim)
             {
-                var underrun = Math.Max(0, maxItemCount - (lim - min));
-                var adjustedMin = Math.Max(0, min - underrun / 2);
-                var adjustedLim = Math.Max(adjustedMin + maxItemCount, lim);
+                var effectiveMin = min;
+                var effectiveLim = lim;
+
+                if (min != 0 && Source.CreatePriorInterstitial(min) != null)
+                {
+                    // If we're top is going to replace custom interstitial, extend top by one item.
+                    effectiveMin--;
+                }
+
+                if (lim != Source.Count && Source.CreatePriorInterstitial(lim) != null)
+                {
+                    // If we're at the bottom and going to replace custom interstitial, extend bottom by one item.
+                    effectiveLim++;
+                }
+
+                var underrun = Math.Max(0, maxItemCount - (effectiveLim - effectiveMin));
+                var adjustedMin = Math.Max(0, effectiveMin - underrun / 2);
+                var adjustedLim = Math.Max(adjustedMin + maxItemCount, effectiveLim);
 
                 var overrun = adjustedLim - Source.Count;
                 if (0 < overrun)

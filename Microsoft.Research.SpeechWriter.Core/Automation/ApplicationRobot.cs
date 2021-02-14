@@ -217,18 +217,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                     }
                     else
                     {
-                        Debug.Assert(!(model.SuggestionInterstitials[index] is InterstitialNonItem));
-                        if (index == 0 &&
-                            model.SuggestionInterstitials[0] is InterstitialGapItem &&
-                            model.SuggestionInterstitials[1] is InterstitialUnicodeItem)
-                        {
-                            // Special case where we may be flip-floping between two sets of suggestions
-                            action = ApplicationRobotAction.CreateInterstitial(1);
-                        }
-                        else
-                        {
-                            action = ApplicationRobotAction.CreateInterstitial(index);
-                        }
+                        action = ApplicationRobotAction.CreateInterstitial(index);
                     }
                 }
                 else if (firstItem is SuggestedSpellingWordItem)
