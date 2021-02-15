@@ -355,22 +355,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:Microsoft.Research.SpeechWriter.Core.Items.SuggestedSpellingWordItem">
-            <summary>
-            Complete word.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Research.SpeechWriter.Core.Items.SuggestedSpellingWordItem.Word">
-            <summary>
-            The word to be committed.
-            </summary>
-        </member>
-        <member name="M:Microsoft.Research.SpeechWriter.Core.Items.SuggestedSpellingWordItem.ToString">
-            <summary>
-            ToString.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:Microsoft.Research.SpeechWriter.Core.Items.SuggestedUnicodeItem">
             <summary>
             Unicode item.

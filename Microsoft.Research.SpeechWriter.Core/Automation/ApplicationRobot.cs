@@ -220,7 +220,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                         action = ApplicationRobotAction.CreateInterstitial(index);
                     }
                 }
-                else if (firstItem is SuggestedSpellingWordItem)
+                else if (firstItem is SuggestedWordItem)
                 {
                     if (firstItem.ToString() == targetWord)
                     {
