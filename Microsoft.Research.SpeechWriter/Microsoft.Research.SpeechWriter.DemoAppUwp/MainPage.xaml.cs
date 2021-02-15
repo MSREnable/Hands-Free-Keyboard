@@ -45,15 +45,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             {
                 return new string[0];
             }
-
-            /// <summary>
-            /// List of sentences, comprising a sequence of words.
-            /// </summary>
-            /// <returns>List of list of words.</returns>
-            public IEnumerable<IEnumerable<string>> GetSeedSentences()
-            {
-                return new string[][] { };
-            }
         }
 
         private readonly ApplicationModel _model = new ApplicationModel(/*new EmptyEnvironment()*/);

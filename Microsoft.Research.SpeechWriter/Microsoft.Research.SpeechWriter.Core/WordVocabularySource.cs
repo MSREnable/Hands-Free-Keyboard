@@ -37,21 +37,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             SelectedItems = new ReadOnlyObservableCollection<ICommand>(_selectedItems);
             RunOnSuggestions = new ReadOnlyObservableCollection<ICommand>(_runOnSuggestions);
 
-            var sentences = model.Environment.GetSeedSentences();
-            foreach (var sentence in sentences)
-            {
-                var sequence = new List<int>(new[] { 0 });
-                foreach (var word in sentence)
-                {
-                    var token = _tokens.GetToken(word);
-                    Debug.Assert(token != 0);
-                    sequence.Add(token);
-                }
-                sequence.Add(0);
-
-                PersistantPredictor.AddSequence(sequence, SeedSequenceWeight);
-            }
-
             var utterances = model.Environment.RecallUtterances();
             foreach (var utterance in utterances)
             {
