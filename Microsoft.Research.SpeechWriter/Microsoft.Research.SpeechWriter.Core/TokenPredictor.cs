@@ -142,6 +142,67 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
+        internal int GetTopToken(int[] context)
+        {
+            var result = -1;
+
+            var contextLimit = context.Length;
+            var contextStart = Math.Max(0, contextLimit - _width + 1);
+
+            for (var scanStart = contextStart; result == -1 && scanStart < contextLimit; scanStart++)
+            {
+                var leafDatabase = _database;
+
+                for (var index = scanStart; leafDatabase != null && index < contextLimit; index++)
+                {
+                    if (leafDatabase.TryGetValue(context[index], out var info))
+                    {
+                        leafDatabase = info.GetChildren();
+                    }
+                    else
+                    {
+                        leafDatabase = null;
+                    }
+                }
+
+                if (leafDatabase != null)
+                {
+                    var maxCount = 0;
+                    var tokens = new HashSet<int>();
+
+                    foreach (var pair in leafDatabase)
+                    {
+                        if (maxCount <= pair.Value.Count)
+                        {
+                            if (maxCount < pair.Value.Count)
+                            {
+                                maxCount = pair.Value.Count;
+                                tokens.Clear();
+                            }
+
+                            tokens.Add(pair.Key);
+                        }
+                    }
+
+                    if (1 < tokens.Count)
+                    {
+                        // TODO: This should pick the most used in context, but for the moment do nothing.
+                    }
+
+                    Debug.Assert(result == -1);
+                    foreach (var token in tokens)
+                    {
+                        if (result < token)
+                        {
+                            result = token;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
         internal IEnumerable<int> GetTopIndices(PredictiveVocabularySource source, int[] context, int minIndex, int limIndex, int count)
         {
             var toFindCount = count;

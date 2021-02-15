@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Research.SpeechWriter.Core.Items
+﻿using System.Diagnostics;
+
+namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     /// <summary>
     /// Whole word item.
@@ -8,6 +10,7 @@
         internal WordItem(WordVocabularySource source, string word)
             : base(source)
         {
+            Debug.Assert(!string.IsNullOrWhiteSpace(word));
             Word = word;
         }
 

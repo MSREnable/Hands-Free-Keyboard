@@ -120,14 +120,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
         {
             Debug.Assert(model.HeadItems[0] is HeadStartItem);
 
-            var escapeIndex = 0;
-            while (escapeIndex < model.HeadItems.Count &&
-                model.HeadItems[escapeIndex + 1] is HeadWordItem)
+            var escapeLimit = 1;
+            while (escapeLimit < model.HeadItems.Count &&
+                model.HeadItems[escapeLimit] is HeadWordItem)
             {
-                escapeIndex++;
+                escapeLimit++;
             }
 
-            var action = ApplicationRobotAction.CreateHead(escapeIndex);
+            var action = ApplicationRobotAction.CreateHead(escapeLimit - 1);
             return action;
         }
 

@@ -46,17 +46,12 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal abstract int GetTokenIndex(int token);
 
         /// <summary>
-        /// Gets the top ranked item indexes within a slice of the source.
+        /// Gets the top ranked token in the given context.
         /// </summary>
         /// <param name="context">The tokens before item to be suggested.</param>
-        /// <param name="minIndex">The minimum index value to return.</param>
-        /// <param name="limIndex">The limit index value.</param>
-        /// <param name="count">The number of indices to attempt to return.</param>
-        /// <returns>A list of indices in reverse rank order (most likely to least likely) such that each
-        /// index i maintains minIndex &gt;= i &gt; limIndex.</returns>
-        internal IEnumerable<int> GetTopIndices(int[] context, int minIndex, int limIndex, int count)
+        internal int GetTopToken(int[] context)
         {
-            var result = PersistantPredictor.GetTopIndices(this, context, minIndex, limIndex, count);
+            var result = PersistantPredictor.GetTopToken(context);
             return result;
         }
 
@@ -98,28 +93,23 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var sequence = new List<int>();
                 sequence.Add(token);
 
-                var more = 0 <= token;
+                var more = true;
                 for (var extras = 0; more && extras < 3; extras++)
                 {
-                    var extraIndices = GetTopIndices(extraContext.ToArray(), -1, Count, 1);
-                    using (var enumerator = extraIndices.GetEnumerator())
+                    var extraToken = GetTopToken(extraContext.ToArray());
+                    if (extraToken != -1)
                     {
-                        if (enumerator.MoveNext())
-                        {
-                            var extraIndex = enumerator.Current;
-                            var extraToken = GetIndexToken(extraIndex);
-                            extraContext.Add(extraToken);
-                            sequence.Add(extraToken);
+                        extraContext.Add(extraToken);
+                        sequence.Add(extraToken);
 
-                            var extraItem = GetSequenceItem(sequence);
-                            yield return extraItem;
+                        var extraItem = GetSequenceItem(sequence);
+                        yield return extraItem;
 
-                            more = 0 < extraToken;
-                        }
-                        else
-                        {
-                            more = false;
-                        }
+                        more = extraToken != 0;
+                    }
+                    else
+                    {
+                        more = false;
                     }
                 }
             }

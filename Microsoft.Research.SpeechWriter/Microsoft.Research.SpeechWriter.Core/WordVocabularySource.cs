@@ -151,9 +151,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal void InitializeUtterance()
         {
             ClearIncrement();
-
-            var selected = GetSelectedTokens();
-            AddSequence(selected, LiveSequenceWeight);
         }
 
         internal void AddSuggestedWord(string word)
@@ -251,6 +248,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             var selection = GetSelectedTokens();
+            selection.Add(0);
 
             RollbackAndAddSequence(selection, PersistedSequenceWeight);
 
@@ -261,6 +259,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             _runOnSuggestions.Clear();
             selection.RemoveAt(0);
+            selection.RemoveAt(selection.Count - 1);
             var utterance = new List<string>();
             foreach (var token in selection)
             {
@@ -299,7 +298,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _runOnSuggestions.RemoveAt(_runOnSuggestions.Count - 1);
 
                 var stopWords = new List<string>();
-                foreach(var ghost in _runOnSuggestions)
+                foreach (var ghost in _runOnSuggestions)
                 {
                     Debug.Assert(ghost is GhostWordItem);
                     stopWords.Add(ghost.ToString());
@@ -367,10 +366,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             while (more && _runOnSuggestions.Count < MaxRunOnSuggestionsCount)
             {
-                var rankedIndices = GetTopIndices(context.ToArray(), -1, Count, 1);
-                var index = rankedIndices.FirstOrDefault();
-                var token = GetIndexToken(index);
-                if (token != 0)
+                var token = GetTopToken(context.ToArray());
+                if (0 < token)
                 {
                     var word = _tokens.GetString(token);
                     var item = new GhostWordItem(this, word);
@@ -381,14 +378,13 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
                 else
                 {
+                    if (token == 0)
+                    {
+                        var item = new GhostStopItem(this, TokensToWords(totalSequence));
+                        _runOnSuggestions.Add(item);
+                    }
                     more = false;
                 }
-            }
-
-            if (!more)
-            {
-                var item = new GhostStopItem(this, TokensToWords(totalSequence));
-                _runOnSuggestions.Add(item);
             }
         }
 
