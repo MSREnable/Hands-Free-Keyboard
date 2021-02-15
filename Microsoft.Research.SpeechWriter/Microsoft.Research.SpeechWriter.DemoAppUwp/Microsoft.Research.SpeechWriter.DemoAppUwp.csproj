@@ -126,6 +126,7 @@
     <Compile Include="StringFormatter.cs" />
     <Compile Include="TemplateOpacityConverter.cs" />
     <Compile Include="TemplateTypeConverter.cs" />
+    <Compile Include="UwpWriterEnvironment.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

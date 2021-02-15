@@ -56,7 +56,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
         }
 
-        private readonly ApplicationModel _model = new ApplicationModel(/*new EmptyEnvironment()*/);
+        private readonly ApplicationModel _model;
 
         private readonly SpeechSynthesizer _synthesizer = new SpeechSynthesizer();
 
@@ -73,6 +73,9 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         public MainPage()
         {
             this.InitializeComponent();
+
+            var environment = new UwpWriterEnvironment();
+            _model = new ApplicationModel(environment);
 
             TemplateTypeConverter.LoadTemplates(Resources);
 
