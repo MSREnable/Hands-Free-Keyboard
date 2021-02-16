@@ -5,7 +5,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
     /// <summary>
     /// Whole word item.
     /// </summary>
-    public abstract class WordItem : Command<WordVocabularySource>, IWordCommand
+    public abstract class WordItem : Command<WordVocabularySource>
     {
         internal WordItem(WordVocabularySource source, string word)
             : base(source)

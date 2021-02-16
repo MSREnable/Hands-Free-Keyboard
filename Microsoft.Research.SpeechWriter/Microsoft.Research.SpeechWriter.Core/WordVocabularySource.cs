@@ -140,8 +140,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             selected.Add(0);
             for (var i = 1; i < _selectedItems.Count; i++)
             {
-                var item = (IWordCommand)_selectedItems[i];
-                var token = _tokens.GetToken(item.Word);
+                var word = _selectedItems[i].ToString();
+                var token = _tokens.GetToken(word);
                 selected.Add(token);
             }
 
@@ -283,7 +283,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var item = _selectedItems[index];
             while (!ReferenceEquals(selected, item))
             {
-                var word = ((IWordCommand)item).Word;
+                var word = item.ToString();
                 var runOn = new GhostWordItem(this, word);
                 _runOnSuggestions.Insert(0, runOn);
                 _selectedItems.RemoveAt(index);
