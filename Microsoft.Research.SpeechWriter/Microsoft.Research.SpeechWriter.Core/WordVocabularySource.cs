@@ -206,7 +206,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var item = (WordItem)_runOnSuggestions[0];
                 _runOnSuggestions.RemoveAt(0);
 
-                var selected = new HeadWordItem(this, item);
+                var selected = new HeadWordItem(this, item.Word);
                 _selectedItems.Add(selected);
 
                 var selection = GetSelectedTokens();

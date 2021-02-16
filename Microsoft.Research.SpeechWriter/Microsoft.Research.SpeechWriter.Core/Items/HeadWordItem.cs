@@ -5,11 +5,6 @@
     /// </summary>
     public sealed class HeadWordItem : WordItem
     {
-        internal HeadWordItem(WordVocabularySource source, IWordCommand word)
-            : base(source, word.Word)
-        {
-        }
-
         internal HeadWordItem(WordVocabularySource source, string word)
             : base(source, word)
         {
