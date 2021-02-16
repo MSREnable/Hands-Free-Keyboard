@@ -76,7 +76,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                 }
 
                 var item = action.GetItem(model);
-                if (item is InterstitialNonItem)
+                //if (item is InterstitialNonItem)
                 {
                     Assert.IsNotInstanceOf<InterstitialNonItem>(item, "Should never click on a non-item");
                 }
