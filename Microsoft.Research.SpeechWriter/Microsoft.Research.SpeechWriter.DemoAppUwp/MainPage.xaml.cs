@@ -59,6 +59,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private bool _demoMode;
 
+        private bool _demoMovementAnimation;
+
         private List<string> _tutorScript;
 
         public MainPage()
@@ -121,6 +123,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             else
             {
                 _demoMode = true;
+                _demoMovementAnimation = true;
 
                 for (var i = 0; _demoMode && i < sentences.Length; i++)
                 {
@@ -135,7 +138,10 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
                         SetupStoryboardForAction(action);
 
-                        await PlayStoryboardAsync(MoveRectangle);
+                        if (_demoMovementAnimation)
+                        {
+                            await PlayStoryboardAsync(MoveRectangle);
+                        }
 
                         var reaction = ApplicationRobot.GetNextCompletionAction(Model, words);
                         if (action.Target == reaction.Target &&
@@ -510,6 +516,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
 
             return script;
+        }
+
+        private void OnClickQuick(object sender, RoutedEventArgs e)
+        {
+            _demoMovementAnimation = false;
         }
     }
 }
