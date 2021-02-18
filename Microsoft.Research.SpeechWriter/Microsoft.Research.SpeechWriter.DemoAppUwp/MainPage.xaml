@@ -88,6 +88,11 @@
                 <TextBlock Text="{Binding Symbol}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
             </Border>
         </DataTemplate>
+        <DataTemplate x:Key="SuggestedSpellingWordItem" x:DataType="lib:SuggestedSpellingWordItem">
+            <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
+                <TextBlock Text="{Binding Word}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
+            </Border>
+        </DataTemplate>
         <DataTemplate x:Key="SuggestedSpellingBackspaceItem" x:DataType="lib:SuggestedSpellingBackspaceItem">
             <TextBlock Text="{Binding Prefix}" FontSize="25" FontWeight="Bold" Foreground="DarkGray" VerticalAlignment="Center"/>
         </DataTemplate>
@@ -250,6 +255,7 @@
         <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="C" Click="OnClickPicard"/>
         <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="V" Click="OnPaste"/>
         <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="T" Click="OnClickTutor"/>
+        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="Q" Click="OnClickQuick"/>
 
         <Canvas x:Name="TargetPanel">
             <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>

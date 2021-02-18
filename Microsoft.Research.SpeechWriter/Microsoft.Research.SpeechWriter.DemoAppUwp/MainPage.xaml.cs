@@ -45,15 +45,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             {
                 return new string[0];
             }
-
-            /// <summary>
-            /// List of sentences, comprising a sequence of words.
-            /// </summary>
-            /// <returns>List of list of words.</returns>
-            public IEnumerable<IEnumerable<string>> GetSeedSentences()
-            {
-                return new string[][] { };
-            }
         }
 
         private readonly ApplicationModel _model;
@@ -67,6 +58,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         private readonly SemaphoreSlim _mediaReady = new SemaphoreSlim(1);
 
         private bool _demoMode;
+
+        private bool _demoMovementAnimation;
 
         private List<string> _tutorScript;
 
@@ -133,6 +126,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             else
             {
                 _demoMode = true;
+                _demoMovementAnimation = true;
 
                 for (var i = 0; _demoMode && i < sentences.Length; i++)
                 {
@@ -147,7 +141,10 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
                         SetupStoryboardForAction(action);
 
-                        await PlayStoryboardAsync(MoveRectangle);
+                        if (_demoMovementAnimation)
+                        {
+                            await PlayStoryboardAsync(MoveRectangle);
+                        }
 
                         var reaction = ApplicationRobot.GetNextCompletionAction(Model, words);
                         if (action.Target == reaction.Target &&
@@ -522,6 +519,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
 
             return script;
+        }
+
+        private void OnClickQuick(object sender, RoutedEventArgs e)
+        {
+            _demoMovementAnimation = false;
         }
     }
 }

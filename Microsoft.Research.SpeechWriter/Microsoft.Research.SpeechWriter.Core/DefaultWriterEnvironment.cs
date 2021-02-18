@@ -60,23 +60,6 @@ namespace Microsoft.Research.SpeechWriter.Core
 #endif
         }
 
-        IEnumerable<IEnumerable<string>> IWriterEnvironment.GetSeedSentences()
-        {
-#if true
-            using (var reader = new StringReader(Resources.SentencesSeed))
-            {
-                for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
-                {
-                    var words = line.Split(' ');
-
-                    yield return words;
-                }
-            }
-#else
-        return new string[][] { };
-#endif
-        }
-
         /// <summary>
         /// Persist an utterance.
         /// </summary>

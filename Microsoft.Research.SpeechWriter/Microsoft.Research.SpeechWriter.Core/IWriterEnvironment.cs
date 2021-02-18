@@ -14,12 +14,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         IEnumerable<string> GetOrderedSeedWords();
 
         /// <summary>
-        /// List of sentences, comprising a sequence of words.
-        /// </summary>
-        /// <returns>List of list of words.</returns>
-        IEnumerable<IEnumerable<string>> GetSeedSentences();
-
-        /// <summary>
         /// Persist an utterance.
         /// </summary>
         /// <param name="words">The words of the utterance.</param>

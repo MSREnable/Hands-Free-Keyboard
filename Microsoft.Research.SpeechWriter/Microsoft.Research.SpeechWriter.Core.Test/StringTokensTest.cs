@@ -30,48 +30,5 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             Assert.AreEqual(oldTokenLimit, newToken);
             Assert.AreEqual(oldTokenLimit + 1, tokens.TokenLimit);
         }
-
-        private static void CheckSentences(StringTokens tokens, string caption)
-        {
-            Debug.WriteLine(caption);
-            Debug.Indent();
-            foreach (var sentence in DefaultWriterEnvironment.Instance.GetSeedSentences())
-            {
-                Assert.IsNotNull(sentence);
-                Assert.IsTrue(1 < sentence.Count());
-
-                var sequence = new List<int>(new[] { 0 });
-                foreach(var word in sentence)
-                {
-                    var token = tokens.GetToken(word);
-                    sequence.Add(token);
-                }
-                Assert.AreEqual(0, sequence[0]);
-
-                for (var i = 1; i < sequence.Count; i++)
-                {
-                    var token = sequence[i];
-                    var word = tokens[token];
-                    Debug.Write($"{word}({token}) ");
-                }
-                Debug.WriteLine(".");
-            }
-            Debug.Unindent();
-        }
-
-        [Test]
-        public void EmptySentencesTest()
-        {
-            var tokens = new StringTokens();
-            CheckSentences(tokens, "Empty tokens");
-        }
-
-        [Test]
-        public void InitializedSentencesTest()
-        {
-            var words = DefaultWriterEnvironment.Instance.GetOrderedSeedWords();
-            var tokens = StringTokens.Create(words);
-            CheckSentences(tokens, "Initialized tokens");
-        }
     }
 }

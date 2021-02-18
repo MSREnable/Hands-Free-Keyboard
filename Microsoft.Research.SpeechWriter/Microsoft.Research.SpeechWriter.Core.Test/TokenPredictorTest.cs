@@ -13,26 +13,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             var predictor2 = new TokenPredictor(3);
             var predictor3 = new TokenPredictor(3);
 
-            var sentenceCount = 0;
-            var wordCount = 0;
-            foreach (var sentence in DefaultWriterEnvironment.Instance.GetSeedSentences())
-            {
-                sentenceCount++;
-
-                var sentenceSoFar = new List<int>();
-
-                foreach (var word in sentence)
-                {
-                    wordCount++;
-                    var token = tokens.GetToken(word);
-                    sentenceSoFar.Add(token);
-
-                    predictor1.AddSequenceTail(sentenceSoFar, 1);
-                    predictor2.AddSequenceTail(sentenceSoFar, 2);
-                    predictor3.AddSequenceTail(sentenceSoFar, 3);
-                }
-            }
-
             var predictor1plus2 = predictor1.CreateCopy();
             CheckJsonEquivalent(tokens, predictor1plus2, predictor1);
             predictor1plus2.Add(predictor2);

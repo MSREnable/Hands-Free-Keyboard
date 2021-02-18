@@ -37,21 +37,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             SelectedItems = new ReadOnlyObservableCollection<ICommand>(_selectedItems);
             RunOnSuggestions = new ReadOnlyObservableCollection<ICommand>(_runOnSuggestions);
 
-            var sentences = model.Environment.GetSeedSentences();
-            foreach (var sentence in sentences)
-            {
-                var sequence = new List<int>(new[] { 0 });
-                foreach (var word in sentence)
-                {
-                    var token = _tokens.GetToken(word);
-                    Debug.Assert(token != 0);
-                    sequence.Add(token);
-                }
-                sequence.Add(0);
-
-                PersistantPredictor.AddSequence(sequence, SeedSequenceWeight);
-            }
-
             var utterances = model.Environment.RecallUtterances();
             foreach (var utterance in utterances)
             {
@@ -155,8 +140,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             selected.Add(0);
             for (var i = 1; i < _selectedItems.Count; i++)
             {
-                var item = (IWordCommand)_selectedItems[i];
-                var token = _tokens.GetToken(item.Word);
+                var word = _selectedItems[i].ToString();
+                var token = _tokens.GetToken(word);
                 selected.Add(token);
             }
 
@@ -166,9 +151,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal void InitializeUtterance()
         {
             ClearIncrement();
-
-            var selected = GetSelectedTokens();
-            AddSequence(selected, LiveSequenceWeight);
         }
 
         internal void AddSuggestedWord(string word)
@@ -224,7 +206,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var item = (WordItem)_runOnSuggestions[0];
                 _runOnSuggestions.RemoveAt(0);
 
-                var selected = new HeadWordItem(this, item);
+                var selected = new HeadWordItem(this, item.Word);
                 _selectedItems.Add(selected);
 
                 var selection = GetSelectedTokens();
@@ -266,6 +248,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             var selection = GetSelectedTokens();
+            selection.Add(0);
 
             RollbackAndAddSequence(selection, PersistedSequenceWeight);
 
@@ -276,6 +259,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             _runOnSuggestions.Clear();
             selection.RemoveAt(0);
+            selection.RemoveAt(selection.Count - 1);
             var utterance = new List<string>();
             foreach (var token in selection)
             {
@@ -299,7 +283,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var item = _selectedItems[index];
             while (!ReferenceEquals(selected, item))
             {
-                var word = ((IWordCommand)item).Word;
+                var word = item.ToString();
                 var runOn = new GhostWordItem(this, word);
                 _runOnSuggestions.Insert(0, runOn);
                 _selectedItems.RemoveAt(index);
@@ -314,7 +298,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _runOnSuggestions.RemoveAt(_runOnSuggestions.Count - 1);
 
                 var stopWords = new List<string>();
-                foreach(var ghost in _runOnSuggestions)
+                foreach (var ghost in _runOnSuggestions)
                 {
                     Debug.Assert(ghost is GhostWordItem);
                     stopWords.Add(ghost.ToString());
@@ -382,10 +366,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             while (more && _runOnSuggestions.Count < MaxRunOnSuggestionsCount)
             {
-                var rankedIndices = GetTopIndices(context.ToArray(), -1, Count, 1);
-                var index = rankedIndices.FirstOrDefault();
-                var token = GetIndexToken(index);
-                if (token != 0)
+                var token = GetTopToken(context.ToArray());
+                if (0 < token)
                 {
                     var word = _tokens.GetString(token);
                     var item = new GhostWordItem(this, word);
@@ -396,14 +378,13 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
                 else
                 {
+                    if (token == 0)
+                    {
+                        var item = new GhostStopItem(this, TokensToWords(totalSequence));
+                        _runOnSuggestions.Add(item);
+                    }
                     more = false;
                 }
-            }
-
-            if (!more)
-            {
-                var item = new GhostStopItem(this, TokensToWords(totalSequence));
-                _runOnSuggestions.Add(item);
             }
         }
 
