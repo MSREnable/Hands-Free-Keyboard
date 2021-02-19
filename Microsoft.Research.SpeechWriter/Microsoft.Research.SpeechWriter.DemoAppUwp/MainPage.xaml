@@ -256,7 +256,7 @@
         <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="V" Click="OnPaste"/>
         <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="T" Click="OnClickTutor"/>
         <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="Q" Click="OnClickQuick"/>
-        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="L" Click="OnClickLoadAsync"/>
+        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="R" Click="OnClickReset"/>
 
         <Canvas x:Name="TargetPanel">
             <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>

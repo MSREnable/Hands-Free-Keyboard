@@ -181,6 +181,14 @@ namespace Microsoft.Research.SpeechWriter.Core
             await _wordSource.LoadUtterancesAsync();
         }
 
+        /// <summary>
+        /// Reset utterances.
+        /// </summary>
+        public void ResetUtterances()
+        {
+            _wordSource.ResetUtterances();
+        }
+
         internal void SetSuggestionsView(VocabularySource source, int lowerBound, int upperLimit, bool isComplete)
         {
             Debug.Assert(!(source is SpellingVocabularySource));

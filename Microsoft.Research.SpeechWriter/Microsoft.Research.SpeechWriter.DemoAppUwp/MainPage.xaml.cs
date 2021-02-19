@@ -539,18 +539,9 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             _demoMovementAnimation = false;
         }
 
-        private async void OnClickLoadAsync(object sender, RoutedEventArgs e)
+        private  void OnClickReset(object sender, RoutedEventArgs e)
         {
-            IsEnabled = false;
-
-            try
-            {
-                await Task.Delay(TimeSpan.FromSeconds(2));
-            }
-            finally
-            {
-                IsEnabled = true;
-            }
+            _model.ResetUtterances();
         }
     }
 }

@@ -87,7 +87,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Load utterances from environment.
         /// </summary>
         /// <returns>Task</returns>
-        public async Task LoadUtterancesAsync()
+        internal async Task LoadUtterancesAsync()
         {
             var enumerable = Environment.RecallUtterances();
             var enumerator = enumerable.GetAsyncEnumerator();
@@ -117,6 +117,13 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
             }
 
+            PopulateVocabularyList();
+            _model.SetSuggestionsView(this, 0, Count, false);
+        }
+
+        internal void ResetUtterances()
+        {
+            Clear();
             PopulateVocabularyList();
             _model.SetSuggestionsView(this, 0, Count, false);
         }

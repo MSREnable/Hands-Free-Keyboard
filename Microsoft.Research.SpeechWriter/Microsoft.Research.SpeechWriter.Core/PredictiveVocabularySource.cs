@@ -132,5 +132,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             PersistantPredictor.AddSequenceTail(sequence, increment);
             TemporaryPredictor.AddSequenceTail(sequence, increment);
         }
+
+        internal void Clear()
+        {
+            PersistantPredictor.Clear();
+            TemporaryPredictor.Clear();
+        }
     }
 }
