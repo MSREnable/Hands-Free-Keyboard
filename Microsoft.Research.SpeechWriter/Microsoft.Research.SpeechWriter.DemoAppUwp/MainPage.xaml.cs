@@ -73,12 +73,25 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             TemplateTypeConverter.LoadTemplates(Resources);
 
             SizeChanged += MainWindow_SizeChanged;
-
+            Loaded += MainPage_Loaded;
             _model.ApplicationModelUpdate += OnCollectionChanged;
 
             TheMediaElement.MediaEnded += (s, e) => _mediaReady.Release();
 
             _ = ConsumeSpeechAsync();
+        }
+
+        private async void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            IsEnabled = false;
+            try
+            {
+                await _model.LoadUtterancesAsync();
+            }
+            finally
+            {
+                IsEnabled = true;
+            }
         }
 
         public double MoveToCenterX

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Storage;
 
 namespace Microsoft.Research.SpeechWriter.DemoAppUwp
@@ -24,6 +24,14 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private async Task SaveUtteranceAsync(string[] words)
         {
+            await AttachHistoryFileAsync();
+
+            var utterance = string.Join(' ', words);
+            await FileIO.AppendLinesAsync(_historyFile, new[] { utterance });
+        }
+
+        private async Task AttachHistoryFileAsync()
+        {
             if (_historyFile == null)
             {
                 await _semaphore.WaitAsync();
@@ -34,24 +42,85 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 }
                 _semaphore.Release();
             }
-
-            var utterance = string.Join(' ', words);
-            await FileIO.AppendLinesAsync(_historyFile, new[] { utterance });
         }
 
         /// <summary>
         /// Recall persisted utterances.
         /// </summary>
         /// <returns>The collection of utterances.</returns>
-        IEnumerable<string[]> IWriterEnvironment.RecallUtterances()
+        IAsyncEnumerable<string[]> IWriterEnvironment.RecallUtterances()
         {
-            //var task = FileIO.ReadLinesAsync(_historyFile);
-            //var utterances = task.GetResults();
-            var utterances = new string[0];
-            foreach (var utterance in utterances)
+            return new UtteranceEnumerable(this);
+        }
+
+        private class UtteranceEnumerable : IAsyncEnumerable<string[]>
+        {
+            private readonly UwpWriterEnvironment _uwpWriterEnvironment;
+
+            public UtteranceEnumerable(UwpWriterEnvironment uwpWriterEnvironment)
             {
-                var words = utterance.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                yield return words;
+                _uwpWriterEnvironment = uwpWriterEnvironment;
+            }
+
+            public IAsyncEnumerator<string[]> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+            {
+                return new UtteranceEnumerator(_uwpWriterEnvironment);
+            }
+
+            private class UtteranceEnumerator : IAsyncEnumerator<string[]>
+            {
+                private readonly UwpWriterEnvironment _uwpWriterEnvironment;
+                private StreamReader _reader;
+
+                public UtteranceEnumerator(UwpWriterEnvironment uwpWriterEnvironment)
+                {
+                    _uwpWriterEnvironment = uwpWriterEnvironment;
+                }
+
+                public string[] Current { get; private set; }
+
+                public ValueTask DisposeAsync()
+                {
+                    if (_reader != null)
+                    {
+                        _reader.Close();
+                    }
+
+                    return new ValueTask(Task.CompletedTask);
+                }
+
+                public async ValueTask<bool> MoveNextAsync()
+                {
+                    await _uwpWriterEnvironment.AttachHistoryFileAsync();
+
+                    if (_reader == null)
+                    {
+                        var stream = await _uwpWriterEnvironment._historyFile.OpenSequentialReadAsync();
+                        _reader = new StreamReader(stream.AsStreamForRead());
+                    }
+
+                    string[] utterance;
+                    var eof = false; ;
+                    do
+                    {
+                        var line = await _reader.ReadLineAsync();
+
+                        if (line == null)
+                        {
+                            utterance = null;
+                            eof = true;
+                        }
+                        else
+                        {
+                            utterance = line.Split(' ');
+                        }
+                    }
+                    while (!eof && utterance == null); ;
+
+                    Current = utterance;
+
+                    return !eof;
+                }
             }
         }
     }

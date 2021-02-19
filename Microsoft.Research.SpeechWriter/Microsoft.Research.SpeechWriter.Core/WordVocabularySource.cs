@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
@@ -36,21 +37,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             _selectedItems.Add(new HeadStartItem(this));
             SelectedItems = new ReadOnlyObservableCollection<ICommand>(_selectedItems);
             RunOnSuggestions = new ReadOnlyObservableCollection<ICommand>(_runOnSuggestions);
-
-            var utterances = model.Environment.RecallUtterances();
-            foreach (var utterance in utterances)
-            {
-                var sequence = new List<int>(new[] { 0 });
-                foreach (var word in utterance)
-                {
-                    var token = _tokens.GetToken(word);
-                    Debug.Assert(token != 0);
-                    sequence.Add(token);
-                }
-                sequence.Add(0);
-
-                PersistantPredictor.AddSequence(sequence, PersistedSequenceWeight);
-            }
 
             PopulateVocabularyList();
 
@@ -96,6 +82,44 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// The number of items within the source.
         /// </summary>
         internal override int Count => _vocabularyList.Count;
+
+        /// <summary>
+        /// Load utterances from environment.
+        /// </summary>
+        /// <returns>Task</returns>
+        public async Task LoadUtterancesAsync()
+        {
+            var enumerable = Environment.RecallUtterances();
+            var enumerator = enumerable.GetAsyncEnumerator();
+            try
+            {
+                while (await enumerator.MoveNextAsync())
+                {
+                    var utterance = enumerator.Current;
+
+                    var sequence = new List<int>(new[] { 0 });
+                    foreach (var word in utterance)
+                    {
+                        var token = _tokens.GetToken(word);
+                        Debug.Assert(token != 0);
+                        sequence.Add(token);
+                    }
+                    sequence.Add(0);
+
+                    PersistantPredictor.AddSequence(sequence, PersistedSequenceWeight);
+                }
+            }
+            finally
+            {
+                if (enumerator != null)
+                {
+                    await enumerator.DisposeAsync();
+                }
+            }
+
+            PopulateVocabularyList();
+            _model.SetSuggestionsView(this, 0, Count, false);
+        }
 
         /// <summary>
         /// Get the non-zero token for at a given index within the source.

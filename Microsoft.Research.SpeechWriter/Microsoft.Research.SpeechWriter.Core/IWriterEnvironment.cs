@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -20,9 +21,9 @@ namespace Microsoft.Research.SpeechWriter.Core
         void SaveUtterance(string[] words);
 
         /// <summary>
-        /// Recall persisted utterances.
+        /// Get utterance reader.
         /// </summary>
         /// <returns>The collection of utterances.</returns>
-        IEnumerable<string[]> RecallUtterances();
+        IAsyncEnumerable<string[]> RecallUtterances();
     }
 }
