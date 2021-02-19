@@ -126,6 +126,9 @@
     <Compile Include="StringFormatter.cs" />
     <Compile Include="TemplateOpacityConverter.cs" />
     <Compile Include="TemplateTypeConverter.cs" />
+    <Compile Include="MainPage.SwitchInterface.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

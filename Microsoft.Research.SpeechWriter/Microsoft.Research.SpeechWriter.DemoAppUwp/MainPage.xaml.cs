@@ -72,6 +72,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
             SizeChanged += MainWindow_SizeChanged;
 
+            _switchTimer.Tick += OnSwitchTimerTick;
+
             _model.ApplicationModelUpdate += OnCollectionChanged;
 
             TheMediaElement.MediaEnded += (s, e) => _mediaReady.Release();
