@@ -10,6 +10,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.SpeechSynthesis;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -70,7 +71,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             var environment = new UwpWriterEnvironment();
             _model = new ApplicationModel(environment);
 
-            TemplateTypeConverter.LoadTemplates(Resources);
+            TemplateConverter.LoadTemplates(Resources);
 
             SizeChanged += MainWindow_SizeChanged;
             Loaded += MainPage_Loaded;
@@ -402,8 +403,9 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             _model.MaxNextSuggestionsCount = (int)(e.NewSize.Height) / 110;
         }
 
-        private void OnClickKirk(object sender, RoutedEventArgs e)
+        private void OnClickKirk(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
+            args.Handled = true;
             ShowDemo("SPACE",
                 "THE FINAL FRONTIER",
                 "THESE ARE THE VOYAGES OF THE STARSHIP ENTERPRISE",
@@ -414,8 +416,9 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 "TO BOLDLY GO WHERE NO MAN HAS GONE BEFORE");
         }
 
-        private void OnClickPicard(object sender, RoutedEventArgs e)
+        private void OnClickPicard(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
+            args.Handled = true;
             ShowDemo("THESE ARE THE VOYAGES OF THE STARSHIP ENTERPRISE",
                 "ITS CONTINUING MISSION",
                 "TO EXPLORE STRANGE NEW WORLDS",
@@ -424,8 +427,9 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 "TO BOLDLY GO WHERE NO ONE HAS GONE BEFORE");
         }
 
-        private async void OnPaste(object sender, RoutedEventArgs e)
+        private async void OnPaste(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
+            args.Handled = true;
             var script = await GetClipboardContentAsync();
 
             if (script.Count != 0)
@@ -434,8 +438,10 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
         }
 
-        private async void OnClickTutor(object sender, RoutedEventArgs e)
+        private async void OnClickTutor(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
+            args.Handled = true;
+
             _demoMode = false;
 
             var script = await GetClipboardContentAsync();
@@ -534,14 +540,15 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             return script;
         }
 
-        private void OnClickQuick(object sender, RoutedEventArgs e)
+        private void OnClickQuick(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
+            args.Handled = true;
             _demoMovementAnimation = false;
         }
 
-        private  void OnClickReset(object sender, RoutedEventArgs e)
+        private void OnClickReset(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            _model.ResetUtterances();
+            Frame.Navigate(GetType(), this);
         }
     }
 }

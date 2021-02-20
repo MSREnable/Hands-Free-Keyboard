@@ -15,7 +15,7 @@
 
     <Page.Resources>
 
-        <local:TemplateTypeConverter x:Key="TemplateConverter"/>
+        <local:TemplateTypeConverter x:Name="TemplateConverter"/>
         <local:TemplateOpacityCoverter x:Key="TemplateOpacityConverter"/>
         <local:StringFormatter x:Key="StringFomatter"/>
 
@@ -195,6 +195,15 @@
 
     </Page.Resources>
 
+    <Page.KeyboardAccelerators>
+        <KeyboardAccelerator Key="X" Invoked="OnClickKirk"/>
+        <KeyboardAccelerator Key="C" Invoked="OnClickPicard"/>
+        <KeyboardAccelerator Key="V" Invoked="OnPaste"/>
+        <KeyboardAccelerator Key="T" Invoked="OnClickTutor"/>
+        <KeyboardAccelerator Key="Q" Invoked="OnClickQuick"/>
+        <KeyboardAccelerator Key="R" Invoked="OnClickReset"/>
+    </Page.KeyboardAccelerators>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -250,13 +259,6 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-
-        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="X" Click="OnClickKirk"/>
-        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="C" Click="OnClickPicard"/>
-        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="V" Click="OnPaste"/>
-        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="T" Click="OnClickTutor"/>
-        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="Q" Click="OnClickQuick"/>
-        <Button Margin="-10000,-10000,0,0" Width="40" Height="40" AccessKey="R" Click="OnClickReset"/>
 
         <Canvas x:Name="TargetPanel">
             <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>
