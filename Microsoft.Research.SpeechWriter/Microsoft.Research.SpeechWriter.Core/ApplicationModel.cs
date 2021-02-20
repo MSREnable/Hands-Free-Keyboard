@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
@@ -169,6 +170,23 @@ namespace Microsoft.Research.SpeechWriter.Core
             _previousWordsLengthNotified = nextPreviousWordsLength;
 
             _applicationModelUpdate?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Load utterances.
+        /// </summary>
+        /// <returns></returns>
+        public async Task LoadUtterancesAsync()
+        {
+            await _wordSource.LoadUtterancesAsync();
+        }
+
+        /// <summary>
+        /// Reset utterances.
+        /// </summary>
+        public void ResetUtterances()
+        {
+            _wordSource.ResetUtterances();
         }
 
         internal void SetSuggestionsView(VocabularySource source, int lowerBound, int upperLimit, bool isComplete)

@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -72,9 +74,32 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Recall persisted utterances.
         /// </summary>
         /// <returns>The collection of utterances.</returns>
-        IEnumerable<string[]> IWriterEnvironment.RecallUtterances()
+        IAsyncEnumerable<string[]> IWriterEnvironment.RecallUtterances()
         {
-            return new string[0][];
+            return new EmptyAsyncEnumerable<string[]>();
+        }
+
+        private class EmptyAsyncEnumerable<T> : IAsyncEnumerable<T>
+        {
+            public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+            {
+                return new EmptyAsyncEnumerator();
+            }
+
+            private class EmptyAsyncEnumerator : IAsyncEnumerator<T>
+            {
+                public T Current => default;
+
+                public ValueTask DisposeAsync()
+                {
+                    return new ValueTask(Task.CompletedTask);
+                }
+
+                public ValueTask<bool> MoveNextAsync()
+                {
+                    return new ValueTask<bool>(Task.FromResult(false));
+                }
+            }
         }
     }
 }

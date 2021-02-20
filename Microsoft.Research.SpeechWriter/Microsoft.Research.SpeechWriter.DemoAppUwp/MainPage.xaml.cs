@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -49,7 +50,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
         }
 
-        private readonly ApplicationModel _model = new ApplicationModel(/*new EmptyEnvironment()*/);
+        private readonly ApplicationModel _model;
 
         private readonly SpeechSynthesizer _synthesizer = new SpeechSynthesizer();
 
@@ -69,7 +70,10 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             this.InitializeComponent();
 
-            TemplateTypeConverter.LoadTemplates(Resources);
+            var environment = new UwpWriterEnvironment();
+            _model = new ApplicationModel(environment);
+
+            TemplateConverter.LoadTemplates(Resources);
 
             SizeChanged += MainWindow_SizeChanged;
 
@@ -80,6 +84,24 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             TheMediaElement.MediaEnded += (s, e) => _mediaReady.Release();
 
             _ = ConsumeSpeechAsync();
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            if (e.Parameter != null)
+            {
+                IsEnabled = false;
+                try
+                {
+                    await _model.LoadUtterancesAsync();
+                }
+                finally
+                {
+                    IsEnabled = true;
+                }
+            }
         }
 
         public double MoveToCenterX
@@ -566,6 +588,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             args.Handled = true;
             _demoMovementAnimation = false;
+        }
+
+        private void OnClickReset(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            Frame.Navigate(GetType(), null);
         }
     }
 }
