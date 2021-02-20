@@ -39,7 +39,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <DataTemplate x:Key="SuggestedWordItem" x:DataType="lib:SuggestedWordItem">
             <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
                 <TextBlock Text="{Binding Word}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
@@ -195,15 +195,6 @@
 
     </Page.Resources>
 
-    <Page.KeyboardAccelerators>
-        <KeyboardAccelerator Key="X" Invoked="OnClickKirk"/>
-        <KeyboardAccelerator Key="C" Invoked="OnClickPicard"/>
-        <KeyboardAccelerator Key="V" Invoked="OnPaste"/>
-        <KeyboardAccelerator Key="T" Invoked="OnClickTutor"/>
-        <KeyboardAccelerator Key="Q" Invoked="OnClickQuick"/>
-        <KeyboardAccelerator Key="R" Invoked="OnClickReset"/>
-    </Page.KeyboardAccelerators>
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -214,6 +205,17 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+
+        <CommandBar Margin="-10000,-10000,0,0">
+            <CommandBar.KeyboardAccelerators>
+                <KeyboardAccelerator Key="X" Invoked="OnClickKirk"/>
+                <KeyboardAccelerator Key="C" Invoked="OnClickPicard"/>
+                <KeyboardAccelerator Key="V" Invoked="OnPaste"/>
+                <KeyboardAccelerator Key="T" Invoked="OnClickTutor"/>
+                <KeyboardAccelerator Key="Q" Invoked="OnClickQuick"/>
+                <KeyboardAccelerator Key="R" Invoked="OnClickReset"/>
+            </CommandBar.KeyboardAccelerators>
+        </CommandBar>
 
         <MediaElement x:Name="TheMediaElement"/>
 
