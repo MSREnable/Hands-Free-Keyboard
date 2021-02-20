@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.Media.SpeechSynthesis;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -167,52 +168,82 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private void SetupStoryboardForAction(ApplicationRobotAction action)
         {
+            var control = GetActionControl(action);
+            Rect targetRect = GetElementRect(control);
+
+            MoveToCenterX = targetRect.X + control.ActualWidth / 2;
+            MoveToCenterY = targetRect.Y + control.ActualHeight / 2;
+            MoveToX = targetRect.X;
+            MoveToY = targetRect.Y;
+            MoveToWidth = targetRect.Width;
+            MoveToHeight = targetRect.Height;
+        }
+
+        private Rect GetElementRect(FrameworkElement control)
+        {
+            var transform = control.TransformToVisual(TargetPanel);
+            var controlRect = new Rect(0, 0, control.ActualWidth, control.ActualHeight);
+            var targetRect = transform.TransformBounds(controlRect);
+            return targetRect;
+        }
+
+        private FrameworkElement GetActionControl(ApplicationRobotAction action)
+        {
             UIElement target;
             switch (action.Target)
             {
                 case ApplicationRobotActionTarget.Head:
-                    {
-                        var control = HeadItemsContainer.ItemsPanelRoot;
-                        target = control.Children[action.Index];
-                    }
+                    target = GetHeadElement(action.Index);
                     break;
 
                 case ApplicationRobotActionTarget.Tail:
-                    {
-                        var control = TailItemsContainer.ItemsPanelRoot;
-                        target = control.Children[action.Index];
-                    }
+                    target = GetTailElement(action.Index);
                     break;
 
                 case ApplicationRobotActionTarget.Interstitial:
-                    {
-                        var control = SuggestionInterstitialsContainer.ItemsPanelRoot;
-                        target = control.Children[action.Index];
-                    }
+                    target = GetInterstitialElement(action.Index);
                     break;
 
                 default:
                 case ApplicationRobotActionTarget.Suggestion:
-                    {
-                        var control = SuggestionListsContainer.ItemsPanelRoot;
-                        var intermediateTarget = (ContentPresenter)control.Children[action.Index];
-                        var nextLevel = (ItemsControl)VisualTreeHelper.GetChild(intermediateTarget, 0);
-                        var nextPanel = nextLevel.ItemsPanelRoot;
-                        target = nextPanel.Children[action.SubIndex];
-                    }
+                    Debug.Assert(action.Target == ApplicationRobotActionTarget.Suggestion);
+                    target = GetSuggestionElement(action.Index, action.SubIndex);
                     break;
 
             }
-            var targetControl = (ContentPresenter)target;
-            var transform = targetControl.TransformToVisual(TargetPanel);
-            var targetPoint = transform.TransformPoint(new Windows.Foundation.Point(0, 0));
+            var targetControl = (FrameworkElement)target;
+            return targetControl;
+        }
 
-            MoveToCenterX = targetPoint.X + targetControl.ActualWidth / 2;
-            MoveToCenterY = targetPoint.Y + targetControl.ActualHeight / 2;
-            MoveToX = targetPoint.X;
-            MoveToY = targetPoint.Y;
-            MoveToWidth = targetControl.ActualWidth;
-            MoveToHeight = targetControl.ActualHeight;
+        private FrameworkElement GetSuggestionElement(int index, int subIndex)
+        {
+            var control = SuggestionListsContainer.ItemsPanelRoot;
+            var intermediateTarget = (ContentPresenter)control.Children[index];
+            var nextLevel = (ItemsControl)VisualTreeHelper.GetChild(intermediateTarget, 0);
+            var nextPanel = nextLevel.ItemsPanelRoot;
+            var target = nextPanel.Children[subIndex];
+            return (FrameworkElement)target;
+        }
+
+        private FrameworkElement GetInterstitialElement(int index)
+        {
+            var panel = SuggestionInterstitialsContainer.ItemsPanelRoot;
+            var target = panel.Children[index];
+            return (FrameworkElement)target;
+        }
+
+        private FrameworkElement GetTailElement(int index)
+        {
+            var panel = TailItemsContainer.ItemsPanelRoot;
+            var target = panel.Children[index];
+            return (FrameworkElement)target;
+        }
+
+        private FrameworkElement GetHeadElement(int index)
+        {
+            var panel = HeadItemsContainer.ItemsPanelRoot;
+            var target = panel.Children[index];
+            return (FrameworkElement)target;
         }
 
         private static bool GetAs<T>(Timeline timeline, out T value)
@@ -308,6 +339,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 Debug.WriteLine($"Sending item {++sent}");
             }
             _semaphore.Release();
+
+            if (_switchMode)
+            {
+                _ = ShowSwitchInterfaceAsync();
+            }
         }
 
         private async Task ConsumeSpeechAsync()

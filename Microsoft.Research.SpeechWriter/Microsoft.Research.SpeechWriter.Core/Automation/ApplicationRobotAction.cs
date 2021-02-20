@@ -8,7 +8,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
     /// </summary>
     public class ApplicationRobotAction
     {
-        private ApplicationRobotAction(ApplicationRobotActionTarget target,
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="index"></param>
+        /// <param name="subIndex"></param>
+        /// <param name="isComplete"></param>
+        public ApplicationRobotAction(ApplicationRobotActionTarget target,
             int index,
             int subIndex,
             bool isComplete)

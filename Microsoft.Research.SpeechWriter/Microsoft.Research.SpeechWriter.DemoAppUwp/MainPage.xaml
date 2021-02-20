@@ -263,5 +263,8 @@
         <Canvas x:Name="TargetPanel">
             <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>
         </Canvas>
+
+        <Canvas x:Name="SwitchPanel"/>
+
     </Grid>
 </Page>
