@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -8,9 +7,9 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 {
     public class TemplateTypeConverter : IValueConverter
     {
-        private static Dictionary<string, DataTemplate> _templates = new Dictionary<string, DataTemplate>();
+        private Dictionary<string, DataTemplate> _templates = new Dictionary<string, DataTemplate>();
 
-        internal static void LoadTemplates(ResourceDictionary resources)
+        internal void LoadTemplates(ResourceDictionary resources)
         {
             foreach (var pair in resources)
             {

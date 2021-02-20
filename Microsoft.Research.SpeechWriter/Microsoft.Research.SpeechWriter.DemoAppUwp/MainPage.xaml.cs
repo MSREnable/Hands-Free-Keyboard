@@ -68,7 +68,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             this.InitializeComponent();
 
-            TemplateTypeConverter.LoadTemplates(Resources);
+            TemplateConverter.LoadTemplates(Resources);
 
             SizeChanged += MainWindow_SizeChanged;
 
@@ -528,6 +528,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             args.Handled = true;
             _demoMovementAnimation = false;
+        }
+
+        private void OnClickReset(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            Frame.Navigate(GetType(), this);
         }
     }
 }
