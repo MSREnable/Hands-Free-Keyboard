@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -74,7 +75,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             TemplateConverter.LoadTemplates(Resources);
 
             SizeChanged += MainWindow_SizeChanged;
-            Loaded += MainPage_Loaded;
             _model.ApplicationModelUpdate += OnCollectionChanged;
 
             TheMediaElement.MediaEnded += (s, e) => _mediaReady.Release();
@@ -82,16 +82,21 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             _ = ConsumeSpeechAsync();
         }
 
-        private async void MainPage_Loaded(object sender, RoutedEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            IsEnabled = false;
-            try
+            base.OnNavigatedTo(e);
+
+            if (e.Parameter != null)
             {
-                await _model.LoadUtterancesAsync();
-            }
-            finally
-            {
-                IsEnabled = true;
+                IsEnabled = false;
+                try
+                {
+                    await _model.LoadUtterancesAsync();
+                }
+                finally
+                {
+                    IsEnabled = true;
+                }
             }
         }
 
@@ -548,7 +553,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private void OnClickReset(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            Frame.Navigate(GetType(), this);
+            Frame.Navigate(GetType(), null);
         }
     }
 }
