@@ -372,62 +372,76 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             var received = 0;
 
-            var spokenDepth = 0;
+            var spokenWords = new List<string>();
 
             for (; ; )
             {
                 ApplicationModelUpdateEventArgs e;
-                do
-                {
-                    Debug.WriteLine($"Waiting for {received + 1}");
-                    await _semaphore.WaitAsync();
 
+                Debug.WriteLine($"Waiting for {received + 1}");
+                await _semaphore.WaitAsync();
+
+                lock (_speech)
+                {
+                    e = _speech.Dequeue();
+                }
+
+                Debug.WriteLine($"Got item {++received}");
+
+                while (!e.IsComplete && await _semaphore.WaitAsync(TimeSpan.FromSeconds(0.25)))
+                {
                     lock (_speech)
                     {
                         e = _speech.Dequeue();
                     }
 
-                    Debug.WriteLine($"Got item {++received}");
+                    Debug.WriteLine($"Immediately replaced with item {++received}");
                 }
-                while (spokenDepth == e.Words.Count &&
-                    !e.IsComplete);
+
+                var lowWaterMark = 0;
+                while (lowWaterMark < spokenWords.Count &&
+                    lowWaterMark < e.Words.Count &&
+                    spokenWords[lowWaterMark] == e.Words[lowWaterMark])
+                {
+                    lowWaterMark++;
+                }
 
                 string text;
 
-                if (e.Words.Count < spokenDepth)
+                if (lowWaterMark < spokenWords.Count)
                 {
-                    Debug.Assert(!e.IsComplete);
-
-                    text = "Uh-oh";
-                    spokenDepth = e.Words.Count;
+                    text = "Oops! ";
+                    lowWaterMark = 0;
+                    spokenWords.Clear();
                 }
                 else
                 {
-                    if (spokenDepth < e.Words.Count)
-                    {
-                        text = e.Words[spokenDepth];
-                        spokenDepth++;
-                        while (spokenDepth < e.Words.Count)
-                        {
-                            text += " " + e.Words[spokenDepth];
-                            spokenDepth++;
-                        }
-                    }
-                    else
-                    {
-                        text = null;
-                    }
+                    text = string.Empty;
+                }
 
-                    if (e.IsComplete)
+                if (lowWaterMark < e.Words.Count)
+                {
+                    text += e.Words[lowWaterMark];
+                    spokenWords.Add(e.Words[lowWaterMark]);
+                    lowWaterMark++;
+
+                    while (lowWaterMark < e.Words.Count)
                     {
-                        spokenDepth = 0;
+                        text += " " + e.Words[lowWaterMark];
+                        spokenWords.Add(e.Words[lowWaterMark]);
+                        lowWaterMark++;
                     }
                 }
 
-                Debug.WriteLine($"Saying \"{text}\"");
-
-                if (text != null)
+                if (e.IsComplete)
                 {
+                    spokenWords.Clear();
+                }
+
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    Debug.WriteLine($"Saying \"{text}\"");
+
                     Debug.WriteLine("Waiting for media");
                     await _mediaReady.WaitAsync();
                     Debug.WriteLine("Media ready");
