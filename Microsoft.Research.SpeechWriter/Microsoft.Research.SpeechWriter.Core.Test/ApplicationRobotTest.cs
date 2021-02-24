@@ -216,7 +216,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyCantoneseTest()
         {
-            MultiTest("分享 同 享受", 51, 1, 33, 178);
+            MultiTest("分享 同 享受", 51, 1, 33, 176);
         }
 
         [Test]

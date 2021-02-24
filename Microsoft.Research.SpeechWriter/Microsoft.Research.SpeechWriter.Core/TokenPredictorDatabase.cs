@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -63,6 +64,51 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             return tokens;
+        }
+
+        internal IReadOnlyList<int> GetTopRanked(IReadOnlyList<int> mask)
+        {
+            IReadOnlyList<int> result;
+
+            var maxCount = 0;
+            var tokens = new List<int>();
+
+            foreach (var pair in _database)
+            {
+                var count = pair.Value.Count;
+                var token = pair.Key;
+
+                if (mask.Contains(token) && maxCount <= count)
+                {
+                    if (maxCount < count)
+                    {
+                        maxCount = count;
+                        tokens.Clear();
+                    }
+
+                    tokens.Add(token);
+                }
+            }
+
+            Debug.Assert(tokens.Count <= mask.Count);
+
+            if (tokens.Count != 0)
+            {
+                if (tokens.Count < mask.Count)
+                {
+                    result = tokens;
+                }
+                else
+                {
+                    result = tokens;
+                }
+            }
+            else
+            {
+                result = mask;
+            }
+
+            return result;
         }
 
         internal TokenPredictorDatabase GetChild(int[] context, int index, int length)

@@ -149,26 +149,31 @@ namespace Microsoft.Research.SpeechWriter.Core
             var contextLimit = context.Length;
             var contextStart = Math.Max(0, contextLimit - _width + 1);
 
-            for (var scanStart = contextStart; result == -1 && scanStart < contextLimit; scanStart++)
+            var scanStart = contextStart;
+            TokenPredictorDatabase leafDatabase = null;
+            for (; leafDatabase == null && scanStart < contextLimit; scanStart++)
             {
-                var leafDatabase = _database.GetChild(context, scanStart, contextLimit - scanStart);
+                leafDatabase = _database.GetChild(context, scanStart, contextLimit - scanStart);
+            }
 
-                if (leafDatabase != null)
+            if (leafDatabase != null)
+            {
+                var tokens = leafDatabase.GetTopRanked();
+
+                for (; 1 < tokens.Count && scanStart < contextLimit; scanStart++)
                 {
-                    var tokens = leafDatabase.GetTopRanked();
+                    leafDatabase = _database.GetChild(context, scanStart, contextLimit - scanStart);
+                    Debug.Assert(leafDatabase != null);
 
-                    if (1 < tokens.Count)
-                    {
-                        // TODO: This should pick the most used in context, but for the moment do nothing.
-                    }
+                    tokens = leafDatabase.GetTopRanked(tokens);
+                }
 
-                    Debug.Assert(result == -1);
-                    foreach (var token in tokens)
+                Debug.Assert(result == -1);
+                foreach (var token in tokens)
+                {
+                    if (result < token)
                     {
-                        if (result < token)
-                        {
-                            result = token;
-                        }
+                        result = token;
                     }
                 }
             }
