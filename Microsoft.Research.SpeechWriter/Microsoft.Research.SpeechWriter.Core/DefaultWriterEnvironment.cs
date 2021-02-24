@@ -33,11 +33,16 @@ namespace Microsoft.Research.SpeechWriter.Core
         IEnumerable<string> IWriterEnvironment.GetOrderedSeedWords()
         {
 #if true
+            var delimiters = "\t \r\n".ToCharArray();
             using (var reader = new StringReader(Resources.WordCountList))
             {
                 for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
                 {
-                    var delimiter = line.IndexOf('\t');
+                    var delimiter = line.IndexOfAny(delimiters);
+                    if (delimiter == -1)
+                    {
+                        delimiter = line.Length;
+                    }
                     var str = line.Substring(0, delimiter).ToUpperInvariant();
 
                     var goodLimit = 0;
