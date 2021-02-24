@@ -61,23 +61,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OH YOU WICKED LITTLE THING
-        ///REALLY DINAH OUGHT TO HAVE TAUGHT YOU BETTER MANNERS
-        ///YOU OUGHT DINAH YOU KNOW YOU OUGHT
-        ///DO YOU KNOW WHAT TO MORROW IS KITTY
-        ///YOU&apos;D HAVE GUESSED IF YOU&apos;D BEEN UP IN THE WINDOW WITH ME ONLY DINAH WAS MAKING YOU TIDY SO YOU COULDN&apos;T
-        ///I WAS WATCHING THE BOYS GETTING IN STICKS FOR THE BONFIRE AND IT WANTS PLENTY OF STICKS KITTY
-        ///ONLY IT GOT SO COLD AND IT SNOWED SO THEY HAD TO LEAVE OFF
-        ///WE&apos;LL GO AND SEE THE BONFIRE TOMORROW
-        ///DO YOU KNOW I WAS SO ANGRY WHEN I SAW ALL THE MISCHIEF YO [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string SentencesSeed {
-            get {
-                return ResourceManager.GetString("SentencesSeed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to I	0.028827635000
         ///to	0.028536368000
         ///and	0.023919919000
