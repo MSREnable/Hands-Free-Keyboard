@@ -151,38 +151,11 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             for (var scanStart = contextStart; result == -1 && scanStart < contextLimit; scanStart++)
             {
-                var leafDatabase = _database;
-
-                for (var index = scanStart; leafDatabase != null && index < contextLimit; index++)
-                {
-                    if (leafDatabase.TryGetValue(context[index], out var info))
-                    {
-                        leafDatabase = info.GetChildren();
-                    }
-                    else
-                    {
-                        leafDatabase = null;
-                    }
-                }
+                var leafDatabase = _database.GetChild(context, scanStart, contextLimit - scanStart);
 
                 if (leafDatabase != null)
                 {
-                    var maxCount = 0;
-                    var tokens = new HashSet<int>();
-
-                    foreach (var pair in leafDatabase)
-                    {
-                        if (maxCount <= pair.Value.Count)
-                        {
-                            if (maxCount < pair.Value.Count)
-                            {
-                                maxCount = pair.Value.Count;
-                                tokens.Clear();
-                            }
-
-                            tokens.Add(pair.Key);
-                        }
-                    }
+                    var tokens = leafDatabase.GetTopRanked();
 
                     if (1 < tokens.Count)
                     {

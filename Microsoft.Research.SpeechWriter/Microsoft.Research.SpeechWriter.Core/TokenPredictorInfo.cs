@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -50,5 +51,20 @@ namespace Microsoft.Research.SpeechWriter.Core
             return _children;
         }
 
+        internal TokenPredictorDatabase GetChild(int[] context, int index, int length)
+        {
+            TokenPredictorDatabase database;
+
+            if (_children != null)
+            {
+                database = _children.GetChild(context, index, length);
+            }
+            else
+            {
+                database = null;
+            }
+
+            return database;
+        }
     }
 }
