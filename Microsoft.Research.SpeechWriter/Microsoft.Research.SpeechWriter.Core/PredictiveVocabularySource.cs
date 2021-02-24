@@ -127,7 +127,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         /// <param name="sequence"></param>
         /// <param name="increment"></param>
-        internal void AddSequence(IList<int> sequence, int increment)
+        internal void AddSequence(IReadOnlyList<int> sequence, int increment)
         {
             PersistantPredictor.AddSequenceTail(sequence, increment);
             TemporaryPredictor.AddSequenceTail(sequence, increment);

@@ -64,7 +64,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         /// <param name="sequence"></param>
         /// <param name="increment">Signed increment to apply.</param>
-        public void AddSequenceTail(IList<int> sequence, int increment)
+        public void AddSequenceTail(IReadOnlyList<int> sequence, int increment)
         {
             var sequenceCount = sequence.Count;
             Debug.Assert(0 < sequenceCount);
