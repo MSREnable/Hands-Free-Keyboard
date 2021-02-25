@@ -113,11 +113,15 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal TokenPredictorDatabase GetChild(int[] context, int index, int length)
         {
-            Debug.Assert(1 <= length);
+            Debug.Assert(0 <= length);
 
             TokenPredictorDatabase result;
 
-            if (_database.TryGetValue(context[index], out var info))
+            if (length == 0)
+            {
+                result = this;
+            }
+            else if (_database.TryGetValue(context[index], out var info))
             {
                 if (length == 1)
                 {

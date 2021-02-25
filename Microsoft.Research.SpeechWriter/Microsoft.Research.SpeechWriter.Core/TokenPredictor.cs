@@ -181,6 +181,18 @@ namespace Microsoft.Research.SpeechWriter.Core
             return result;
         }
 
+        private struct CandidatePair
+        {
+            internal CandidatePair(int token, int count)
+            {
+                Token = token;
+                Count = count;
+            }
+
+            internal int Token { get; private set; }
+            internal int Count { get; private set; }
+        };
+
         internal IEnumerable<int> GetTopIndices(PredictiveVocabularySource source, int[] context, int minIndex, int limIndex, int count)
         {
             var toFindCount = count;
@@ -191,50 +203,43 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             for (var scanIndex = contextStart; toFindCount != 0 && scanIndex <= contextLimit; scanIndex++)
             {
-                var dictionaryX = _database;
-                for (var index = scanIndex; dictionaryX != null && index < contextLimit; index++)
-                {
-                    if (dictionaryX.TryGetValue(context[index], out var infoX))
-                    {
-                        dictionaryX = infoX.GetChildren();
-                    }
-                    else
-                    {
-                        dictionaryX = null;
-                    }
-                }
+                var database = _database.GetChild(context, scanIndex, contextLimit - scanIndex);
 
-                if (dictionaryX != null)
+                if (database != null)
                 {
-                    var candidates = new List<Tuple<int, int>>();
+                    var candidates = new List<CandidatePair>();
 
                     var acceptedMin = int.MinValue;
-                    foreach (var pair in dictionaryX)
+                    foreach (var pair in database)
                     {
-                        if (!foundTokens.Contains(pair.Key))
+                        var token = pair.Key;
+
+                        if (!foundTokens.Contains(token))
                         {
-                            var index = source.GetTokenIndex(pair.Key);
-                            if (minIndex <= index && index < limIndex && acceptedMin <= pair.Value.Count)
+                            var tokenCount = pair.Value.Count;
+
+                            var index = source.GetTokenIndex(token);
+                            if (minIndex <= index && index < limIndex && acceptedMin <= tokenCount)
                             {
                                 var candidateLimit = candidates.Count;
-                                while (0 < candidateLimit && candidates[candidateLimit - 1].Item2 < pair.Value.Count)
+                                while (0 < candidateLimit && candidates[candidateLimit - 1].Count < tokenCount)
                                 {
                                     candidateLimit--;
                                 }
 
-                                candidates.Insert(candidateLimit, new Tuple<int, int>(pair.Key, pair.Value.Count));
+                                candidates.Insert(candidateLimit, new CandidatePair(token, tokenCount));
 
                                 if (toFindCount == candidates.Count)
                                 {
-                                    acceptedMin = candidates[candidates.Count - 1].Item2;
+                                    acceptedMin = candidates[candidates.Count - 1].Count;
                                 }
 
                                 if (toFindCount < candidates.Count &&
-                                    candidates[candidates.Count - 1].Item2 < candidates[toFindCount - 1].Item2)
+                                    candidates[candidates.Count - 1].Count < candidates[toFindCount - 1].Count)
                                 {
-                                    Debug.Assert(candidates[toFindCount].Item2 < candidates[toFindCount - 1].Item2);
+                                    Debug.Assert(candidates[toFindCount].Count < candidates[toFindCount - 1].Count);
                                     candidates.RemoveRange(toFindCount, candidates.Count - toFindCount);
-                                    acceptedMin = candidates[candidates.Count - 1].Item2;
+                                    acceptedMin = candidates[candidates.Count - 1].Count;
                                 }
                             }
                         }
@@ -244,18 +249,14 @@ namespace Microsoft.Research.SpeechWriter.Core
                     foreach (var candidate in candidates)
                     {
                         var counts = new int[contextLimit - scanIndex + 2];
-                        counts[0] = candidate.Item2;
-                        counts[contextLimit - scanIndex + 1] = candidate.Item1;
+                        counts[0] = candidate.Count;
+                        counts[contextLimit - scanIndex + 1] = candidate.Token;
                         sortableCandidates.Add(counts);
                     }
                     for (var subIndex = scanIndex + 1; subIndex <= contextLimit; subIndex++)
                     {
-                        var dictionary = _database;
-                        for (var subSubIndex = subIndex; dictionary != null && subSubIndex < contextLimit; subSubIndex++)
-                        {
-                            var subInfo = dictionary.GetValue(context[subSubIndex]);
-                            dictionary = subInfo.TryGetChildren();
-                        }
+                        var dictionary = _database.GetChild(context, subIndex, contextLimit - subIndex);
+
                         if (dictionary != null)
                         {
                             foreach (var counts in sortableCandidates)
