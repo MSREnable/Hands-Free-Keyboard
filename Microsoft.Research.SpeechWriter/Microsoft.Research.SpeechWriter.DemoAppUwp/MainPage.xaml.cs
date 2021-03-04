@@ -25,6 +25,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public static DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(ApplicationModel), typeof(MainPage),
+            new PropertyMetadata(null, OnModelChanged));
         public static DependencyProperty MoveToCenterXProperty = DependencyProperty.Register(nameof(MoveToCenterX), typeof(double), typeof(MainPage),
             new PropertyMetadata(0.0));
         public static DependencyProperty MoveToCenterYProperty = DependencyProperty.Register(nameof(MoveToCenterY), typeof(double), typeof(MainPage),
@@ -38,19 +40,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         public static DependencyProperty MoveToHeightProperty = DependencyProperty.Register(nameof(MoveToHeight), typeof(double), typeof(MainPage),
             new PropertyMetadata(0.0));
 
-        private class EmptyEnvironment : DefaultWriterEnvironment, IWriterEnvironment
-        {
-            /// <summary>
-            /// Dictionary of words, listed from most likely to least likely.
-            /// </summary>
-            /// <returns>List of words.</returns>
-            public IEnumerable<string> GetOrderedSeedWords()
-            {
-                return new string[0];
-            }
-        }
-
-        private readonly ApplicationModel _model;
+        private ApplicationModel _model;
 
         private readonly SpeechSynthesizer _synthesizer = new SpeechSynthesizer();
 
@@ -70,25 +60,41 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             this.InitializeComponent();
 
-            var environment = new UwpWriterEnvironment();
-            _model = new ApplicationModel(environment);
-
             TemplateConverter.LoadTemplates(Resources);
 
             SizeChanged += MainWindow_SizeChanged;
 
             _switchTimer.Tick += OnSwitchTimerTick;
 
-            _model.ApplicationModelUpdate += OnCollectionChanged;
-
             TheMediaElement.MediaEnded += (s, e) => _mediaReady.Release();
 
             _ = ConsumeSpeechAsync();
         }
 
+        private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var page = (MainPage)d;
+            var model = (ApplicationModel)e.NewValue;
+
+            if (page._model != null)
+            {
+                page._model.ApplicationModelUpdate -= page.OnApplicationModelUpdate;
+            }
+
+            page._model = model;
+
+            if (page._model != null)
+            {
+                page._model.ApplicationModelUpdate += page.OnApplicationModelUpdate;
+            }
+        }
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
+            var environment = new UwpWriterEnvironment();
+            Model = new ApplicationModel(environment);
 
             if (e.Parameter != null)
             {
@@ -353,7 +359,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private int sent;
 
-        private void OnCollectionChanged(object sender, ApplicationModelUpdateEventArgs e)
+        private void OnApplicationModelUpdate(object sender, ApplicationModelUpdateEventArgs e)
         {
             lock (_speech)
             {
@@ -454,7 +460,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
         }
 
-        public ApplicationModel Model => _model;
+        public ApplicationModel Model
+        {
+            get => _model;
+            set => SetValue(ModelProperty, value);
+        }
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
