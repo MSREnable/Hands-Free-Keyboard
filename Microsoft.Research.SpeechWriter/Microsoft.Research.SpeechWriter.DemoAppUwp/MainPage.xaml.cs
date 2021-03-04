@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Media.SpeechSynthesis;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -93,10 +94,12 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             base.OnNavigatedTo(e);
 
-            var environment = new UwpWriterEnvironment();
+            var passedEnvironment = e.Parameter as IWriterEnvironment;
+
+            var environment = passedEnvironment ?? new UwpWriterEnvironment();
             Model = new ApplicationModel(environment);
 
-            if (e.Parameter != null)
+            if (e.Parameter != null && passedEnvironment == null)
             {
                 IsEnabled = false;
                 try
@@ -614,9 +617,58 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             _demoMovementAnimation = false;
         }
 
+        private async void SetLanguageAsync(string filename)
+        {
+            var uri = new Uri($"ms-appx:///Assets/{filename}");
+            var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+            var content = await FileIO.ReadTextAsync(file);
+            var environment = new NonEnglishWriterEnvironment(content);
+            Frame.Navigate(typeof(MainPage), environment);
+        }
+
         private void OnClickReset(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             Frame.Navigate(GetType(), null);
+        }
+
+        private void OnFrench(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            SetLanguageAsync("fr_50k.txt");
+        }
+
+        private void OnSpanish(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            SetLanguageAsync("es_50k.txt");
+        }
+
+        private void OnGerman(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            SetLanguageAsync("de_50k.txt");
+        }
+
+        private void OnThai(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            SetLanguageAsync("th_50k.txt");
+        }
+
+        private void OnPortuguese(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            SetLanguageAsync("pt_br_50k.txt");
+        }
+
+        private void OnItalian(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            SetLanguageAsync("it_50k.txt");
+        }
+
+        private void OnArabic(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            SetLanguageAsync("ar_50k.txt");
+        }
+
+        private void OnChinese(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            SetLanguageAsync("zh_cn_50k.txt");
         }
     }
 }

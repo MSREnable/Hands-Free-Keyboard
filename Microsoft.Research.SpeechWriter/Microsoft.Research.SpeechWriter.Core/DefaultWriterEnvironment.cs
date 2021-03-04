@@ -30,11 +30,21 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         int IComparer<string>.Compare(string string1, string string2) => _compare(string1, string2);
 
+        /// <summary>
+        /// Create reader for seed dictionary.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual StringReader CreateOrderedSeedWordsReader()
+        {
+            var reader = new StringReader(Resources.WordCountList);
+            return reader;
+        }
+
         IEnumerable<string> IWriterEnvironment.GetOrderedSeedWords()
         {
 #if true
             var delimiters = "\t \r\n".ToCharArray();
-            using (var reader = new StringReader(Resources.WordCountList))
+            using (var reader = CreateOrderedSeedWordsReader())
             {
                 for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
                 {

@@ -215,6 +215,14 @@
                 <KeyboardAccelerator Key="Q" Invoked="OnClickQuick"/>
                 <KeyboardAccelerator Key="R" Invoked="OnClickReset"/>
                 <KeyboardAccelerator Key="Space" Invoked="OnSpace"/>
+                <KeyboardAccelerator Key="NumberPad1" Invoked="OnFrench"/>
+                <KeyboardAccelerator Key="NumberPad2" Invoked="OnSpanish"/>
+                <KeyboardAccelerator Key="NumberPad3" Invoked="OnGerman"/>
+                <KeyboardAccelerator Key="NumberPad4" Invoked="OnThai"/>
+                <KeyboardAccelerator Key="NumberPad5" Invoked="OnPortuguese"/>
+                <KeyboardAccelerator Key="NumberPad6" Invoked="OnItalian"/>
+                <KeyboardAccelerator Key="NumberPad7" Invoked="OnArabic"/>
+                <KeyboardAccelerator Key="NumberPad8" Invoked="OnChinese"/>
             </CommandBar.KeyboardAccelerators>
         </CommandBar>
 
