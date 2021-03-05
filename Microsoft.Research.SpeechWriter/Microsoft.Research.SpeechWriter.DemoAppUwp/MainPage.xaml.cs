@@ -99,6 +99,20 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             var environment = passedEnvironment ?? new UwpWriterEnvironment();
             Model = new ApplicationModel(environment);
 
+            var voiceChoice = new List<VoiceInformation>();
+            foreach (var voice in SpeechSynthesizer.AllVoices)
+            {
+                if (voice.Language.StartsWith(environment.Language))
+                {
+                    voiceChoice.Add(voice);
+                }
+            }
+
+            if (voiceChoice.Count != 0)
+            {
+                _synthesizer.Voice = voiceChoice[0];
+            }
+
             if (e.Parameter != null && passedEnvironment == null)
             {
                 IsEnabled = false;
@@ -619,10 +633,19 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private async void SetLanguageAsync(string filename)
         {
+            var voiceChoices = new List<object>();
+            foreach (var voice in SpeechSynthesizer.AllVoices)
+            {
+                if (voice.Language.Substring(0, 2) == filename.Substring(0, 2))
+                {
+                    voiceChoices.Add(voice);
+                }
+            }
+
             var uri = new Uri($"ms-appx:///Assets/{filename}");
             var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
             var content = await FileIO.ReadTextAsync(file);
-            var environment = new NonEnglishWriterEnvironment(content);
+            var environment = new NonEnglishWriterEnvironment(filename.Substring(0, 2), content);
             Frame.Navigate(typeof(MainPage), environment);
         }
 

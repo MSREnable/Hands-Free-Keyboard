@@ -30,6 +30,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         int IComparer<string>.Compare(string string1, string string2) => _compare(string1, string2);
 
+        string IWriterEnvironment.Language => "en-US";
+
         /// <summary>
         /// Create reader for seed dictionary.
         /// </summary>

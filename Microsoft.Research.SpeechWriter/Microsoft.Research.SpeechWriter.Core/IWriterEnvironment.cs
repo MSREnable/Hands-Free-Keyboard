@@ -9,6 +9,11 @@ namespace Microsoft.Research.SpeechWriter.Core
     public interface IWriterEnvironment : IComparer<string>
     {
         /// <summary>
+        /// The language.
+        /// </summary>
+        string Language { get; }
+
+        /// <summary>
         /// Dictionary of words, listed from most likely to least likely.
         /// </summary>
         /// <returns>List of words.</returns>

@@ -5,12 +5,16 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 {
     class NonEnglishWriterEnvironment : DefaultWriterEnvironment, IWriterEnvironment
     {
-        private string _seedWords;
+        private readonly string _language;
+        private readonly string _seedWords;
 
-        internal NonEnglishWriterEnvironment(string seedWords)
+        internal NonEnglishWriterEnvironment(string language, string seedWords)
         {
+            _language = language;
             _seedWords = seedWords;
         }
+
+        string IWriterEnvironment.Language => _language;
 
         protected override StringReader CreateOrderedSeedWordsReader()
         {
