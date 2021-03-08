@@ -28,7 +28,17 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         public static IWriterEnvironment Instance { get; } = new DefaultWriterEnvironment();
 
-        int IComparer<string>.Compare(string string1, string string2) => _compare(string1, string2);
+        int IComparer<string>.Compare(string string1, string string2)
+        {
+            var result = _compare(string1, string2);
+
+            if (result == 0)
+            {
+                result = string.CompareOrdinal(string1, string2);
+            }
+
+            return result;
+        }
 
         string IWriterEnvironment.Language => "en-US";
 
