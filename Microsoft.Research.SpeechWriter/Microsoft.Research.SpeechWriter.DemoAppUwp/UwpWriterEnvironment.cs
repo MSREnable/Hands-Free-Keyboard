@@ -110,6 +110,10 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                             utterance = null;
                             eof = true;
                         }
+                        else if (string.IsNullOrWhiteSpace(line))
+                        {
+                            utterance = null;
+                        }
                         else
                         {
                             utterance = line.Split(' ');

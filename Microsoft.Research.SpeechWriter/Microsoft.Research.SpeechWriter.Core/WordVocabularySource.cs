@@ -96,10 +96,12 @@ namespace Microsoft.Research.SpeechWriter.Core
                 while (await enumerator.MoveNextAsync())
                 {
                     var utterance = enumerator.Current;
+                    Debug.Assert(utterance.Length != 0);
 
                     var sequence = new List<int>(new[] { 0 });
                     foreach (var word in utterance)
                     {
+                        Debug.Assert(!string.IsNullOrWhiteSpace(word));
                         var token = _tokens.GetToken(word);
                         Debug.Assert(token != 0);
                         sequence.Add(token);
