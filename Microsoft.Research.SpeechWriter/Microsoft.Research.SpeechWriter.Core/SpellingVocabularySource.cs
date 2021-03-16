@@ -69,17 +69,13 @@ namespace Microsoft.Research.SpeechWriter.Core
             sequence.Add(0);
             for (var index = 0; index < word.Length;)
             {
-                int utf32;
-
-                var ch = word[index];
-                if (char.GetUnicodeCategory(ch) != UnicodeCategory.Surrogate)
+                int utf32 = char.ConvertToUtf32(word, index);
+                if (char.GetUnicodeCategory(word, index) != UnicodeCategory.Surrogate)
                 {
-                    utf32 = ch;
                     index++;
                 }
                 else
                 {
-                    utf32 = char.ConvertToUtf32(word, index);
                     index += 2;
                 }
 
@@ -244,7 +240,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             Context.Add(token);
 
-            if(_characterSet.Add(char.ConvertFromUtf32(token)))
+            if (_characterSet.Add(char.ConvertFromUtf32(token)))
             {
                 PopulateVocabularyList();
             }
