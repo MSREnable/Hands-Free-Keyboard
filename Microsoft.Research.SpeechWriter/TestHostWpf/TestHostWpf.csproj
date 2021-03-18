@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core.UI.Wpf\Microsoft.Research.SpeechWriter.Core.UI.Wpf.csproj" />
+    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core.UI\Microsoft.Research.SpeechWriter.Core.UI.csproj" />
+  </ItemGroup>
+
+</Project>
