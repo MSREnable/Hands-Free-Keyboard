@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppWpf
+namespace Microsoft.Research.SpeechWriter.Core.UI.Wpf
 {
     public class TemplateOpacityCoverter : IValueConverter
     {
@@ -26,7 +26,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 
             return opacity;
         }
-
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

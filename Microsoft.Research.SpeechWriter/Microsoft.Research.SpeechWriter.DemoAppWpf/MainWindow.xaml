@@ -3,107 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Microsoft.Research.SpeechWriter.DemoAppWpf"
-        xmlns:lib="clr-namespace:Microsoft.Research.SpeechWriter.Core.Items;assembly=Microsoft.Research.SpeechWriter.Core"
         mc:Ignorable="d"
         Title="SpeechWriter DemoApp WPF" Height="580" Width="1030">
 
     <Window.Resources>
-
-        <local:TemplateOpacityCoverter x:Key="TemplateOpacityConverter"/>
-
-        <Style TargetType="Button">
-            <Setter Property="MinHeight" Value="50"/>
-            <Setter Property="MinWidth" Value="50"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-        </Style>
-        <Style TargetType="TextBlock">
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="FontSize" Value="25"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-        </Style>
-        <Style TargetType="ItemsControl">
-            <Setter Property="ItemTemplate">
-                <Setter.Value>
-                    <DataTemplate>
-                        <Button Content="{Binding}" Command="{Binding}" Opacity="{Binding Converter={StaticResource TemplateOpacityConverter}}"/>
-                    </DataTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <DataTemplate DataType="{x:Type lib:SuggestedWordItem}">
-            <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
-                <TextBlock Text="{Binding Word}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-            </Border>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:SuggestedWordSequenceItem}">
-            <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
-                <TextBlock Text="{Binding Word}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-            </Border>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:HeadWordItem}">
-            <Border BorderBrush="Black" BorderThickness="1" Background="LightGreen" Margin="5,2">
-                <TextBlock Text="{Binding Word}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-            </Border>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:GhostWordItem}">
-            <Border BorderBrush="Black" BorderThickness="1" Background="LightBlue" Margin="5,2">
-                <TextBlock Text="{Binding Word}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-            </Border>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:InterstitialGapItem}">
-            <TextBlock Text=":" FontSize="25" FontWeight="Bold" Margin="5"/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:InterstitialSpellingItem}">
-            <TextBlock Text="*" FontSize="25" FontWeight="Bold" Margin="5"/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:HeadStartItem}">
-            <TextBlock Text="&#xAB;" FontSize="25" FontWeight="Bold" Margin="5"/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:TailStopItem}">
-            <TextBlock Text="&#xBB;" FontSize="25" FontWeight="Bold" Margin="5"/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:GhostStopItem}">
-            <TextBlock Text="&#xBB;" FontSize="25" FontWeight="Bold" Margin="5"/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:SuggestedSpellingItem}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Prefix}" FontSize="25" FontWeight="Bold" Foreground="DarkGray" VerticalAlignment="Center"/>
-                <Border BorderBrush="Black" BorderThickness="1" Background="LightSteelBlue" Margin="5,2">
-                    <TextBlock Text="{Binding Symbol}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-                </Border>
-            </StackPanel>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:SuggestedSpellingSequenceItem}">
-            <Border BorderBrush="Black" BorderThickness="1" Background="LightSteelBlue" Margin="5,2">
-                <TextBlock Text="{Binding Symbol}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-            </Border>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:SuggestedSpellingWordItem}">
-            <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
-                <TextBlock Text="{Binding Word}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-            </Border>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:SuggestedSpellingBackspaceItem}">
-            <TextBlock Text="{Binding Prefix}" FontSize="25" FontWeight="Bold" Foreground="DarkGray" VerticalAlignment="Center"/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:InterstitialUnicodeItem}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="&#xE775;" FontSize="25" FontFamily="Segoe MDL2 Assets" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-            </StackPanel>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type lib:SuggestedUnicodeItem}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Prefix}" FontSize="25" FontWeight="Bold" Foreground="DarkGray" VerticalAlignment="Center"/>
-                <Border BorderBrush="Black" BorderThickness="1" Background="LightSteelBlue" Margin="5,2">
-                    <TextBlock Text="{Binding Symbol}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-                </Border>
-                <TextBlock Text="{Binding Code, StringFormat={}&amp;#{0};}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-            </StackPanel>
-        </DataTemplate>
-
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Microsoft.Research.SpeechWriter.Core.UI.Wpf;component/TemplateDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid x:Name="TheContent">
