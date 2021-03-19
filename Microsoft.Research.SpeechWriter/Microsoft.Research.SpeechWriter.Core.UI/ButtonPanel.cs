@@ -23,7 +23,7 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
             _layout = layout;
             _list = list;
 
-            ((INotifyCollectionChanged)_list).CollectionChanged += (s, e) => ResetContent(_list);
+            ((INotifyCollectionChanged)_list).CollectionChanged += OnCollectionChanged;
         }
 
         protected double UniformMargin => _layout.UniformMargin;
@@ -40,6 +40,45 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
             Rows = rows;
 
             ResetContent(_list);
+        }
+
+        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    AddContent(_list, e.NewStartingIndex, e.NewItems.Count);
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    RemoveContent(_list, e.OldStartingIndex, e.OldItems.Count);
+                    break;
+
+                case NotifyCollectionChangedAction.Replace:
+                    ReplaceContent(_list, e.OldStartingIndex, e.OldItems.Count);
+                    break;
+
+                case NotifyCollectionChangedAction.Reset:
+                case NotifyCollectionChangedAction.Move:
+                default:
+                    ResetContent(_list);
+                    break;
+            }
+        }
+
+        protected virtual void AddContent(IList<TItem> list, int startIndex, int count)
+        {
+            ResetContent(list);
+        }
+
+        protected virtual void RemoveContent(IList<TItem> list, int startIndex, int count)
+        {
+            ResetContent(list);
+        }
+
+        protected virtual void ReplaceContent(IList<TItem> list, int startIndex, int count)
+        {
+            ResetContent(list);
         }
 
         protected abstract void ResetContent(IList<TItem> list);

@@ -14,6 +14,14 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
         {
         }
 
+        protected override void AddContent(IList<ICommand> list, int startIndex, int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                AddItem(startIndex + i, list[startIndex + i]);
+            }
+        }
+
         protected override void ResetContent(IList<ICommand> list)
         {
             foreach (var element in _elements)
@@ -25,12 +33,17 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
             var row = 0;
             foreach (var command in list)
             {
-                var element = Create(command, WidthBehavior.Fixed);
-                Move(element, row, 0);
-                _elements.Add(element);
+                AddItem(row, command);
 
                 row++;
             }
+        }
+
+        private void AddItem(int row, ICommand command)
+        {
+            var element = Create(command, WidthBehavior.Fixed);
+            Move(element, row, 0);
+            _elements.Add(element);
         }
     }
 }
