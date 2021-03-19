@@ -1,26 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core.UI
 {
-    public class ButtonWrapPanel<T> : ButtonPanel<T>
+    public class ButtonWrapPanel<T> : ButtonPanel<T, ICommand>
         where T : IButtonUI
     {
-        private readonly ReadOnlyObservableCollection<ICommand> _list;
-
         private readonly List<T> _elementList = new List<T>();
 
         public ButtonWrapPanel(ApplicationLayout<T> layout, ReadOnlyObservableCollection<ICommand> list)
-            : base(layout)
+            : base(layout, list)
         {
-            _list = list;
-
-            ((INotifyCollectionChanged)_list).CollectionChanged += (s, e) => ResetContent();
         }
 
-        protected override void ResetContent()
+        protected override void ResetContent(IList<ICommand> list)
         {
             foreach (var element in _elementList)
             {
@@ -31,7 +25,7 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
             var row = 0;
             var offset = 0.0;
 
-            using (var enumerator = _list.GetEnumerator())
+            using (var enumerator = list.GetEnumerator())
             {
                 while (enumerator.MoveNext() && row < Rows)
                 {

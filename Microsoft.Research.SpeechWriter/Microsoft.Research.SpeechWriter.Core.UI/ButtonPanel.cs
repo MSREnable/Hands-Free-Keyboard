@@ -1,21 +1,29 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core.UI
 {
-    public abstract class ButtonPanel<T>
-        where T : IButtonUI
+    public abstract class ButtonPanel<TButton, TItem>
+        where TButton : IButtonUI
     {
-        readonly IButtonSurfaceUI<T> _surface;
-        readonly ApplicationLayout<T> _layout;
+        readonly IButtonSurfaceUI<TButton> _surface;
+        readonly ApplicationLayout<TButton> _layout;
+
+        private readonly ReadOnlyObservableCollection<TItem> _list;
 
         private double _left;
 
         private double _top;
 
-        protected ButtonPanel(ApplicationLayout<T> layout)
+        protected ButtonPanel(ApplicationLayout<TButton> layout, ReadOnlyObservableCollection<TItem> list)
         {
             _surface = layout.Surface;
             _layout = layout;
+            _list = list;
+
+            ((INotifyCollectionChanged)_list).CollectionChanged += (s, e) => ResetContent(_list);
         }
 
         protected double UniformMargin => _layout.UniformMargin;
@@ -31,23 +39,23 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
             Width = width;
             Rows = rows;
 
-            ResetContent();
+            ResetContent(_list);
         }
 
-        protected abstract void ResetContent();
+        protected abstract void ResetContent(IList<TItem> list);
 
-        protected T Create(ICommand command, WidthBehavior behavior)
+        protected TButton Create(ICommand command, WidthBehavior behavior)
         {
             var element = _surface.Create(command, _layout.Pitch, _layout.Pitch, behavior);
             return element;
         }
 
-        protected void Move(T element, int row, double offset)
+        protected void Move(TButton element, int row, double offset)
         {
             _surface.Move(element, _left + offset, _top + row * (_layout.Pitch + _layout.UniformMargin));
         }
 
-        protected void Remove(T element)
+        protected void Remove(TButton element)
         {
             _surface.Remove(element);
         }

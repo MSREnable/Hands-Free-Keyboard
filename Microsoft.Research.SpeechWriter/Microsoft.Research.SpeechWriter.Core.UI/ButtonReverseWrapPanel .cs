@@ -5,22 +5,17 @@ using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core.UI
 {
-    public class ButtonReverseWrapPanel<T> : ButtonPanel<T>
+    public class ButtonReverseWrapPanel<T> : ButtonPanel<T, ICommand>
         where T : IButtonUI
     {
-        private readonly ReadOnlyObservableCollection<ICommand> _list;
-
         private readonly List<T> _elementList = new List<T>();
 
         public ButtonReverseWrapPanel(ApplicationLayout<T> layout, ReadOnlyObservableCollection<ICommand> list)
-            : base(layout)
+            : base(layout, list)
         {
-            _list = list;
-
-            ((INotifyCollectionChanged)_list).CollectionChanged += (s, e) => ResetContent();
         }
 
-        protected override void ResetContent()
+        protected override void ResetContent(IList<ICommand> list)
         {
             foreach (var element in _elementList)
             {
@@ -28,7 +23,7 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
             }
             _elementList.Clear();
 
-            using (var enumerator = _list.GetEnumerator())
+            using (var enumerator = list.GetEnumerator())
             {
                 var offset = Width;
 

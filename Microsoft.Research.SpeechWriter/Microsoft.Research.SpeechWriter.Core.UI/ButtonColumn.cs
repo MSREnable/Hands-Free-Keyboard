@@ -1,27 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core.UI
 {
-    public class ButtonColumn<T> : ButtonPanel<T>
+    public class ButtonColumn<T> : ButtonPanel<T, ICommand>
         where T : IButtonUI
     {
-        private readonly ReadOnlyObservableCollection<ICommand> _list;
-
         private readonly List<T> _elements = new List<T>();
 
         public ButtonColumn(ApplicationLayout<T> layout, ReadOnlyObservableCollection<ICommand> list)
-            : base(layout)
+            : base(layout, list)
         {
-            _list = list;
-
-            ((INotifyCollectionChanged)_list).CollectionChanged += (s, e) => ResetContent();
-            ResetContent();
         }
 
-        protected override void ResetContent()
+        protected override void ResetContent(IList<ICommand> list)
         {
             foreach (var element in _elements)
             {
@@ -30,7 +23,7 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
             _elements.Clear();
 
             var row = 0;
-            foreach (var command in _list)
+            foreach (var command in list)
             {
                 var element = Create(command, WidthBehavior.Fixed);
                 Move(element, row, 0);
