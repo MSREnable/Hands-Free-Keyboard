@@ -12,6 +12,8 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
 
         private readonly ButtonWrapPanel<T> _documentWrapPanel;
 
+        private readonly ApplicationModel _model = new ApplicationModel();
+
         private readonly ButtonReverseWrapPanel<T> _documentTailPanel;
 
         private readonly ButtonColumn<T> _navigationColumn;
@@ -22,34 +24,18 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
         private readonly double _uniformMargin;
         private int _rows;
 
-        private readonly ObservableCollection<ICommand> _documentList = new ObservableCollection<ICommand>();
-
-        private readonly ObservableCollection<ICommand> _documentTailList = new ObservableCollection<ICommand>();
-
-        private readonly ObservableCollection<ICommand> _navigationList = new ObservableCollection<ICommand>();
-
-        private readonly ObservableCollection<IEnumerable<ICommand>> _selectionLists = new ObservableCollection<IEnumerable<ICommand>>();
-
         public ApplicationLayout(IButtonSurfaceUI<T> surface, double pitch, double uniformMargin)
         {
             _surface = surface;
             _pitch = pitch;
             _uniformMargin = uniformMargin;
 
-            _documentWrapPanel = new ButtonWrapPanel<T>(this, new ReadOnlyObservableCollection<ICommand>(_documentList));
-            _documentTailPanel = new ButtonReverseWrapPanel<T>(this, new ReadOnlyObservableCollection<ICommand>(_documentTailList));
-            _navigationColumn = new ButtonColumn<T>(this, new ReadOnlyObservableCollection<ICommand>(_navigationList));
-            _selectionListsColumn = new ButtonListColumn<T>(this, new ReadOnlyObservableCollection<IEnumerable<ICommand>>(_selectionLists));
+            _documentWrapPanel = new ButtonWrapPanel<T>(this, _model.HeadItems);
+            _documentTailPanel = new ButtonReverseWrapPanel<T>(this, _model.TailItems);
+            _navigationColumn = new ButtonColumn<T>(this, _model.SuggestionInterstitials);
+            _selectionListsColumn = new ButtonListColumn<T>(this, _model.SuggestionLists);
 
             _surface.Resized += OnResized;
-
-            var random = new Random(-1);
-            for (var i = 0; i < 20; i++)
-            {
-                _documentList.Add(new PsuedoContent(random.Next().ToString()));
-            }
-
-            _documentTailList.Add(new PsuedoContent(">"));
         }
 
         internal IButtonSurfaceUI<T> Surface => _surface;
@@ -64,23 +50,7 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
         {
             _rows = (int)Math.Floor((_surface.TotalHeight - _uniformMargin) / (_pitch + _uniformMargin));
 
-            while (_rows < _navigationList.Count)
-            {
-                _navigationList.RemoveAt(_navigationList.Count - 1);
-            }
-            while (_navigationList.Count < _rows)
-            {
-                _navigationList.Add(new PsuedoContent((_navigationList.Count + 1).ToString()));
-            }
-
-            while (_rows - 1 < _selectionLists.Count)
-            {
-                _selectionLists.RemoveAt(_selectionLists.Count - 1);
-            }
-            while (_selectionLists.Count < _rows - 1)
-            {
-                _selectionLists.Add(GetSelectionList(_selectionLists.Count));
-            }
+            _model.MaxNextSuggestionsCount = _rows;
 
             _documentWrapPanel.Move(x: _uniformMargin, y: _uniformMargin, width: WingWidth, _rows - 1);
             _documentTailPanel.Move(x: _uniformMargin, y: _uniformMargin + (_rows - 1) * (_pitch + _uniformMargin), width: WingWidth, 1);

@@ -20,7 +20,7 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <Button Content="{Binding}" Command="{Binding}" Opacity="{Binding Converter={StaticResource TemplateOpacityConverter}}"/>
+                    <local:ButtonUI Content="{Binding}" Command="{Binding}" Opacity="{Binding Converter={StaticResource TemplateOpacityConverter}}"/>
                 </DataTemplate>
             </Setter.Value>
         </Setter>
