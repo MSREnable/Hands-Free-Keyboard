@@ -11,6 +11,17 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Microsoft.Research.SpeechWriter.Core.UI.Wpf;component/TemplateDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="ItemsControl">
+                <Setter Property="ItemTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <Button Content="{Binding}" Command="{Binding}" Opacity="{Binding Converter={StaticResource TemplateOpacityConverter}}"/>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         </ResourceDictionary>
     </Window.Resources>
 

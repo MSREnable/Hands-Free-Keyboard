@@ -16,15 +16,6 @@
         <Setter Property="FontSize" Value="25"/>
         <Setter Property="FontWeight" Value="Bold"/>
     </Style>
-    <Style TargetType="ItemsControl">
-        <Setter Property="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <local:ButtonUI Content="{Binding}" Command="{Binding}" Opacity="{Binding Converter={StaticResource TemplateOpacityConverter}}"/>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
 
     <DataTemplate DataType="{x:Type lib:SuggestedWordItem}">
         <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
