@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core.UI
 {
@@ -56,16 +53,6 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
             _documentTailPanel.Move(x: _uniformMargin, y: _uniformMargin + (_rows - 1) * (_pitch + _uniformMargin), width: WingWidth, 1);
             _navigationColumn.Move(x: _uniformMargin + WingWidth, y: _uniformMargin, width: _pitch, _rows);
             _selectionListsColumn.Move(x: _surface.TotalWidth - WingWidth, y: _uniformMargin + (_uniformMargin + _pitch) / 2, width: WingWidth, _rows - 1);
-        }
-
-        private IEnumerable<ICommand> GetSelectionList(int seed)
-        {
-            var random = new Random(seed);
-            for (; ; )
-            {
-                var value = random.Next();
-                yield return new PsuedoContent(value.ToString());
-            }
         }
     }
 }
