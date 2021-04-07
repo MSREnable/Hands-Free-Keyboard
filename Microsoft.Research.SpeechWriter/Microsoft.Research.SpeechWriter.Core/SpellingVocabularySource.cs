@@ -201,7 +201,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 {
                     word += (char)sequence[i];
                 }
-                item = new SuggestedWordItem(_wordVocabularySource, word);
+                item = _wordVocabularySource.CreateSuggestedWordItem(word);
             }
             else
             {

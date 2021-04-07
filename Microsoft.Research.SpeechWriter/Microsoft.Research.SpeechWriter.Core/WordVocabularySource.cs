@@ -186,6 +186,36 @@ namespace Microsoft.Research.SpeechWriter.Core
             ClearIncrement();
         }
 
+        private HeadWordItem CreateHeadWordItem(string word)
+        {
+            var item = new HeadWordItem(this, word);
+            return item;
+        }
+
+        private GhostWordItem CreateGhostWordItem(string word)
+        {
+            var item = new GhostWordItem(this, word);
+            return item;
+        }
+
+        internal SuggestedWordItem CreateSuggestedWordItem(string word)
+        {
+            var item = new SuggestedWordItem(this, word);
+            return item;
+        }
+
+        private SuggestedWordSequenceItem CreateSuggestedWordSequenceItem(IEnumerable<int> tokenSequence)
+        {
+            var item = new SuggestedWordSequenceItem(this, TokensToWords(tokenSequence));
+            return item;
+        }
+
+        internal SuggestedSpellingWordItem CreateSuggestedSpellingWordItem(string word)
+        {
+            var item = new SuggestedSpellingWordItem(this, word);
+            return item;
+        }
+
         internal void AddSuggestedWord(string word)
         {
             if (_tokens.IsNewWord(word))
@@ -194,7 +224,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _spellingSource.AddNewWord(word);
             }
 
-            var item = new HeadWordItem(this, word);
+            var item = CreateHeadWordItem(word);
             _selectedItems.Add(item);
 
             var selection = GetSelectedTokens();
@@ -208,7 +238,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             foreach (var word in words)
             {
-                var item = new HeadWordItem(this, word);
+                var item = CreateHeadWordItem(word);
                 _selectedItems.Add(item);
 
                 var selection = GetSelectedTokens();
@@ -239,7 +269,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var item = (WordItem)_runOnSuggestions[0];
                 _runOnSuggestions.RemoveAt(0);
 
-                var selected = new HeadWordItem(this, item.Word);
+                var selected = CreateHeadWordItem(item.Word);
                 _selectedItems.Add(selected);
 
                 var selection = GetSelectedTokens();
@@ -298,7 +328,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 var word = _tokens.GetString(token);
                 utterance.Add(word);
-                var item = new GhostWordItem(this, word);
+                var item = CreateGhostWordItem(word);
                 _runOnSuggestions.Add(item);
             }
             var tail = new GhostStopItem(this, TokensToWords(selection));
@@ -317,7 +347,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             while (!ReferenceEquals(selected, item))
             {
                 var word = item.ToString();
-                var runOn = new GhostWordItem(this, word);
+                var runOn = CreateGhostWordItem(word);
                 _runOnSuggestions.Insert(0, runOn);
                 _selectedItems.RemoveAt(index);
 
@@ -403,7 +433,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 if (0 < token)
                 {
                     var word = _tokens.GetString(token);
-                    var item = new GhostWordItem(this, word);
+                    var item = CreateGhostWordItem(word);
                     _runOnSuggestions.Add(item);
 
                     context.Add(token);
@@ -425,7 +455,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var token = GetIndexToken(index);
             var word = _tokens.GetString(token);
-            var item = new SuggestedWordItem(this, word);
+            var item = CreateSuggestedWordItem(word);
             return item;
         }
 
@@ -453,7 +483,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             if (lastToken != 0)
             {
                 var word = _tokens.GetString(lastToken);
-                item = new SuggestedWordSequenceItem(this, TokensToWords(tokenSequence));
+                item = CreateSuggestedWordSequenceItem(tokenSequence);
             }
             else
             {

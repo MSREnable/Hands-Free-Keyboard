@@ -42,7 +42,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 if (index == HeaderSize - 1)
                 {
-                    yield return new SuggestedSpellingWordItem(_wordVocabularySource, _spellingVocabularySource.Prefix);
+                    yield return _wordVocabularySource.CreateSuggestedSpellingWordItem(_spellingVocabularySource.Prefix);
                 }
                 else
                 {
