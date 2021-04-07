@@ -11,7 +11,7 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// <summary>
     /// The spelling source.
     /// </summary>
-    public class SpellingVocabularySource : PredictiveVocabularySource
+    public class SpellingVocabularySource : PredictiveVocabularySource<SuggestedSpellingItem>
     {
         private const int SeedSequenceWeight = 1;
 
@@ -155,15 +155,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
-        private ICommand GetTokenItem(int token)
-        {
-            var prefix = Prefix;
-
-            var item = new SuggestedSpellingItem(this, prefix, token);
-
-            return item;
-        }
-
         internal override int GetTokenIndex(int token)
         {
             int index;
@@ -180,10 +171,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             return index;
         }
 
-        internal override ICommand GetIndexItem(int index)
+        internal override SuggestedSpellingItem GetIndexItem(int index)
         {
             var token = GetIndexToken(index);
-            var item = GetTokenItem(token);
+            var item = new SuggestedSpellingItem(this, Prefix, token);
             return item;
         }
 

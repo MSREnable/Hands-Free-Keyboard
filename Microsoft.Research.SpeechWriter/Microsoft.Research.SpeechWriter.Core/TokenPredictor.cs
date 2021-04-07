@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -193,7 +194,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             internal int Count { get; private set; }
         };
 
-        internal IEnumerable<int> GetTopIndices(PredictiveVocabularySource source, int[] context, int minIndex, int limIndex, int count)
+        internal IEnumerable<int> GetTopIndices<T>(PredictiveVocabularySource<T> source, int[] context, int minIndex, int limIndex, int count)
+            where T : ICommand
         {
             var toFindCount = count;
             var foundTokens = new HashSet<int>();

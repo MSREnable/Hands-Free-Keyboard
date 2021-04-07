@@ -11,7 +11,7 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// <summary>
     /// The word source.
     /// </summary>
-    public class WordVocabularySource : PredictiveVocabularySource
+    public class WordVocabularySource : PredictiveVocabularySource<SuggestedWordItem>
     {
         private const int SeedSequenceWeight = 1;
         private const int PersistedSequenceWeight = 100;
@@ -451,7 +451,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
-        internal override ICommand GetIndexItem(int index)
+        internal override SuggestedWordItem GetIndexItem(int index)
         {
             var token = GetIndexToken(index);
             var word = _tokens.GetString(token);

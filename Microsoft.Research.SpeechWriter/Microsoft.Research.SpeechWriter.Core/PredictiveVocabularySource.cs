@@ -6,7 +6,8 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// <summary>
     /// A source containing an ordered list of vocabulary items.
     /// </summary>
-    public abstract class PredictiveVocabularySource : VocabularySource
+    public abstract class PredictiveVocabularySource<TItem> : VocabularySource
+        where TItem : ICommand
     {
         private readonly TokenPredictor _persistantPredictor;
 
@@ -69,7 +70,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <returns>An enumeration of integer tokens.</returns>
         internal abstract IEnumerable<int> GetTokens();
 
-        internal abstract ICommand GetIndexItem(int index);
+        internal abstract TItem GetIndexItem(int index);
 
         /// <summary>
         /// Get the item sequence that corresponds to the given index.
