@@ -204,9 +204,9 @@ namespace Microsoft.Research.SpeechWriter.Core
             return item;
         }
 
-        private SuggestedWordSequenceItem CreateSuggestedWordSequenceItem(IEnumerable<int> tokenSequence)
+        private SuggestedWordItem CreateSuggestedWordSequenceItem(SuggestedWordItem previous, string word)
         {
-            var item = new SuggestedWordSequenceItem(this, TokensToWords(tokenSequence));
+            var item = new SuggestedWordItem(this, previous, word);
             return item;
         }
 
@@ -236,13 +236,26 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void AddWords(string[] words)
         {
+            var newWords = false;
+
             foreach (var word in words)
             {
+                if (_tokens.IsNewWord(word))
+                {
+                    newWords = true;
+                    _spellingSource.AddNewWord(word);
+                }
+
                 var item = CreateHeadWordItem(word);
                 _selectedItems.Add(item);
 
                 var selection = GetSelectedTokens();
                 AddSequence(selection, LiveSequenceWeight);
+            }
+
+            if(newWords)
+            {
+                PopulateVocabularyList();
             }
         }
 
@@ -251,7 +264,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             AddWords(words);
 
             SetRunOnSuggestions();
-            ResetSuggestionsView();
+            SetSuggestionsView();
         }
 
         internal void SetRunOnSuggestions()
@@ -475,21 +488,18 @@ namespace Microsoft.Research.SpeechWriter.Core
             return index;
         }
 
-        internal override ICommand GetSequenceItem(IEnumerable<int> tokenSequence)
+        internal ISuggestionItem GetNextItem(SuggestedWordItem previousItem, int token)
         {
-            ICommand item;
+            ISuggestionItem item;
 
-            var lastToken = tokenSequence.Last();
-            if (lastToken != 0)
+            if (token != 0)
             {
-                var word = _tokens.GetString(lastToken);
-                item = CreateSuggestedWordSequenceItem(tokenSequence);
+                var word = _tokens.GetString(token);
+                item = CreateSuggestedWordSequenceItem(previousItem, word);
             }
             else
             {
-                var sequence = new List<int>(tokenSequence);
-                sequence.RemoveAt(sequence.Count - 1);
-                item = new TailStopItem(this, TokensToWords(sequence));
+                item = new TailStopItem(this, previousItem.Words);
             }
 
             return item;

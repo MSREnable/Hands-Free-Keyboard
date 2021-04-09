@@ -17,6 +17,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         }
 
         /// <summary>
+        /// The source.
+        /// </summary>
+        protected TSource Source => _source;
+
+        /// <summary>
         /// Occurs when changes occur that affect whether or not the command should execute.
         /// </summary>
         public event EventHandler CanExecuteChanged

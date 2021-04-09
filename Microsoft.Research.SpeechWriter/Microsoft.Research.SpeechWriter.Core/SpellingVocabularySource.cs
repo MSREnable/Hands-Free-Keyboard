@@ -174,29 +174,21 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal override SuggestedSpellingItem GetIndexItem(int index)
         {
             var token = GetIndexToken(index);
-            var item = new SuggestedSpellingItem(this, Prefix, token);
+            var item = new SuggestedSpellingItem(this, Prefix, char.ConvertFromUtf32(token));
             return item;
         }
 
-        internal override ICommand GetSequenceItem(IEnumerable<int> tokenSequence)
+        internal ISuggestionItem GetNextItem(string prefix, int token)
         {
-            ICommand item;
+            ISuggestionItem item;
 
-            var sequence = tokenSequence.ToArray();
-            var tail = sequence[sequence.Length - 1];
-
-            if (tail == 0)
+            if (token == 0)
             {
-                var word = Prefix;
-                for (var i = 0; i < sequence.Length - 1; i++)
-                {
-                    word += (char)sequence[i];
-                }
-                item = _wordVocabularySource.CreateSuggestedWordItem(word);
+                item = _wordVocabularySource.CreateSuggestedWordItem(prefix);
             }
             else
             {
-                item = new SuggestedSpellingSequenceItem(this, sequence);
+                item = new SuggestedSpellingSequenceItem(this, prefix, char.ConvertFromUtf32(token));
             }
 
             return item;
@@ -239,13 +231,41 @@ namespace Microsoft.Research.SpeechWriter.Core
             _outerSpellingVocabularySource.SetSuggestionsView();
         }
 
-        internal void AddSpellingTokens(int[] tokens)
+        internal void AddSpellingTokens(string tokens)
         {
             foreach (var token in tokens)
             {
                 Context.Add(token);
             }
             ResetSuggestionsView();
+        }
+
+        internal void SetSpellingPrefix(string prefix)
+        {
+            Context.Clear();
+            Context.Add(0);
+
+            var length = prefix.Length;
+            var newChar = false;
+            for (var index = 0; index < length;)
+            {
+                var ch = char.ConvertToUtf32(prefix, index);
+                Context.Add(ch);
+
+                if (_characterSet.Add(char.ConvertFromUtf32(ch)))
+                {
+                    newChar = true;
+                }
+
+                index += char.IsSurrogate(prefix, index) ? 2 : 1;
+            }
+
+            if (newChar)
+            {
+                PopulateVocabularyList();
+            }
+
+            _outerSpellingVocabularySource.SetSuggestionsView();
         }
 
         internal void SpellingBackspace()

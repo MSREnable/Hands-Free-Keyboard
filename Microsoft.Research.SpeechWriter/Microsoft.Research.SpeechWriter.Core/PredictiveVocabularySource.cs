@@ -91,21 +91,18 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var extraContext = new List<int>(context);
                 extraContext.Add(token);
 
-                var sequence = new List<int>();
-                sequence.Add(token);
-
+                var prevItem = (ISuggestionItem)item;
                 var more = true;
                 for (var extras = 0; more && extras < 3; extras++)
                 {
                     var extraToken = GetTopToken(extraContext.ToArray());
                     if (extraToken != -1)
                     {
-                        extraContext.Add(extraToken);
-                        sequence.Add(extraToken);
-
-                        var extraItem = GetSequenceItem(sequence);
+                        var extraItem = prevItem.GetNextItem(extraToken);
                         yield return extraItem;
+                        prevItem = extraItem;
 
+                        extraContext.Add(extraToken);
                         more = extraToken != 0;
                     }
                     else
@@ -115,13 +112,6 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
             }
         }
-
-        /// <summary>
-        /// Get follow in compound item.
-        /// </summary>
-        /// <param name="tokenSequence">The sequence of tokens.</param>
-        /// <returns></returns>
-        internal abstract ICommand GetSequenceItem(IEnumerable<int> tokenSequence);
 
         /// <summary>
         /// Add the next step of the sequence.

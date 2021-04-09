@@ -3,22 +3,13 @@
     /// <summary>
     /// A symbol in the suggestion list.
     /// </summary>
-    public class SuggestedSpellingSequenceItem : Command<SpellingVocabularySource>
+    public class SuggestedSpellingSequenceItem : Command<SpellingVocabularySource>, ISuggestionItem
     {
-        readonly int[] _tokens;
-
-        internal SuggestedSpellingSequenceItem(SpellingVocabularySource source, int[] tokens)
+        internal SuggestedSpellingSequenceItem(SpellingVocabularySource source, string prefix, string symbol)
             : base(source)
         {
-            _tokens = tokens;
-
-            var prefix = source.Prefix;
-            for (var i = 0; i < tokens.Length - 1; i++)
-            {
-                var ch = tokens[i];
-                prefix += char.ConvertFromUtf32(ch);
-            }
             Prefix = prefix;
+            Symbol = symbol;
         }
 
         /// <summary>
@@ -29,11 +20,11 @@
         /// <summary>
         /// The symbol to be added.
         /// </summary>
-        public string Symbol => char.ConvertFromUtf32(_tokens[_tokens.Length - 1]);
+        public string Symbol { get; }
 
         internal override void Execute(SpellingVocabularySource source)
         {
-            source.AddSpellingTokens(_tokens);
+            source.SetSpellingPrefix(Prefix + Symbol);
         }
 
         /// <summary>
@@ -41,5 +32,11 @@
         /// </summary>
         /// <returns></returns>
         public override string ToString() => Prefix + Symbol;
+
+        ISuggestionItem ISuggestionItem.GetNextItem(int token)
+        {
+            var item = Source.GetNextItem(Prefix + Symbol, token);
+            return item;
+        }
     }
 }

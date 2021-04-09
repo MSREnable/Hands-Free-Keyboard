@@ -88,7 +88,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 var subIndex = 0;
                 while (enumerator.MoveNext() &&
                     wordsMatchLim + subIndex + 1 < words.Length &&
-                    enumerator.Current is SuggestedWordSequenceItem &&
+                    enumerator.Current is SuggestedWordItem &&
                     enumerator.Current.ToString() == words[wordsMatchLim + subIndex + 1])
                 {
                     subIndex++;

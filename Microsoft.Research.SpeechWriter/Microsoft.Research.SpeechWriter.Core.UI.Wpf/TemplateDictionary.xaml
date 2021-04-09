@@ -22,11 +22,6 @@
             <TextBlock Text="{Binding Word}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
         </Border>
     </DataTemplate>
-    <DataTemplate DataType="{x:Type lib:SuggestedWordSequenceItem}">
-        <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
-            <TextBlock Text="{Binding Word}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-        </Border>
-    </DataTemplate>
     <DataTemplate DataType="{x:Type lib:HeadWordItem}">
         <Border BorderBrush="Black" BorderThickness="1" Background="LightGreen" Margin="5,2">
             <TextBlock Text="{Binding Word}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
