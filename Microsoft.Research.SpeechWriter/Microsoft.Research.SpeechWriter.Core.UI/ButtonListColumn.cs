@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core.UI
 {
-    public class ButtonListColumn<T> : ButtonPanel<T, IEnumerable<ICommand>>
+    public class ButtonListColumn<T> : ButtonPanel<T, IEnumerable<ITile>>
         where T : IButtonUI
     {
         private readonly List<List<T>> _elementLists = new List<List<T>>();
 
-        public ButtonListColumn(ApplicationLayout<T> layout, ReadOnlyObservableCollection<IEnumerable<ICommand>> list)
+        public ButtonListColumn(ApplicationLayout<T> layout, ReadOnlyObservableCollection<IEnumerable<ITile>> list)
             : base(layout, list)
         {
         }
 
-        protected override void ResetContent(IList<IEnumerable<ICommand>> list)
+        protected override void ResetContent(IList<IEnumerable<ITile>> list)
         {
             foreach (var elementList in _elementLists)
             {

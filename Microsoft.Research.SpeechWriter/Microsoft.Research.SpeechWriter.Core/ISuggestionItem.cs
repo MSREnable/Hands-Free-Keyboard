@@ -1,11 +1,9 @@
-﻿using System.Windows.Input;
-
-namespace Microsoft.Research.SpeechWriter.Core
+﻿namespace Microsoft.Research.SpeechWriter.Core
 {
     /// <summary>
     /// Suggestion item.
     /// </summary>
-    public interface ISuggestionItem : ICommand
+    public interface ISuggestionItem : ITile
     {
         /// <summary>
         /// Create the next suggestion item based on a token.

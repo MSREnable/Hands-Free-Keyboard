@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
     /// <summary>
     /// Base class for command items.
     /// </summary>
-    public abstract class Command<TSource> : ICommand
+    public abstract class Command<TSource> : ITile
         where TSource : VocabularySource
     {
         private readonly TSource _source;

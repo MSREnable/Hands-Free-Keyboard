@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -23,8 +21,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private readonly Dictionary<int, int> _tokenToIndex = new Dictionary<int, int>();
 
-        private readonly ObservableCollection<ICommand> _selectedItems = new ObservableCollection<ICommand>();
-        private readonly ObservableCollection<ICommand> _runOnSuggestions = new ObservableCollection<ICommand>();
+        private readonly ObservableCollection<ITile> _selectedItems = new ObservableCollection<ITile>();
+        private readonly ObservableCollection<ITile> _runOnSuggestions = new ObservableCollection<ITile>();
 
         private readonly OuterSpellingVocabularySource _spellingSource;
 
@@ -35,8 +33,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             _tokens = StringTokens.Create(words);
 
             _selectedItems.Add(new HeadStartItem(this));
-            SelectedItems = new ReadOnlyObservableCollection<ICommand>(_selectedItems);
-            RunOnSuggestions = new ReadOnlyObservableCollection<ICommand>(_runOnSuggestions);
+            SelectedItems = new ReadOnlyObservableCollection<ITile>(_selectedItems);
+            RunOnSuggestions = new ReadOnlyObservableCollection<ITile>(_runOnSuggestions);
 
             PopulateVocabularyList();
 
@@ -55,12 +53,12 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <summary>
         /// The currently selected items.
         /// </summary>
-        public ReadOnlyObservableCollection<ICommand> SelectedItems { get; }
+        public ReadOnlyObservableCollection<ITile> SelectedItems { get; }
 
         /// <summary>
         /// Following words suggestions. (Sequence of several words that may all be used next.)
         /// </summary>
-        public ReadOnlyObservableCollection<ICommand> RunOnSuggestions { get; }
+        public ReadOnlyObservableCollection<ITile> RunOnSuggestions { get; }
 
         internal IEnumerable<string> Words
         {
@@ -274,7 +272,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             ContinueRunOnSuggestions();
         }
 
-        internal void TransferRunOnToSuccessors(ICommand runOn)
+        internal void TransferRunOnToSuccessors(ITile runOn)
         {
             bool done;
             do
@@ -295,7 +293,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             ContinueRunOnSuggestions();
         }
 
-        internal void TakeGhostWord(ICommand runOn)
+        internal void TakeGhostWord(ITile runOn)
         {
             TransferRunOnToSuccessors(runOn);
             SetSuggestionsView();
@@ -353,7 +351,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             SetSuggestionsViewComplete();
         }
 
-        internal void TransferSuccessorsToRunOn(ICommand selected)
+        internal void TransferSuccessorsToRunOn(ITile selected)
         {
             var index = _selectedItems.Count - 1;
             var item = _selectedItems[index];
@@ -505,7 +503,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             return item;
         }
 
-        internal override ICommand CreatePriorInterstitial(int index) => new InterstitialSpellingItem(_spellingSource, index);
+        internal override ITile CreatePriorInterstitial(int index) => new InterstitialSpellingItem(_spellingSource, index);
 
         internal override IEnumerable<int> GetTokens()
         {

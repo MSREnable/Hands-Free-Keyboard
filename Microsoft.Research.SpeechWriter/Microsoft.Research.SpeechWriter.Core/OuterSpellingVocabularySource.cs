@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -36,7 +35,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _spellingVocabularySource.AddNewWord(word);
         }
 
-        internal override IEnumerable<ICommand> CreateSuggestionList(int index)
+        internal override IEnumerable<ITile> CreateSuggestionList(int index)
         {
             if (index < HeaderSize)
             {
@@ -61,9 +60,9 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
-        internal override ICommand CreatePriorInterstitial(int index)
+        internal override ITile CreatePriorInterstitial(int index)
         {
-            ICommand interstitial;
+            ITile interstitial;
 
             if (index < HeaderSize)
             {

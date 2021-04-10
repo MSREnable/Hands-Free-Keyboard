@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core.UI
 {
-    public class ButtonWrapPanel<T> : ButtonPanel<T, ICommand>
+    public class ButtonWrapPanel<T> : ButtonPanel<T, ITile>
         where T : IButtonUI
     {
         private readonly List<T> _elementList = new List<T>();
 
-        public ButtonWrapPanel(ApplicationLayout<T> layout, ReadOnlyObservableCollection<ICommand> list)
+        public ButtonWrapPanel(ApplicationLayout<T> layout, ReadOnlyObservableCollection<ITile> list)
             : base(layout, list)
         {
         }
 
-        protected override void ResetContent(IList<ICommand> list)
+        protected override void ResetContent(IList<ITile> list)
         {
             foreach (var element in _elementList)
             {

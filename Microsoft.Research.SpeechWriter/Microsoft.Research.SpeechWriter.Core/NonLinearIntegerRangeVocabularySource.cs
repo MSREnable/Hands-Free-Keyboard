@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -21,13 +20,13 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal sealed override int Count => _limit - _minimum;
 
-        internal sealed override IEnumerable<ICommand> CreateSuggestionList(int index)
+        internal sealed override IEnumerable<ITile> CreateSuggestionList(int index)
         {
             var item = CreateItem(_minimum + index);
             yield return item;
         }
 
-        internal abstract ICommand CreateItem(int value);
+        internal abstract ITile CreateItem(int value);
 
         private static IEnumerable<double> BisectingSequence
         {

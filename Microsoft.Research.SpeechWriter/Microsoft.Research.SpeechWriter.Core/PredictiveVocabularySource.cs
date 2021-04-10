@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -7,7 +6,7 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// A source containing an ordered list of vocabulary items.
     /// </summary>
     public abstract class PredictiveVocabularySource<TItem> : VocabularySource
-        where TItem : ICommand
+        where TItem : ITile
     {
         private readonly TokenPredictor _persistantPredictor;
 
@@ -78,7 +77,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <param name="index">The index within the source.</param>
         /// 
         /// <returns>The vocabulary item corresponding to the index.</returns>
-        internal override IEnumerable<ICommand> CreateSuggestionList(int index)
+        internal override IEnumerable<ITile> CreateSuggestionList(int index)
         {
             var item = GetIndexItem(index);
 

@@ -6,7 +6,6 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -20,12 +19,12 @@ namespace Microsoft.Research.SpeechWriter.Core
         private int _lowerBound;
         private int _upperLimit;
 
-        private readonly ObservableCollection<ICommand> _closingItems = new ObservableCollection<ICommand>();
+        private readonly ObservableCollection<ITile> _closingItems = new ObservableCollection<ITile>();
 
-        private readonly ObservableCollection<IEnumerable<ICommand>> _nextSuggestions = new ObservableCollection<IEnumerable<ICommand>>();
-        private readonly ObservableCollection<ICommand> _suggestionInterstitials = new ObservableCollection<ICommand>();
+        private readonly ObservableCollection<IEnumerable<ITile>> _nextSuggestions = new ObservableCollection<IEnumerable<ITile>>();
+        private readonly ObservableCollection<ITile> _suggestionInterstitials = new ObservableCollection<ITile>();
 
-        private readonly ObservableCollection<ICommand> _combined = new ObservableCollection<ICommand>();
+        private readonly ObservableCollection<ITile> _combined = new ObservableCollection<ITile>();
 
         private int _previousWordsLengthNotified;
 
@@ -38,13 +37,13 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             _wordSource = new WordVocabularySource(this);
 
-            TailItems = new ReadOnlyObservableCollection<ICommand>(_closingItems);
+            TailItems = new ReadOnlyObservableCollection<ITile>(_closingItems);
             _closingItems.Add(new TailStopItem(_wordSource));
 
-            SuggestionLists = new ReadOnlyObservableCollection<IEnumerable<ICommand>>(_nextSuggestions);
-            SuggestionInterstitials = new ReadOnlyObservableCollection<ICommand>(_suggestionInterstitials);
+            SuggestionLists = new ReadOnlyObservableCollection<IEnumerable<ITile>>(_nextSuggestions);
+            SuggestionInterstitials = new ReadOnlyObservableCollection<ITile>(_suggestionInterstitials);
 
-            HeadItems = new ReadOnlyObservableCollection<ICommand>(_combined);
+            HeadItems = new ReadOnlyObservableCollection<ITile>(_combined);
             LoadCombined(null, null);
             ((INotifyCollectionChanged)SelectedItems).CollectionChanged += LoadCombined;
             ((INotifyCollectionChanged)RunOnSuggestions).CollectionChanged += LoadCombined;
@@ -101,32 +100,32 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <summary>
         /// The currently selected items.
         /// </summary>
-        public ReadOnlyObservableCollection<ICommand> SelectedItems => _wordSource.SelectedItems;
+        public ReadOnlyObservableCollection<ITile> SelectedItems => _wordSource.SelectedItems;
 
         /// <summary>
         /// The open items that can be closed.
         /// </summary>
-        public ReadOnlyObservableCollection<ICommand> TailItems { get; }
+        public ReadOnlyObservableCollection<ITile> TailItems { get; }
 
         /// <summary>
         /// Next word suggestion list. (Several individual words, one of which may be used next.)
         /// </summary>
-        public ReadOnlyObservableCollection<IEnumerable<ICommand>> SuggestionLists { get; }
+        public ReadOnlyObservableCollection<IEnumerable<ITile>> SuggestionLists { get; }
 
         /// <summary>
         /// Items between suggestion lists.
         /// </summary>
-        public ReadOnlyObservableCollection<ICommand> SuggestionInterstitials { get; }
+        public ReadOnlyObservableCollection<ITile> SuggestionInterstitials { get; }
 
         /// <summary>
         /// Following words suggestions. (Sequence of several words that may all be used next.)
         /// </summary>
-        internal ReadOnlyObservableCollection<ICommand> RunOnSuggestions => _wordSource.RunOnSuggestions;
+        internal ReadOnlyObservableCollection<ITile> RunOnSuggestions => _wordSource.RunOnSuggestions;
 
         /// <summary>
         /// Combined lists.
         /// </summary>
-        public ReadOnlyObservableCollection<ICommand> HeadItems { get; }
+        public ReadOnlyObservableCollection<ITile> HeadItems { get; }
 
         /// <summary>
         /// Event occurring afer every model update.

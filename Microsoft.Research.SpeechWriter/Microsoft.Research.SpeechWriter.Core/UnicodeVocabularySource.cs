@@ -1,5 +1,4 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Items;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -21,7 +20,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _parent = parent;
         }
 
-        internal override ICommand CreateItem(int value)
+        internal override ITile CreateItem(int value)
         {
             var unicode = value < SurrogateCodePointsMinimum ? 
                 value : value - SurrogateCodePointsMinimum + SurrogateCodePointsLimit;

@@ -1,6 +1,4 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Items;
-using System.Collections.Generic;
-using System.Windows.Input;
+﻿using System.Collections.Generic;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -30,7 +28,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         /// <param name="index">The index within the source.</param>
         /// <returns>The suggestions list.</returns>
-        internal abstract IEnumerable<ICommand> CreateSuggestionList(int index);
+        internal abstract IEnumerable<ITile> CreateSuggestionList(int index);
 
         /// <summary>
         /// Get an item that comes before the specified item and the immediately preceeding item.
@@ -39,7 +37,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Count for item after last.
         /// </param>
         /// <returns></returns>
-        internal virtual ICommand CreatePriorInterstitial(int index) => null;
+        internal virtual ITile CreatePriorInterstitial(int index) => null;
 
         internal void ResetSuggestionsView()
         {
