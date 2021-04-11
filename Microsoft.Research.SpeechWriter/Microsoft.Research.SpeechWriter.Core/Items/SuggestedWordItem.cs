@@ -10,14 +10,15 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         private readonly SuggestedWordItem _previous;
 
         internal SuggestedWordItem(WordVocabularySource source, SuggestedWordItem previous, string word)
-            : base(source, word)
+            : base(previous, source, word)
         {
             _previous = previous;
         }
 
-        internal SuggestedWordItem(WordVocabularySource source, string word)
-            : this(source, null, word)
+        internal SuggestedWordItem(ITile predecessor, WordVocabularySource source, string word)
+            : base(predecessor, source, word)
         {
+            _previous = null;
         }
 
         internal string[] Words

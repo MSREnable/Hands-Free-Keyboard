@@ -55,6 +55,8 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         public ReadOnlyObservableCollection<ITile> SelectedItems { get; }
 
+        internal ITile LastTile => _selectedItems[_selectedItems.Count - 1];
+
         /// <summary>
         /// Following words suggestions. (Sequence of several words that may all be used next.)
         /// </summary>
@@ -186,19 +188,19 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private HeadWordItem CreateHeadWordItem(string word)
         {
-            var item = new HeadWordItem(this, word);
+            var item = new HeadWordItem(LastTile, this, word);
             return item;
         }
 
-        private GhostWordItem CreateGhostWordItem(string word)
+        private GhostWordItem CreateGhostWordItem(ITile predecessor, string word)
         {
-            var item = new GhostWordItem(this, word);
+            var item = new GhostWordItem(predecessor, this, word);
             return item;
         }
 
         internal SuggestedWordItem CreateSuggestedWordItem(string word)
         {
-            var item = new SuggestedWordItem(this, word);
+            var item = new SuggestedWordItem(LastTile, this, word);
             return item;
         }
 
@@ -210,7 +212,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal SuggestedSpellingWordItem CreateSuggestedSpellingWordItem(string word)
         {
-            var item = new SuggestedSpellingWordItem(this, word);
+            var item = new SuggestedSpellingWordItem(LastTile, this, word);
             return item;
         }
 
@@ -251,7 +253,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 AddSequence(selection, LiveSequenceWeight);
             }
 
-            if(newWords)
+            if (newWords)
             {
                 PopulateVocabularyList();
             }
@@ -335,14 +337,16 @@ namespace Microsoft.Research.SpeechWriter.Core
             selection.RemoveAt(0);
             selection.RemoveAt(selection.Count - 1);
             var utterance = new List<string>();
+            ITile predecessor = _selectedItems[0];
             foreach (var token in selection)
             {
                 var word = _tokens.GetString(token);
                 utterance.Add(word);
-                var item = CreateGhostWordItem(word);
+                var item = CreateGhostWordItem(predecessor, word);
                 _runOnSuggestions.Add(item);
+                predecessor = item;
             }
-            var tail = new GhostStopItem(this, TokensToWords(selection));
+            var tail = new GhostStopItem(predecessor, this, TokensToWords(selection));
             _runOnSuggestions.Add(tail);
 
             _model.Environment.SaveUtterance(utterance.ToArray());
@@ -353,33 +357,57 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void TransferSuccessorsToRunOn(ITile selected)
         {
-            var index = _selectedItems.Count - 1;
-            var item = _selectedItems[index];
-            while (!ReferenceEquals(selected, item))
+            // Find the selected tile.
+            var tailIndex = 0;
+            while (tailIndex < _selectedItems.Count && !ReferenceEquals(selected, _selectedItems[tailIndex]))
             {
-                var word = item.ToString();
-                var runOn = CreateGhostWordItem(word);
-                _runOnSuggestions.Insert(0, runOn);
-                _selectedItems.RemoveAt(index);
+                tailIndex++;
+            }
+            Debug.Assert(tailIndex < _selectedItems.Count);
 
-                index--;
-                item = _selectedItems[index];
+            var predecessor = _selectedItems[tailIndex];
+            var newGhosts = new List<ITile>();
+
+            var tailLimit = tailIndex + 1;
+            while (tailLimit < _selectedItems.Count)
+            {
+                var oldItem = _selectedItems[tailLimit];
+                _selectedItems.RemoveAt(tailLimit);
+                var newItem = new GhostWordItem(predecessor, this, oldItem.ToString());
+                newGhosts.Add(newItem);
+
+                predecessor = newItem;
             }
 
-            // TODO: This is very bad, the Stop item should not carry the list, etc., etc., etc.
-            if (_runOnSuggestions.Count != 0 && _runOnSuggestions[_runOnSuggestions.Count - 1] is GhostStopItem)
+            var runOnIndex = 0;
+            for (; runOnIndex < _runOnSuggestions.Count && !(_runOnSuggestions[runOnIndex] is GhostStopItem); runOnIndex++)
             {
-                _runOnSuggestions.RemoveAt(_runOnSuggestions.Count - 1);
+                var oldItem = _runOnSuggestions[runOnIndex];
+                var newItem = new GhostWordItem(predecessor, this, oldItem.ToString());
+                newGhosts.Add(newItem);
 
-                var stopWords = new List<string>();
-                foreach (var ghost in _runOnSuggestions)
+                predecessor = newItem;
+            }
+
+            if (runOnIndex < _runOnSuggestions.Count)
+            {
+                Debug.Assert(runOnIndex == _runOnSuggestions.Count - 1);
+                Debug.Assert(_runOnSuggestions[runOnIndex] is GhostStopItem);
+
+                // TODO: This is very bad, the Stop item should not carry the list, etc., etc., etc.
+                var words = new string[newGhosts.Count];
+                for (var i = 0; i < words.Length; i++)
                 {
-                    Debug.Assert(ghost is GhostWordItem);
-                    stopWords.Add(ghost.ToString());
+                    words[i] = newGhosts[i].ToString();
                 }
+                var ghostStop = new GhostStopItem(predecessor, this, words);
+                newGhosts.Add(ghostStop);
+            }
 
-                var ghostStop = new GhostStopItem(this, stopWords.ToArray());
-                _runOnSuggestions.Add(ghostStop);
+            _runOnSuggestions.Clear();
+            foreach (var ghost in newGhosts)
+            {
+                _runOnSuggestions.Add(ghost);
             }
 
             SetSuggestionsView();
@@ -415,8 +443,11 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             var context = GetSelectedTokens();
             var totalSequence = new List<int>();
+            var predecessor = LastTile;
             foreach (var item in _runOnSuggestions)
             {
+                predecessor = item;
+
                 var wordCommand = item as WordItem;
                 if (wordCommand != null)
                 {
@@ -444,17 +475,19 @@ namespace Microsoft.Research.SpeechWriter.Core
                 if (0 < token)
                 {
                     var word = _tokens.GetString(token);
-                    var item = CreateGhostWordItem(word);
+                    var item = CreateGhostWordItem(predecessor, word);
                     _runOnSuggestions.Add(item);
 
                     context.Add(token);
                     totalSequence.Add(token);
+
+                    predecessor = item;
                 }
                 else
                 {
                     if (token == 0)
                     {
-                        var item = new GhostStopItem(this, TokensToWords(totalSequence));
+                        var item = new GhostStopItem(predecessor, this, TokensToWords(totalSequence));
                         _runOnSuggestions.Add(item);
                     }
                     more = false;
@@ -497,13 +530,13 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             else
             {
-                item = new TailStopItem(this, previousItem.Words);
+                item = new TailStopItem(previousItem, this, previousItem.Words);
             }
 
             return item;
         }
 
-        internal override ITile CreatePriorInterstitial(int index) => new InterstitialSpellingItem(_spellingSource, index);
+        internal override ITile CreatePriorInterstitial(int index) => new InterstitialSpellingItem(LastTile, _spellingSource, index);
 
         internal override IEnumerable<int> GetTokens()
         {

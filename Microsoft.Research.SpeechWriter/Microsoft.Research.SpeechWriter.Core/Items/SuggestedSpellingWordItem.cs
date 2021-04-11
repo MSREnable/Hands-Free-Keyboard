@@ -5,8 +5,8 @@
     /// </summary>
     public class SuggestedSpellingWordItem : WordItem
     {
-        internal SuggestedSpellingWordItem(WordVocabularySource source, string word)
-            : base(source, word)
+        internal SuggestedSpellingWordItem(ITile predecessor, WordVocabularySource source, string word)
+            : base(predecessor, source, word)
         {
         }
 

@@ -5,8 +5,8 @@
     /// </summary>
     public class SuggestedSpellingItem : Command<SpellingVocabularySource>, ISuggestionItem
     {
-        internal SuggestedSpellingItem(SpellingVocabularySource source, string prefix, string symbol)
-            : base(source)
+        internal SuggestedSpellingItem(ITile predecessor, SpellingVocabularySource source, string prefix, string symbol) 
+            : base(predecessor,  source)
         {
             Prefix = prefix;
             Symbol = symbol;
@@ -35,7 +35,7 @@
 
         ISuggestionItem ISuggestionItem.GetNextItem(int token)
         {
-            var item = Source.GetNextItem(Prefix + Symbol, token);
+            var item = Source.GetNextItem(this, Prefix + Symbol, token);
             return item;
         }
     }

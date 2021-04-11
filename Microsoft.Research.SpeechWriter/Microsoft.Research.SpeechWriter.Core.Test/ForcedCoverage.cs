@@ -18,14 +18,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void InterstitialSpellingItemCoverage()
         {
-            var spellingItem = new InterstitialSpellingItem(null, 0);
+            var spellingItem = new InterstitialSpellingItem(null, null, 0);
             Assert.AreEqual("*", spellingItem.ToString());
         }
 
         [Test]
         public void InterstitialGapItemCoverage()
         {
-            var gapItem = new InterstitialGapItem(null, null, 0, 1);
+            var gapItem = new InterstitialGapItem(null, null, null, 0, 1);
             Assert.AreEqual(":", gapItem.ToString());
         }
     }

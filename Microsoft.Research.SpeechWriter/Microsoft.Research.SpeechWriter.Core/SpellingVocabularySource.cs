@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -174,11 +173,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal override SuggestedSpellingItem GetIndexItem(int index)
         {
             var token = GetIndexToken(index);
-            var item = new SuggestedSpellingItem(this, Prefix, char.ConvertFromUtf32(token));
+            var item = new SuggestedSpellingItem(_model.LastTile, this, Prefix, char.ConvertFromUtf32(token));
             return item;
         }
 
-        internal ISuggestionItem GetNextItem(string prefix, int token)
+        internal ISuggestionItem GetNextItem(ITile predecessor, string prefix, int token)
         {
             ISuggestionItem item;
 
@@ -188,7 +187,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             else
             {
-                item = new SuggestedSpellingSequenceItem(this, prefix, char.ConvertFromUtf32(token));
+                item = new SuggestedSpellingSequenceItem(predecessor, this, prefix, char.ConvertFromUtf32(token));
             }
 
             return item;

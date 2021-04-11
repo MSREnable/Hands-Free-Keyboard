@@ -9,8 +9,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
     {
         private readonly string[] _words;
 
-        internal TailStopItem(WordVocabularySource source, params string[] words)
-            : base(source)
+        internal TailStopItem(ITile predecessor, WordVocabularySource source, params string[] words)
+            : base(predecessor, source)
         {
             _words = words;
         }

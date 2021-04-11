@@ -5,8 +5,8 @@
     /// </summary>
     public class SuggestedSpellingBackspaceItem : Command<SpellingVocabularySource>
     {
-        internal SuggestedSpellingBackspaceItem(SpellingVocabularySource source, string prefix)
-            : base(source)
+        internal SuggestedSpellingBackspaceItem(ITile predecessor, SpellingVocabularySource source, string prefix) 
+            : base(predecessor,  source)
         {
             Prefix = prefix.Substring(0, prefix.Length - 1);
         }

@@ -11,7 +11,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             internal bool _called;
 
             internal TestCommand()
-                : base(null)
+                : base(null, null)
             {
             }
 

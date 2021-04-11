@@ -8,12 +8,19 @@ namespace Microsoft.Research.SpeechWriter.Core
     public abstract class Command<TSource> : ITile
         where TSource : VocabularySource
     {
+        private readonly ITile _predecessor;
         private readonly TSource _source;
 
-        internal Command(TSource source)
+        internal Command(ITile predecessor, TSource source)
         {
+            _predecessor = predecessor;
             _source = source;
         }
+
+        /// <summary>
+        /// Tile that preceeds this.
+        /// </summary>
+        public ITile Predecessor => _predecessor;
 
         /// <summary>
         /// The source.

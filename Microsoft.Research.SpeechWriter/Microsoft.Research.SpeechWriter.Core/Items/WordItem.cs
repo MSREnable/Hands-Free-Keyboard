@@ -7,8 +7,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
     /// </summary>
     public abstract class WordItem : Command<WordVocabularySource>
     {
-        internal WordItem(WordVocabularySource source, string word)
-            : base(source)
+        internal WordItem(ITile predecessor, WordVocabularySource source, string word)
+            : base(predecessor, source)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(word));
             Word = word;

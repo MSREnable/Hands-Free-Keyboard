@@ -7,8 +7,8 @@
     {
         private readonly int _index;
 
-        internal InterstitialSpellingItem(OuterSpellingVocabularySource source, int index)
-            : base(source)
+        internal InterstitialSpellingItem(ITile predecessor, OuterSpellingVocabularySource source, int index)
+            : base(predecessor, source)
         {
             _index = index;
         }

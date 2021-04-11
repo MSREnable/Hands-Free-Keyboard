@@ -38,7 +38,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _wordSource = new WordVocabularySource(this);
 
             TailItems = new ReadOnlyObservableCollection<ITile>(_closingItems);
-            _closingItems.Add(new TailStopItem(_wordSource));
+            _closingItems.Add(new TailStopItem(null, _wordSource));
 
             SuggestionLists = new ReadOnlyObservableCollection<IEnumerable<ITile>>(_nextSuggestions);
             SuggestionInterstitials = new ReadOnlyObservableCollection<ITile>(_suggestionInterstitials);
@@ -126,6 +126,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Combined lists.
         /// </summary>
         public ReadOnlyObservableCollection<ITile> HeadItems { get; }
+
+        /// <summary>
+        /// The last selected tile.
+        /// </summary>
+        internal ITile LastTile => _wordSource.LastTile;
 
         /// <summary>
         /// Event occurring afer every model update.
@@ -237,7 +242,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                         Debug.Assert(index <= _lowerBound);
 
                         // First item of bounded area, so emit interstitial from start to this item.
-                        var interstitialItem = new InterstitialGapItem(this, Source, 0, Math.Max(_lowerBound, maxItemCount));
+                        var interstitialItem = new InterstitialGapItem(LastTile, this, Source, 0, Math.Max(_lowerBound, maxItemCount));
                         _suggestionInterstitials.Add(interstitialItem);
                     }
                 }
@@ -297,7 +302,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                     adjustedLim -= overrun;
                 }
 
-                var interstitial = new InterstitialGapItem(this, Source, adjustedMin, adjustedLim);
+                var interstitial = new InterstitialGapItem(LastTile, this, Source, adjustedMin, adjustedLim);
                 _suggestionInterstitials.Add(interstitial);
             }
         }

@@ -7,5 +7,9 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// </summary>
     public interface ITile : ICommand
     {
+        /// <summary>
+        /// Tile that preceeds this.
+        /// </summary>
+        ITile Predecessor { get; }
     }
 }

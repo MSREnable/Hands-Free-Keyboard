@@ -5,8 +5,8 @@
     /// </summary>
     public class GhostWordItem : WordItem
     {
-        internal GhostWordItem(WordVocabularySource source, string word)
-            : base(source, word)
+        internal GhostWordItem(ITile predecessor, WordVocabularySource source, string word) 
+            : base(predecessor,  source, word)
         {
         }
 

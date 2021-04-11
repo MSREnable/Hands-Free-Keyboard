@@ -5,8 +5,8 @@
     /// </summary>
     public class InterstitialUnicodeItem : Command<UnicodeVocabularySource>
     {
-        internal InterstitialUnicodeItem(UnicodeVocabularySource source)
-            : base(source)
+        internal InterstitialUnicodeItem(ITile predecessor, UnicodeVocabularySource source)
+            : base(predecessor, source)
         {
         }
 

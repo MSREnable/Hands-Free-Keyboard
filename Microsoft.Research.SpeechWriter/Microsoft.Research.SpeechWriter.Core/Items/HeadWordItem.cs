@@ -5,8 +5,8 @@
     /// </summary>
     public sealed class HeadWordItem : WordItem
     {
-        internal HeadWordItem(WordVocabularySource source, string word)
-            : base(source, word)
+        internal HeadWordItem(ITile predecessor, WordVocabularySource source, string word)
+            : base(predecessor, source, word)
         {
         }
 

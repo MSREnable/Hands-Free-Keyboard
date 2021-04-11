@@ -8,7 +8,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
     public class InterstitialNonItem : Command<WordVocabularySource>, ICommand
     {
         internal InterstitialNonItem()
-            : base(null)
+            : base(null, null)
         {
         }
 

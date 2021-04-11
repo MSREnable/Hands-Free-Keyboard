@@ -45,7 +45,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
                 else
                 {
-                    yield return new SuggestedSpellingBackspaceItem(_spellingVocabularySource, _spellingVocabularySource.Prefix);
+                    yield return new SuggestedSpellingBackspaceItem(_model.LastTile, _spellingVocabularySource, _spellingVocabularySource.Prefix);
                 }
             }
             else
@@ -70,7 +70,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             else
             {
-                interstitial = new InterstitialUnicodeItem(_unicodeVocabularySource);
+                interstitial = new InterstitialUnicodeItem(_model.LastTile, _unicodeVocabularySource);
             }
 
             return interstitial;

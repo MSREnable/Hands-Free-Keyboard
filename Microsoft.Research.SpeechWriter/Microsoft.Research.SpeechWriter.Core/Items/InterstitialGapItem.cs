@@ -11,8 +11,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         private readonly int _lowerBound;
         private readonly int _upperLimit;
 
-        internal InterstitialGapItem(ApplicationModel model, VocabularySource source, int lowerBound, int upperLimit)
-            : base(source)
+        internal InterstitialGapItem(ITile predecessor, ApplicationModel model, VocabularySource source, int lowerBound, int upperLimit)
+            : base(predecessor, source)
         {
             Debug.Assert(0 <= lowerBound);
             Debug.Assert(lowerBound < upperLimit);

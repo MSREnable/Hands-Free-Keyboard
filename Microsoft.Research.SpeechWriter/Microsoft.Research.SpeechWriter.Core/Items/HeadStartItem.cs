@@ -6,7 +6,7 @@
     public class HeadStartItem : Command<WordVocabularySource>
     {
         internal HeadStartItem(WordVocabularySource source)
-            : base(source)
+            : base(null, source)
         {
         }
 

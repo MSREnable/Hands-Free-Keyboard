@@ -5,8 +5,8 @@
     /// </summary>
     public class GhostStopItem : TailStopItem
     {
-        internal GhostStopItem(WordVocabularySource source, params string[] words)
-            : base(source, words)
+        internal GhostStopItem(ITile predecessor, WordVocabularySource source, params string[] words)
+            : base(predecessor, source, words)
         {
         }
     }

@@ -5,8 +5,8 @@
     /// </summary>
     public class SuggestedUnicodeItem : Command<OuterSpellingVocabularySource>
     {
-        internal SuggestedUnicodeItem(OuterSpellingVocabularySource source, int code)
-            : base(source)
+        internal SuggestedUnicodeItem(ITile predecessor, OuterSpellingVocabularySource source, int code) 
+            : base(predecessor,  source)
         {
             Prefix = source.Prefix;
 
