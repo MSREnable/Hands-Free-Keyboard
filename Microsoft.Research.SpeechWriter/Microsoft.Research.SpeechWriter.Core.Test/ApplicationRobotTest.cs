@@ -10,6 +10,68 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 {
     public class ApplicationRobotTest
     {
+        private static void CheckModelLinkage(ApplicationModel model)
+        {
+            ITile commonPredecessor;
+
+            using (var enumerator = model.SelectedItems.GetEnumerator())
+            {
+                Assert.IsTrue(enumerator.MoveNext());
+                var predecessor = enumerator.Current;
+                commonPredecessor = predecessor;
+                Assert.IsNull(predecessor.Predecessor);
+
+                while (enumerator.MoveNext())
+                {
+                    Assert.AreSame(predecessor, enumerator.Current.Predecessor);
+                    if (enumerator.Current is HeadWordItem)
+                    {
+                        Assert.AreSame(commonPredecessor, predecessor);
+                        commonPredecessor = enumerator.Current;
+                    }
+                    predecessor = enumerator.Current;
+                }
+            }
+
+            foreach (var interstital in model.SuggestionInterstitials)
+            {
+                if (interstital is InterstitialNonItem)
+                {
+                    Assert.IsNull(interstital.Predecessor);
+                }
+                else
+                {
+                    Assert.AreSame(commonPredecessor, interstital.Predecessor);
+                }
+            }
+
+            foreach (var list in model.SuggestionLists)
+            {
+                var predecessor = commonPredecessor;
+                var count = 0;
+                var spellingSeen = false;
+                foreach (var suggestion in list)
+                {
+                    if (spellingSeen && suggestion is SuggestedWordItem)
+                    {
+                        Assert.AreSame(commonPredecessor, suggestion.Predecessor);
+                    }
+                    else
+                    {
+                        Assert.AreSame(predecessor, suggestion.Predecessor);
+
+                        if (suggestion is SuggestedSpellingItem)
+                        {
+                            spellingSeen = true;
+                        }
+                    }
+                    predecessor = suggestion;
+
+                    count++;
+                }
+            }
+        }
+
         private static int CountClicks(ApplicationModel model, string[] words, double errorRate)
         {
             var random = new Random(0);
@@ -86,6 +148,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                 action.ExecuteItem(model);
                 Assert.IsTrue(hasNotified, "We should have seen a notification");
                 Assert.AreEqual(isGood && expectedIsComplete, isGood && action.IsComplete, "IsComplete in action and notification should match");
+
+                CheckModelLinkage(model);
 
                 count++;
                 done = isGood && action.IsComplete;

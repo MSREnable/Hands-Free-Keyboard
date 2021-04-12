@@ -6,7 +6,7 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// A source containing an ordered list of vocabulary items.
     /// </summary>
     public abstract class PredictiveVocabularySource<TItem> : VocabularySource
-        where TItem : ITile
+        where TItem : ISuggestionItem
     {
         private readonly TokenPredictor _persistantPredictor;
 
@@ -79,7 +79,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <returns>The vocabulary item corresponding to the index.</returns>
         internal override IEnumerable<ITile> CreateSuggestionList(int index)
         {
-            var item = GetIndexItem(index);
+            ISuggestionItem item = GetIndexItem(index);
 
             yield return item;
 
@@ -90,16 +90,14 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var extraContext = new List<int>(context);
                 extraContext.Add(token);
 
-                var prevItem = (ISuggestionItem)item;
                 var more = true;
                 for (var extras = 0; more && extras < 3; extras++)
                 {
                     var extraToken = GetTopToken(extraContext.ToArray());
                     if (extraToken != -1)
                     {
-                        var extraItem = prevItem.GetNextItem(extraToken);
-                        yield return extraItem;
-                        prevItem = extraItem;
+                        item = item.GetNextItem(extraToken);
+                        yield return item;
 
                         extraContext.Add(extraToken);
                         more = extraToken != 0;

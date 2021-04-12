@@ -194,7 +194,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         };
 
         internal IEnumerable<int> GetTopIndices<T>(PredictiveVocabularySource<T> source, int[] context, int minIndex, int limIndex, int count)
-            where T : ITile
+            where T : ISuggestionItem
         {
             var toFindCount = count;
             var foundTokens = new HashSet<int>();
