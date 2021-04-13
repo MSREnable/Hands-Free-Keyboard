@@ -12,7 +12,16 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(word));
             Word = word;
+
+            var upper = word.ToUpper(Culture);
+            var lower = word.ToLower(Culture);
+            IsCased = Culture.CompareInfo.Compare(upper, lower) != 0;
         }
+
+        /// <summary>
+        /// Is this item changed by conversion to uppercase or lowercase?
+        /// </summary>
+        public override bool IsCased { get; }
 
         /// <summary>
         /// The text of the word.

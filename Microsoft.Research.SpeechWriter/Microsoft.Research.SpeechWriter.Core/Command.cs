@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -18,9 +19,24 @@ namespace Microsoft.Research.SpeechWriter.Core
         }
 
         /// <summary>
+        /// The tile language.
+        /// </summary>
+        public virtual CultureInfo Culture => _predecessor.Culture;
+
+        /// <summary>
         /// Tile that preceeds this.
         /// </summary>
         public ITile Predecessor => _predecessor;
+
+        /// <summary>
+        /// Is this item changed by conversion to uppercase or lowercase?
+        /// </summary>
+        public virtual bool IsCased => false;
+
+        /// <summary>
+        /// Does this item follow an item with IsCase true?
+        /// </summary>
+        public virtual bool IsCasedSuccessor => _predecessor.IsCasedSuccessor || _predecessor.IsCased;
 
         /// <summary>
         /// The source.
