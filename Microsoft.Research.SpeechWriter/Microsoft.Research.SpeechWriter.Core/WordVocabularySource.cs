@@ -35,8 +35,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _headItems.Add(new HeadStartItem(this));
             _selectedIndex = 0;
 
-            SelectedItems = new ReadOnlyObservableCollection<ITile>(_headItems);
-            RunOnSuggestions = new ReadOnlyObservableCollection<ITile>(new ObservableCollection<ITile>());
+            HeadItems = new ReadOnlyObservableCollection<ITile>(_headItems);
 
             PopulateVocabularyList();
 
@@ -57,14 +56,9 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <summary>
         /// The currently selected items.
         /// </summary>
-        public ReadOnlyObservableCollection<ITile> SelectedItems { get; }
+        internal ReadOnlyObservableCollection<ITile> HeadItems { get; }
 
         internal ITile LastTile => _headItems[_selectedIndex];
-
-        /// <summary>
-        /// Following words suggestions. (Sequence of several words that may all be used next.)
-        /// </summary>
-        public ReadOnlyObservableCollection<ITile> RunOnSuggestions { get; }
 
         internal IEnumerable<string> Words
         {
@@ -123,13 +117,6 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
             }
 
-            PopulateVocabularyList();
-            _model.SetSuggestionsView(this, 0, Count, false);
-        }
-
-        internal void ResetUtterances()
-        {
-            Clear();
             PopulateVocabularyList();
             _model.SetSuggestionsView(this, 0, Count, false);
         }
@@ -415,7 +402,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             // Find the selected tile.
             var index = 0;
-            while (index <= _selectedIndex && !ReferenceEquals(selected, _headItems[index]))
+            while (!ReferenceEquals(selected, _headItems[index]))
             {
                 index++;
             }

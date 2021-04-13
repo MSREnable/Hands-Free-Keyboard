@@ -24,7 +24,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 
             TheContent.SizeChanged += MainWindow_SizeChanged;
 
-            ((INotifyCollectionChanged)_model.SelectedItems).CollectionChanged += OnCollectionChanged;
+            ((INotifyCollectionChanged)_model.HeadItems).CollectionChanged += OnCollectionChanged;
         }
 
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

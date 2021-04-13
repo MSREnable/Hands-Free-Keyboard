@@ -14,7 +14,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         {
             ITile commonPredecessor;
 
-            using (var enumerator = model.SelectedItems.GetEnumerator())
+            using (var enumerator = model.HeadItems.GetEnumerator())
             {
                 Assert.IsTrue(enumerator.MoveNext());
                 var predecessor = enumerator.Current;

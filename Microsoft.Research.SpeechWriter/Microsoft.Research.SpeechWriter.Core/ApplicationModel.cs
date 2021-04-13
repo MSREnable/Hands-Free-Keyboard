@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,8 +23,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         private readonly ObservableCollection<IEnumerable<ITile>> _nextSuggestions = new ObservableCollection<IEnumerable<ITile>>();
         private readonly ObservableCollection<ITile> _suggestionInterstitials = new ObservableCollection<ITile>();
 
-        private readonly ObservableCollection<ITile> _combined = new ObservableCollection<ITile>();
-
         private int _previousWordsLengthNotified;
 
         /// <summary>
@@ -43,26 +40,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             SuggestionLists = new ReadOnlyObservableCollection<IEnumerable<ITile>>(_nextSuggestions);
             SuggestionInterstitials = new ReadOnlyObservableCollection<ITile>(_suggestionInterstitials);
 
-            HeadItems = new ReadOnlyObservableCollection<ITile>(_combined);
-            LoadCombined(null, null);
-            ((INotifyCollectionChanged)SelectedItems).CollectionChanged += LoadCombined;
-            ((INotifyCollectionChanged)RunOnSuggestions).CollectionChanged += LoadCombined;
-
             Source = _wordSource;
             _wordSource.ResetSuggestionsView();
-
-            void LoadCombined(object sender, NotifyCollectionChangedEventArgs e)
-            {
-                _combined.Clear();
-                foreach (var item in SelectedItems)
-                {
-                    _combined.Add(item);
-                }
-                foreach (var item in RunOnSuggestions)
-                {
-                    _combined.Add(item);
-                }
-            }
         }
 
         /// <summary>
@@ -98,11 +77,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal VocabularySource Source { get; private set; }
 
         /// <summary>
-        /// The currently selected items.
-        /// </summary>
-        public ReadOnlyObservableCollection<ITile> SelectedItems => _wordSource.SelectedItems;
-
-        /// <summary>
         /// The open items that can be closed.
         /// </summary>
         public ReadOnlyObservableCollection<ITile> TailItems { get; }
@@ -118,14 +92,9 @@ namespace Microsoft.Research.SpeechWriter.Core
         public ReadOnlyObservableCollection<ITile> SuggestionInterstitials { get; }
 
         /// <summary>
-        /// Following words suggestions. (Sequence of several words that may all be used next.)
-        /// </summary>
-        internal ReadOnlyObservableCollection<ITile> RunOnSuggestions => _wordSource.RunOnSuggestions;
-
-        /// <summary>
         /// Combined lists.
         /// </summary>
-        public ReadOnlyObservableCollection<ITile> HeadItems { get; }
+        public ReadOnlyObservableCollection<ITile> HeadItems => _wordSource.HeadItems;
 
         /// <summary>
         /// The last selected tile.
@@ -183,14 +152,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         public async Task LoadUtterancesAsync()
         {
             await _wordSource.LoadUtterancesAsync();
-        }
-
-        /// <summary>
-        /// Reset utterances.
-        /// </summary>
-        public void ResetUtterances()
-        {
-            _wordSource.ResetUtterances();
         }
 
         internal void SetSuggestionsView(VocabularySource source, int lowerBound, int upperLimit, bool isComplete)
