@@ -274,7 +274,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 91, 1, 65, 525);
+            MultiTest("공유하 고 즐기십시오", 91, 1, 65, 520);
         }
 
         [Test]
