@@ -27,5 +27,10 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Does this item follow an item with IsCase true?
         /// </summary>
         bool IsCasedSuccessor { get; }
+
+        /// <summary>
+        /// The basic content of the tile.
+        /// </summary>
+        string Content { get; }
     }
 }

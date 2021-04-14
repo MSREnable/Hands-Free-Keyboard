@@ -5,8 +5,8 @@
     /// </summary>
     public class SuggestedUnicodeItem : Command<OuterSpellingVocabularySource>
     {
-        internal SuggestedUnicodeItem(ITile predecessor, OuterSpellingVocabularySource source, int code) 
-            : base(predecessor,  source)
+        internal SuggestedUnicodeItem(ITile predecessor, OuterSpellingVocabularySource source, int code)
+            : base(predecessor, source)
         {
             Prefix = source.Prefix;
 
@@ -34,9 +34,8 @@
         }
 
         /// <summary>
-        /// ToString.
+        /// The basic content of the tile.
         /// </summary>
-        /// <returns></returns>
-        public override string ToString() => Prefix + Symbol;
+        public override string Content => Prefix + Symbol;
     }
 }

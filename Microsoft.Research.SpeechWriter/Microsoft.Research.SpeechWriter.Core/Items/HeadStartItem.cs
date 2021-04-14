@@ -27,6 +27,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public override bool IsCasedSuccessor => false;
 
+        /// <summary>
+        /// The basic content of the tile.
+        /// </summary>
+        public override string Content => "<<";
+
         internal override void Execute(WordVocabularySource source)
         {
             source.TransferSuccessorsToRunOn(this);

@@ -29,9 +29,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         public string Word { get; }
 
         /// <summary>
-        /// String.
+        /// The basic content of the tile.
         /// </summary>
-        /// <returns></returns>
-        public override string ToString() => Word;
+        public override string Content => Word;
+
     }
 }

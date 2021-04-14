@@ -15,6 +15,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             {
             }
 
+            /// <summary>
+            /// The basic content of the tile.
+            /// </summary>
+            public override string Content => "Wibble";
+
             internal override void Execute(WordVocabularySource source)
             {
                 Assert.IsNull(source);
@@ -26,7 +31,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void CoverNonFunctions()
         {
-            ICommand command = new TestCommand();
+            ITile command = new TestCommand();
 
             OnCanExecuteChanged(this, EventArgs.Empty);
             command.CanExecuteChanged += OnCanExecuteChanged;
@@ -37,6 +42,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             Assert.IsFalse(((TestCommand)command)._called);
             command.Execute(null);
             Assert.IsTrue(((TestCommand)command)._called);
+
+            Assert.AreEqual("Wibble", command.Content);
         }
 
         private void OnCanExecuteChanged(object sender, EventArgs e)

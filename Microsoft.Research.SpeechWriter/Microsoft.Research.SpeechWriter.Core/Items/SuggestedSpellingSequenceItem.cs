@@ -5,8 +5,8 @@
     /// </summary>
     public class SuggestedSpellingSequenceItem : Command<SpellingVocabularySource>, ISuggestionItem
     {
-        internal SuggestedSpellingSequenceItem(ITile predecessor, SpellingVocabularySource source, string prefix, string symbol) 
-            : base(predecessor,  source)
+        internal SuggestedSpellingSequenceItem(ITile predecessor, SpellingVocabularySource source, string prefix, string symbol)
+            : base(predecessor, source)
         {
             Prefix = prefix;
             Symbol = symbol;
@@ -28,10 +28,9 @@
         }
 
         /// <summary>
-        /// ToString.
+        /// The basic content of the tile.
         /// </summary>
-        /// <returns></returns>
-        public override string ToString() => Prefix + Symbol;
+        public override string Content => Prefix + Symbol;
 
         ISuggestionItem ISuggestionItem.GetNextItem(int token)
         {

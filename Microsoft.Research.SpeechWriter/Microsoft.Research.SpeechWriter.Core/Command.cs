@@ -39,6 +39,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         public virtual bool IsCasedSuccessor => _predecessor.IsCasedSuccessor || _predecessor.IsCased;
 
         /// <summary>
+        /// The basic content of the tile.
+        /// </summary>
+        public abstract string Content { get; }
+
+        /// <summary>
         /// The source.
         /// </summary>
         protected TSource Source => _source;
@@ -69,5 +74,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         }
 
         internal abstract void Execute(TSource source);
+
+        /// <summary>
+        /// Standard override.
+        /// </summary>
+        /// <returns></returns>
+        public sealed override string ToString() => Content;
     }
 }

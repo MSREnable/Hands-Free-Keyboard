@@ -24,5 +24,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// The basic content of the tile.
+        /// </summary>
+        public override string Content => ">>";
     }
 }

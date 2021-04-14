@@ -18,10 +18,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         {
         }
 
+
         /// <summary>
-        /// ToString.
+        /// The basic content of the tile.
         /// </summary>
-        /// <returns></returns>
-        public override string ToString() => "~";
+        public override string Content => "~";
     }
 }

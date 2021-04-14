@@ -10,6 +10,11 @@
         {
         }
 
+        /// <summary>
+        /// The basic content of the tile.
+        /// </summary>
+        public override string Content => ":";
+
         internal override void Execute(UnicodeVocabularySource source)
         {
             source.SetSuggestionsView();
