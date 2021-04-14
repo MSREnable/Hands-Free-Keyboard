@@ -34,7 +34,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _tokens = StringTokens.Create(words);
 
             _headItems.Add(new HeadStartItem(this));
-            _tailItems.Add(new TailStopItem(null, this));
+            _tailItems.Add(null); // Create the slot for the tail item.
             SetSelectedIndex(0);
 
             HeadItems = new ReadOnlyObservableCollection<ITile>(_headItems);
@@ -245,7 +245,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             ParanoidAssertValid();
         }
 
-        internal void AddWords(string[] words)
+        internal void AddWords(IEnumerable<string> words)
         {
             var newWords = false;
 
@@ -279,11 +279,9 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             var predecessor = _headItems[_selectedIndex];
-            var stopWords = new List<string>();
             for (var i = _selectedIndex + 1; i < ghostLimit; i++)
             {
                 var oldGhost = _headItems[i].Content;
-                stopWords.Add(oldGhost);
                 var newGhost = new GhostWordItem(predecessor, this, oldGhost);
                 _headItems[i] = newGhost;
                 predecessor = newGhost;
@@ -291,7 +289,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             if (ghostLimit != _headItems.Count)
             {
-                _headItems[ghostLimit] = new GhostStopItem(predecessor, this, stopWords.ToArray());
+                _headItems[ghostLimit] = new GhostStopItem(predecessor, this);
             }
 
             ParanoidAssertValid();
@@ -348,22 +346,19 @@ namespace Microsoft.Research.SpeechWriter.Core
             SetSuggestionsView();
         }
 
-        internal string[] TokensToWords(IEnumerable<int> tokens)
-        {
-            var words = new List<string>();
-            foreach (var token in tokens)
-            {
-                var word = _tokens.GetString(token);
-                words.Add(word);
-            }
-            return words.ToArray();
-        }
-
-        internal void Commit(params string[] words)
+        internal void Commit(ITile stopTile)
         {
             ParanoidAssertValid();
 
-            AddWords(words);
+            var wordList = new List<string>();
+            var position = stopTile.Predecessor;
+            while (!ReferenceEquals(LastTile, position))
+            {
+                wordList.Insert(0, position.Content);
+                position = position.Predecessor;
+            }
+
+            AddWords(wordList);
 
             if (_selectedIndex == 0 &&
                 2 < _headItems.Count &&
@@ -402,9 +397,9 @@ namespace Microsoft.Research.SpeechWriter.Core
                 utterance.Add(word);
             }
 
-            var tail = new GhostStopItem(predecessor, this, TokensToWords(selection));
-            _headItems.Add(tail);
             SetSelectedIndex(0);
+            var tail = new GhostStopItem(predecessor, this);
+            _headItems.Add(tail);
 
             _model.Environment.SaveUtterance(utterance.ToArray());
 
@@ -426,7 +421,6 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             var predecessor = _headItems[index];
 
-            var ghosts = new List<string>();
             var ghostIndex = index + 1;
             var ghostLimit = _headItems.Count;
             if (_headItems[ghostLimit - 1] is GhostStopItem)
@@ -437,22 +431,20 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 var oldItem = _headItems[ghostIndex];
                 var encoding = oldItem.Content;
-                ghosts.Add(encoding);
                 var newItem = new GhostWordItem(predecessor, this, encoding);
                 _headItems[ghostIndex] = newItem;
                 predecessor = newItem;
             }
 
+            SetSelectedIndex(index);
+
             if (ghostLimit < _headItems.Count)
             {
                 Debug.Assert(ghostLimit + 1 == _headItems.Count);
 
-                // TODO: This is very bad, the Stop item should not carry the list, etc., etc., etc.
-                var ghostStop = new GhostStopItem(predecessor, this, ghosts.ToArray());
+                var ghostStop = new GhostStopItem(predecessor, this);
                 _headItems[ghostLimit] = ghostStop;
             }
-
-            SetSelectedIndex(index);
 
             SetSuggestionsView();
 
@@ -497,7 +489,6 @@ namespace Microsoft.Research.SpeechWriter.Core
                 context.Add(token);
             }
 
-            var stopSequence = new List<string>();
             var count = _headItems.Count;
             if (_headItems[count - 1] is GhostStopItem)
             {
@@ -515,8 +506,6 @@ namespace Microsoft.Research.SpeechWriter.Core
                 word = new GhostWordItem(predecessor, this, word.Content);
                 _headItems[i] = word;
                 predecessor = word;
-
-                stopSequence.Add(word.Content);
             }
 
             var more = true;
@@ -530,7 +519,6 @@ namespace Microsoft.Research.SpeechWriter.Core
                     _headItems.Add(item);
 
                     context.Add(token);
-                    stopSequence.Add(word);
 
                     predecessor = item;
                 }
@@ -538,7 +526,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 {
                     if (token == 0)
                     {
-                        var item = new GhostStopItem(predecessor, this, stopSequence.ToArray());
+                        var item = new GhostStopItem(predecessor, this);
                         _headItems.Add(item);
                     }
                     more = false;
@@ -589,7 +577,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             else
             {
-                item = new TailStopItem(previousItem, this, previousItem.Words);
+                item = new TailStopItem(previousItem, this);
             }
 
             return item;
