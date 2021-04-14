@@ -48,9 +48,9 @@ namespace Microsoft.Research.SpeechWriter.Core.UI.Test
             _resized?.Invoke(this, EventArgs.Empty);
         }
 
-        MockButton IButtonSurfaceUI<MockButton>.Create(ICommand command, double width, double height, WidthBehavior behavior)
+        MockButton IButtonSurfaceUI<MockButton>.Create(ITile tile, double width, double height, WidthBehavior behavior)
         {
-            var button = new MockButton(_nextButtonId, command, width, height, behavior);
+            var button = new MockButton(_nextButtonId, tile, width, height, behavior);
             _buttons.Add(_nextButtonId, button);
             _nextButtonId++;
 

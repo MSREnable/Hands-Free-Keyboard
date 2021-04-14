@@ -9,8 +9,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void InterstitialNonItemCoverage()
         {
-            var nonItem = (ICommand)new InterstitialNonItem();
-            Assert.AreEqual("~", nonItem.ToString());
+            var nonItem = (ITile)new InterstitialNonItem();
+            Assert.AreEqual("~", nonItem.Content);
             Assert.IsFalse(nonItem.CanExecute(null));
             nonItem.Execute(null);
         }
@@ -19,14 +19,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         public void InterstitialSpellingItemCoverage()
         {
             var spellingItem = new InterstitialSpellingItem(null, null, 0);
-            Assert.AreEqual("*", spellingItem.ToString());
+            Assert.AreEqual("*", spellingItem.Content);
         }
 
         [Test]
         public void InterstitialGapItemCoverage()
         {
             var gapItem = new InterstitialGapItem(null, null, null, 0, 1);
-            Assert.AreEqual(":", gapItem.ToString());
+            Assert.AreEqual(":", gapItem.Content);
         }
     }
 }

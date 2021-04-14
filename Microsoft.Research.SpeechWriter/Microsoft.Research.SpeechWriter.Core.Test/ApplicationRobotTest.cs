@@ -370,20 +370,20 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             Establish(model, "HELLO", "WORLD");
 
             Assert.IsInstanceOf<HeadWordItem>(model.HeadItems[1]);
-            Assert.AreEqual("HELLO", model.HeadItems[1].ToString());
+            Assert.AreEqual("HELLO", model.HeadItems[1].Content);
             model.HeadItems[1].Execute(null);
 
             Assert.IsInstanceOf<GhostWordItem>(model.HeadItems[2]);
-            Assert.AreEqual("WORLD", model.HeadItems[2].ToString());
+            Assert.AreEqual("WORLD", model.HeadItems[2].Content);
             /* TODO: This test is revealing nonsensical results currently!
             Assert.IsInstanceOf<GhostStopItem>(model.HeadItems[3]);
             model.HeadItems[3].Execute(null);
 
             Assert.IsInstanceOf<HeadStartItem>(model.HeadItems[0]);
             Assert.IsInstanceOf<GhostWordItem>(model.HeadItems[1]);
-            Assert.AreEqual("HELLO", model.HeadItems[1].ToString());
+            Assert.AreEqual("HELLO", model.HeadItems[1].Content);
             Assert.IsInstanceOf<GhostWordItem>(model.HeadItems[2]);
-            Assert.AreEqual("WORLD", model.HeadItems[2].ToString());
+            Assert.AreEqual("WORLD", model.HeadItems[2].Content);
             Assert.IsInstanceOf<GhostStopItem>(model.HeadItems[3]);
             */
         }

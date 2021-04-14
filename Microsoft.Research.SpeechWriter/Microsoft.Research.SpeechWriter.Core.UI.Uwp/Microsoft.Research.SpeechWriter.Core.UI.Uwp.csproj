@@ -135,6 +135,10 @@
       <Project>{de2241ea-da07-4fe1-a5fc-1216533467aa}</Project>
       <Name>Microsoft.Research.SpeechWriter.Core.UI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.csproj">
+      <Project>{b20b47f7-52d1-48ef-8acb-bd44bb78f023}</Project>
+      <Name>Microsoft.Research.SpeechWriter.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

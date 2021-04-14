@@ -35,7 +35,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
                 {
                     Debug.WriteLine(item);
 
-                    _synthesizer.SpeakAsync(item.ToString());
+                    _synthesizer.SpeakAsync(item.Content);
                 }
             }
         }

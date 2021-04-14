@@ -37,13 +37,13 @@ namespace Microsoft.Research.SpeechWriter.Core.UI.Wpf
             SizeChanged += (s, e) => _resized?.Invoke(s, EventArgs.Empty);
         }
 
-        ButtonUI IButtonSurfaceUI<ButtonUI>.Create(ICommand command, double width, double height, WidthBehavior behavior)
+        ButtonUI IButtonSurfaceUI<ButtonUI>.Create(ITile tile, double width, double height, WidthBehavior behavior)
         {
             var element = new ButtonUI
             {
-                Content = command,
-                Command = command,
-                Opacity = (double)_opacityConverter.Convert(command, null, null, null),
+                Content = tile,
+                Command = tile,
+                Opacity = (double)_opacityConverter.Convert(tile, null, null, null),
                 Height = height
             };
             switch (behavior)

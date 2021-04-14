@@ -12,7 +12,7 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
 
         event EventHandler Resized;
 
-        TElementUI Create(ICommand command, double width, double height, WidthBehavior behavior);
+        TElementUI Create(ITile tile, double width, double height, WidthBehavior behavior);
 
         void Move(TElementUI element, double x, double y);
 

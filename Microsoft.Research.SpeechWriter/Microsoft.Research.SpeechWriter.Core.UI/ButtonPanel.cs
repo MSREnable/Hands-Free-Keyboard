@@ -83,9 +83,9 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
 
         protected abstract void ResetContent(IList<TItem> list);
 
-        protected TButton Create(ICommand command, WidthBehavior behavior)
+        protected TButton Create(ITile tile, WidthBehavior behavior)
         {
-            var element = _surface.Create(command, _layout.Pitch, _layout.Pitch, behavior);
+            var element = _surface.Create(tile, _layout.Pitch, _layout.Pitch, behavior);
             return element;
         }
 

@@ -66,9 +66,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return action;
         }
 
-        private static bool IsItemMatch<T>(ICommand item, string value)
+        private static bool IsItemMatch<T>(ITile tile, string value)
         {
-            return item is T && item.ToString() == value;
+            return tile is T && tile.Content == value;
         }
 
         private static ApplicationRobotAction CreateSuggestedWordAction(ApplicationModel model, bool complete, string[] words, int wordsMatchLim, int index)
@@ -82,14 +82,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 // Check the first word matches.
                 enumerator.MoveNext();
                 Debug.Assert(enumerator.Current is SuggestedWordItem);
-                Debug.Assert(enumerator.Current.ToString() == words[wordsMatchLim]);
+                Debug.Assert(enumerator.Current.Content == words[wordsMatchLim]);
 
                 // See if more words match.
                 var subIndex = 0;
                 while (enumerator.MoveNext() &&
                     wordsMatchLim + subIndex + 1 < words.Length &&
                     enumerator.Current is SuggestedWordItem &&
-                    enumerator.Current.ToString() == words[wordsMatchLim + subIndex + 1])
+                    enumerator.Current.Content == words[wordsMatchLim + subIndex + 1])
                 {
                     subIndex++;
                 }
@@ -145,7 +145,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
                 if (firstItem is SuggestedWordItem)
                 {
-                    var suggestedWord = firstItem.ToString();
+                    var suggestedWord = firstItem.Content;
 
                     if (suggestedWord == targetWord)
                     {
@@ -160,7 +160,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 }
                 else if (firstItem is SuggestedSpellingItem)
                 {
-                    var partial = firstItem.ToString();
+                    var partial = firstItem.Content;
 
                     if (targetWord.StartsWith(partial, StringComparison.Ordinal))
                     {
@@ -174,7 +174,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             more = enumerator.MoveNext();
                             while (more &&
                                 enumerator.Current is SuggestedSpellingSequenceItem &&
-                                targetWord.StartsWith(enumerator.Current.ToString(), StringComparison.Ordinal))
+                                targetWord.StartsWith(enumerator.Current.Content, StringComparison.Ordinal))
                             {
                                 subIndex++;
                                 more = enumerator.MoveNext();
@@ -183,7 +183,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             if (complete &&
                                 more &&
                                 enumerator.Current is SuggestedWordItem &&
-                                enumerator.Current.ToString() == targetWord)
+                                enumerator.Current.Content == targetWord)
                             {
                                 action = ApplicationRobotAction.CreateSuggestion(index, subIndex + 1);
                             }
@@ -222,14 +222,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 }
                 else if (firstItem is SuggestedSpellingWordItem)
                 {
-                    if (firstItem.ToString() == targetWord)
+                    if (firstItem.Content == targetWord)
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                     }
                 }
                 else if (firstItem is SuggestedSpellingBackspaceItem)
                 {
-                    if (!targetWord.StartsWith(firstItem.ToString(), StringComparison.Ordinal))
+                    if (!targetWord.StartsWith(firstItem.Content, StringComparison.Ordinal))
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                     }
@@ -238,7 +238,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 {
                     Debug.Assert(firstItem is SuggestedUnicodeItem);
 
-                    var partial = firstItem.ToString();
+                    var partial = firstItem.Content;
 
                     Debug.Assert(((SuggestedUnicodeItem)firstItem).Symbol.Length == 1);
                     Debug.Assert(((SuggestedUnicodeItem)firstItem).Symbol[0] == partial[partial.Length - 1]);

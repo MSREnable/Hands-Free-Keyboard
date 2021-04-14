@@ -121,7 +121,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 for (var i = 1; i < HeadItems.Count && HeadItems[i] is GhostWordItem; i++)
                 {
-                    words.Add(HeadItems[i].ToString());
+                    words.Add(HeadItems[i].Content);
                 }
                 Debug.Assert(HeadItems.Count == words.Count + 2);
                 Debug.Assert(HeadItems[HeadItems.Count - 1] is GhostStopItem);
@@ -132,7 +132,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 for (var i = 1; i < HeadItems.Count && HeadItems[i] is HeadWordItem; i++)
                 {
-                    words.Add(HeadItems[i].ToString());
+                    words.Add(HeadItems[i].Content);
                 }
 
                 nextPreviousWordsLength = words.Count;

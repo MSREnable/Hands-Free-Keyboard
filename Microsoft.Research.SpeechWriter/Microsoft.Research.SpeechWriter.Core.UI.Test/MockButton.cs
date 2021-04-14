@@ -6,18 +6,18 @@ namespace Microsoft.Research.SpeechWriter.Core.UI.Test
     {
         private readonly ICommand _command;
 
-        public MockButton(int id, ICommand command, double width, double height, WidthBehavior behavior)
+        public MockButton(int id, ITile tile, double width, double height, WidthBehavior behavior)
         {
             Id = id;
 
-            _command = command;
+            _command = tile;
 
             Width = width;
             Height = height;
             ;
             if (behavior == WidthBehavior.Minimum)
             {
-                var captionWidth = 6 + 2 * command.ToString().Length;
+                var captionWidth = 6 + 2 * tile.Content.Length;
                 if (Width < captionWidth)
                 {
                     Width = captionWidth;

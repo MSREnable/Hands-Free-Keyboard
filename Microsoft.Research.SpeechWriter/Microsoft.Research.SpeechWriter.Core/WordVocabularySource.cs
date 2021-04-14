@@ -165,7 +165,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             selected.Add(0);
             for (var i = 1; i < count; i++)
             {
-                var word = _headItems[i].ToString();
+                var word = _headItems[i].Content;
                 var token = _tokens.GetToken(word);
                 selected.Add(token);
             }
@@ -266,7 +266,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var stopWords = new List<string>();
             for (var i = _selectedIndex + 1; i < ghostLimit; i++)
             {
-                var oldGhost = _headItems[i].ToString();
+                var oldGhost = _headItems[i].Content;
                 stopWords.Add(oldGhost);
                 var newGhost = new GhostWordItem(predecessor, this, oldGhost);
                 _headItems[i] = newGhost;
@@ -367,7 +367,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             for (var i = 1; i <= _selectedIndex; i++)
             {
                 var selected = _headItems[i];
-                var ghost = CreateGhostWordItem(predecessor, selected.ToString());
+                var ghost = CreateGhostWordItem(predecessor, selected.Content);
                 _headItems[i] = ghost;
                 predecessor = ghost;
             }
@@ -420,7 +420,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             for (; ghostIndex < ghostLimit; ghostIndex++)
             {
                 var oldItem = _headItems[ghostIndex];
-                var encoding = oldItem.ToString();
+                var encoding = oldItem.Content;
                 ghosts.Add(encoding);
                 var newItem = new GhostWordItem(predecessor, this, encoding);
                 _headItems[ghostIndex] = newItem;

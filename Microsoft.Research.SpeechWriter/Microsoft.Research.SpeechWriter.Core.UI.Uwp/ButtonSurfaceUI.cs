@@ -31,11 +31,11 @@ namespace Microsoft.Research.SpeechWriter.Core.UI.Uwp
             SizeChanged += (s, e) => _resized?.Invoke(s, EventArgs.Empty);
         }
 
-        ButtonUI IButtonSurfaceUI<ButtonUI>.Create(ICommand command, double width, double height, WidthBehavior behavior)
+        ButtonUI IButtonSurfaceUI<ButtonUI>.Create(ITile tile, double width, double height, WidthBehavior behavior)
         {
             var element = new ButtonUI
             {
-                Content = command,
+                Content = tile,
                 Height = height
             };
             switch (behavior)
