@@ -32,11 +32,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
                     value = _previous.Words;
                     var index = value.Length;
                     Array.Resize(ref value, index + 1);
-                    value[index] = Word;
+                    value[index] = Content;
                 }
                 else
                 {
-                    value = new[] { Word };
+                    value = new[] { Content };
                 }
 
                 return value;

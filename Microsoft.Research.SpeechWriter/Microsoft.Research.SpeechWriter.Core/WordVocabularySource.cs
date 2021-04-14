@@ -310,7 +310,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 var item = (WordItem)_headItems[_selectedIndex + 1];
 
-                var selected = CreateHeadWordItem(item.Word);
+                var selected = CreateHeadWordItem(item.Content);
                 _selectedIndex++;
                 _headItems[_selectedIndex] = selected;
 
@@ -477,7 +477,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var word = (WordItem)_headItems[i];
                 Debug.Assert(predecessor == word.Predecessor);
                 predecessor = word;
-                var token = _tokens.GetToken(word.Word);
+                var token = _tokens.GetToken(word.Content);
                 context.Add(token);
             }
 
@@ -493,14 +493,14 @@ namespace Microsoft.Research.SpeechWriter.Core
             for (var i = _selectedIndex + 1; i < count; i++)
             {
                 var word = (GhostWordItem)_headItems[i];
-                var token = _tokens.GetToken(word.Word);
+                var token = _tokens.GetToken(word.Content);
                 context.Add(token);
 
-                word = new GhostWordItem(predecessor, this, word.Word);
+                word = new GhostWordItem(predecessor, this, word.Content);
                 _headItems[i] = word;
                 predecessor = word;
 
-                stopSequence.Add(word.Word);
+                stopSequence.Add(word.Content);
             }
 
             var more = true;

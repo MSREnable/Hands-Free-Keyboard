@@ -11,7 +11,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
             : base(predecessor, source)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(word));
-            Word = word;
+            Content = word;
 
             var upper = word.ToUpper(Culture);
             var lower = word.ToLower(Culture);
@@ -24,14 +24,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         public override bool IsCased { get; }
 
         /// <summary>
-        /// The text of the word.
-        /// </summary>
-        public string Word { get; }
-
-        /// <summary>
         /// The basic content of the tile.
         /// </summary>
-        public override string Content => Word;
+        public override string Content { get; }
 
+        /// <summary>
+        /// The formatted content of the tile.
+        /// </summary>
+        public override string FormattedContent => IsCased && !IsCasedSuccessor ? Culture.TextInfo.ToTitleCase(Content) : Content;
     }
 }
