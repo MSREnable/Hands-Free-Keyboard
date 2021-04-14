@@ -92,6 +92,9 @@ namespace Microsoft.Research.SpeechWriter.Core
         private void SetSelectedIndex(int index)
         {
             _selectedIndex = index;
+
+            Debug.Assert(_tailItems.Count == 1);
+            _tailItems[0] = new TailStopItem(_headItems[index], this);
         }
 
         /// <summary>
@@ -230,8 +233,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             var item = CreateHeadWordItem(word);
+            _headItems.Insert(_selectedIndex + 1, item);
             SetSelectedIndex(_selectedIndex + 1);
-            _headItems.Insert(_selectedIndex, item);
 
             var selection = GetSelectedTokens();
             AddSequence(selection, LiveSequenceWeight);
@@ -257,8 +260,8 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
 
                 var item = CreateHeadWordItem(word);
+                _headItems.Insert(_selectedIndex + 1, item);
                 SetSelectedIndex(_selectedIndex + 1);
-                _headItems.Insert(_selectedIndex, item);
 
                 var selection = GetSelectedTokens();
                 AddSequence(selection, LiveSequenceWeight);
@@ -324,8 +327,8 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var item = (WordItem)_headItems[_selectedIndex + 1];
 
                 var selected = CreateHeadWordItem(item.Content);
+                _headItems[_selectedIndex + 1] = selected;
                 SetSelectedIndex(_selectedIndex + 1);
-                _headItems[_selectedIndex] = selected;
 
                 var selection = GetSelectedTokens();
                 AddSequence(selection, LiveSequenceWeight);
