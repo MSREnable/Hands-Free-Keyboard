@@ -18,8 +18,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         private int _lowerBound;
         private int _upperLimit;
 
-        private readonly ObservableCollection<ITile> _closingItems = new ObservableCollection<ITile>();
-
         private readonly ObservableCollection<IEnumerable<ITile>> _nextSuggestions = new ObservableCollection<IEnumerable<ITile>>();
         private readonly ObservableCollection<ITile> _suggestionInterstitials = new ObservableCollection<ITile>();
 
@@ -33,9 +31,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             Environment = environment;
 
             _wordSource = new WordVocabularySource(this);
-
-            TailItems = new ReadOnlyObservableCollection<ITile>(_closingItems);
-            _closingItems.Add(new TailStopItem(null, _wordSource));
 
             SuggestionLists = new ReadOnlyObservableCollection<IEnumerable<ITile>>(_nextSuggestions);
             SuggestionInterstitials = new ReadOnlyObservableCollection<ITile>(_suggestionInterstitials);
@@ -79,7 +74,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <summary>
         /// The open items that can be closed.
         /// </summary>
-        public ReadOnlyObservableCollection<ITile> TailItems { get; }
+        public ReadOnlyObservableCollection<ITile> TailItems => _wordSource.TailItems;
 
         /// <summary>
         /// Next word suggestion list. (Several individual words, one of which may be used next.)

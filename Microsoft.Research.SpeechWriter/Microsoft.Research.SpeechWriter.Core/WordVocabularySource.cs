@@ -22,6 +22,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         private readonly Dictionary<int, int> _tokenToIndex = new Dictionary<int, int>();
 
         private readonly ObservableCollection<ITile> _headItems = new ObservableCollection<ITile>();
+        private readonly ObservableCollection<ITile> _tailItems = new ObservableCollection<ITile>();
         private int _selectedIndex;
 
         private readonly OuterSpellingVocabularySource _spellingSource;
@@ -33,9 +34,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             _tokens = StringTokens.Create(words);
 
             _headItems.Add(new HeadStartItem(this));
+            _tailItems.Add(new TailStopItem(null, this));
             SetSelectedIndex(0);
 
             HeadItems = new ReadOnlyObservableCollection<ITile>(_headItems);
+            TailItems = new ReadOnlyObservableCollection<ITile>(_tailItems);
 
             PopulateVocabularyList();
 
@@ -59,6 +62,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal ReadOnlyObservableCollection<ITile> HeadItems { get; }
 
         internal ITile LastTile => _headItems[_selectedIndex];
+
+        /// <summary>
+        /// The tail items.
+        /// </summary>
+        internal ReadOnlyObservableCollection<ITile> TailItems { get; }
 
         internal IEnumerable<string> Words
         {
