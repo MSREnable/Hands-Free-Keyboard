@@ -65,7 +65,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                     {
                         delimiter = line.Length;
                     }
-                    var str = line.Substring(0, delimiter).ToUpperInvariant();
+                    var str = line.Substring(0, delimiter);
 
                     var goodLimit = 0;
                     while (goodLimit < str.Length && IsValidChar(str[goodLimit]))

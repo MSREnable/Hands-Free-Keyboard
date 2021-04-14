@@ -249,26 +249,26 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("THIS IS THE DAWNING OF THE AGE OF AQUARIUS", 29, 1, 117, 88);
+            MultiTest("this is the dawning of the age of aquarius", 29, 1, 117, 88);
         }
 
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("THE QUICK BROWN FOX JUMPS OVER A LAZY DOG", 39, 1, 179, 96);
+            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 179, 96);
         }
 
         [Test]
         public void HelloWorldTest()
         {
             // TODO: Find out why entering HELLO WORLD predicts HELLO WORLD HELLO WORLD as the next sentence.
-            MultiTest("HELLO WORLD", 10, 1, 46, 10);
+            MultiTest("hello world", 10, 1, 46, 10);
         }
 
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("IZZY WIZZY LETS GET BUSY", 27, 1, 80, 49);
+            MultiTest("izzy wizzy lets get busy", 27, 1, 80, 49);
         }
 
         [Test]
@@ -296,14 +296,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 
             var script = new[]
             {
-                "SPACE",
-                "THE FINAL FRONTIER",
-                "THESE ARE THE VOYAGES OF THE STARSHIP ENTERPRISE",
-                "ITS FIVE YEAR MISSION",
-                "TO EXPLORE STRANGE NEW WORLDS",
-                "TO SEEK OUT NEW LIFE",
-                "AND NEW CIVILIZATIONS",
-                "TO BOLDLY GO WHERE NO MAN HAS GONE BEFORE"
+                "space",
+                "the final frontier",
+                "these are the voyages of the starship enterprise",
+                "its five year mission",
+                "to explore strange new worlds",
+                "to seek out new life",
+                "and new civilizations",
+                "to boldly go where no man has gone before"
             };
 
             for (var line = 0; line < script.Length - 1; line++)
@@ -340,7 +340,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             ApplicationRobotAction action;
             do
             {
-                action = ApplicationRobot.GetNextCompletionAction(model, "IZZY", "WIZZY", "LETS", "GET", "BUSY");
+                action = ApplicationRobot.GetNextCompletionAction(model, "izzy", "wizzy", "lets", "get", "busy");
 
                 var item = action.GetItem(model);
                 Debug.WriteLine($"{count}: {action.Target} {action.Index}.{action.SubIndex} - {item.GetType().Name} - {item}");
@@ -367,14 +367,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         public void HelloWordNotIsTest()
         {
             var model = new ApplicationModel();
-            Establish(model, "HELLO", "WORLD");
+            Establish(model, "hello", "world");
 
             Assert.IsInstanceOf<HeadWordItem>(model.HeadItems[1]);
-            Assert.AreEqual("HELLO", model.HeadItems[1].Content);
+            Assert.AreEqual("hello", model.HeadItems[1].Content);
             model.HeadItems[1].Execute(null);
 
             Assert.IsInstanceOf<GhostWordItem>(model.HeadItems[2]);
-            Assert.AreEqual("WORLD", model.HeadItems[2].Content);
+            Assert.AreEqual("world", model.HeadItems[2].Content);
             /* TODO: This test is revealing nonsensical results currently!
             Assert.IsInstanceOf<GhostStopItem>(model.HeadItems[3]);
             model.HeadItems[3].Execute(null);

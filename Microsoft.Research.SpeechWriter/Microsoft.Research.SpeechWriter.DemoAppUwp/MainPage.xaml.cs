@@ -491,25 +491,25 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         private void OnClickKirk(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             args.Handled = true;
-            ShowDemo("SPACE",
-                "THE FINAL FRONTIER",
-                "THESE ARE THE VOYAGES OF THE STARSHIP ENTERPRISE",
-                "ITS FIVE YEAR MISSION",
-                "TO EXPLORE STRANGE NEW WORLDS",
-                "TO SEEK OUT NEW LIFE",
-                "AND NEW CIVILIZATIONS",
-                "TO BOLDLY GO WHERE NO MAN HAS GONE BEFORE");
+            ShowDemo("space",
+                "the final frontier",
+                "these are the voyages of the starship enterprise",
+                "its five year mission",
+                "to explore strange new worlds",
+                "to seek out new life",
+                "and new civilizations",
+                "to boldly go where no man has gone before");
         }
 
         private void OnClickPicard(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             args.Handled = true;
-            ShowDemo("THESE ARE THE VOYAGES OF THE STARSHIP ENTERPRISE",
-                "ITS CONTINUING MISSION",
-                "TO EXPLORE STRANGE NEW WORLDS",
-                "TO SEEK OUT NEW LIFE",
-                "AND NEW CIVILIZATIONS",
-                "TO BOLDLY GO WHERE NO ONE HAS GONE BEFORE");
+            ShowDemo("these are the voyages of the starship enterprise",
+                "its continuing mission",
+                "to explore strange new worlds",
+                "to seek out new life",
+                "and new civilizations",
+                "to boldly go where no one has gone before");
         }
 
         private async void OnPaste(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
