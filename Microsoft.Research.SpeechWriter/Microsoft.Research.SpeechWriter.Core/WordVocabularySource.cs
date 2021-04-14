@@ -33,7 +33,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _tokens = StringTokens.Create(words);
 
             _headItems.Add(new HeadStartItem(this));
-            _selectedIndex = 0;
+            SetSelectedIndex(0);
 
             HeadItems = new ReadOnlyObservableCollection<ITile>(_headItems);
 
@@ -80,6 +80,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// The number of items within the source.
         /// </summary>
         internal override int Count => _vocabularyList.Count;
+
+        private void SetSelectedIndex(int index)
+        {
+            _selectedIndex = index;
+        }
 
         /// <summary>
         /// Load utterances from environment.
@@ -217,7 +222,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             var item = CreateHeadWordItem(word);
-            _selectedIndex++;
+            SetSelectedIndex(_selectedIndex + 1);
             _headItems.Insert(_selectedIndex, item);
 
             var selection = GetSelectedTokens();
@@ -244,7 +249,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
 
                 var item = CreateHeadWordItem(word);
-                _selectedIndex++;
+                SetSelectedIndex(_selectedIndex + 1);
                 _headItems.Insert(_selectedIndex, item);
 
                 var selection = GetSelectedTokens();
@@ -311,7 +316,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var item = (WordItem)_headItems[_selectedIndex + 1];
 
                 var selected = CreateHeadWordItem(item.Content);
-                _selectedIndex++;
+                SetSelectedIndex(_selectedIndex + 1);
                 _headItems[_selectedIndex] = selected;
 
                 var selection = GetSelectedTokens();
@@ -388,7 +393,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             var tail = new GhostStopItem(predecessor, this, TokensToWords(selection));
             _headItems.Add(tail);
-            _selectedIndex = 0;
+            SetSelectedIndex(0);
 
             _model.Environment.SaveUtterance(utterance.ToArray());
 
@@ -436,7 +441,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _headItems[ghostLimit] = ghostStop;
             }
 
-            _selectedIndex = index;
+            SetSelectedIndex(index);
 
             SetSuggestionsView();
 
