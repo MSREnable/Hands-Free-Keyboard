@@ -44,6 +44,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         public abstract string Content { get; }
 
         /// <summary>
+        /// The formatted content of the tile.
+        /// </summary>
+        public virtual string FormattedContent => Content;
+
+        /// <summary>
         /// The source.
         /// </summary>
         protected TSource Source => _source;
@@ -79,6 +84,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Standard override.
         /// </summary>
         /// <returns></returns>
-        public sealed override string ToString() => Content;
+        public sealed override string ToString() => $"{GetType().Name} - {Content}";
     }
 }

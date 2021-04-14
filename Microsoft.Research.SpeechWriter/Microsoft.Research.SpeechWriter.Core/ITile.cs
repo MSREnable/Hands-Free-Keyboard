@@ -32,5 +32,10 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// The basic content of the tile.
         /// </summary>
         string Content { get; }
+
+        /// <summary>
+        /// The formatted content of the tile.
+        /// </summary>
+        string FormattedContent { get; }
     }
 }
