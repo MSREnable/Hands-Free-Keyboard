@@ -583,7 +583,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             var view = Clipboard.GetContent();
             var text = await view.GetTextAsync();
-            var upper = text.ToUpper();
+            var upper = text.ToLower();
 
             var builder = new StringBuilder();
             foreach (var ch in upper)
