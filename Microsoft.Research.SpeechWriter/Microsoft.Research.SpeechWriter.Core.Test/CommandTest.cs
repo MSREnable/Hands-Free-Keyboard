@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
 {

@@ -1,7 +1,4 @@
 ﻿using NUnit.Framework;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
 {

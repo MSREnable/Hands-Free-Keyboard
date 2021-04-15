@@ -1,7 +1,6 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.UI;
 using Microsoft.Research.SpeechWriter.Core.UI.Wpf;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace TestHostWpf
 {

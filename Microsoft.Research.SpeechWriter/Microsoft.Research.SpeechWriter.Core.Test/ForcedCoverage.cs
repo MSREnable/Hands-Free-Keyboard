@@ -1,6 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Items;
 using NUnit.Framework;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
 {
