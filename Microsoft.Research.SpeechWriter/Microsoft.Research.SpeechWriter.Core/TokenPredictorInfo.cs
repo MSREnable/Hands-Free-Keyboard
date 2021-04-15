@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -41,7 +40,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var children = GetChildren();
 
-            var info = _children.GetValue(token);
+            var info = children.GetValue(token);
 
             return info;
         }

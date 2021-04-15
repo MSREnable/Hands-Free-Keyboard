@@ -3,7 +3,6 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core.Automation
 {
@@ -32,7 +31,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 suggestionsCount += subListCount;
             }
 
-            var totalCount = headCount + tailCount + suggestionsCount;
             var index = random.Next(0, suggestionsCount);
 
             if (index < headCount)

@@ -7,17 +7,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
     /// </summary>
     public class TailStopItem : Command<WordVocabularySource>, ISuggestionItem
     {
-        private readonly string[] _words;
-
-        internal TailStopItem(ITile predecessor, WordVocabularySource source, params string[] words)
+        internal TailStopItem(ITile predecessor, WordVocabularySource source)
             : base(predecessor, source)
         {
-            _words = words;
         }
 
         internal override void Execute(WordVocabularySource source)
         {
-            source.Commit(_words);
+            source.Commit(this);
         }
 
         ISuggestionItem ISuggestionItem.GetNextItem(int token)

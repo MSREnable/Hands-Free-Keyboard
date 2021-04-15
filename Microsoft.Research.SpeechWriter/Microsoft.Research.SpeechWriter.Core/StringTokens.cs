@@ -1,7 +1,5 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Properties;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -15,9 +13,9 @@ namespace Microsoft.Research.SpeechWriter.Core
     {
         private int _tokenLimit;
 
-        private List<string> _tokenToString = new List<string>();
+        private readonly List<string> _tokenToString = new List<string>();
 
-        private Dictionary<string, int> _stringToToken = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> _stringToToken = new Dictionary<string, int>();
 
         /// <summary>
         /// Default constructor.

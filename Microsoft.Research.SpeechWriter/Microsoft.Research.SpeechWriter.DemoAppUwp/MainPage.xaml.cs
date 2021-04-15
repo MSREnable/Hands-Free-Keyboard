@@ -300,8 +300,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private static TimeSpan GetTimeLineDuration(Timeline timeline)
         {
-            var begin = timeline.BeginTime.HasValue ? timeline.BeginTime.Value : TimeSpan.Zero;
-            var duration = timeline.Duration.HasTimeSpan ? timeline.Duration.TimeSpan : TimeSpan.Zero; ;
+            var begin = timeline.BeginTime ?? TimeSpan.Zero;
+            var duration = timeline.Duration.HasTimeSpan ? timeline.Duration.TimeSpan : TimeSpan.Zero;
 
             if (GetAs<Storyboard>(timeline, out var storyboard))
             {
@@ -347,7 +347,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         private static async Task PlayStoryboardAsync(Storyboard storyboard)
         {
             var semaphore = new SemaphoreSlim(0);
-            EventHandler<object> handler = (s, e) => semaphore.Release();
+            void handler(object s, object e) => semaphore.Release();
             storyboard.Completed += handler;
             try
             {

@@ -22,7 +22,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal override ITile CreateItem(int value)
         {
-            var unicode = value < SurrogateCodePointsMinimum ? 
+            var unicode = value < SurrogateCodePointsMinimum ?
                 value : value - SurrogateCodePointsMinimum + SurrogateCodePointsLimit;
             var item = new SuggestedUnicodeItem(_model.LastTile, _parent, unicode);
             return item;
