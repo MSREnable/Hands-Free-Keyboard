@@ -1,7 +1,5 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Properties;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
