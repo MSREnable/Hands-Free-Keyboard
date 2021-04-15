@@ -41,7 +41,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var children = GetChildren();
 
-            var info = _children.GetValue(token);
+            var info = children.GetValue(token);
 
             return info;
         }

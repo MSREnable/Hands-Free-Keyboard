@@ -32,7 +32,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 suggestionsCount += subListCount;
             }
 
-            var totalCount = headCount + tailCount + suggestionsCount;
             var index = random.Next(0, suggestionsCount);
 
             if (index < headCount)

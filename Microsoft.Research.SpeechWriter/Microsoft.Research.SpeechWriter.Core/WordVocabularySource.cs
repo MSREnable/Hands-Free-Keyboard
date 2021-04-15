@@ -11,7 +11,7 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// </summary>
     public class WordVocabularySource : PredictiveVocabularySource<SuggestedWordItem>
     {
-        private const int SeedSequenceWeight = 1;
+        internal const int SeedSequenceWeight = 1;
         private const int PersistedSequenceWeight = 100;
         private const int LiveSequenceWeight = 10000;
 
@@ -176,9 +176,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal List<int> GetSelectedTokens()
         {
             var count = _selectedIndex + 1;
-            var selected = new List<int>(count);
-
-            selected.Add(0);
+            var selected = new List<int>(count) { 0 };
             for (var i = 1; i < count; i++)
             {
                 var word = _headItems[i].Content;
@@ -477,8 +475,10 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void ContinueRunOnSuggestions()
         {
-            var context = new List<int>();
-            context.Add(0);
+            var context = new List<int>
+            {
+                0
+            };
             ITile predecessor = _headItems[0];
             for (var i = 1; i <= _selectedIndex; i++)
             {
@@ -626,8 +626,6 @@ namespace Microsoft.Research.SpeechWriter.Core
                 Debug.Assert(!checkPredecessor || ReferenceEquals(predecessor, _headItems[i].Predecessor), "Correctly linked Head Word predecessor");
                 predecessor = _headItems[i];
             }
-
-            var commonPredecessor = predecessor;
 
             var ghostWordLimit = _headItems.Count;
             if (_headItems[ghostWordLimit - 1] is GhostStopItem)

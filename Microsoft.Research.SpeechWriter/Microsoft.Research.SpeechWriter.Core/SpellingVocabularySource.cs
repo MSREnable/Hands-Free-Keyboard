@@ -12,8 +12,6 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// </summary>
     public class SpellingVocabularySource : PredictiveVocabularySource<SuggestedSpellingItem>
     {
-        private const int SeedSequenceWeight = 1;
-
         private readonly List<int> _vocabularyList = new List<int>();
 
         private readonly Dictionary<int, int> _tokenToIndex = new Dictionary<int, int>();
@@ -39,15 +37,17 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             foreach (var word in _wordVocabularySource.Words)
             {
-                var sequence = new List<int>(word.Length + 2);
-                sequence.Add(0);
+                var sequence = new List<int>(word.Length + 2)
+                {
+                    0
+                };
                 foreach (var ch in word.ToCharArray())
                 {
                     sequence.Add(ch);
                 }
                 sequence.Add(0);
 
-                PersistantPredictor.AddSequence(sequence, SeedSequenceWeight);
+                PersistantPredictor.AddSequence(sequence, WordVocabularySource.SeedSequenceWeight);
             }
 
             PopulateVocabularyList();
@@ -64,8 +64,10 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var needToRepopuplate = false;
 
-            var sequence = new List<int>(word.Length + 2);
-            sequence.Add(0);
+            var sequence = new List<int>(word.Length + 2)
+            {
+                0
+            };
             for (var index = 0; index < word.Length;)
             {
                 int utf32 = char.ConvertToUtf32(word, index);
@@ -86,7 +88,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             sequence.Add(0);
 
-            PersistantPredictor.AddSequence(sequence, SeedSequenceWeight);
+            PersistantPredictor.AddSequence(sequence, WordVocabularySource.SeedSequenceWeight);
 
             if (needToRepopuplate)
             {

@@ -349,9 +349,10 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private static IDictionary<string, object> ToJsonDictionary(StringTokens tokens, TokenPredictorInfo info)
         {
-            var saved = new SortedDictionary<string, object>();
-
-            saved.Add("#", info.Count);
+            var saved = new SortedDictionary<string, object>
+            {
+                { "#", info.Count }
+            };
 
             var children = info.TryGetChildren();
             if (children != null)

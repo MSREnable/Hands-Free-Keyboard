@@ -99,12 +99,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <summary>
         /// Event occurring afer every model update.
         /// </summary>
-        public event EventHandler<ApplicationModelUpdateEventArgs> ApplicationModelUpdate
-        {
-            add { _applicationModelUpdate += value; }
-            remove { _applicationModelUpdate -= value; }
-        }
-        private event EventHandler<ApplicationModelUpdateEventArgs> _applicationModelUpdate;
+        public event EventHandler<ApplicationModelUpdateEventArgs> ApplicationModelUpdate;
 
         private void RaiseApplicationModelUpdateEvent(bool isComplete)
         {
@@ -137,7 +132,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var e = new ApplicationModelUpdateEventArgs(words, _previousWordsLengthNotified, isComplete);
             _previousWordsLengthNotified = nextPreviousWordsLength;
 
-            _applicationModelUpdate?.Invoke(this, e);
+            ApplicationModelUpdate?.Invoke(this, e);
         }
 
         /// <summary>

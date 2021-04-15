@@ -87,8 +87,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             if (token != 0)
             {
                 var context = GetContext();
-                var extraContext = new List<int>(context);
-                extraContext.Add(token);
+                var extraContext = new List<int>(context) { token };
 
                 var more = true;
                 for (var extras = 0; more && extras < 3; extras++)
