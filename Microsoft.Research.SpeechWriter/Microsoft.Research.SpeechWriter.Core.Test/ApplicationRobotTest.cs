@@ -219,8 +219,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 
         private static void MultiTest(string[] words, int expectedFirstClicks, int expectedSecondClicks, int expectedEmptyClicks, int expectedClicksWithRandomErrors)
         {
-            var model = new ApplicationModel();
-            model.MaxNextSuggestionsCount = 9;
+            var model = new ApplicationModel() { MaxNextSuggestionsCount = 9 };
 
             var actualFirstClicks = CountClicks(model, words);
             Assert.AreEqual(expectedFirstClicks, actualFirstClicks);
@@ -234,8 +233,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             var actualEmptyClicks = CountClicks(emptyModel, words);
             Assert.AreEqual(expectedEmptyClicks, actualEmptyClicks);
 
-            var errorModel = new ApplicationModel();
-            errorModel.MaxNextSuggestionsCount = 9;
+            var errorModel = new ApplicationModel() { MaxNextSuggestionsCount = 9 };
             var actualClicksWithRandomErrors = CountClicks(errorModel, words, 0.2);
             Assert.AreEqual(expectedClicksWithRandomErrors, actualClicksWithRandomErrors);
         }
@@ -319,7 +317,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                 while (!action.IsComplete);
             }
 
-            var lastWords = script[script.Length - 1].Split(' ');
+            var lastWords = script[^1].Split(' ');
             for (var action = ApplicationRobot.GetNextEstablishingAction(model, lastWords);
                 action != null;
                 action = ApplicationRobot.GetNextEstablishingAction(model, lastWords))

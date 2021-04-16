@@ -119,6 +119,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return culture.CompareInfo.Compare(string1, string2, CompareOptions.StringSort);
         }
 
+        private static bool StartsWith(string string1, string string2, CultureInfo culture)
+        {
+            Debug.Assert(culture != null);
+            return string1.StartsWith(string2, StringComparison.OrdinalIgnoreCase);
+        }
+
         private static ApplicationRobotAction GetModeEscape(ApplicationModel model)
         {
             Debug.Assert(model.HeadItems[0] is HeadStartItem);
@@ -134,10 +140,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return action;
         }
 
-        private static ApplicationRobotAction GetSuggestionsAction(ApplicationModel model, bool complete, string[] words, int wordsMatchLim)
+        private static ApplicationRobotAction GetSuggestionsAction(ApplicationModel model,
+            bool complete,
+            string[] words,
+            int wordsMatchLim,
+            CultureInfo culture)
         {
             ApplicationRobotAction action;
-            var culture = model.HeadItems[0].Culture;
 
             var targetWord = words[wordsMatchLim];
 
@@ -166,8 +175,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 {
                     var partial = firstItem.Content;
 
-                    // if (targetWord.StartsWith(partial, true, culture))
-                    if (targetWord.StartsWith(partial, StringComparison.OrdinalIgnoreCase))
+                    if (StartsWith(targetWord, partial, culture))
                     {
                         var subIndex = 0;
                         using (var enumerator = list.GetEnumerator())
@@ -179,8 +187,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             more = enumerator.MoveNext();
                             while (more &&
                                 enumerator.Current is SuggestedSpellingSequenceItem &&
-                                // targetWord.StartsWith(enumerator.Current.Content, true, culture))
-                                targetWord.StartsWith(enumerator.Current.Content, StringComparison.OrdinalIgnoreCase))
+                                StartsWith(targetWord, enumerator.Current.Content, culture))
                             {
                                 subIndex++;
                                 more = enumerator.MoveNext();
@@ -199,8 +206,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             }
                         }
                     }
-                    // else if (!targetWord.StartsWith(partial.Substring(0, partial.Length - 1), true, culture))
-                    else if (!targetWord.StartsWith(partial.Substring(0, partial.Length - 1), StringComparison.OrdinalIgnoreCase))
+                    else if (!StartsWith(targetWord, partial.Substring(0, partial.Length - 1), culture))
                     {
                         // Need to remove incorrectly spelled items.
                         if (targetWord[0] != partial[0])
@@ -236,8 +242,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 }
                 else if (firstItem is SuggestedSpellingBackspaceItem)
                 {
-                    // if (!targetWord.StartsWith(firstItem.Content, true, culture))
-                    if (!targetWord.StartsWith(firstItem.Content, StringComparison.OrdinalIgnoreCase))
+                    if (!StartsWith(targetWord, firstItem.Content, culture))
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                     }
@@ -251,13 +256,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                     Debug.Assert(((SuggestedUnicodeItem)firstItem).Symbol.Length == 1);
                     Debug.Assert(((SuggestedUnicodeItem)firstItem).Symbol[0] == partial[partial.Length - 1]);
 
-                    // if (targetWord.StartsWith(partial, true, culture))
-                    if (targetWord.StartsWith(partial, StringComparison.OrdinalIgnoreCase))
+                    if (StartsWith(targetWord, partial, culture))
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                     }
-                    // else if (!targetWord.StartsWith(partial.Substring(0, partial.Length - 1), true, culture))
-                    else if (!targetWord.StartsWith(partial.Substring(0, partial.Length - 1), StringComparison.OrdinalIgnoreCase))
+                    else if (!StartsWith(targetWord, partial.Substring(0, partial.Length - 1), culture))
                     {
                         action = GetModeEscape(model);
                     }
@@ -362,7 +365,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 else
                 {
                     // Click something in the suggestions to advance.
-                    action = GetSuggestionsAction(model, complete, words, wordsMatchLim);
+                    action = GetSuggestionsAction(model, complete, words, wordsMatchLim, culture);
 
                     if (!action.IsComplete && wordsMatchLim < ghostMatchLim)
                     {
