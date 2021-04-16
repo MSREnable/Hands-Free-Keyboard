@@ -64,12 +64,17 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return action;
         }
 
-        private static bool IsItemMatch<T>(ITile tile, string value)
+        private static bool IsItemMatch<T>(ITile tile, string value, CultureInfo culture)
         {
-            return tile is T && tile.Content == value;
+            return tile is T && string.Compare(tile.Content, value, true, culture) == 0;
         }
 
-        private static ApplicationRobotAction CreateSuggestedWordAction(ApplicationModel model, bool complete, string[] words, int wordsMatchLim, int index)
+        private static ApplicationRobotAction CreateSuggestedWordAction(ApplicationModel model,
+            bool complete,
+            string[] words,
+            int wordsMatchLim,
+            int index,
+            CultureInfo culture)
         {
             ApplicationRobotAction action;
 
@@ -80,14 +85,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 // Check the first word matches.
                 enumerator.MoveNext();
                 Debug.Assert(enumerator.Current is SuggestedWordItem);
-                Debug.Assert(enumerator.Current.Content == words[wordsMatchLim]);
+                Debug.Assert(string.Compare(enumerator.Current.Content, words[wordsMatchLim], true, culture) == 0);
 
                 // See if more words match.
                 var subIndex = 0;
                 while (enumerator.MoveNext() &&
                     wordsMatchLim + subIndex + 1 < words.Length &&
                     enumerator.Current is SuggestedWordItem &&
-                    enumerator.Current.Content == words[wordsMatchLim + subIndex + 1])
+                    string.Compare(enumerator.Current.Content, words[wordsMatchLim + subIndex + 1], true, culture) == 0)
                 {
                     subIndex++;
                 }
@@ -109,9 +114,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return action;
         }
 
-        private static int StringCompare(string string1, string string2)
+        private static int StringCompare(string string1, string string2, CultureInfo culture)
         {
-            return CultureInfo.CurrentUICulture.CompareInfo.Compare(string1, string2, CompareOptions.StringSort);
+            return culture.CompareInfo.Compare(string1, string2, CompareOptions.StringSort);
         }
 
         private static ApplicationRobotAction GetModeEscape(ApplicationModel model)
@@ -132,6 +137,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
         private static ApplicationRobotAction GetSuggestionsAction(ApplicationModel model, bool complete, string[] words, int wordsMatchLim)
         {
             ApplicationRobotAction action;
+            var culture = model.HeadItems[0].Culture;
 
             var targetWord = words[wordsMatchLim];
 
@@ -145,12 +151,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 {
                     var suggestedWord = firstItem.Content;
 
-                    if (suggestedWord == targetWord)
+                    if (string.Compare(suggestedWord, targetWord, true, culture) == 0)
                     {
                         // Found our word.
-                        action = CreateSuggestedWordAction(model, complete, words, wordsMatchLim, index);
+                        action = CreateSuggestedWordAction(model, complete, words, wordsMatchLim, index, culture);
                     }
-                    else if (StringCompare(targetWord, suggestedWord) < 0)
+                    else if (StringCompare(targetWord, suggestedWord, culture) < 0)
                     {
                         // Need to step back.
                         action = ApplicationRobotAction.CreateInterstitial(index);
@@ -160,7 +166,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 {
                     var partial = firstItem.Content;
 
-                    if (targetWord.StartsWith(partial, StringComparison.Ordinal))
+                    // if (targetWord.StartsWith(partial, true, culture))
+                    if (targetWord.StartsWith(partial, StringComparison.OrdinalIgnoreCase))
                     {
                         var subIndex = 0;
                         using (var enumerator = list.GetEnumerator())
@@ -172,7 +179,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             more = enumerator.MoveNext();
                             while (more &&
                                 enumerator.Current is SuggestedSpellingSequenceItem &&
-                                targetWord.StartsWith(enumerator.Current.Content, StringComparison.Ordinal))
+                                // targetWord.StartsWith(enumerator.Current.Content, true, culture))
+                                targetWord.StartsWith(enumerator.Current.Content, StringComparison.OrdinalIgnoreCase))
                             {
                                 subIndex++;
                                 more = enumerator.MoveNext();
@@ -181,7 +189,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             if (complete &&
                                 more &&
                                 enumerator.Current is SuggestedWordItem &&
-                                enumerator.Current.Content == targetWord)
+                                string.Compare(enumerator.Current.Content, targetWord, true, culture) == 0)
                             {
                                 action = ApplicationRobotAction.CreateSuggestion(index, subIndex + 1);
                             }
@@ -191,7 +199,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             }
                         }
                     }
-                    else if (!targetWord.StartsWith(partial.Substring(0, partial.Length - 1), StringComparison.Ordinal))
+                    // else if (!targetWord.StartsWith(partial.Substring(0, partial.Length - 1), true, culture))
+                    else if (!targetWord.StartsWith(partial.Substring(0, partial.Length - 1), StringComparison.OrdinalIgnoreCase))
                     {
                         // Need to remove incorrectly spelled items.
                         if (targetWord[0] != partial[0])
@@ -209,7 +218,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             action = ApplicationRobotAction.CreateInterstitial(0);
                         }
                     }
-                    else if (StringCompare(partial.Substring(partial.Length - 1, 1), targetWord.Substring(partial.Length - 1, 1)) < 0)
+                    else if (StringCompare(partial.Substring(partial.Length - 1, 1), targetWord.Substring(partial.Length - 1, 1), culture) < 0)
                     {
                         // Look at next item.
                     }
@@ -220,14 +229,15 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 }
                 else if (firstItem is SuggestedSpellingWordItem)
                 {
-                    if (firstItem.Content == targetWord)
+                    if (string.Compare(firstItem.Content, targetWord, true, culture) == 0)
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                     }
                 }
                 else if (firstItem is SuggestedSpellingBackspaceItem)
                 {
-                    if (!targetWord.StartsWith(firstItem.Content, StringComparison.Ordinal))
+                    // if (!targetWord.StartsWith(firstItem.Content, true, culture))
+                    if (!targetWord.StartsWith(firstItem.Content, StringComparison.OrdinalIgnoreCase))
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                     }
@@ -241,11 +251,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                     Debug.Assert(((SuggestedUnicodeItem)firstItem).Symbol.Length == 1);
                     Debug.Assert(((SuggestedUnicodeItem)firstItem).Symbol[0] == partial[partial.Length - 1]);
 
-                    if (targetWord.StartsWith(partial, StringComparison.Ordinal))
+                    // if (targetWord.StartsWith(partial, true, culture))
+                    if (targetWord.StartsWith(partial, StringComparison.OrdinalIgnoreCase))
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                     }
-                    else if (!targetWord.StartsWith(partial.Substring(0, partial.Length - 1), StringComparison.Ordinal))
+                    // else if (!targetWord.StartsWith(partial.Substring(0, partial.Length - 1), true, culture))
+                    else if (!targetWord.StartsWith(partial.Substring(0, partial.Length - 1), StringComparison.OrdinalIgnoreCase))
                     {
                         action = GetModeEscape(model);
                     }
@@ -284,11 +296,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
             Debug.Assert(model.HeadItems[0] is HeadStartItem);
 
+            var culture = model.HeadItems[0].Culture;
+
             // Find number of words already correctly entered.
             var wordsMatchLim = 0;
             while (wordsMatchLim < words.Length &&
                 wordsMatchLim + 1 < model.HeadItems.Count &&
-                IsItemMatch<HeadWordItem>(model.HeadItems[wordsMatchLim + 1], words[wordsMatchLim]))
+                IsItemMatch<HeadWordItem>(model.HeadItems[wordsMatchLim + 1], words[wordsMatchLim], culture))
             {
                 wordsMatchLim++;
             }
@@ -331,7 +345,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 var ghostMatchLim = wordsMatchLim;
                 while (ghostMatchLim < words.Length &&
                     ghostMatchLim + 1 < model.HeadItems.Count &&
-                    IsItemMatch<GhostWordItem>(model.HeadItems[ghostMatchLim + 1], words[ghostMatchLim]))
+                    IsItemMatch<GhostWordItem>(model.HeadItems[ghostMatchLim + 1], words[ghostMatchLim], culture))
                 {
                     ghostMatchLim++;
                 }

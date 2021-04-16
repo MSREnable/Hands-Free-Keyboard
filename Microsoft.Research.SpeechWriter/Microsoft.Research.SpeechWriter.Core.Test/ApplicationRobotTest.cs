@@ -255,38 +255,38 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 179, 96);
+            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 182, 96);
         }
 
         [Test]
         public void HelloWorldTest()
         {
             // TODO: Find out why entering HELLO WORLD predicts HELLO WORLD HELLO WORLD as the next sentence.
-            MultiTest("hello world", 10, 1, 46, 10);
+            MultiTest("hello world", 10, 1, 45, 10);
         }
 
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("izzy wizzy lets get busy", 27, 1, 80, 49);
+            MultiTest("izzy wizzy lets get busy", 29, 1, 77, 104);
         }
 
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 91, 1, 65, 520);
+            MultiTest("공유하 고 즐기십시오", 94, 1, 65, 485);
         }
 
         [Test]
         public void ShareAndEnjoyCantoneseTest()
         {
-            MultiTest("分享 同 享受", 51, 1, 33, 178);
+            MultiTest("分享 同 享受", 53, 1, 33, 176);
         }
 
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 137, 1, 94, 564);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 94, 563);
         }
 
         [Test]
