@@ -66,7 +66,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
         private static bool IsItemMatch<T>(ITile tile, string value, CultureInfo culture)
         {
-            return tile is T && string.Compare(tile.Content, value, true, culture) == 0;
+            return tile is T && StringEquals(tile.Content, value, culture);
         }
 
         private static ApplicationRobotAction CreateSuggestedWordAction(ApplicationModel model,
@@ -85,14 +85,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 // Check the first word matches.
                 enumerator.MoveNext();
                 Debug.Assert(enumerator.Current is SuggestedWordItem);
-                Debug.Assert(string.Compare(enumerator.Current.Content, words[wordsMatchLim], true, culture) == 0);
+                Debug.Assert(StringEquals(enumerator.Current.Content, words[wordsMatchLim], culture));
 
                 // See if more words match.
                 var subIndex = 0;
                 while (enumerator.MoveNext() &&
                     wordsMatchLim + subIndex + 1 < words.Length &&
                     enumerator.Current is SuggestedWordItem &&
-                    string.Compare(enumerator.Current.Content, words[wordsMatchLim + subIndex + 1], true, culture) == 0)
+                    StringEquals(enumerator.Current.Content, words[wordsMatchLim + subIndex + 1], culture))
                 {
                     subIndex++;
                 }
@@ -114,6 +114,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return action;
         }
 
+        private static bool StringEquals(string string1, string string2, CultureInfo culture)
+        {
+            var value = string.Compare(string1, string2, true, culture);
+            return value == 0;
+        }
+
         private static int StringCompare(string string1, string string2, CultureInfo culture)
         {
             return culture.CompareInfo.Compare(string1, string2, CompareOptions.StringSort);
@@ -129,7 +135,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
             var string2Length = string2.Length;
             var value = string2.Length <= string1.Length &&
-                string.Compare(string1.Substring(0, string2.Length), string2, true, culture) == 0;
+                StringEquals(string1.Substring(0, string2.Length), string2, culture);
 
             return value;
         }
@@ -169,7 +175,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 {
                     var suggestedWord = firstItem.Content;
 
-                    if (string.Compare(suggestedWord, targetWord, true, culture) == 0)
+                    if (StringEquals(suggestedWord, targetWord, culture))
                     {
                         // Found our word.
                         action = CreateSuggestedWordAction(model, complete, words, wordsMatchLim, index, culture);
@@ -205,7 +211,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             if (complete &&
                                 more &&
                                 enumerator.Current is SuggestedWordItem &&
-                                string.Compare(enumerator.Current.Content, targetWord, true, culture) == 0)
+                                StringEquals(enumerator.Current.Content, targetWord, culture))
                             {
                                 action = ApplicationRobotAction.CreateSuggestion(index, subIndex + 1);
                             }
@@ -244,7 +250,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 }
                 else if (firstItem is SuggestedSpellingWordItem)
                 {
-                    if (string.Compare(firstItem.Content, targetWord, true, culture) == 0)
+                    if (StringEquals(firstItem.Content, targetWord, culture))
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                     }
