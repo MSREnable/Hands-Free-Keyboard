@@ -121,8 +121,17 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
         private static bool StartsWith(string string1, string string2, CultureInfo culture)
         {
-            Debug.Assert(culture != null);
-            return string1.StartsWith(string2, StringComparison.OrdinalIgnoreCase);
+            // TODO: Would like to do this, but it doesn't work:
+            // var cultureTruth = string1.StartsWith(string2, true, culture);
+
+            // TODO: This also works, but may not be correct!
+            // var ordinalTruth = string1.StartsWith(string2, StringComparison.OrdinalIgnoreCase);
+
+            var string2Length = string2.Length;
+            var value = string2.Length <= string1.Length &&
+                string.Compare(string1.Substring(0, string2.Length), string2, true, culture) == 0;
+
+            return value;
         }
 
         private static ApplicationRobotAction GetModeEscape(ApplicationModel model)
