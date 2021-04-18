@@ -231,7 +231,7 @@
 
         <MediaElement x:Name="TheMediaElement"/>
 
-        <ItemsControl x:Name="HeadItemsContainer" Grid.Column="0" Grid.Row="0" ItemsSource="{x:Bind Model.HeadItems}">
+        <ItemsControl x:Name="HeadItemsContainer" Grid.Column="0" Grid.Row="0" ItemsSource="{x:Bind Model.HeadItems, Mode=OneWay}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <controls:WrapPanel/>
@@ -239,7 +239,7 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
 
-        <ItemsControl x:Name="TailItemsContainer" Grid.Column="0" Grid.Row="1" ItemsSource="{x:Bind Model.TailItems}">
+        <ItemsControl x:Name="TailItemsContainer" Grid.Column="0" Grid.Row="1" ItemsSource="{x:Bind Model.TailItems, Mode=OneWay}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <controls:WrapPanel HorizontalAlignment="Right"/>
@@ -247,7 +247,7 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
 
-        <ItemsControl x:Name="SuggestionInterstitialsContainer" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{x:Bind Model.SuggestionInterstitials}">
+        <ItemsControl x:Name="SuggestionInterstitialsContainer" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{x:Bind Model.SuggestionInterstitials, Mode=OneWay}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical"/>
@@ -255,7 +255,7 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
 
-        <ItemsControl x:Name="SuggestionListsContainer" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{x:Bind Model.SuggestionLists}">
+        <ItemsControl x:Name="SuggestionListsContainer" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{x:Bind Model.SuggestionLists, Mode=OneWay}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical" Margin="0,55,0,0"/>

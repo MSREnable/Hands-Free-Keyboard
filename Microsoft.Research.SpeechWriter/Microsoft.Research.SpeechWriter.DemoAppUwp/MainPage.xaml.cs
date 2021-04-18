@@ -97,7 +97,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             var passedEnvironment = e.Parameter as IWriterEnvironment;
 
             var environment = passedEnvironment ?? new UwpWriterEnvironment();
-            Model = new ApplicationModel(environment);
+            _model = new ApplicationModel(environment);
 
             var voiceChoice = new List<VoiceInformation>();
             foreach (var voice in SpeechSynthesizer.AllVoices)
@@ -125,6 +125,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                     IsEnabled = true;
                 }
             }
+            SetMaxNextSuggestionsCount();
+            Model = _model;
         }
 
         public double MoveToCenterX
@@ -479,13 +481,21 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         public ApplicationModel Model
         {
-            get => _model;
+            get => (ApplicationModel)GetValue(ModelProperty);
             set => SetValue(ModelProperty, value);
+        }
+
+        private void SetMaxNextSuggestionsCount()
+        {
+            _model.MaxNextSuggestionsCount = (int)(ActualHeight) / 110;
         }
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            _model.MaxNextSuggestionsCount = (int)(e.NewSize.Height) / 110;
+            if (Model != null)
+            {
+                SetMaxNextSuggestionsCount();
+            }
         }
 
         private void OnClickKirk(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
