@@ -19,6 +19,14 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var word = _tokens.GetString(token);
 
+            // If there is content before a null character...
+            var nullPosition = word.IndexOf('\0');
+            if (0 < nullPosition)
+            {
+                // ...ignore the content beyond the null.
+                word = word.Substring(0, nullPosition);
+            }
+
             var value = true;
             using (var enumerator = _set.GetEnumerator())
             {
