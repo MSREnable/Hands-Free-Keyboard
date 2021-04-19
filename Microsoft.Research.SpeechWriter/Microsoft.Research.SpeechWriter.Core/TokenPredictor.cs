@@ -7,7 +7,7 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// <summary>
     /// Token sequence predictor.
     /// </summary>
-    public class TokenPredictor
+    public sealed class TokenPredictor
     {
         private readonly int _width;
 
@@ -198,12 +198,15 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var toFindCount = count;
             var foundTokens = new HashSet<int>();
+            var repeatTokenFilter = source.CreateRepeatTokenFilter();
 
             var contextLimit = context.Length;
             var contextStart = Math.Max(0, contextLimit - _width + 1);
 
-            for (var scanIndex = contextStart; toFindCount != 0 && scanIndex <= contextLimit; scanIndex++)
+            var scanIndex = contextStart;
+            while (toFindCount != 0 && scanIndex <= contextLimit)
             {
+                var processed = true;
                 var database = _database.GetChild(context, scanIndex, contextLimit - scanIndex);
 
                 if (database != null)
@@ -282,9 +285,21 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                         foundTokens.Add(token);
 
-                        yield return index;
+                        if (repeatTokenFilter.Accept(token))
+                        {
+                            yield return index;
+                            toFindCount--;
+                        }
+                        else
+                        {
+                            processed = false;
+                        }
                     }
-                    toFindCount -= sliceCount;
+                }
+
+                if (processed)
+                {
+                    scanIndex++;
                 }
             }
 
@@ -304,8 +319,12 @@ namespace Microsoft.Research.SpeechWriter.Core
                             if (minIndex <= index && index < limIndex)
                             {
                                 foundTokens.Add(token);
-                                toFindCount--;
-                                yield return index;
+
+                                if (repeatTokenFilter.Accept(token))
+                                {
+                                    yield return index;
+                                    toFindCount--;
+                                }
                             }
                         }
                     }

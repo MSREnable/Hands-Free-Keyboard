@@ -134,8 +134,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             // var ordinalTruth = string1.StartsWith(string2, StringComparison.OrdinalIgnoreCase);
 
             var string2Length = string2.Length;
-            var value = string2.Length <= string1.Length &&
-                StringEquals(string1.Substring(0, string2.Length), string2, culture);
+            var value = string2Length <= string1.Length &&
+                StringEquals(string1.Substring(0, string2Length), string2, culture);
 
             return value;
         }

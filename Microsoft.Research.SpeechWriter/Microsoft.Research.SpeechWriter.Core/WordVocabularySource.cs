@@ -82,6 +82,12 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
+        internal override RepeatTokenFilter CreateRepeatTokenFilter()
+        {
+            var filter = new WordRepeatTokenFiler(_tokens, _headItems[0].Culture);
+            return filter;
+        }
+
         internal override int[] GetContext() => GetSelectedTokens().ToArray();
 
         /// <summary>
