@@ -8,6 +8,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         private readonly StringTokens _tokens;
         private readonly CompareInfo _compare;
         private readonly List<string> _set = new List<string>();
+        private readonly Dictionary<int, bool> _tokenToAcceptance = new Dictionary<int, bool>();
 
         public WordRepeatTokenFiler(StringTokens tokens, CultureInfo culture)
         {
@@ -17,31 +18,36 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal override bool Accept(int token)
         {
-            var word = _tokens.GetString(token);
-
-            // If there is content before a null character...
-            var nullPosition = word.IndexOf('\0');
-            if (0 < nullPosition)
+            if (!_tokenToAcceptance.TryGetValue(token, out var value))
             {
-                // ...ignore the content beyond the null.
-                word = word.Substring(0, nullPosition);
-            }
+                var word = _tokens.GetString(token);
 
-            var value = true;
-            using (var enumerator = _set.GetEnumerator())
-            {
-                while (value && enumerator.MoveNext())
+                // If there is content before a null character...
+                var nullPosition = word.IndexOf('\0');
+                if (0 < nullPosition)
                 {
-                    if (_compare.Compare(word, enumerator.Current, CompareOptions.IgnoreCase) == 0)
+                    // ...ignore the content beyond the null.
+                    word = word.Substring(0, nullPosition);
+                }
+
+                value = true;
+                using (var enumerator = _set.GetEnumerator())
+                {
+                    while (value && enumerator.MoveNext())
                     {
-                        value = false;
+                        if (_compare.Compare(word, enumerator.Current, CompareOptions.IgnoreCase) == 0)
+                        {
+                            value = false;
+                        }
                     }
                 }
-            }
 
-            if (value)
-            {
-                _set.Add(word);
+                if (value)
+                {
+                    _set.Add(word);
+                }
+
+                _tokenToAcceptance.Add(token, value);
             }
 
             return value;
