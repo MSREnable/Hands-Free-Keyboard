@@ -29,9 +29,9 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         protected TokenPredictor TemporaryPredictor => _temporaryPredictor;
 
-        internal virtual RepeatTokenFilter CreateRepeatTokenFilter()
+        internal virtual TokenFilter CreateRepeatTokenFilter()
         {
-            return new RepeatTokenFilter();
+            return new TokenFilter();
         }
 
         internal abstract int[] GetContext();

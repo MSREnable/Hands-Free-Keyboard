@@ -3,14 +3,14 @@ using System.Globalization;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
-    internal class WordRepeatTokenFiler : RepeatTokenFilter
+    internal class WordTokenFiler : TokenFilter
     {
         private readonly StringTokens _tokens;
         private readonly CompareInfo _compare;
         private readonly List<string> _set = new List<string>();
         private readonly Dictionary<int, bool> _tokenToAcceptance = new Dictionary<int, bool>();
 
-        public WordRepeatTokenFiler(StringTokens tokens, CultureInfo culture)
+        public WordTokenFiler(StringTokens tokens, CultureInfo culture)
         {
             _tokens = tokens;
             _compare = culture.CompareInfo;

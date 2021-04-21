@@ -1,8 +1,8 @@
 ﻿namespace Microsoft.Research.SpeechWriter.Core
 {
-    internal class RepeatTokenFilter
+    internal class TokenFilter
     {
-        public RepeatTokenFilter()
+        public TokenFilter()
         {
         }
 
