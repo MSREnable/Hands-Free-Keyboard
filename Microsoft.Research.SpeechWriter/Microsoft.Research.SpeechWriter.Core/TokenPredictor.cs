@@ -193,12 +193,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             internal int Count { get; private set; }
         };
 
-        internal IEnumerable<int> GetTopIndices<T>(PredictiveVocabularySource<T> source, int[] context, int minIndex, int limIndex, int count)
+        internal IEnumerable<int> GetTopIndices<T>(PredictiveVocabularySource<T> source, RepeatTokenFilter filter, int[] context, int minIndex, int limIndex, int count)
             where T : ISuggestionItem
         {
             var toFindCount = count;
             var foundTokens = new HashSet<int>();
-            var repeatTokenFilter = source.CreateRepeatTokenFilter();
 
             var contextLimit = context.Length;
             var contextStart = Math.Max(0, contextLimit - _width + 1);
@@ -285,7 +284,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                         foundTokens.Add(token);
 
-                        if (repeatTokenFilter.Accept(token))
+                        if (filter.Accept(token))
                         {
                             yield return index;
                             toFindCount--;
@@ -320,7 +319,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                             {
                                 foundTokens.Add(token);
 
-                                if (repeatTokenFilter.Accept(token))
+                                if (filter.Accept(token))
                                 {
                                     yield return index;
                                     toFindCount--;

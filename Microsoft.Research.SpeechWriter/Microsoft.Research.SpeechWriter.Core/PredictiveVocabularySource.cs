@@ -63,8 +63,9 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal override IEnumerable<int> GetTopIndices(int minIndex, int limIndex, int count)
         {
             var context = GetContext();
+            var filter = CreateRepeatTokenFilter();
 
-            var result = PersistantPredictor.GetTopIndices(this, context, minIndex, limIndex, count);
+            var result = PersistantPredictor.GetTopIndices(this, filter, context, minIndex, limIndex, count);
             return result;
         }
 
