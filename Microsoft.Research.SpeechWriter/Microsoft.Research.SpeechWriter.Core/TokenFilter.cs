@@ -2,11 +2,11 @@
 {
     internal class TokenFilter
     {
-        public TokenFilter()
+        internal TokenFilter()
         {
         }
 
-        internal virtual bool Accept(int token)
+        internal virtual bool IsVisible(int token)
         {
             return true;
         }

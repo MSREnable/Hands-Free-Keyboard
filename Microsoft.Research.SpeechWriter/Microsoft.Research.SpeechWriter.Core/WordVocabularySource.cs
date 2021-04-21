@@ -82,7 +82,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
-        internal override TokenFilter CreateRepeatTokenFilter()
+        internal override TokenFilter CreateTokenFilter()
         {
             var filter = new WordTokenFiler(_tokens, _headItems[0].Culture);
             return filter;

@@ -284,7 +284,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                         foundTokens.Add(token);
 
-                        if (filter.Accept(token))
+                        if (filter.IsVisible(token))
                         {
                             yield return index;
                             toFindCount--;
@@ -319,7 +319,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                             {
                                 foundTokens.Add(token);
 
-                                if (filter.Accept(token))
+                                if (filter.IsVisible(token))
                                 {
                                     yield return index;
                                     toFindCount--;

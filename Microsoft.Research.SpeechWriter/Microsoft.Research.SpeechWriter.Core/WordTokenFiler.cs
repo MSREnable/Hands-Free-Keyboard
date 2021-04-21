@@ -16,7 +16,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _compare = culture.CompareInfo;
         }
 
-        internal override bool Accept(int token)
+        internal override bool IsVisible(int token)
         {
             if (!_tokenToAcceptance.TryGetValue(token, out var value))
             {
