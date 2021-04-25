@@ -1,12 +1,12 @@
 ﻿namespace Microsoft.Research.SpeechWriter.Core
 {
-    internal class TokenFilter
+    internal class TileFilter
     {
-        internal TokenFilter()
+        internal TileFilter()
         {
         }
 
-        internal virtual bool IsVisible(int token)
+        internal virtual bool IsTokenVisible(int token)
         {
             return true;
         }

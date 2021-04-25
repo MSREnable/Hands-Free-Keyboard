@@ -29,11 +29,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         protected TokenPredictor TemporaryPredictor => _temporaryPredictor;
 
-        internal virtual TokenFilter CreateTokenFilter()
-        {
-            return new TokenFilter();
-        }
-
         internal abstract int[] GetContext();
 
         /// <summary>
@@ -63,7 +58,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal override IEnumerable<int> GetTopIndices(int minIndex, int limIndex, int count)
         {
             var context = GetContext();
-            var filter = CreateTokenFilter();
+            var filter = CreateTileFilter();
 
             var result = PersistantPredictor.GetTopIndices(this, filter, context, minIndex, limIndex, count);
             return result;

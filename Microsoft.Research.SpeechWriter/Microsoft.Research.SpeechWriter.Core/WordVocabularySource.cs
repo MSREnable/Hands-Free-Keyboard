@@ -82,9 +82,9 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
-        internal override TokenFilter CreateTokenFilter()
+        internal override TileFilter CreateTileFilter()
         {
-            var filter = new WordTokenFiler(_tokens, _headItems[0].Culture);
+            var filter = new WordTileFiler(_tokens, _headItems[0].Culture);
             return filter;
         }
 

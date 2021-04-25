@@ -3,20 +3,20 @@ using System.Globalization;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
-    internal class WordTokenFiler : TokenFilter
+    internal class WordTileFiler : TileFilter
     {
         private readonly StringTokens _tokens;
         private readonly CompareInfo _compare;
         private readonly List<string> _set = new List<string>();
         private readonly Dictionary<int, bool> _tokenToAcceptance = new Dictionary<int, bool>();
 
-        public WordTokenFiler(StringTokens tokens, CultureInfo culture)
+        public WordTileFiler(StringTokens tokens, CultureInfo culture)
         {
             _tokens = tokens;
             _compare = culture.CompareInfo;
         }
 
-        internal override bool IsVisible(int token)
+        internal override bool IsTokenVisible(int token)
         {
             if (!_tokenToAcceptance.TryGetValue(token, out var value))
             {
