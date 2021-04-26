@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -21,11 +20,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         private readonly WordVocabularySource _wordVocabularySource;
 
         private readonly OuterSpellingVocabularySource _outerSpellingVocabularySource;
-
-        /// <summary>
-        /// The spelling context.
-        /// </summary>
-        private IList<int> Context { get; } = new List<int>();
 
         internal SpellingVocabularySource(ApplicationModel model, WordVocabularySource wordVocabularySource, OuterSpellingVocabularySource outerSpellingVocabularySource)
             : base(model: model, predictorWidth: 4)
@@ -52,8 +46,6 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             PopulateVocabularyList();
         }
-
-        internal override int[] GetContext() => Context.ToArray();
 
         /// <summary>
         /// The number of items within the source.
@@ -148,7 +140,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             get
             {
                 var prefix = string.Empty;
-                for (var i = 1; i < Context.Count; i++)
+                for (var i = 1; i < Context.Length; i++)
                 {
                     prefix += (char)Context[i];
                 }
@@ -205,8 +197,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void StartSpelling(int index)
         {
-            Context.Clear();
-            Context.Add(0);
+            var context = new List<int> { 0 };
 
             if (index != 0 && index != _wordVocabularySource.Count)
             {
@@ -215,14 +206,16 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var maxLength = Math.Min(beforeWord.Length, afterWord.Length);
                 for (var i = 0; i < maxLength && beforeWord[i] == afterWord[i]; i++)
                 {
-                    Context.Add(beforeWord[i]);
+                    context.Add(beforeWord[i]);
                 }
             }
+
+            SetContext(context);
         }
 
         internal void AddSpellingToken(int token)
         {
-            Context.Add(token);
+            SetContext(new List<int>(Context) { token });
 
             if (_characterSet.Add(char.ConvertFromUtf32(token)))
             {
@@ -232,26 +225,16 @@ namespace Microsoft.Research.SpeechWriter.Core
             _outerSpellingVocabularySource.SetSuggestionsView();
         }
 
-        internal void AddSpellingTokens(string tokens)
-        {
-            foreach (var token in tokens)
-            {
-                Context.Add(token);
-            }
-            ResetSuggestionsView();
-        }
-
         internal void SetSpellingPrefix(string prefix)
         {
-            Context.Clear();
-            Context.Add(0);
+            var context = new List<int> { 0 };
 
             var length = prefix.Length;
             var newChar = false;
             for (var index = 0; index < length;)
             {
                 var ch = char.ConvertToUtf32(prefix, index);
-                Context.Add(ch);
+                context.Add(ch);
 
                 if (_characterSet.Add(char.ConvertFromUtf32(ch)))
                 {
@@ -260,6 +243,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 index += char.IsSurrogate(prefix, index) ? 2 : 1;
             }
+
+            SetContext(context);
 
             if (newChar)
             {
@@ -271,7 +256,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void SpellingBackspace()
         {
-            var contextCount = Context.Count;
+            var contextCount = Context.Length;
 
             if (contextCount == 2)
             {
@@ -279,7 +264,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             else
             {
-                Context.RemoveAt(contextCount - 1);
+                var context = Context;
+                Array.Resize(ref context, contextCount - 1);
+                SetContext(context);
+
                 ResetSuggestionsView();
             }
         }

@@ -29,7 +29,17 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         protected TokenPredictor TemporaryPredictor => _temporaryPredictor;
 
-        internal abstract int[] GetContext();
+        internal int[] Context { get; private set; }
+
+        internal void SetContext(int[] context)
+        {
+            Context = context;
+        }
+
+        internal void SetContext(List<int> context)
+        {
+            SetContext(context.ToArray());
+        }
 
         /// <summary>
         /// Get the non-zero token for at a given index within the source.
@@ -57,10 +67,9 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal override IEnumerable<int> GetTopIndices(int minIndex, int limIndex, int count)
         {
-            var context = GetContext();
             var filter = CreateTileFilter();
 
-            var result = PersistantPredictor.GetTopIndices(this, filter, context, minIndex, limIndex, count);
+            var result = PersistantPredictor.GetTopIndices(this, filter, Context, minIndex, limIndex, count);
             return result;
         }
 
@@ -87,8 +96,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var token = GetIndexToken(index);
             if (token != 0)
             {
-                var context = GetContext();
-                var extraContext = new List<int>(context) { token };
+                var extraContext = new List<int>(Context) { token };
 
                 var more = true;
                 for (var extras = 0; more && extras < 3; extras++)
@@ -119,12 +127,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             PersistantPredictor.AddSequenceTail(sequence, increment);
             TemporaryPredictor.AddSequenceTail(sequence, increment);
-        }
-
-        internal void Clear()
-        {
-            PersistantPredictor.Clear();
-            TemporaryPredictor.Clear();
         }
     }
 }

@@ -88,8 +88,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             return filter;
         }
 
-        internal override int[] GetContext() => GetSelectedTokens().ToArray();
-
         /// <summary>
         /// The number of items within the source.
         /// </summary>
@@ -98,6 +96,19 @@ namespace Microsoft.Research.SpeechWriter.Core
         private void SetSelectedIndex(int index)
         {
             _selectedIndex = index;
+
+            Debug.Assert(_headItems[0] is HeadStartItem);
+
+            var count = _selectedIndex + 1;
+            var context = new List<int>(count) { 0 };
+            for (var i = 1; i < count; i++)
+            {
+                var word = _headItems[i].Content;
+                var token = _tokens.GetToken(word);
+                context.Add(token);
+            }
+            SetContext(context);
+
 
             Debug.Assert(_tailItems.Count == 1);
             _tailItems[0] = new TailStopItem(_headItems[index], this);
@@ -179,20 +190,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
-        internal List<int> GetSelectedTokens()
-        {
-            var count = _selectedIndex + 1;
-            var selected = new List<int>(count) { 0 };
-            for (var i = 1; i < count; i++)
-            {
-                var word = _headItems[i].Content;
-                var token = _tokens.GetToken(word);
-                selected.Add(token);
-            }
-
-            return selected;
-        }
-
         internal void InitializeUtterance()
         {
             ClearIncrement();
@@ -240,8 +237,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _headItems.Insert(_selectedIndex + 1, item);
             SetSelectedIndex(_selectedIndex + 1);
 
-            var selection = GetSelectedTokens();
-            AddSequence(selection, LiveSequenceWeight);
+            AddSequence(Context, LiveSequenceWeight);
 
             SetRunOnSuggestions();
             SetSuggestionsView();
@@ -267,8 +263,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _headItems.Insert(_selectedIndex + 1, item);
                 SetSelectedIndex(_selectedIndex + 1);
 
-                var selection = GetSelectedTokens();
-                AddSequence(selection, LiveSequenceWeight);
+                AddSequence(Context, LiveSequenceWeight);
             }
 
             if (newWords)
@@ -332,8 +327,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _headItems[_selectedIndex + 1] = selected;
                 SetSelectedIndex(_selectedIndex + 1);
 
-                var selection = GetSelectedTokens();
-                AddSequence(selection, LiveSequenceWeight);
+                AddSequence(Context, LiveSequenceWeight);
 
                 done = ReferenceEquals(item, runOn);
             }
@@ -373,8 +367,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             ParanoidAssertValid();
 
-            var selection = GetSelectedTokens();
-            selection.Add(0);
+            var selection = new List<int>(Context) { 0 };
 
             RollbackAndAddSequence(selection, PersistedSequenceWeight);
 
