@@ -8,8 +8,8 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// </summary>
     public abstract class NonLinearIntegerRangeVocabularySource : VocabularySource
     {
-        readonly int _minimum;
-        readonly int _limit;
+        private readonly int _minimum;
+        private readonly int _limit;
 
         internal NonLinearIntegerRangeVocabularySource(ApplicationModel model, int minimum, int limit)
             : base(model)
