@@ -9,7 +9,7 @@ namespace TestHostWpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        ApplicationLayout<ButtonUI> _applicationLayout;
+        private readonly ApplicationLayout<ButtonUI> _applicationLayout;
 
         public MainWindow()
         {

@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
 {
-    class ForcedCoverage
+    internal class ForcedCoverage
     {
         [Test]
         public void InterstitialNonItemCoverage()

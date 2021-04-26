@@ -7,8 +7,8 @@ namespace Microsoft.Research.SpeechWriter.Core.UI
     public abstract class ButtonPanel<TButton, TItem>
         where TButton : IButtonUI
     {
-        readonly IButtonSurfaceUI<TButton> _surface;
-        readonly ApplicationLayout<TButton> _layout;
+        private readonly IButtonSurfaceUI<TButton> _surface;
+        private readonly ApplicationLayout<TButton> _layout;
 
         private readonly ReadOnlyObservableCollection<TItem> _list;
 

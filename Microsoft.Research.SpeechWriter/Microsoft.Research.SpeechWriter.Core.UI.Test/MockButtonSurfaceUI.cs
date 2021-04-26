@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Research.SpeechWriter.Core.UI.Test
 {
-    class MockButtonSurfaceUI : IButtonSurfaceUI<MockButton>
+    internal class MockButtonSurfaceUI : IButtonSurfaceUI<MockButton>
     {
         private int _nextButtonId;
 

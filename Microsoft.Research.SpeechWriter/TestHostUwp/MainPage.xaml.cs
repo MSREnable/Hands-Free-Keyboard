@@ -11,7 +11,7 @@ namespace TestHostUwp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        ApplicationLayout<ButtonUI> _applicationLayout;
+        private readonly ApplicationLayout<ButtonUI> _applicationLayout;
 
         public MainPage()
         {

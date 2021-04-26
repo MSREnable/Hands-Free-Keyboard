@@ -2,7 +2,7 @@
 
 namespace Microsoft.Research.SpeechWriter.Core.UI.Test
 {
-    class MockButton : IButtonUI
+    internal class MockButton : IButtonUI
     {
         private readonly ICommand _command;
 

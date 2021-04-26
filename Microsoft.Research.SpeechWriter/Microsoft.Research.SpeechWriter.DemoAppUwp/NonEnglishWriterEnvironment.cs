@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 {
-    class NonEnglishWriterEnvironment : DefaultWriterEnvironment, IWriterEnvironment
+    internal class NonEnglishWriterEnvironment : DefaultWriterEnvironment, IWriterEnvironment
     {
         private readonly string _language;
         private readonly string _seedWords;

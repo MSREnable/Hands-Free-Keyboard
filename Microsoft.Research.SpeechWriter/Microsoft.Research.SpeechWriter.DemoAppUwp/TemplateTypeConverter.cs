@@ -7,7 +7,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 {
     public class TemplateTypeConverter : IValueConverter
     {
-        private Dictionary<string, DataTemplate> _templates = new Dictionary<string, DataTemplate>();
+        private readonly Dictionary<string, DataTemplate> _templates = new Dictionary<string, DataTemplate>();
 
         internal void LoadTemplates(ResourceDictionary resources)
         {

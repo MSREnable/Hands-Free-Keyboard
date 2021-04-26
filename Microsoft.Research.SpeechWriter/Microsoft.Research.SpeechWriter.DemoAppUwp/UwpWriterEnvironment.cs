@@ -8,7 +8,7 @@ using Windows.Storage;
 
 namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 {
-    class UwpWriterEnvironment : DefaultWriterEnvironment, IWriterEnvironment
+    internal class UwpWriterEnvironment : DefaultWriterEnvironment, IWriterEnvironment
     {
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
         private IStorageFile _historyFile;
