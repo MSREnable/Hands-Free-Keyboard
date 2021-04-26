@@ -155,6 +155,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             ResetSuggestionsView(isComplete);
         }
 
+        private static bool AreAdjacentIndices(int lowerIndex, int upperIndex)
+        {
+            return lowerIndex == upperIndex;
+        }
+
         private void ResetSuggestionsView(bool isComplete)
         {
             var maxItemCount = Math.Min(Source.Count, MaxNextSuggestionsCount - 1);
@@ -170,7 +175,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var previousIndex = -1;
             foreach (var index in sortedIndices)
             {
-                if (previousIndex + 1 == index)
+                if (AreAdjacentIndices(previousIndex + 1, index))
                 {
                     // Item contiguous with previous one, so allow it to dictate its interstitial.
                     var interstitialItem = Source.CreatePriorInterstitial(index);
@@ -204,7 +209,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 previousIndex = index;
             }
 
-            if (previousIndex + 1 == Source.Count)
+            if (AreAdjacentIndices(previousIndex + 1, Source.Count))
             {
                 // Last item in source, so allow it to dictate the final interstitial.
                 var interstitial = Source.CreatePriorInterstitial(previousIndex + 1);
