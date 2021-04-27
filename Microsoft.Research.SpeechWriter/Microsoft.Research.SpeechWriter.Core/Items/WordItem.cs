@@ -13,9 +13,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
             Debug.Assert(!string.IsNullOrWhiteSpace(word));
             Content = word;
 
-            var upper = word.ToUpper(Culture);
-            var lower = word.ToLower(Culture);
-            IsCased = Culture.CompareInfo.Compare(upper, lower) != 0;
+            var length = word.Length;
+            var index = 0;
+            while (index < length && !char.IsLetterOrDigit(word, index))
+            {
+                index++;
+            }
+            IsCased = index < length;
         }
 
         /// <summary>

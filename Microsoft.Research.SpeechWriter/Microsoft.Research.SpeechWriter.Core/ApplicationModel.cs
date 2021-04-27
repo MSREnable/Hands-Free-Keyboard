@@ -155,8 +155,14 @@ namespace Microsoft.Research.SpeechWriter.Core
             ResetSuggestionsView(isComplete);
         }
 
-        private static bool AreAdjacentIndices(int lowerIndex, int upperIndex)
+        private bool AreAdjacentIndices(int lowerIndex, int upperIndex)
         {
+            var adjustedLowerIndex = lowerIndex;
+            while (adjustedLowerIndex < upperIndex && !Source.Filter.IsIndexVisible(adjustedLowerIndex))
+            {
+                adjustedLowerIndex++;
+            }
+
             return lowerIndex == upperIndex;
         }
 

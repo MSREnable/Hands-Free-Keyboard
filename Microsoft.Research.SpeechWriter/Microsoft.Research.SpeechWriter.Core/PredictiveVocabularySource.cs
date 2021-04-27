@@ -31,14 +31,25 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal int[] Context { get; private set; }
 
+        internal override sealed ITileFilter Filter => TokenFilter;
+
+        internal abstract ITokenTileFilter TokenFilter { get; }
+
         internal void SetContext(int[] context)
         {
             Context = context;
+
+            ResetTileFilter();
         }
 
         internal void SetContext(List<int> context)
         {
             SetContext(context.ToArray());
+        }
+
+        internal virtual void ResetTileFilter()
+        {
+
         }
 
         /// <summary>
@@ -67,9 +78,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal override IEnumerable<int> GetTopIndices(int minIndex, int limIndex, int count)
         {
-            var filter = CreateTileFilter();
-
-            var result = PersistantPredictor.GetTopIndices(this, filter, Context, minIndex, limIndex, count);
+            var result = PersistantPredictor.GetTopIndices(this, TokenFilter, Context, minIndex, limIndex, count);
             return result;
         }
 

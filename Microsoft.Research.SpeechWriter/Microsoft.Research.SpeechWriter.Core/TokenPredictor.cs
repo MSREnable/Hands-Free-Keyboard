@@ -193,7 +193,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             internal int Count { get; private set; }
         };
 
-        internal IEnumerable<int> GetTopIndices<T>(PredictiveVocabularySource<T> source, TileFilter filter, int[] context, int minIndex, int limIndex, int count)
+        internal IEnumerable<int> GetTopIndices<T>(PredictiveVocabularySource<T> source, ITokenTileFilter filter, int[] context, int minIndex, int limIndex, int count)
             where T : ISuggestionItem
         {
             var toFindCount = count;

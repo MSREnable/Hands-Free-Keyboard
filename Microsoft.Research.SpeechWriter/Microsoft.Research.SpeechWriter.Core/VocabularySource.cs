@@ -21,10 +21,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal abstract int Count { get; }
 
-        internal virtual TileFilter CreateTileFilter()
-        {
-            return new TileFilter();
-        }
+        internal virtual ITileFilter Filter => DefaultTileFilter.Instance;
 
         internal abstract IEnumerable<int> GetTopIndices(int minIndex, int limIndex, int count);
 

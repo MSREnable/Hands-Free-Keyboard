@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Microsoft.Research.SpeechWriter.Core
@@ -27,11 +28,15 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private readonly OuterSpellingVocabularySource _spellingSource;
 
+        private readonly WordTileFilter _tileFilter;
+
         internal WordVocabularySource(ApplicationModel model)
             : base(model, predictorWidth: 4)
         {
             var words = model.Environment.GetOrderedSeedWords();
             _tokens = StringTokens.Create(words);
+
+            _tileFilter = new WordTileFilter(this, _tokens, CultureInfo.CurrentUICulture);
 
             _headItems.Add(new HeadStartItem(this));
             _tailItems.Add(null); // Create the slot for the tail item.
@@ -82,16 +87,19 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
-        internal override TileFilter CreateTileFilter()
-        {
-            var filter = new WordTileFiler(_tokens, _headItems[0].Culture);
-            return filter;
-        }
-
         /// <summary>
         /// The number of items within the source.
         /// </summary>
         internal override int Count => _vocabularyList.Count;
+
+        internal override ITokenTileFilter TokenFilter => _tileFilter;
+
+        internal override void ResetTileFilter()
+        {
+            base.ResetTileFilter();
+
+            _tileFilter.Reset();
+        }
 
         private void SetSelectedIndex(int index)
         {

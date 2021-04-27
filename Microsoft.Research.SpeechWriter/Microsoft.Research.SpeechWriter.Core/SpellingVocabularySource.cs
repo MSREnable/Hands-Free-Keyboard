@@ -52,6 +52,8 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         internal override int Count => _vocabularyList.Count;
 
+        internal override ITokenTileFilter TokenFilter => DefaultTileFilter.Instance;
+
         internal void AddNewWord(string word)
         {
             var needToRepopuplate = false;
