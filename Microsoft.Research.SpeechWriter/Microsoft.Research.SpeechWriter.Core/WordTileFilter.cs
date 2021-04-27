@@ -3,20 +3,29 @@ using System.Globalization;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
-    internal class WordTileFiler : TileFilter
+    internal class WordTileFilter : ITokenTileFilter
     {
+        private readonly WordVocabularySource _source;
         private readonly StringTokens _tokens;
         private readonly CompareInfo _compare;
         private readonly List<string> _set = new List<string>();
         private readonly Dictionary<int, bool> _tokenToAcceptance = new Dictionary<int, bool>();
 
-        public WordTileFiler(StringTokens tokens, CultureInfo culture)
+        public WordTileFilter(WordVocabularySource source, StringTokens tokens, CultureInfo culture)
         {
+            _source = source;
             _tokens = tokens;
             _compare = culture.CompareInfo;
         }
 
-        internal override bool IsTokenVisible(int token)
+        public bool IsIndexVisible(int index)
+        {
+            var token = _source.GetIndexToken(index);
+            var value = IsTokenVisible(token);
+            return value;
+        }
+
+        public bool IsTokenVisible(int token)
         {
             if (!_tokenToAcceptance.TryGetValue(token, out var value))
             {
@@ -51,6 +60,12 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             return value;
+        }
+
+        internal void Reset()
+        {
+            _set.Clear();
+            _tokenToAcceptance.Clear();
         }
     }
 }
