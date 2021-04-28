@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Items;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -466,17 +467,25 @@ namespace Microsoft.Research.SpeechWriter.Core
             for (var token = _tokens.TokenStart; token < _tokens.TokenLimit; token++)
             {
                 var word = _tokens.GetString(token);
-                sortedWords.Add(new KeyValuePair<string, int>(word, token));
+                if (word[0] != '\0')
+                {
+                    sortedWords.Add(new KeyValuePair<string, int>(word, token));
+                }
             }
             sortedWords.Sort((kv1, kv2) => Environment.Compare(kv1.Key, kv2.Key));
+
+            var commandIndex = 0;
+            foreach (var enumName in Enum.GetNames(typeof(WordTileCommand)))
+            {
+                var command = '\0' + enumName;
+                var token = _tokens.GetToken(command);
+                sortedWords.Insert(commandIndex, new KeyValuePair<string, int>(command, token));
+            }
 
             foreach (var pair in sortedWords)
             {
                 Debug.Assert(pair.Value != 0);
                 yield return pair.Value;
-
-                // TODO: Add spelling items back
-                // yield return -token;
             }
         }
 
@@ -557,6 +566,26 @@ namespace Microsoft.Research.SpeechWriter.Core
             return item;
         }
 
+        internal override IEnumerable<ITile> CreateSuggestionList(int index)
+        {
+            IEnumerable<ITile> value;
+
+            var token = GetIndexToken(index);
+            var word = _tokens.GetString(token);
+            if (word[0] != '\0')
+            {
+                value = base.CreateSuggestionList(index);
+            }
+            else
+            {
+                var command = (WordTileCommand)Enum.Parse(typeof(WordTileCommand), word.Substring(1));
+                var tile = new CommandItem(null, this, command);
+                value = new[] { tile };
+            }
+
+            return value;
+        }
+
         internal override int GetTokenIndex(int token)
         {
             int index;
@@ -590,7 +619,23 @@ namespace Microsoft.Research.SpeechWriter.Core
             return item;
         }
 
-        internal override ITile CreatePriorInterstitial(int index) => new InterstitialSpellingItem(LastTile, _spellingSource, index);
+        internal override ITile CreatePriorInterstitial(int index)
+        {
+            ITile value;
+
+            var token = GetIndexToken(index);
+            var word = _tokens.GetString(token);
+            if (word[0] != '\0')
+            {
+                value = new InterstitialSpellingItem(LastTile, _spellingSource, index);
+            }
+            else
+            {
+                value = null;
+            }
+
+            return value;
+        }
 
         internal override IEnumerable<int> GetTokens()
         {

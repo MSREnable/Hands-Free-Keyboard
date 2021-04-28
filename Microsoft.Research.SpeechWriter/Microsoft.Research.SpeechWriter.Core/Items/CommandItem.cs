@@ -1,0 +1,37 @@
+﻿using System.Diagnostics;
+
+namespace Microsoft.Research.SpeechWriter.Core.Items
+{
+    /// <summary>
+    /// Whole word item.
+    /// </summary>
+    public class CommandItem : Command<WordVocabularySource>
+    {
+        private readonly WordTileCommand _command;
+
+        internal CommandItem(ITile predecessor, WordVocabularySource source, WordTileCommand command)
+            : base(predecessor, source)
+        {
+            _command = command;
+        }
+
+        /// <summary>
+        /// The command.
+        /// </summary>
+        public WordTileCommand Command => _command;
+
+        /// <summary>
+        /// The basic content of the tile.
+        /// </summary>
+        public override string Content => _command.ToString();
+
+        /// <summary>
+        /// The formatted content of the tile.
+        /// </summary>
+        public override string FormattedContent => _command.ToString();
+
+        internal override void Execute(WordVocabularySource source)
+        {
+        }
+    }
+}
