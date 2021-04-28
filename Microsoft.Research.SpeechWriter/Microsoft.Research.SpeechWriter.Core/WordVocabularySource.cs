@@ -475,7 +475,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             sortedWords.Sort((kv1, kv2) => Environment.Compare(kv1.Key, kv2.Key));
 
             var commandIndex = 0;
-            foreach (var enumName in Enum.GetNames(typeof(WordTileCommand)))
+            foreach (var enumName in Enum.GetNames(typeof(TileCommand)))
             {
                 var command = '\0' + enumName;
                 var token = _tokens.GetToken(command);
@@ -578,7 +578,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             else
             {
-                var command = (WordTileCommand)Enum.Parse(typeof(WordTileCommand), word.Substring(1));
+                var command = (TileCommand)Enum.Parse(typeof(TileCommand), word.Substring(1));
                 var tile = new CommandItem(null, this, command);
                 value = new[] { tile };
             }

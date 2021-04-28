@@ -33,30 +33,38 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 // If there is content before a null character...
                 var nullPosition = word.IndexOf('\0');
-                if (0 < nullPosition)
+                switch (nullPosition)
                 {
-                    // ...ignore the content beyond the null.
-                    word = word.Substring(0, nullPosition);
-                }
+                    case 0:
+                        value = false;
+                        break;
 
-                value = true;
-                using (var enumerator = _set.GetEnumerator())
-                {
-                    while (value && enumerator.MoveNext())
-                    {
-                        if (_compare.Compare(word, enumerator.Current, CompareOptions.IgnoreCase) == 0)
+                    default:
+                        // ...ignore the content beyond the null.
+                        word = word.Substring(0, nullPosition);
+                        goto case -1;
+
+                    case -1:
+                        value = true;
+                        using (var enumerator = _set.GetEnumerator())
                         {
-                            value = false;
+                            while (value && enumerator.MoveNext())
+                            {
+                                if (_compare.Compare(word, enumerator.Current, CompareOptions.IgnoreCase) == 0)
+                                {
+                                    value = false;
+                                }
+                            }
                         }
-                    }
-                }
 
-                if (value)
-                {
-                    _set.Add(word);
-                }
+                        if (value)
+                        {
+                            _set.Add(word);
+                        }
 
-                _tokenToAcceptance.Add(token, value);
+                        _tokenToAcceptance.Add(token, value);
+                        break;
+                }
             }
 
             return value;

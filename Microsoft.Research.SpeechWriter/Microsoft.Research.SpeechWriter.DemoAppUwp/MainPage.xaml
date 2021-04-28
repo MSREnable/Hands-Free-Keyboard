@@ -40,6 +40,9 @@
             </Setter>
         </Style>
 
+        <DataTemplate x:Key="CommandItem" x:DataType="lib:CommandItem">
+            <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="5"/>
+        </DataTemplate>
         <DataTemplate x:Key="SuggestedWordItem" x:DataType="lib:SuggestedWordItem">
             <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
                 <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>

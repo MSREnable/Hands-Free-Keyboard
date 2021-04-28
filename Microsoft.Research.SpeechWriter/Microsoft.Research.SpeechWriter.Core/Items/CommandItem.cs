@@ -7,9 +7,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
     /// </summary>
     public class CommandItem : Command<WordVocabularySource>
     {
-        private readonly WordTileCommand _command;
+        private readonly TileCommand _command;
 
-        internal CommandItem(ITile predecessor, WordVocabularySource source, WordTileCommand command)
+        internal CommandItem(ITile predecessor, WordVocabularySource source, TileCommand command)
             : base(predecessor, source)
         {
             _command = command;
@@ -18,7 +18,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// The command.
         /// </summary>
-        public WordTileCommand Command => _command;
+        public TileCommand Command => _command;
 
         /// <summary>
         /// The basic content of the tile.
