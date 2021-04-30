@@ -487,7 +487,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private void SetMaxNextSuggestionsCount()
         {
-            _model.MaxNextSuggestionsCount = (int)(ActualHeight) / 110;
+            var count = Math.Max(1, (int)(ActualHeight) / 110);
+            _model.MaxNextSuggestionsCount = count;
         }
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
