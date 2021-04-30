@@ -31,11 +31,15 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
         {
             if (e.NewItems != null)
             {
-                foreach (HeadWordItem item in e.NewItems)
+                foreach (ITile item in e.NewItems)
                 {
                     Debug.WriteLine(item);
 
-                    _synthesizer.SpeakAsync(item.Content);
+                    var headWordItem = item as HeadWordItem;
+                    if (headWordItem != null)
+                    {
+                        _synthesizer.SpeakAsync(item.Content);
+                    }
                 }
             }
         }
