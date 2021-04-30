@@ -247,32 +247,32 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("this is the dawning of the age of aquarius", 29, 1, 117, 88);
+            MultiTest("this is the dawning of the age of aquarius", 29, 1, 102, 88);
         }
 
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 182, 96);
+            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 169, 96);
         }
 
         [Test]
         public void HelloWorldTest()
         {
             // TODO: Find out why entering HELLO WORLD predicts HELLO WORLD HELLO WORLD as the next sentence.
-            MultiTest("hello world", 10, 1, 45, 10);
+            MultiTest("hello world", 10, 1, 41, 10);
         }
 
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("izzy wizzy lets get busy", 29, 1, 77, 104);
+            MultiTest("izzy wizzy lets get busy", 29, 1, 69, 104);
         }
 
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 94, 1, 65, 493);
+            MultiTest("공유하 고 즐기십시오", 94, 1, 67, 493);
         }
 
         [Test]
@@ -284,7 +284,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 94, 563);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 99, 563);
         }
 
         [Test]

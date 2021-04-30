@@ -623,15 +623,22 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             ITile value;
 
-            var token = GetIndexToken(index);
-            var word = _tokens.GetString(token);
-            if (word[0] != '\0')
+            if (index != _vocabularyList.Count)
             {
-                value = new InterstitialSpellingItem(LastTile, _spellingSource, index);
+                var token = GetIndexToken(index);
+                var word = _tokens.GetString(token);
+                if (word[0] != '\0')
+                {
+                    value = new InterstitialSpellingItem(LastTile, _spellingSource, index);
+                }
+                else
+                {
+                    value = null;
+                }
             }
             else
             {
-                value = null;
+                value = new InterstitialSpellingItem(LastTile, _spellingSource, index);
             }
 
             return value;

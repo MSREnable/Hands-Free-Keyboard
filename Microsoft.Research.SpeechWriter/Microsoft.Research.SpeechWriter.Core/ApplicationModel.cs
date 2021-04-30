@@ -163,7 +163,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 adjustedLowerIndex++;
             }
 
-            return lowerIndex == upperIndex;
+            return adjustedLowerIndex == upperIndex;
         }
 
         private void ResetSuggestionsView(bool isComplete)
@@ -184,8 +184,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 if (AreAdjacentIndices(previousIndex + 1, index))
                 {
                     // Item contiguous with previous one, so allow it to dictate its interstitial.
-                    var interstitialItem = Source.CreatePriorInterstitial(index);
-                    _suggestionInterstitials.Add(interstitialItem ?? new InterstitialNonItem());
+                    EmitPriorInterstitial(index);
                 }
                 else
                 {
@@ -218,8 +217,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             if (AreAdjacentIndices(previousIndex + 1, Source.Count))
             {
                 // Last item in source, so allow it to dictate the final interstitial.
-                var interstitial = Source.CreatePriorInterstitial(previousIndex + 1);
-                _suggestionInterstitials.Add(interstitial);
+                EmitPriorInterstitial(Source.Count);
             }
             else if (previousIndex + 1 < _upperLimit)
             {
@@ -235,6 +233,13 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             RaiseApplicationModelUpdateEvent(isComplete);
+
+            void EmitPriorInterstitial(int index)
+            {
+                var interstitialItem = Source.CreatePriorInterstitial(index);
+                var actualItem = interstitialItem ?? new InterstitialNonItem();
+                _suggestionInterstitials.Add(actualItem);
+            }
 
             void EmitInterstitial(int min, int lim)
             {
