@@ -28,7 +28,16 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             foreach (var subList in model.SuggestionLists)
             {
                 var subListCount = subList.Count();
-                suggestionsCount += subListCount;
+
+                // TODO: CommandItem should not be excluded from randomness!
+                if (subList.First() is CommandItem)
+                {
+                    suggestionsCount -= subListCount;
+                }
+                else
+                {
+                    suggestionsCount += subListCount;
+                }
             }
 
             var index = random.Next(0, suggestionsCount);
@@ -45,6 +54,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             {
                 var subIndex = index - headCount - tailCount;
                 index = 0;
+                while (model.SuggestionLists[index].First() is CommandItem)
+                {
+                    index++;
+                }
                 while (model.SuggestionLists[index].Count() <= subIndex)
                 {
                     subIndex -= model.SuggestionLists[index].Count();
@@ -58,6 +71,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                     }
 
                     action = ApplicationRobotAction.CreateSuggestion(index, subIndex);
+                    AssertGoodAction(model, action);
                 }
             }
 
@@ -108,10 +122,17 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 {
                     // We can advance a word or more.
                     action = ApplicationRobotAction.CreateSuggestion(index, subIndex);
+                    AssertGoodAction(model, action);
                 }
             }
 
             return action;
+        }
+
+        private static void AssertGoodAction(ApplicationModel model, ApplicationRobotAction action)
+        {
+            Debug.Assert(action.Target != ApplicationRobotActionTarget.Suggestion || action.SubIndex != 0 ||
+                !(model.SuggestionLists[action.Index].First() is CommandItem));
         }
 
         private static bool StringEquals(string string1, string string2, CultureInfo culture)
@@ -214,6 +235,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                                 StringEquals(enumerator.Current.Content, targetWord, culture))
                             {
                                 action = ApplicationRobotAction.CreateSuggestion(index, subIndex + 1);
+                                AssertGoodAction(model, action);
                             }
                             else
                             {
@@ -231,6 +253,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                         else if (index != 0 && model.SuggestionLists[0].First() is SuggestedSpellingBackspaceItem)
                         {
                             action = ApplicationRobotAction.CreateSuggestion(0, 0);
+                            AssertGoodAction(model, action);
                         }
                         else
                         {
@@ -253,6 +276,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                     if (StringEquals(firstItem.Content, targetWord, culture))
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
+                        AssertGoodAction(model, action);
                     }
                 }
                 else if (firstItem is SuggestedSpellingBackspaceItem)
@@ -261,6 +285,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                     }
+                }
+                else if (firstItem is CommandItem)
+                {
+                    // TODO: We don't deal with these yet!
                 }
                 else
                 {

@@ -247,7 +247,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("this is the dawning of the age of aquarius", 29, 1, 102, 88);
+            MultiTest("this is the dawning of the age of aquarius", 31, 1, 102, 88);
         }
 
         [Test]
@@ -272,7 +272,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 94, 1, 67, 493);
+            MultiTest("공유하 고 즐기십시오", 94, 1, 67, 512);
         }
 
         [Test]
@@ -284,7 +284,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 99, 563);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 99, 571);
         }
 
         [Test]
