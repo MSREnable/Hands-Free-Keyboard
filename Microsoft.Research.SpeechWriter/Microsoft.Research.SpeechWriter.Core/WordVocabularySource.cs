@@ -102,6 +102,25 @@ namespace Microsoft.Research.SpeechWriter.Core
             _tileFilter.Reset();
         }
 
+        internal bool IsCommandVisible(TileCommand command)
+        {
+            bool value;
+
+            switch(command)
+            {
+                case TileCommand.CaSe:
+                    var headWordTile = LastTile as HeadWordItem;
+                    value = headWordTile != null && headWordTile.IsCased;
+                    break;
+
+                default:
+                    value = false;
+                    break;
+            }
+
+            return value;
+        }
+
         private void SetSelectedIndex(int index)
         {
             _selectedIndex = index;
@@ -579,7 +598,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             else
             {
                 var command = (TileCommand)Enum.Parse(typeof(TileCommand), word.Substring(1));
-                var tile = new CommandItem(null, this, command);
+                var tile = new CommandItem(LastTile, this, command);
                 value = new[] { tile };
             }
 

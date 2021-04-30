@@ -3,7 +3,7 @@
     /// <summary>
     /// Commands for word tiles.
     /// </summary>
-    public enum  TileCommand
+    public enum TileCommand
     {
         /// <summary>
         /// Alter the case of the current word.

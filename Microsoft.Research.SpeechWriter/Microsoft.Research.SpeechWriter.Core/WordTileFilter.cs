@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Microsoft.Research.SpeechWriter.Core
@@ -36,7 +37,8 @@ namespace Microsoft.Research.SpeechWriter.Core
                 switch (nullPosition)
                 {
                     case 0:
-                        value = false;
+                        var command = (TileCommand)Enum.Parse(typeof(TileCommand), word.Substring(1));
+                        value = _source.IsCommandVisible(command);
                         break;
 
                     default:
