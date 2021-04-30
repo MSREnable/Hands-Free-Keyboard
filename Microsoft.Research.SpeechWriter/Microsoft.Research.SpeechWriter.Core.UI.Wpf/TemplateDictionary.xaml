@@ -17,6 +17,9 @@
         <Setter Property="FontWeight" Value="Bold"/>
     </Style>
 
+    <DataTemplate DataType="{x:Type lib:CommandItem}">
+        <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="5"/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type lib:SuggestedWordItem}">
         <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
             <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
