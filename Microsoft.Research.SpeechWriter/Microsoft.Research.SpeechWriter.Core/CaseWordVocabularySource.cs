@@ -1,6 +1,7 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Items;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -17,7 +18,77 @@ namespace Microsoft.Research.SpeechWriter.Core
             _source = source;
             _target = target;
 
-            _substitutes = new[] { "One", "tWo", "thRee", "fouR", "five", "SIX" };
+            var lowerCount = 0;
+            var upperCount = 0;
+            var positions = new List<int>();
+            var uppers = new List<bool>();
+
+            var content = target.Content;
+            for (var position = 0; position < content.Length; position++)
+            {
+                var ch = content[position];
+
+                if (char.IsLetter(ch))
+                {
+                    var lower = char.ToLower(ch);
+                    var upper = char.ToUpper(ch);
+                    if (lower != upper)
+                    {
+                        if (ch == lower)
+                        {
+                            if (ch != upper)
+                            {
+                                lowerCount++;
+                                positions.Add(position);
+                                uppers.Add(false);
+                            }
+                        }
+                        else if (ch == upper)
+                        {
+                            if (ch != lower)
+                            {
+                                upperCount++;
+                                positions.Add(position);
+                                uppers.Add(true);
+                            }
+                        }
+                    }
+                }
+            }
+
+            Debug.Assert(positions.Count == uppers.Count);
+
+            var substitutes = new List<string>();
+
+            if (positions.Count != 0)
+            {
+                if (upperCount == 0 && lowerCount != 0)
+                {
+                    var position = positions[0];
+                    var title = content.Substring(0, position) + char.ToUpper(content[position]) + content.Substring(position + 1);
+                    substitutes.Add(title);
+                }
+
+                if (upperCount != 0)
+                {
+                    substitutes.Add(content.ToLower());
+                }
+
+                if (lowerCount != 0 && lowerCount + upperCount != 1)
+                {
+                    substitutes.Add(content.ToUpper());
+                }
+
+                for (var i = 1; i < positions.Count; i++)
+                {
+                    var position = positions[i];
+                    var ch = uppers[i] ? char.ToLower(content[position]) : char.ToUpper(content[position]);
+                    var cased = content.Substring(0, position) + ch + content.Substring(position + 1);
+                    substitutes.Add(cased);
+                }
+            }
+
+            _substitutes = substitutes.ToArray();
         }
 
         internal override int Count => _substitutes.Length;
