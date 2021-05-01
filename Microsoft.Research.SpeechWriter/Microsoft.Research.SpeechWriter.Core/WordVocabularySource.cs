@@ -25,6 +25,21 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private readonly ObservableCollection<ITile> _headItems = new ObservableCollection<ITile>();
         private readonly ObservableCollection<ITile> _tailItems = new ObservableCollection<ITile>();
+
+        internal void ExecuteCommand(TileCommand command)
+        {
+            switch (command)
+            {
+                default:
+                    throw new NotImplementedException();
+
+                case TileCommand.CaSe:
+                    var source = new CaseWordVocabularySource(_model, this, (HeadWordItem)LastTile);
+                    source.SetSuggestionsView();
+                    break;
+            }
+        }
+
         private int _selectedIndex;
 
         private readonly OuterSpellingVocabularySource _spellingSource;
@@ -106,7 +121,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             bool value;
 
-            switch(command)
+            switch (command)
             {
                 case TileCommand.CaSe:
                     var headWordTile = LastTile as HeadWordItem;

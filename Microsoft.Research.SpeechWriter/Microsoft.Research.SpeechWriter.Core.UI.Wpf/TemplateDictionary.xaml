@@ -30,10 +30,24 @@
             <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
         </Border>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type lib:ReplacementItem}">
+        <StackPanel Orientation="Horizontal">
+            <Border BorderBrush="Black" BorderThickness="1" Background="LightGreen" Margin="5,2">
+                <TextBlock Text="{Binding OldContent}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
+            </Border>
+            <TextBlock Text="&#x2192;" FontSize="25" FontWeight="Bold" Foreground="DarkGray" VerticalAlignment="Center"/>
+            <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
+                <TextBlock Text="{Binding Content}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type lib:GhostWordItem}">
         <Border BorderBrush="Black" BorderThickness="1" Background="LightBlue" Margin="5,2">
             <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
         </Border>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type lib:InterstitialNonItem}">
+        <TextBlock Text="-" FontSize="25" FontWeight="Bold" Margin="5"/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type lib:InterstitialGapItem}">
         <TextBlock Text=":" FontSize="25" FontWeight="Bold" Margin="5"/>

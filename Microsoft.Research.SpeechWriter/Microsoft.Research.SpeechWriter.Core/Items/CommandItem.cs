@@ -32,6 +32,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
 
         internal override void Execute(WordVocabularySource source)
         {
+            source.ExecuteCommand(_command);
         }
     }
 }
