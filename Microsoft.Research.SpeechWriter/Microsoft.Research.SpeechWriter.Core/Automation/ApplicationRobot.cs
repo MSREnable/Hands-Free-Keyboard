@@ -187,6 +187,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return action;
         }
 
+        private static bool IsItem<T>(ITile tile, out T item)
+            where T : class
+        {
+            item = tile as T;
+            return item != default(T);
+        }
+
         private static ApplicationRobotAction GetSuggestionsAction(ApplicationModel model,
             bool complete,
             string[] words,
@@ -340,6 +347,31 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return action;
         }
 
+        private static ApplicationRobotAction GetCaseWordAction(ApplicationModel model, string word, CultureInfo culture)
+        {
+            ApplicationRobotAction action;
+
+            var firstOfFirst = model.SuggestionLists[0].First();
+
+            if (IsItem<CommandItem>(firstOfFirst, out var commandItem))
+            {
+                Debug.Assert(commandItem.Command == TileCommand.CaSe);
+                action = ApplicationRobotAction.CreateSuggestion(0, 0);
+            }
+            else if (!(firstOfFirst is ReplacementItem))
+            {
+                Debug.Assert(model.SuggestionInterstitials[0] is InterstitialGapItem);
+                action = ApplicationRobotAction.CreateInterstitial(0);
+            }
+            else
+            {
+                // TODO: Need to select closest case.
+                throw new NotImplementedException();
+            }
+
+            return action;
+        }
+
         /// <summary>
         /// Get the next action to achieve the given goal.
         /// </summary>
@@ -368,8 +400,16 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 wordsMatchLim + 1 < model.HeadItems.Count &&
                 IsItemMatch<HeadWordItem>(model.HeadItems[wordsMatchLim + 1], words[wordsMatchLim], culture))
             {
-                // TODO: Got a word of the wrong case, either truncate so its the last or, if it is the last, adjust
-                throw new NotImplementedException();
+                if (wordsMatchLim + 2 < model.HeadItems.Count && model.HeadItems[wordsMatchLim + 2] is HeadWordItem)
+                {
+                    // Make the miscased item the last current item.
+                    action = ApplicationRobotAction.CreateHead(wordsMatchLim + 1);
+                }
+                else
+                {
+                    // TODO: Got a word of the wrong case, so adjust it
+                    action = GetCaseWordAction(model, words[wordsMatchLim], culture);
+                }
             }
             else if (wordsMatchLim + 1 < model.HeadItems.Count &&
                 model.HeadItems[wordsMatchLim + 1] is HeadWordItem)
