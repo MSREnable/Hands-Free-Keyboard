@@ -288,6 +288,17 @@ namespace Microsoft.Research.SpeechWriter.Core
             ParanoidAssertValid();
         }
 
+        internal void ReplaceLastItem(string word)
+        {
+            while (_selectedIndex < _headItems.Count)
+            {
+                _headItems.RemoveAt(_headItems.Count - 1);
+            }
+            _selectedIndex--;
+
+            AddSuggestedWord(word);
+        }
+
         internal void AddWords(IEnumerable<string> words)
         {
             var newWords = false;

@@ -30,7 +30,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
 
         internal override void Execute(WordVocabularySource source)
         {
-            throw new NotImplementedException();
+            source.ReplaceLastItem(_replacement);
         }
     }
 }
