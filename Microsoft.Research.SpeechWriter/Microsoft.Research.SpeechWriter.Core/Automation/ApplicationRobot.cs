@@ -83,6 +83,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return tile is T && StringEquals(tile.Content, value, culture);
         }
 
+        private static bool IsItemMatchExact<T>(ITile tile, string value, CultureInfo culture)
+        {
+            return tile is T && StringEqualsExact(tile.Content, value, culture);
+        }
+
         private static ApplicationRobotAction CreateSuggestedWordAction(ApplicationModel model,
             bool complete,
             string[] words,
@@ -138,6 +143,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
         private static bool StringEquals(string string1, string string2, CultureInfo culture)
         {
             var value = string.Compare(string1, string2, true, culture);
+            return value == 0;
+        }
+
+        private static bool StringEqualsExact(string string1, string string2, CultureInfo culture)
+        {
+            var value = string.Compare(string1, string2, false, culture);
             return value == 0;
         }
 
@@ -348,12 +359,19 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             var wordsMatchLim = 0;
             while (wordsMatchLim < words.Length &&
                 wordsMatchLim + 1 < model.HeadItems.Count &&
-                IsItemMatch<HeadWordItem>(model.HeadItems[wordsMatchLim + 1], words[wordsMatchLim], culture))
+                IsItemMatchExact<HeadWordItem>(model.HeadItems[wordsMatchLim + 1], words[wordsMatchLim], culture))
             {
                 wordsMatchLim++;
             }
 
-            if (wordsMatchLim + 1 < model.HeadItems.Count &&
+            if (wordsMatchLim < words.Length &&
+                wordsMatchLim + 1 < model.HeadItems.Count &&
+                IsItemMatch<HeadWordItem>(model.HeadItems[wordsMatchLim + 1], words[wordsMatchLim], culture))
+            {
+                // TODO: Got a word of the wrong case, either truncate so its the last or, if it is the last, adjust
+                throw new NotImplementedException();
+            }
+            else if (wordsMatchLim + 1 < model.HeadItems.Count &&
                 model.HeadItems[wordsMatchLim + 1] is HeadWordItem)
             {
                 // We have a word we don't want, so truncate.
