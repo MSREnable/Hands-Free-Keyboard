@@ -504,7 +504,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             args.Handled = true;
             ShowDemo("space",
                 "the final frontier",
-                "these are the voyages of the starship enterprise",
+                "these are the voyages of the starship Enterprise",
                 "its five year mission",
                 "to explore strange new worlds",
                 "to seek out new life",
@@ -594,10 +594,9 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             var view = Clipboard.GetContent();
             var text = await view.GetTextAsync();
-            var upper = text.ToLower();
 
             var builder = new StringBuilder();
-            foreach (var ch in upper)
+            foreach (var ch in text)
             {
                 switch (ch)
                 {
@@ -629,6 +628,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 var words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 if (words.Length != 0)
                 {
+                    words[0] = words[0].ToLower();
                     script.Add(string.Join(' ', words));
                 }
             }

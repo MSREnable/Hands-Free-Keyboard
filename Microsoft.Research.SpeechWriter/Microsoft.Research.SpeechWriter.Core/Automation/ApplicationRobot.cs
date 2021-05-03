@@ -101,32 +101,34 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
             using (var enumerator = list.GetEnumerator())
             {
-                // Check the first word matches.
-                enumerator.MoveNext();
-                Debug.Assert(enumerator.Current is SuggestedWordItem);
-                Debug.Assert(StringEquals(enumerator.Current.Content, words[wordsMatchLim], culture));
-
-                // See if more words match.
-                var subIndex = 0;
+                // See what words match exactly.
+                var subLim = 0;
                 while (enumerator.MoveNext() &&
-                    wordsMatchLim + subIndex + 1 < words.Length &&
+                    wordsMatchLim + subLim < words.Length &&
                     enumerator.Current is SuggestedWordItem &&
-                    StringEquals(enumerator.Current.Content, words[wordsMatchLim + subIndex + 1], culture))
+                    StringEqualsExact(enumerator.Current.Content, words[wordsMatchLim + subLim], culture))
                 {
-                    subIndex++;
+                    subLim++;
                 }
 
                 if (complete &&
-                    wordsMatchLim + subIndex + 1 == words.Length &&
+                    wordsMatchLim + subLim == words.Length &&
                     enumerator.Current is TailStopItem)
                 {
                     // We can complete the action.
-                    action = ApplicationRobotAction.CreateSuggestionAndComplete(index, subIndex + 1);
+                    action = ApplicationRobotAction.CreateSuggestionAndComplete(index, subLim - 1);
                 }
                 else
                 {
+                    if (wordsMatchLim + subLim < words.Length &&
+                        enumerator.Current is SuggestedWordItem &&
+                        StringEquals(enumerator.Current.Content, words[wordsMatchLim + subLim], culture))
+                    {
+                        subLim++;
+                    }
+
                     // We can advance a word or more.
-                    action = ApplicationRobotAction.CreateSuggestion(index, subIndex);
+                    action = ApplicationRobotAction.CreateSuggestion(index, subLim - 1);
                     AssertGoodAction(model, action);
                 }
             }
@@ -495,7 +497,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 var ghostMatchLim = wordsMatchLim;
                 while (ghostMatchLim < words.Length &&
                     ghostMatchLim + 1 < model.HeadItems.Count &&
-                    IsItemMatch<GhostWordItem>(model.HeadItems[ghostMatchLim + 1], words[ghostMatchLim], culture))
+                    IsItemMatchExact<GhostWordItem>(model.HeadItems[ghostMatchLim + 1], words[ghostMatchLim], culture))
                 {
                     ghostMatchLim++;
                 }
@@ -519,6 +521,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                         if (action.Target != ApplicationRobotActionTarget.Suggestion ||
                             action.SubIndex <= ghostMatchLim - wordsMatchLim)
                         {
+                            // See if we can snaffle one more ghost.
+                            if (ghostMatchLim < words.Length &&
+                                ghostMatchLim + 1 < model.HeadItems.Count &&
+                                IsItemMatch<GhostWordItem>(model.HeadItems[ghostMatchLim + 1], words[ghostMatchLim], culture))
+                            {
+                                ghostMatchLim++;
+                            }
+
                             // We would have been no better off than clicking in the ghost words, so do that.
                             action = ApplicationRobotAction.CreateHead(ghostMatchLim);
                         }
