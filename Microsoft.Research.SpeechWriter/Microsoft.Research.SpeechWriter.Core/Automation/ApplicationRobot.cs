@@ -347,7 +347,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return action;
         }
 
-        private static ApplicationRobotAction GetCaseWordAction(ApplicationModel model, string word, CultureInfo culture)
+        private static ApplicationRobotAction GetCaseWordAction(ApplicationModel model, string startWord, string targetWord, CultureInfo culture)
         {
             ApplicationRobotAction action;
 
@@ -365,8 +365,54 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             }
             else
             {
-                // TODO: Need to select closest case.
-                throw new NotImplementedException();
+                var startMap = WordCaseMap.Create(startWord);
+                var targetMap = WordCaseMap.Create(targetWord);
+                Debug.Assert(startMap.LetterCount == targetMap.LetterCount);
+
+                var bestReplacementIndex = -1;
+                var bestReplacementScore = 0;
+
+                var index = 0;
+                foreach (var list in model.SuggestionLists)
+                {
+                    var replacement = (ReplacementItem)list.First();
+                    var suggestedMap = WordCaseMap.Create(replacement.Content);
+                    Debug.Assert(suggestedMap.LetterCount == targetMap.LetterCount);
+
+                    var score = 0;
+                    for (var i = 0; i < suggestedMap.Uppers.Length; i++)
+                    {
+                        Debug.Assert(startMap.Positions[i] == targetMap.Positions[i]);
+                        Debug.Assert(targetMap.Positions[i] == suggestedMap.Positions[i]);
+
+                        if (startMap.Uppers[i] == suggestedMap.Uppers[i])
+                        {
+                            score--;
+                        }
+                        if (suggestedMap.Uppers[i] == targetMap.Uppers[i])
+                        {
+                            score++;
+                        }
+                    }
+
+                    if (bestReplacementScore < score)
+                    {
+                        bestReplacementIndex = index;
+                        bestReplacementScore = score;
+                    }
+
+                    index++;
+                }
+
+                if (bestReplacementScore != 0)
+                {
+                    action = ApplicationRobotAction.CreateSuggestion(bestReplacementIndex, 0);
+                }
+                else
+                {
+                    Debug.Assert(model.SuggestionInterstitials[model.SuggestionInterstitials.Count - 1] is InterstitialGapItem);
+                    action = ApplicationRobotAction.CreateInterstitial(model.SuggestionInterstitials.Count - 1);
+                }
             }
 
             return action;
@@ -407,8 +453,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 }
                 else
                 {
-                    // TODO: Got a word of the wrong case, so adjust it
-                    action = GetCaseWordAction(model, words[wordsMatchLim], culture);
+                    var headWordItem = (HeadWordItem)model.HeadItems[wordsMatchLim + 1];
+                    action = GetCaseWordAction(model, headWordItem.Content, words[wordsMatchLim], culture);
                 }
             }
             else if (wordsMatchLim + 1 < model.HeadItems.Count &&

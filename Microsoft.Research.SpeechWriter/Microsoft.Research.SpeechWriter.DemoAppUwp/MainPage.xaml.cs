@@ -515,7 +515,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         private void OnClickPicard(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             args.Handled = true;
-            ShowDemo("these are the voyages of the starship enterprise",
+            ShowDemo("these are the voyages of the starship Enterprise",
                 "its continuing mission",
                 "to explore strange new worlds",
                 "to seek out new life",

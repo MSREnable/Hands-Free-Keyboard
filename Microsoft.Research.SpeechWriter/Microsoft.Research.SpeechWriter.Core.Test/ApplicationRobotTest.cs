@@ -247,13 +247,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("this is the dawning of the age of aquarius", 31, 1, 102, 88);
+            MultiTest("this is the dawning of the age of aquarius", 33, 1, 104, 88);
         }
 
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 169, 96);
+            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 175, 96);
         }
 
         [Test]
@@ -266,7 +266,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("izzy wizzy lets get busy", 29, 1, 69, 104);
+            MultiTest("izzy wizzy lets get busy", 31, 1, 73, 104);
         }
 
         [Test]

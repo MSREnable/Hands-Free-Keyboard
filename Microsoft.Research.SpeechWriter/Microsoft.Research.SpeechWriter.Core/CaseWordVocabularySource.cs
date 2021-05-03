@@ -18,71 +18,35 @@ namespace Microsoft.Research.SpeechWriter.Core
             _source = source;
             _target = target;
 
-            var lowerCount = 0;
-            var upperCount = 0;
-            var positions = new List<int>();
-            var uppers = new List<bool>();
-
-            var content = target.Content;
-            for (var position = 0; position < content.Length; position++)
-            {
-                var ch = content[position];
-
-                if (char.IsLetter(ch))
-                {
-                    var lower = char.ToLower(ch);
-                    var upper = char.ToUpper(ch);
-                    if (lower != upper)
-                    {
-                        if (ch == lower)
-                        {
-                            if (ch != upper)
-                            {
-                                lowerCount++;
-                                positions.Add(position);
-                                uppers.Add(false);
-                            }
-                        }
-                        else if (ch == upper)
-                        {
-                            if (ch != lower)
-                            {
-                                upperCount++;
-                                positions.Add(position);
-                                uppers.Add(true);
-                            }
-                        }
-                    }
-                }
-            }
-
-            Debug.Assert(positions.Count == uppers.Count);
+            var map = WordCaseMap.Create(target.Content);
 
             var substitutes = new List<string>();
 
-            if (positions.Count != 0)
+            if (map.LetterCount != 0)
             {
-                if (upperCount == 0 && lowerCount != 0)
+                var content = target.Content;
+
+                if (map.UpperCount == 0 && map.LowerCount != 0)
                 {
-                    var position = positions[0];
+                    var position = map.Positions[0];
                     var title = content.Substring(0, position) + char.ToUpper(content[position]) + content.Substring(position + 1);
                     substitutes.Add(title);
                 }
 
-                if (upperCount != 0)
+                if (map.UpperCount != 0)
                 {
                     substitutes.Add(content.ToLower());
                 }
 
-                if (lowerCount != 0 && lowerCount + upperCount != 1)
+                if (map.LowerCount != 0 && map.LetterCount != 1)
                 {
                     substitutes.Add(content.ToUpper());
                 }
 
-                for (var i = 1; i < positions.Count; i++)
+                for (var i = 1; i < map.Positions.Length; i++)
                 {
-                    var position = positions[i];
-                    var ch = uppers[i] ? char.ToLower(content[position]) : char.ToUpper(content[position]);
+                    var position = map.Positions[i];
+                    var ch = map.Uppers[i] ? char.ToLower(content[position]) : char.ToUpper(content[position]);
                     var cased = content.Substring(0, position) + ch + content.Substring(position + 1);
                     substitutes.Add(cased);
                 }
