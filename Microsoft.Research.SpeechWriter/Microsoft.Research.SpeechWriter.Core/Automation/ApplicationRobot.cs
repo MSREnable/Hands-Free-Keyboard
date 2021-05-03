@@ -84,8 +84,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
         }
 
         private static bool IsItemMatchExact<T>(ITile tile, string value, CultureInfo culture)
+            where T : WordItem
         {
-            return tile is T && StringEqualsExact(tile.Content, value, culture);
+            return tile is T &&
+                (StringEqualsExact(tile.Content, value, culture) ||
+                StringEqualsExact(tile.FormattedContent, value, culture));
         }
 
         private static ApplicationRobotAction CreateSuggestedWordAction(ApplicationModel model,
@@ -105,8 +108,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 var subLim = 0;
                 while (enumerator.MoveNext() &&
                     wordsMatchLim + subLim < words.Length &&
-                    enumerator.Current is SuggestedWordItem &&
-                    StringEqualsExact(enumerator.Current.Content, words[wordsMatchLim + subLim], culture))
+                    IsItemMatchExact<SuggestedWordItem>(enumerator.Current, words[wordsMatchLim + subLim], culture))
                 {
                     subLim++;
                 }
@@ -121,8 +123,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 else
                 {
                     if (wordsMatchLim + subLim < words.Length &&
-                        enumerator.Current is SuggestedWordItem &&
-                        StringEquals(enumerator.Current.Content, words[wordsMatchLim + subLim], culture))
+                        IsItemMatch<SuggestedWordItem>(enumerator.Current, words[wordsMatchLim + subLim], culture))
                     {
                         subLim++;
                     }

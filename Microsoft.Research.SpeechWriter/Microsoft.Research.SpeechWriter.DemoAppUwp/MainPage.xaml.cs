@@ -471,7 +471,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                     await _mediaReady.WaitAsync();
                     Debug.WriteLine("Media ready");
 
-                    var stream = await _synthesizer.SynthesizeTextToStreamAsync(text.ToLower());
+                    var stream = await _synthesizer.SynthesizeTextToStreamAsync(text);
                     TheMediaElement.AutoPlay = true;
                     TheMediaElement.SetSource(stream, stream.ContentType);
                     TheMediaElement.Play();
@@ -628,7 +628,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 var words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 if (words.Length != 0)
                 {
-                    words[0] = words[0].ToLower();
                     script.Add(string.Join(' ', words));
                 }
             }
