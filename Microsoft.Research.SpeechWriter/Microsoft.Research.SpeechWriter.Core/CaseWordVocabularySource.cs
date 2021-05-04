@@ -38,17 +38,20 @@ namespace Microsoft.Research.SpeechWriter.Core
                     substitutes.Add(content.ToLower());
                 }
 
-                if (map.LowerCount != 0 && map.LetterCount != 1)
+                if (map.LowerCount != 0)
                 {
                     substitutes.Add(content.ToUpper());
                 }
 
-                for (var i = 1; i < map.Positions.Length; i++)
+                if (map.LetterCount != 1)
                 {
-                    var position = map.Positions[i];
-                    var ch = map.Uppers[i] ? char.ToLower(content[position]) : char.ToUpper(content[position]);
-                    var cased = content.Substring(0, position) + ch + content.Substring(position + 1);
-                    substitutes.Add(cased);
+                    for (var i = 0; i < map.Positions.Length; i++)
+                    {
+                        var position = map.Positions[i];
+                        var ch = map.Uppers[i] ? char.ToLower(content[position]) : char.ToUpper(content[position]);
+                        var cased = content.Substring(0, position) + ch + content.Substring(position + 1);
+                        substitutes.Add(cased);
+                    }
                 }
             }
 

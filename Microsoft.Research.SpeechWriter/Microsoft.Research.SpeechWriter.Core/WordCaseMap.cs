@@ -73,5 +73,24 @@ namespace Microsoft.Research.SpeechWriter.Core
             var map = new WordCaseMap(positions.ToArray(), uppers.ToArray(), lowerCount);
             return map;
         }
+
+        internal int GetDistanceTo(WordCaseMap other)
+        {
+            var distance = 0;
+
+            Debug.Assert(Positions.Length == other.Positions.Length);
+
+            for (var i = 0; i < Positions.Length; i++)
+            {
+                Debug.Assert(Positions[i] == other.Positions[i]);
+
+                if (Uppers[i] != other.Uppers[i])
+                {
+                    distance++;
+                }
+            }
+
+            return distance;
+        }
     }
 }

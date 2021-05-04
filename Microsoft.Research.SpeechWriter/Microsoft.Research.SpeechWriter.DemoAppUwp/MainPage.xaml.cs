@@ -55,7 +55,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private bool _demoMovementAnimation;
 
-        private List<string> _tutorScript;
+        private List<string[]> _tutorScript;
 
         public MainPage()
         {
@@ -165,7 +165,17 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             set { SetValue(MoveToHeightProperty, value); }
         }
 
-        private async void ShowDemo(params string[] sentences)
+        private void ShowDemo(params string[] sentences)
+        {
+            var script = new List<string[]>();
+            foreach (var sentence in sentences)
+            {
+                script.Add(sentence.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+            }
+            ShowDemo(sentences);
+        }
+
+        private async void ShowDemo(List<string[]> sentences)
         {
             if (_demoMode)
             {
@@ -176,11 +186,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 _demoMode = true;
                 _demoMovementAnimation = true;
 
-                for (var i = 0; _demoMode && i < sentences.Length; i++)
+                for (var i = 0; _demoMode && i < sentences.Count; i++)
                 {
                     TargetOutline.Visibility = Visibility.Visible;
 
-                    var words = sentences[i].Split(' ');
+                    var words = sentences[i];
 
                     bool done;
                     do
@@ -530,7 +540,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
             if (script.Count != 0)
             {
-                ShowDemo(script.ToArray());
+                ShowDemo(script);
             }
         }
 
@@ -555,7 +565,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             if (_tutorScript != null)
             {
-                if (e.IsComplete && string.Join(' ', e.Words) == _tutorScript[0])
+                if (e.IsComplete /* && string.Join(' ', e.Words) == _tutorScript[0] */ )
                 {
                     if (_tutorScript.Count == 1)
                     {
@@ -584,51 +594,74 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         private async Task ShowNextTutorStepAsync()
         {
             await Task.Delay(50);
-            var words = _tutorScript[0].Split(' ');
+            var words = _tutorScript[0];
             var action = ApplicationRobot.GetNextCompletionAction(_model, words);
             SetupStoryboardForAction(action);
             _ = PlayStoryboardAsync(TutorMoveStoryboard);
         }
 
-        private static async Task<List<string>> GetClipboardContentAsync()
+        private static async Task<List<string[]>> GetClipboardContentAsync()
         {
+            var script = new List<string[]>();
+
             var view = Clipboard.GetContent();
             var text = await view.GetTextAsync();
 
-            var builder = new StringBuilder();
-            foreach (var ch in text)
-            {
-                switch (ch)
-                {
-                    case '\r':
-                    case '\n':
-                    case '.':
-                    case '!':
-                    case '?':
-                    case ':':
-                    case '\'':
-                    case '-':
-                    case ' ':
-                        builder.Append(ch);
-                        break;
+            var lines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    default:
-                        if (char.IsLetterOrDigit(ch))
-                        {
-                            builder.Append(ch);
-                        }
-                        break;
-                }
-            }
-
-            var script = new List<string>();
-            var lines = builder.ToString().Split(new[] { '\r', '\n', '.', '?', '!', ':' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in lines)
             {
+                var utterance = new List<string>();
+
                 var words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                if (words.Length != 0)
+
+                foreach (var word in words)
                 {
-                    script.Add(string.Join(' ', words));
+                    var alphaNumericStart = 0;
+                    var alphaNumericLimit = word.Length;
+
+                    while (alphaNumericStart < alphaNumericLimit &&
+                        !char.IsLetterOrDigit(word[alphaNumericStart]))
+                    {
+                        utterance.Add(word[alphaNumericStart].ToString());
+                        alphaNumericStart++;
+                    }
+
+                    var isUtteranceComplete = false;
+                    while (alphaNumericStart < alphaNumericLimit &&
+                        !char.IsLetterOrDigit(word[alphaNumericLimit - 1]))
+                    {
+                        alphaNumericLimit--;
+                        switch (word[alphaNumericLimit])
+                        {
+                            case '.':
+                            case '?':
+                            case '!':
+                                isUtteranceComplete = true;
+                                break;
+                        }
+                    }
+
+                    if (alphaNumericStart < alphaNumericLimit)
+                    {
+                        utterance.Add(word.Substring(alphaNumericStart, alphaNumericLimit - alphaNumericStart));
+                    }
+
+                    for (var i = alphaNumericLimit; i < word.Length; i++)
+                    {
+                        utterance.Add(word[i].ToString());
+                    }
+
+                    if (isUtteranceComplete)
+                    {
+                        script.Add(utterance.ToArray());
+                        utterance.Clear();
+                    }
+                }
+
+                if (utterance.Count != 0)
+                {
+                    script.Add(utterance.ToArray());
                 }
             }
 

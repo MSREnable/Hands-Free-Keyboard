@@ -118,7 +118,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                     enumerator.Current is TailStopItem)
                 {
                     // We can complete the action.
-                    action = ApplicationRobotAction.CreateSuggestionAndComplete(index, subLim - 1);
+                    action = ApplicationRobotAction.CreateSuggestionAndComplete(index, subLim);
                 }
                 else
                 {
@@ -372,8 +372,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 var targetMap = WordCaseMap.Create(targetWord);
                 Debug.Assert(startMap.LetterCount == targetMap.LetterCount);
 
+                var startDistance = targetMap.GetDistanceTo(startMap);
+
                 var bestReplacementIndex = -1;
-                var bestReplacementScore = 0;
+                var bestReplacementDistance = startDistance;
 
                 var index = 0;
                 foreach (var list in model.SuggestionLists)
@@ -382,32 +384,18 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                     var suggestedMap = WordCaseMap.Create(replacement.Content);
                     Debug.Assert(suggestedMap.LetterCount == targetMap.LetterCount);
 
-                    var score = 0;
-                    for (var i = 0; i < suggestedMap.Uppers.Length; i++)
-                    {
-                        Debug.Assert(startMap.Positions[i] == targetMap.Positions[i]);
-                        Debug.Assert(targetMap.Positions[i] == suggestedMap.Positions[i]);
+                    var suggestionDistance = targetMap.GetDistanceTo(suggestedMap);
 
-                        if (startMap.Uppers[i] == suggestedMap.Uppers[i])
-                        {
-                            score--;
-                        }
-                        if (suggestedMap.Uppers[i] == targetMap.Uppers[i])
-                        {
-                            score++;
-                        }
-                    }
-
-                    if (bestReplacementScore < score)
+                    if (suggestionDistance < bestReplacementDistance)
                     {
+                        bestReplacementDistance = suggestionDistance;
                         bestReplacementIndex = index;
-                        bestReplacementScore = score;
                     }
 
                     index++;
                 }
 
-                if (bestReplacementScore != 0)
+                if (bestReplacementIndex != -1)
                 {
                     action = ApplicationRobotAction.CreateSuggestion(bestReplacementIndex, 0);
                 }
