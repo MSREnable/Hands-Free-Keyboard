@@ -172,7 +172,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             {
                 script.Add(sentence.Split(' ', StringSplitOptions.RemoveEmptyEntries));
             }
-            ShowDemo(sentences);
+            ShowDemo(script);
         }
 
         private async void ShowDemo(List<string[]> sentences)
