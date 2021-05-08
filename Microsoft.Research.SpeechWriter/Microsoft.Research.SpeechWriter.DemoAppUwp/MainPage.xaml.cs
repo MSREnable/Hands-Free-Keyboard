@@ -482,7 +482,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                     Debug.WriteLine("Media ready");
 
                     var stream = await _synthesizer.SynthesizeTextToStreamAsync(text);
-                    TheMediaElement.AutoPlay = true;
                     TheMediaElement.SetSource(stream, stream.ContentType);
                     TheMediaElement.Play();
                 }

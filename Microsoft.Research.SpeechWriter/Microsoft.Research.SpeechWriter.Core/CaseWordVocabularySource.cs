@@ -26,31 +26,28 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 var content = target.Content;
 
-                if (map.UpperCount == 0 && map.LowerCount != 0)
+                var included = new HashSet<string> { content };
+
+                var position0 = map.Positions[0];
+
+                CheckedAdd(model.HeadItems[0].Culture.TextInfo.ToTitleCase(content));
+                CheckedAdd(content.ToLower());
+                CheckedAdd(content.ToUpper());
+                CheckedAdd(content.Substring(0, position0) + char.ToUpper(content[position0]) + content.Substring(position0 + 1));
+
+                for (var i = 0; i < map.Positions.Length; i++)
                 {
-                    var position = map.Positions[0];
-                    var title = content.Substring(0, position) + char.ToUpper(content[position]) + content.Substring(position + 1);
-                    substitutes.Add(title);
+                    var position = map.Positions[i];
+                    var ch = map.Uppers[i] ? char.ToLower(content[position]) : char.ToUpper(content[position]);
+                    var cased = content.Substring(0, position) + ch + content.Substring(position + 1);
+                    CheckedAdd(cased);
                 }
 
-                if (map.UpperCount != 0)
+                void CheckedAdd(string version)
                 {
-                    substitutes.Add(content.ToLower());
-                }
-
-                if (map.LowerCount != 0)
-                {
-                    substitutes.Add(content.ToUpper());
-                }
-
-                if (map.LetterCount != 1)
-                {
-                    for (var i = 0; i < map.Positions.Length; i++)
+                    if (included.Add(version))
                     {
-                        var position = map.Positions[i];
-                        var ch = map.Uppers[i] ? char.ToLower(content[position]) : char.ToUpper(content[position]);
-                        var cased = content.Substring(0, position) + ch + content.Substring(position + 1);
-                        substitutes.Add(cased);
+                        substitutes.Add(version);
                     }
                 }
             }
