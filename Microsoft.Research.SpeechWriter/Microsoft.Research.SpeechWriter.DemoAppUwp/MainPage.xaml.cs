@@ -10,6 +10,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Media.SpeechSynthesis;
 using Windows.Storage;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -56,6 +57,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         private bool _demoMovementAnimation;
 
         private List<string[]> _tutorScript;
+
+        private DateTimeOffset _speechStarted;
 
         public MainPage()
         {
@@ -436,9 +439,14 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 var lowWaterMark = 0;
                 while (lowWaterMark < spokenWords.Count &&
                     lowWaterMark < e.Words.Count &&
-                    spokenWords[lowWaterMark] == e.Words[lowWaterMark])
+                    spokenWords[lowWaterMark].Equals(e.Words[lowWaterMark], StringComparison.CurrentCultureIgnoreCase))
                 {
                     lowWaterMark++;
+                }
+
+                if (lowWaterMark == 0)
+                {
+                    _speechStarted = DateTimeOffset.UtcNow;
                 }
 
                 string text;
@@ -470,6 +478,13 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
                 if (e.IsComplete)
                 {
+                    var speechTime = DateTimeOffset.UtcNow - _speechStarted;
+                    var join = string.Join(' ', spokenWords);
+                    var trueWordsPerMinute = spokenWords.Count / speechTime.TotalMinutes;
+                    var standardWordPerMinute = (join.Length / 5.0) / speechTime.TotalMinutes;
+                    var title = $"True wpm = {trueWordsPerMinute:0.0}, standard wpm = {standardWordPerMinute:0.0}";
+                    ApplicationView.GetForCurrentView().Title = title;
+
                     spokenWords.Clear();
                 }
 
