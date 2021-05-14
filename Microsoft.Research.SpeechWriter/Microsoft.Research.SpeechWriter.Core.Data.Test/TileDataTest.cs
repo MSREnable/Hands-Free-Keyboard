@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -97,6 +98,43 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
                 Assert.AreEqual(element.Equals(plainWrong), plainWrong.Equals(element));
             }
             Assert.AreEqual(1, matchCount);
+        }
+
+        [Test]
+        public void NoNullInContentTest()
+        {
+            var contents = new[] { "Good", "Bad\0", "\0Badder", "Bad\0est" };
+            for (var i = 0; i < contents.Length; i++)
+            {
+                var good = true;
+                try
+                {
+                    _ = new TileData(contents[i]);
+                }
+                catch (ArgumentException)
+                {
+                    good = false;
+                }
+                Assert.AreEqual(i == 0, good);
+            }
+        }
+
+        [Test]
+        public void CheckTokenizationTest()
+        {
+            CheckTokenization(new TileData("Simple"), "Simple");
+            CheckTokenization(new TileData("Before", isGlueAfter: true), "Before\0B");
+            CheckTokenization(new TileData("After", isGlueBefore: true), "After\0A");
+            CheckTokenization(new TileData("Before", isGlueBefore: true, isGlueAfter: true), "Before\0J");
+
+            void CheckTokenization(TileData tile, string expected)
+            {
+                var token = tile.ToTokenString();
+                Assert.AreEqual(expected, token);
+
+                var reborn = TileData.FromTokenString(token);
+                Assert.AreEqual(tile, reborn);
+            }
         }
     }
 }
