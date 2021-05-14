@@ -133,6 +133,9 @@
     <Compile Include="MainPage.SwitchInterface.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TileControl.xaml.cs">
+      <DependentUpon>TileControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UwpWriterEnvironment.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +187,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="SwitchTargetControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TileControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
