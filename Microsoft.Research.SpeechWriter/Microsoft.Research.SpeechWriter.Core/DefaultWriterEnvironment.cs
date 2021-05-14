@@ -1,4 +1,5 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Properties;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using Microsoft.Research.SpeechWriter.Core.Properties;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -92,8 +93,8 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <summary>
         /// Persist an utterance.
         /// </summary>
-        /// <param name="words">The words of the utterance.</param>
-        void IWriterEnvironment.SaveUtterance(string[] words)
+        /// <param name="tiles">The words of the utterance.</param>
+        void IWriterEnvironment.SaveUtterance(IReadOnlyList<TileData> tiles)
         {
         }
 
@@ -101,9 +102,9 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Recall persisted utterances.
         /// </summary>
         /// <returns>The collection of utterances.</returns>
-        IAsyncEnumerable<string[]> IWriterEnvironment.RecallUtterances()
+        IAsyncEnumerable<IReadOnlyList<TileData>> IWriterEnvironment.RecallUtterances()
         {
-            return new EmptyAsyncEnumerable<string[]>();
+            return new EmptyAsyncEnumerable<IReadOnlyList<TileData>>();
         }
 
         private class EmptyAsyncEnumerable<T> : IAsyncEnumerable<T>

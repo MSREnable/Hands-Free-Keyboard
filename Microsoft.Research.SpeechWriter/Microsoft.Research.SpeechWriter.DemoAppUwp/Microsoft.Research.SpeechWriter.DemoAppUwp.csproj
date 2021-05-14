@@ -203,6 +203,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core.Data\Microsoft.Research.SpeechWriter.Core.Data.csproj">
+      <Project>{74414063-0447-4815-A4A0-3ED6CB49A2F3}</Project>
+      <Name>Microsoft.Research.SpeechWriter.Core.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.csproj">
       <Project>{b20b47f7-52d1-48ef-8acb-bd44bb78f023}</Project>
       <Name>Microsoft.Research.SpeechWriter.Core</Name>

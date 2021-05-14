@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core.Items
 {
@@ -7,12 +8,17 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
     /// </summary>
     public abstract class WordItem : Command<WordVocabularySource>
     {
-        internal WordItem(ITile predecessor, WordVocabularySource source, string word)
+        internal WordItem(ITile predecessor, WordVocabularySource source, string tokenString)
             : base(predecessor, source)
         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(word));
-            Content = word;
+            Debug.Assert(!string.IsNullOrWhiteSpace(tokenString));
 
+            var tile = TileData.FromTokenString(tokenString);
+            Content = tile.Content;
+            IsAttachedToNext = tile.IsGlueAfter;
+            IsAttachedToPrevoius = tile.IsGlueBefore;
+
+            var word = tile.Content;
             var length = word.Length;
             var index = 0;
             while (index < length && !char.IsLetterOrDigit(word, index))
@@ -31,6 +37,16 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// The basic content of the tile.
         /// </summary>
         public override string Content { get; }
+
+        /// <summary>
+        /// Is this item followed with out space by the next item.
+        /// </summary>
+        public bool IsAttachedToNext { get; }
+
+        /// <summary>
+        /// Does this item follow without space the preceeding item.
+        /// </summary>
+        public bool IsAttachedToPrevoius { get; }
 
         /// <summary>
         /// The formatted content of the tile.

@@ -44,7 +44,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         private TileSequence(List<TileData> sequence)
         {
             _sequence = sequence;
+            Tiles = _sequence;
         }
+
+        /// <summary>
+        /// The contained tiles.
+        /// </summary>
+        public IReadOnlyList<TileData> Tiles { get; }
 
         /// <summary>
         /// Constructor from an array of existing <code>TileData</code> objects.

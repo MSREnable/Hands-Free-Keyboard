@@ -1,4 +1,5 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Items;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using Microsoft.Research.SpeechWriter.Core.Items;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -170,13 +171,14 @@ namespace Microsoft.Research.SpeechWriter.Core
                 while (await enumerator.MoveNextAsync())
                 {
                     var utterance = enumerator.Current;
-                    Debug.Assert(utterance.Length != 0);
+                    Debug.Assert(utterance.Count != 0);
 
                     var sequence = new List<int>(new[] { 0 });
-                    foreach (var word in utterance)
+                    foreach (var tile in utterance)
                     {
-                        Debug.Assert(!string.IsNullOrWhiteSpace(word));
-                        var token = _tokens.GetToken(word);
+                        var tokenString = tile.ToTokenString();
+                        Debug.Assert(!string.IsNullOrWhiteSpace(tokenString));
+                        var token = _tokens.GetToken(tokenString);
                         Debug.Assert(token != 0);
                         sequence.Add(token);
                     }
@@ -441,11 +443,12 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             selection.RemoveAt(0);
             selection.RemoveAt(selection.Count - 1);
-            var utterance = new List<string>();
+            var utterance = new List<TileData>();
             foreach (var token in selection)
             {
-                var word = _tokens.GetString(token);
-                utterance.Add(word);
+                var tokenString = _tokens.GetString(token);
+                var tile = TileData.FromTokenString(tokenString);
+                utterance.Add(tile);
             }
 
             SetSelectedIndex(0);

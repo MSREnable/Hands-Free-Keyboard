@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using System.Collections.Generic;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -21,13 +22,13 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <summary>
         /// Persist an utterance.
         /// </summary>
-        /// <param name="words">The words of the utterance.</param>
-        void SaveUtterance(string[] words);
+        /// <param name="tiles">The words of the utterance.</param>
+        void SaveUtterance(IReadOnlyList<TileData> tiles);
 
         /// <summary>
         /// Get utterance reader.
         /// </summary>
         /// <returns>The collection of utterances.</returns>
-        IAsyncEnumerable<string[]> RecallUtterances();
+        IAsyncEnumerable<IReadOnlyList<TileData>> RecallUtterances();
     }
 }
