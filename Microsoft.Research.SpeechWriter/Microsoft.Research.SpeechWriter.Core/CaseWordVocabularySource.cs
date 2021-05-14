@@ -1,7 +1,6 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Items;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
