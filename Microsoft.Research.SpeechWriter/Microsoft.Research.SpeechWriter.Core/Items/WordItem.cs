@@ -8,17 +8,17 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
     /// </summary>
     public abstract class WordItem : Command<WordVocabularySource>
     {
-        internal WordItem(ITile predecessor, WordVocabularySource source, string tokenString)
+        internal WordItem(ITile predecessor, WordVocabularySource source, string word)
             : base(predecessor, source)
         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(tokenString));
+            Debug.Assert(!string.IsNullOrWhiteSpace(word));
 
-            var tile = TileData.FromTokenString(tokenString);
-            Content = tile.Content;
+            var tile = TileData.FromTokenString(word);
+            Content = word;
+            UnformattedContent = tile.Content;
             IsAttachedToNext = tile.IsGlueAfter;
             IsAttachedToPrevoius = tile.IsGlueBefore;
 
-            var word = tile.Content;
             var length = word.Length;
             var index = 0;
             while (index < length && !char.IsLetterOrDigit(word, index))
@@ -47,6 +47,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// Does this item follow without space the preceeding item.
         /// </summary>
         public bool IsAttachedToPrevoius { get; }
+
+        /// <summary>
+        /// The unformatted content part.
+        /// </summary>
+        public string UnformattedContent { get; }
 
         /// <summary>
         /// The formatted content of the tile.
