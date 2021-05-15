@@ -51,9 +51,9 @@
         </DataTemplate>
         <DataTemplate x:Key="ReplacementItem" x:DataType="lib:ReplacementItem">
             <StackPanel Orientation="Horizontal">
-                <local:TileControl Background="LightGreen" Caption="{Binding OldContent}"/>
+                <local:TileControl Background="LightGreen" Caption="{Binding OldUnformattedContent}" ShowAttachedToNext="{Binding OldIsAttachedToNext}" ShowAttachedToPrevious="{Binding OldIsAttachedToPrevious}"/>
                 <TextBlock Text="&#x2192;" FontSize="25" FontWeight="Bold" Foreground="DarkGray" VerticalAlignment="Center"/>
-                <local:TileControl Background="LightGreen" Caption="{Binding Content}"/>
+                <local:TileControl Background="LightGreen" Caption="{Binding UnformattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="GhostWordItem" x:DataType="lib:GhostWordItem">

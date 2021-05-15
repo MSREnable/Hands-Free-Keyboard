@@ -16,8 +16,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         private bool _switchMode;
         private ApplicationRobotActionTarget _switchTarget;
         private int _switchClickCount;
-        private DispatcherTimer _switchTimer = new DispatcherTimer();
-        private List<SwitchTargetControl> _targets = new List<SwitchTargetControl>();
+        private readonly DispatcherTimer _switchTimer = new DispatcherTimer();
+        private readonly List<SwitchTargetControl> _targets = new List<SwitchTargetControl>();
         private int _switchSuggestionListsIndex;
 
         private void ShowSwitchInterface()

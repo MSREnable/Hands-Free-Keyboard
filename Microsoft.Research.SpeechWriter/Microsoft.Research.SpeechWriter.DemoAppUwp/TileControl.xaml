@@ -12,7 +12,7 @@
 
     <Border>
         <Border BorderBrush="Black" BorderThickness="{Binding InternalBorder, ElementName=userControl, Mode=oneway}" Background="{Binding Background, ElementName=userControl}">
-            <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
+            <TextBlock Text="{Binding Caption, ElementName=userControl, Mode=OneWay}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
         </Border>
     </Border>
 </UserControl>

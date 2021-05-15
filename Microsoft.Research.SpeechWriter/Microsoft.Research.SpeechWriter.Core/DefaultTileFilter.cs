@@ -2,7 +2,7 @@
 {
     internal class DefaultTileFilter : ITokenTileFilter
     {
-        private static ITokenTileFilter _instance = new DefaultTileFilter();
+        private static readonly ITokenTileFilter _instance = new DefaultTileFilter();
 
         private DefaultTileFilter()
         {

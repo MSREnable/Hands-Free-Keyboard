@@ -31,7 +31,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal int[] Context { get; private set; }
 
-        internal override sealed ITileFilter Filter => TokenFilter;
+        internal sealed override ITileFilter Filter => TokenFilter;
 
         internal abstract ITokenTileFilter TokenFilter { get; }
 

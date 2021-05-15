@@ -1,4 +1,5 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Items;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using Microsoft.Research.SpeechWriter.Core.Items;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -368,11 +369,22 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             }
             else
             {
-                var startMap = WordCaseMap.Create(startWord);
-                var targetMap = WordCaseMap.Create(targetWord);
+                var startTile = TileData.FromTokenString(startWord);
+                var targetTile = TileData.FromTokenString(targetWord);
+
+                var startMap = WordCaseMap.Create(startTile.Content);
+                var targetMap = WordCaseMap.Create(targetTile.Content);
                 Debug.Assert(startMap.LetterCount == targetMap.LetterCount);
 
                 var startDistance = targetMap.GetDistanceTo(startMap);
+                if (targetTile.IsGlueAfter != startTile.IsGlueAfter)
+                {
+                    startDistance++;
+                }
+                if (targetTile.IsGlueBefore != startTile.IsGlueBefore)
+                {
+                    startDistance++;
+                }
 
                 var bestReplacementIndex = -1;
                 var bestReplacementDistance = startDistance;
@@ -381,10 +393,19 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 foreach (var list in model.SuggestionLists)
                 {
                     var replacement = (ReplacementItem)list.First();
-                    var suggestedMap = WordCaseMap.Create(replacement.Content);
+                    var suggestedTile = TileData.FromTokenString(replacement.Content);
+                    var suggestedMap = WordCaseMap.Create(suggestedTile.Content);
                     Debug.Assert(suggestedMap.LetterCount == targetMap.LetterCount);
 
                     var suggestionDistance = targetMap.GetDistanceTo(suggestedMap);
+                    if (targetTile.IsGlueAfter != suggestedTile.IsGlueAfter)
+                    {
+                        suggestionDistance++;
+                    }
+                    if (targetTile.IsGlueBefore != suggestedTile.IsGlueBefore)
+                    {
+                        suggestionDistance++;
+                    }
 
                     if (suggestionDistance < bestReplacementDistance)
                     {

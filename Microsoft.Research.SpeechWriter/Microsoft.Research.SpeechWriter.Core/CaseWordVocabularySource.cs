@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
-    class CaseWordVocabularySource : VocabularySource
+    internal class CaseWordVocabularySource : VocabularySource
     {
         private readonly WordVocabularySource _source;
         private readonly HeadWordItem _target;
