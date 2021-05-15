@@ -17,11 +17,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
             Content = word;
             UnformattedContent = tile.Content;
             IsAttachedToNext = tile.IsGlueAfter;
-            IsAttachedToPrevoius = tile.IsGlueBefore;
+            IsAttachedToPrevious = tile.IsGlueBefore;
 
-            var length = word.Length;
+            var text = UnformattedContent;
+            var length = text.Length;
             var index = 0;
-            while (index < length && !char.IsLetterOrDigit(word, index))
+            while (index < length && !char.IsLetterOrDigit(text, index))
             {
                 index++;
             }
@@ -46,7 +47,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// Does this item follow without space the preceeding item.
         /// </summary>
-        public bool IsAttachedToPrevoius { get; }
+        public bool IsAttachedToPrevious { get; }
 
         /// <summary>
         /// The unformatted content part.
@@ -56,6 +57,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// The formatted content of the tile.
         /// </summary>
-        public override string FormattedContent => IsCased && !IsCasedSuccessor ? Culture.TextInfo.ToTitleCase(Content) : Content;
+        public override string FormattedContent => IsCased && !IsCasedSuccessor ? Culture.TextInfo.ToTitleCase(UnformattedContent) : UnformattedContent;
     }
 }

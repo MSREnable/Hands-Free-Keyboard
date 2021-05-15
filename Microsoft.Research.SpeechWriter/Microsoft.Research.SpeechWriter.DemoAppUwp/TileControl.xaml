@@ -11,7 +11,7 @@
     d:DesignWidth="400">
 
     <Border>
-        <Border BorderBrush="Black" BorderThickness="{Binding InternalBorder, ElementName=userControl, Mode=oneway}" CornerRadius="4" Background="{Binding Background, ElementName=userControl}">
+        <Border BorderBrush="Black" BorderThickness="{Binding InternalBorder, ElementName=userControl, Mode=oneway}" Background="{Binding Background, ElementName=userControl}">
             <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
         </Border>
     </Border>

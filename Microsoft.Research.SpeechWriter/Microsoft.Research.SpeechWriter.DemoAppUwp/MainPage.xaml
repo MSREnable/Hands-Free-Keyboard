@@ -44,10 +44,10 @@
             <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="5"/>
         </DataTemplate>
         <DataTemplate x:Key="SuggestedWordItem" x:DataType="lib:SuggestedWordItem">
-            <local:TileControl Background="LightYellow" Caption="{Binding FormattedContent}"/>
+            <local:TileControl Background="LightYellow" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
         </DataTemplate>
         <DataTemplate x:Key="HeadWordItem" x:DataType="lib:HeadWordItem">
-            <local:TileControl Background="LightGreen" Caption="{Binding FormattedContent}"/>
+            <local:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
         </DataTemplate>
         <DataTemplate x:Key="ReplacementItem" x:DataType="lib:ReplacementItem">
             <StackPanel Orientation="Horizontal">
@@ -57,7 +57,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="GhostWordItem" x:DataType="lib:GhostWordItem">
-            <local:TileControl Background="LightBlue" Caption="{Binding FormattedContent}"/>
+            <local:TileControl Background="LightBlue" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
         </DataTemplate>
         <DataTemplate x:Key="InterstitialNonItem" x:DataType="lib:InterstitialNonItem">
             <TextBlock Text="-" FontSize="25" FontWeight="Bold" Margin="5"/>

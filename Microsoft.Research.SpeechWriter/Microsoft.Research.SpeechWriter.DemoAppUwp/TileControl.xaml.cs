@@ -11,7 +11,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             new PropertyMetadata(null, UpdateBorder));
         public static readonly DependencyProperty ShowAttachedToPreviousProperty = DependencyProperty.Register(nameof(ShowAttachedToPrevious), typeof(bool), typeof(TileControl),
             new PropertyMetadata(false, UpdateBorder));
-        public static readonly DependencyProperty ShowAttachedToNextProperty = DependencyProperty.Register(nameof(ShowAttachedToPrevious), typeof(bool), typeof(TileControl),
+        public static readonly DependencyProperty ShowAttachedToNextProperty = DependencyProperty.Register(nameof(ShowAttachedToNext), typeof(bool), typeof(TileControl),
             new PropertyMetadata(false, UpdateBorder));
         public static readonly DependencyProperty BorderProperty = DependencyProperty.Register(nameof(Border), typeof(Thickness), typeof(TileControl),
             new PropertyMetadata(new Thickness(1), UpdateBorder));
