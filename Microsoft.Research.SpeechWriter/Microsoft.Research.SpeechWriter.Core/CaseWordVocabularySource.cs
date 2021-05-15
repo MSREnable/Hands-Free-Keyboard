@@ -1,4 +1,5 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Items;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using Microsoft.Research.SpeechWriter.Core.Items;
 using System;
 using System.Collections.Generic;
 
@@ -17,16 +18,18 @@ namespace Microsoft.Research.SpeechWriter.Core
             _source = source;
             _target = target;
 
-            var map = WordCaseMap.Create(target.Content);
-
             var substitutes = new List<string>();
+
+            var tile = TileData.FromTokenString(target.Content);
+            var content = tile.Content;
+            var isGlueAfter = tile.IsGlueAfter;
+            var isGlueBefore = tile.IsGlueBefore;
+            var included = new HashSet<string> { target.Content };
+
+            var map = WordCaseMap.Create(content);
 
             if (map.LetterCount != 0)
             {
-                var content = target.Content;
-
-                var included = new HashSet<string> { content };
-
                 var position0 = map.Positions[0];
 
                 CheckedAdd(model.HeadItems[0].Culture.TextInfo.ToTitleCase(content));
@@ -42,12 +45,24 @@ namespace Microsoft.Research.SpeechWriter.Core
                     CheckedAdd(cased);
                 }
 
-                void CheckedAdd(string version)
+                void CheckedAdd(string newContent)
                 {
+                    var newTile = new TileData(content: newContent, isGlueAfter: isGlueAfter, isGlueBefore: isGlueBefore);
+                    var version = newTile.ToTokenString();
                     if (included.Add(version))
                     {
                         substitutes.Add(version);
                     }
+                }
+            }
+
+            for (var i = 0; i < 4; i++)
+            {
+                var spacedTile = new TileData(content: content, isGlueAfter: (i & 1) != 0, isGlueBefore: (i & 2) != 0);
+                var spacedContent = spacedTile.ToTokenString();
+                if (included.Add(spacedContent))
+                {
+                    substitutes.Add(spacedContent);
                 }
             }
 

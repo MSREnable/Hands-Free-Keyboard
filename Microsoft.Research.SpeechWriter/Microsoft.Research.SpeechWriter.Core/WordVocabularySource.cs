@@ -125,8 +125,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             switch (command)
             {
                 case TileCommand.CaSe:
-                    var headWordTile = LastTile as HeadWordItem;
-                    value = headWordTile != null && headWordTile.IsCased;
+                    value = LastTile is HeadWordItem;
                     break;
 
                 default:
