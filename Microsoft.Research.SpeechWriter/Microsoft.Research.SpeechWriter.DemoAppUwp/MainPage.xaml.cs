@@ -1,5 +1,6 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
+using Microsoft.Research.SpeechWriter.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -626,49 +627,29 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             {
                 var utterance = new List<string>();
 
-                var words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var sequence = TileSequence.FromRaw(line);
 
-                foreach (var word in words)
+                var isUtteranceEnding = false;
+                foreach (var tile in sequence.Tiles)
                 {
-                    var alphaNumericStart = 0;
-                    var alphaNumericLimit = word.Length;
+                    var word = tile.ToTokenString();
+                    utterance.Add(word);
 
-                    while (alphaNumericStart < alphaNumericLimit &&
-                        !char.IsLetterOrDigit(word[alphaNumericStart]))
+                    switch (tile.Content)
                     {
-                        utterance.Add(word[alphaNumericStart].ToString());
-                        alphaNumericStart++;
+                        case ".":
+                        case "?":
+                        case "!":
+                            isUtteranceEnding = true;
+                            break;
                     }
 
-                    var isUtteranceComplete = false;
-                    while (alphaNumericStart < alphaNumericLimit &&
-                        !char.IsLetterOrDigit(word[alphaNumericLimit - 1]))
-                    {
-                        alphaNumericLimit--;
-                        switch (word[alphaNumericLimit])
-                        {
-                            case '.':
-                            case '?':
-                            case '!':
-                                isUtteranceComplete = true;
-                                break;
-                        }
-                    }
-
-                    if (alphaNumericStart < alphaNumericLimit)
-                    {
-                        utterance.Add(word.Substring(alphaNumericStart, alphaNumericLimit - alphaNumericStart));
-                    }
-
-                    for (var i = alphaNumericLimit; i < word.Length; i++)
-                    {
-                        utterance.Add(word[i].ToString());
-                    }
-
-                    if (isUtteranceComplete)
+                    if (isUtteranceEnding && !tile.IsGlueAfter)
                     {
                         script.Add(utterance.ToArray());
                         utterance.Clear();
+
+                        isUtteranceEnding = false;
                     }
                 }
 
