@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microsoft.Research.SpeechWriter.Core.Items
+﻿namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     /// <summary>
     /// Tile rewriting item.

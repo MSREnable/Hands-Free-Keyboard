@@ -20,11 +20,54 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
         public TileData(string content, bool isGlueBefore = false, bool isGlueAfter = false)
         {
+            if (content.Contains("\0"))
+            {
+                throw new ArgumentException("content contains null character");
+            }
+
             Content = content;
             IsGlueBefore = isGlueBefore;
             IsGlueAfter = isGlueAfter;
 
             Debug.Assert(!IsSpaces || (IsGlueBefore & IsGlueAfter), "Spaces must always be glued both sides");
+        }
+
+        public string ToTokenString()
+        {
+            string value;
+
+            if (IsGlueBefore || IsGlueAfter)
+            {
+                var nameIndex = (IsGlueAfter ? 1 : 0) + (IsGlueBefore ? 2 : 0);
+                var localName = _elementNames[nameIndex];
+                value = $"{Content}\0{localName}";
+            }
+            else
+            {
+                value = Content;
+            }
+
+            return value;
+        }
+
+        public static TileData FromTokenString(string token)
+        {
+            TileData value;
+
+            var nullIndex = token.IndexOf('\0');
+            if (nullIndex != -1)
+            {
+                var content = token.Substring(0, nullIndex);
+                var elementName = token.Substring(nullIndex + 1);
+                var nameIndex = Array.IndexOf(_elementNames, elementName);
+                value = new TileData(content: content, isGlueBefore: (nameIndex & 2) != 0, isGlueAfter: (nameIndex & 1) != 0);
+            }
+            else
+            {
+                value = new TileData(token);
+            }
+
+            return value;
         }
 
         public string Content { get; }

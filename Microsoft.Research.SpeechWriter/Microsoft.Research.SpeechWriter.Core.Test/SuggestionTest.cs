@@ -1,9 +1,7 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Items;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
 {

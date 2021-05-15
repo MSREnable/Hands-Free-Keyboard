@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Microsoft.Research.SpeechWriter.Core.Items
+﻿namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     /// <summary>
     /// Whole word item.
