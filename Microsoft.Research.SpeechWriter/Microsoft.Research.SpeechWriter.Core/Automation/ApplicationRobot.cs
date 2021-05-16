@@ -553,11 +553,29 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
         /// Get the next action to achieve the given goal and press a Stop button to complete,
         /// </summary>
         /// <param name="model">The model to act against.</param>
+        /// <param name="sequence">The words to be spoken.</param>
+        /// <returns>The next action to take with IsComplete set true if this is the action to complete the goal.</returns>
+        public static ApplicationRobotAction GetNextCompletionAction(ApplicationModel model, TileSequence sequence)
+        {
+            var words = new string[sequence.Count];
+            for (var i = 0; i < words.Length; i++)
+            {
+                words[i] = sequence[i].ToTokenString();
+            }
+            var action = FindNextAction(model, true, words);
+            return action;
+        }
+
+        /// <summary>
+        /// Get the next action to achieve the given goal and press a Stop button to complete,
+        /// </summary>
+        /// <param name="model">The model to act against.</param>
         /// <param name="words">The words to be spoken.</param>
         /// <returns>The next action to take with IsComplete set true if this is the action to complete the goal.</returns>
         public static ApplicationRobotAction GetNextCompletionAction(ApplicationModel model, params string[] words)
         {
-            var action = FindNextAction(model, true, words);
+            var sequence = TileSequence.FromWords(words);
+            var action = GetNextCompletionAction(model, sequence);
             return action;
         }
 
@@ -565,10 +583,15 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
         /// Get the next action to achieve the given goal.
         /// </summary>
         /// <param name="model">The model to act against.</param>
-        /// <param name="words">The words to be spoken.</param>
+        /// <param name="sequence">The words to be spoken.</param>
         /// <returns>The next action to take or null if no action is needed..</returns>
-        public static ApplicationRobotAction GetNextEstablishingAction(ApplicationModel model, params string[] words)
+        public static ApplicationRobotAction GetNextEstablishingAction(ApplicationModel model, TileSequence sequence)
         {
+            var words = new string[sequence.Count];
+            for (var i = 0; i < words.Length; i++)
+            {
+                words[i] = sequence[i].ToTokenString();
+            }
             var action = FindNextAction(model, false, words);
             return action;
         }

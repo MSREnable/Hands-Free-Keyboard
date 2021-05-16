@@ -52,6 +52,24 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         public TileData this[int index] => _sequence[index];
 
         /// <summary>
+        /// Create sequence from list of encoded tiles.
+        /// </summary>
+        /// <param name="words">The encoded tiles.</param>
+        /// <returns>The sequence.</returns>
+        public static TileSequence FromWords(params string[] words)
+        {
+            var tiles = new List<TileData>(words.Length);
+            foreach (var word in words)
+            {
+                var tile = TileData.FromTokenString(word);
+                tiles.Add(tile);
+            }
+            var value = new TileSequence(tiles);
+            return value;
+
+        }
+
+        /// <summary>
         /// Constructor from an array of existing <code>TileData</code> objects.
         /// </summary>
         /// <param name="tiles">The tiles.</param>

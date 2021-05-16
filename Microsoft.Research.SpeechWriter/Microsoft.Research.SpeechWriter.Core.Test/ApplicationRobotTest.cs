@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Automation;
+using Microsoft.Research.SpeechWriter.Core.Data;
 using Microsoft.Research.SpeechWriter.Core.Items;
 using NUnit.Framework;
 using System;
@@ -72,7 +73,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             }
         }
 
-        private static int CountClicks(ApplicationModel model, string[] words, double errorRate)
+        private static int CountClicks(ApplicationModel model, TileSequence words, double errorRate)
         {
             var random = new Random(0);
 
@@ -201,7 +202,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 
         private static int CountClicks(ApplicationModel model, string[] words)
         {
-            var clicks = CountClicks(model, words, 0.0);
+            var sequence = TileSequence.FromWords(words);
+            var clicks = CountClicks(model, sequence, 0.0);
             return clicks;
         }
 
@@ -234,7 +236,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             Assert.AreEqual(expectedEmptyClicks, actualEmptyClicks);
 
             var errorModel = new ApplicationModel() { MaxNextSuggestionsCount = 9 };
-            var actualClicksWithRandomErrors = CountClicks(errorModel, words, 0.2);
+            var sequence = TileSequence.FromWords(words);
+            var actualClicksWithRandomErrors = CountClicks(errorModel, sequence, 0.2);
             Assert.AreEqual(expectedClicksWithRandomErrors, actualClicksWithRandomErrors);
         }
 
@@ -306,25 +309,25 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 
             for (var line = 0; line < script.Length - 1; line++)
             {
-                var words = script[line].Split(' ');
+                var lineSequence = TileSequence.FromRaw(script[line]);
 
                 ApplicationRobotAction action;
                 do
                 {
-                    action = ApplicationRobot.GetNextCompletionAction(model, words);
+                    action = ApplicationRobot.GetNextCompletionAction(model, lineSequence);
                     action.ExecuteItem(model);
                 }
                 while (!action.IsComplete);
             }
 
-            var lastWords = script[^1].Split(' ');
-            for (var action = ApplicationRobot.GetNextEstablishingAction(model, lastWords);
+            var sequence = TileSequence.FromRaw(script[^1]);
+            for (var action = ApplicationRobot.GetNextEstablishingAction(model, sequence);
                 action != null;
-                action = ApplicationRobot.GetNextEstablishingAction(model, lastWords))
+                action = ApplicationRobot.GetNextEstablishingAction(model, sequence))
             {
                 action.ExecuteItem(model);
             }
-            var lastAction = ApplicationRobot.GetNextCompletionAction(model, lastWords);
+            var lastAction = ApplicationRobot.GetNextCompletionAction(model, sequence);
             Assert.AreEqual(ApplicationRobotActionTarget.Tail, lastAction.Target);
             Assert.AreEqual(0, lastAction.Index);
         }
@@ -338,7 +341,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             ApplicationRobotAction action;
             do
             {
-                action = ApplicationRobot.GetNextCompletionAction(model, "izzy", "wizzy", "lets", "get", "busy");
+                var sequence = TileSequence.FromRaw("izzy wizzy lets get busy");
+                action = ApplicationRobot.GetNextCompletionAction(model, sequence);
 
                 var item = action.GetItem(model);
                 Debug.WriteLine($"{count}: {action.Target} {action.Index}.{action.SubIndex} - {item.GetType().Name} - {item}");
@@ -353,11 +357,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 
         private void Establish(ApplicationModel model, params string[] words)
         {
-            var action = ApplicationRobot.GetNextEstablishingAction(model, words);
+            var sequence = TileSequence.FromWords(words);
+            var action = ApplicationRobot.GetNextEstablishingAction(model, sequence);
             while (action != null)
             {
                 action.ExecuteItem(model);
-                action = ApplicationRobot.GetNextEstablishingAction(model, words);
+                action = ApplicationRobot.GetNextEstablishingAction(model, sequence);
             }
         }
 
