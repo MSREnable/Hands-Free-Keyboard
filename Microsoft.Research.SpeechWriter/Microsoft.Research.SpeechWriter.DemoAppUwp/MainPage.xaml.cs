@@ -646,7 +646,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 var sequence = TileSequence.FromRaw(line);
 
                 var isUtteranceEnding = false;
-                foreach (var tile in sequence.Tiles)
+                foreach (var tile in sequence)
                 {
                     var word = tile.ToTokenString();
                     utterance.Add(word);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
@@ -8,7 +9,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
     /// <summary>
     /// Container class for a sequence of <code>TileData</code> objects.
     /// </summary>
-    public class TileSequence
+    public class TileSequence : IReadOnlyList<TileData>
     {
         /// <summary>
         /// A simple space that may be assumed before and after a sequence and also may be implied within a sequence.
@@ -44,13 +45,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         private TileSequence(List<TileData> sequence)
         {
             _sequence = sequence;
-            Tiles = _sequence;
         }
 
-        /// <summary>
-        /// The contained tiles.
-        /// </summary>
-        public IReadOnlyList<TileData> Tiles { get; }
+        public int Count => _sequence.Count;
+
+        public TileData this[int index] => _sequence[index];
 
         /// <summary>
         /// Constructor from an array of existing <code>TileData</code> objects.
@@ -364,6 +363,16 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         public override int GetHashCode()
         {
             return _sequence.GetHashCode();
+        }
+
+        public IEnumerator<TileData> GetEnumerator()
+        {
+            return _sequence.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_sequence).GetEnumerator();
         }
     }
 }

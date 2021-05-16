@@ -119,7 +119,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                         else
                         {
                             var sequence = TileSequence.FromEncoded(line);
-                            utterance = sequence.Tiles;
+                            utterance = sequence;
                         }
                     }
                     while (!eof && utterance == null); ;
