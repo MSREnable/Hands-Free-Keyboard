@@ -13,11 +13,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(word));
 
-            var tile = TileData.FromTokenString(word);
-            Content = word;
-            UnformattedContent = tile.Content;
-            IsAttachedToNext = tile.IsGlueAfter;
-            IsAttachedToPrevious = tile.IsGlueBefore;
+            Tile = TileData.FromTokenString(word);
 
             var text = UnformattedContent;
             var length = text.Length;
@@ -30,6 +26,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         }
 
         /// <summary>
+        /// The underlying tile.
+        /// </summary>
+        public TileData Tile { get; }
+
+        /// <summary>
         /// Is this item changed by conversion to uppercase or lowercase?
         /// </summary>
         public override bool IsCased { get; }
@@ -37,22 +38,22 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// The basic content of the tile.
         /// </summary>
-        public override string Content { get; }
+        public override string Content => Tile.ToTokenString();
 
         /// <summary>
         /// Is this item followed with out space by the next item.
         /// </summary>
-        public bool IsAttachedToNext { get; }
+        public bool IsAttachedToNext => Tile.IsGlueAfter;
 
         /// <summary>
         /// Does this item follow without space the preceeding item.
         /// </summary>
-        public bool IsAttachedToPrevious { get; }
+        public bool IsAttachedToPrevious => Tile.IsGlueBefore;
 
         /// <summary>
         /// The unformatted content part.
         /// </summary>
-        public string UnformattedContent { get; }
+        public string UnformattedContent => Tile.Content;
 
         /// <summary>
         /// The formatted content of the tile.
