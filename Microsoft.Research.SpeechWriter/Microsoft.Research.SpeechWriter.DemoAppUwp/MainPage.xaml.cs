@@ -60,7 +60,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private bool _demoMovementAnimation;
 
-        private List<string[]> _tutorScript;
+        private List<TileSequence> _tutorScript;
 
         private DateTimeOffset _speechStarted;
 
@@ -186,15 +186,19 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private void ShowDemo(params string[] sentences)
         {
-            var script = new List<string[]>();
+            var script = new List<TileSequence>(sentences.Length);
             foreach (var sentence in sentences)
             {
-                script.Add(sentence.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+                if (!string.IsNullOrWhiteSpace(sentence))
+                {
+                    var sequence = TileSequence.FromRaw(sentence);
+                    script.Add(sequence);
+                }
             }
             ShowDemo(script);
         }
 
-        private async void ShowDemo(List<string[]> sentences)
+        private async void ShowDemo(List<TileSequence> sentences)
         {
             if (_demoMode)
             {
@@ -209,12 +213,12 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 {
                     TargetOutline.Visibility = Visibility.Visible;
 
-                    var words = sentences[i];
+                    var sequence = sentences[i];
 
                     bool done;
                     do
                     {
-                        var action = ApplicationRobot.GetNextCompletionAction(Model, words);
+                        var action = ApplicationRobot.GetNextCompletionAction(Model, sequence);
 
                         SetupStoryboardForAction(action);
 
@@ -223,7 +227,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                             await PlayStoryboardAsync(MoveRectangle);
                         }
 
-                        var reaction = ApplicationRobot.GetNextCompletionAction(Model, words);
+                        var reaction = ApplicationRobot.GetNextCompletionAction(Model, sequence);
                         if (action.Target == reaction.Target &&
                             action.Index == reaction.Index &&
                             action.SubIndex == reaction.SubIndex)
@@ -630,9 +634,9 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             _ = PlayStoryboardAsync(TutorMoveStoryboard);
         }
 
-        private static async Task<List<string[]>> GetClipboardContentAsync()
+        private static async Task<List<TileSequence>> GetClipboardContentAsync()
         {
-            var script = new List<string[]>();
+            var script = new List<TileSequence>();
 
             var view = Clipboard.GetContent();
             var text = await view.GetTextAsync();
@@ -641,15 +645,14 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
             foreach (var line in lines)
             {
-                var utterance = new List<string>();
+                var utterance = new List<TileData>();
 
                 var sequence = TileSequence.FromRaw(line);
 
                 var isUtteranceEnding = false;
                 foreach (var tile in sequence)
                 {
-                    var word = tile.ToTokenString();
-                    utterance.Add(word);
+                    utterance.Add(tile);
 
                     switch (tile.Content)
                     {
@@ -662,7 +665,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
                     if (isUtteranceEnding && !tile.IsGlueAfter)
                     {
-                        script.Add(utterance.ToArray());
+                        var utteranceSequence = TileSequence.FromData(utterance);
+                        script.Add(utteranceSequence);
                         utterance.Clear();
 
                         isUtteranceEnding = false;
@@ -671,7 +675,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
                 if (utterance.Count != 0)
                 {
-                    script.Add(utterance.ToArray());
+                    var utteranceSequence = TileSequence.FromData(utterance);
+                    script.Add(utteranceSequence);
                 }
             }
 

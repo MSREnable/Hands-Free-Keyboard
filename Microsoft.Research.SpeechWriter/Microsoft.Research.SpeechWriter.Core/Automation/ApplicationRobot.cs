@@ -567,19 +567,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
         }
 
         /// <summary>
-        /// Get the next action to achieve the given goal and press a Stop button to complete,
-        /// </summary>
-        /// <param name="model">The model to act against.</param>
-        /// <param name="words">The words to be spoken.</param>
-        /// <returns>The next action to take with IsComplete set true if this is the action to complete the goal.</returns>
-        public static ApplicationRobotAction GetNextCompletionAction(ApplicationModel model, params string[] words)
-        {
-            var sequence = TileSequence.FromWords(words);
-            var action = GetNextCompletionAction(model, sequence);
-            return action;
-        }
-
-        /// <summary>
         /// Get the next action to achieve the given goal.
         /// </summary>
         /// <param name="model">The model to act against.</param>

@@ -200,9 +200,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             return count;
         }
 
-        private static int CountClicks(ApplicationModel model, string[] words)
+        private static int CountClicks(ApplicationModel model, TileSequence sequence)
         {
-            var sequence = TileSequence.FromWords(words);
             var clicks = CountClicks(model, sequence, 0.0);
             return clicks;
         }
@@ -219,7 +218,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             }
         }
 
-        private static void MultiTest(string[] words, int expectedFirstClicks, int expectedSecondClicks, int expectedEmptyClicks, int expectedClicksWithRandomErrors)
+        private static void MultiTest(TileSequence words, int expectedFirstClicks, int expectedSecondClicks, int expectedEmptyClicks, int expectedClicksWithRandomErrors)
         {
             var model = new ApplicationModel() { MaxNextSuggestionsCount = 9 };
 
@@ -236,14 +235,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             Assert.AreEqual(expectedEmptyClicks, actualEmptyClicks);
 
             var errorModel = new ApplicationModel() { MaxNextSuggestionsCount = 9 };
-            var sequence = TileSequence.FromWords(words);
-            var actualClicksWithRandomErrors = CountClicks(errorModel, sequence, 0.2);
+            var actualClicksWithRandomErrors = CountClicks(errorModel, words, 0.2);
             Assert.AreEqual(expectedClicksWithRandomErrors, actualClicksWithRandomErrors);
         }
 
         private static void MultiTest(string sentence, int expectedFirstClicks, int expectedSecondClicks, int expectedEmptyClicks, int expectedClicksWithRandomErrors)
         {
-            var words = sentence.Split(' ');
+            var words = TileSequence.FromRaw(sentence);
             MultiTest(words, expectedFirstClicks, expectedSecondClicks, expectedEmptyClicks, expectedClicksWithRandomErrors);
         }
 
@@ -355,9 +353,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             while (!action.IsComplete);
         }
 
-        private void Establish(ApplicationModel model, params string[] words)
+        private void Establish(ApplicationModel model, string words)
         {
-            var sequence = TileSequence.FromWords(words);
+            var sequence = TileSequence.FromRaw(words);
             var action = ApplicationRobot.GetNextEstablishingAction(model, sequence);
             while (action != null)
             {
@@ -370,7 +368,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         public void HelloWordNotIsTest()
         {
             var model = new ApplicationModel();
-            Establish(model, "hello", "world");
+            Establish(model, "hello world");
 
             Assert.IsInstanceOf<HeadWordItem>(model.HeadItems[1]);
             Assert.AreEqual("hello", model.HeadItems[1].Content);
