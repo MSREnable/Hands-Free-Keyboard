@@ -115,48 +115,48 @@
 
         <Storyboard x:Name="MoveRectangle">
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Left)">
-                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToX, Mode=OneWay}">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToX, Mode=OneWay}">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.25" Value="{x:Bind MoveToCenterX, Mode=OneWay}">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSettleTime, Mode=OneWay}" Value="{x:Bind MoveToCenterX, Mode=OneWay}">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Top)">
-                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToY, Mode=OneWay}">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToY, Mode=OneWay}">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.25" Value="{x:Bind MoveToCenterY, Mode=OneWay}">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSettleTime, Mode=OneWay}" Value="{x:Bind MoveToCenterY, Mode=OneWay}">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Height)">
-                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToHeight, Mode=OneWay}">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToHeight, Mode=OneWay}">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.25" Value="0">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSettleTime, Mode=OneWay}" Value="0">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Width)">
-                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToWidth, Mode=OneWay}">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToWidth, Mode=OneWay}">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:01.25" Value="0">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSettleTime, Mode=OneWay}" Value="0">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -166,28 +166,28 @@
 
         <Storyboard x:Name="TutorMoveStoryboard">
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Left)">
-                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToX, Mode=OneWay}">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToX, Mode=OneWay}">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Top)">
-                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToY, Mode=OneWay}">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToY, Mode=OneWay}">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Height)">
-                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToHeight, Mode=OneWay}">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToHeight, Mode=OneWay}">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Width)">
-                <EasingDoubleKeyFrame KeyTime="00:00:01.00" Value="{x:Bind MoveToWidth, Mode=OneWay}">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToWidth, Mode=OneWay}">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <ExponentialEase EasingMode="EaseInOut"/>
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -217,6 +217,7 @@
                 <KeyboardAccelerator Key="Q" Invoked="OnClickQuick"/>
                 <KeyboardAccelerator Key="R" Invoked="OnClickReset"/>
                 <KeyboardAccelerator Key="Space" Invoked="OnSpace"/>
+                <KeyboardAccelerator Key="S" Invoked="OnTimingChange"/>
                 <KeyboardAccelerator Key="NumberPad1" Invoked="OnFrench"/>
                 <KeyboardAccelerator Key="NumberPad2" Invoked="OnSpanish"/>
                 <KeyboardAccelerator Key="NumberPad3" Invoked="OnGerman"/>

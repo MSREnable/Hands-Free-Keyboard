@@ -41,6 +41,10 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             new PropertyMetadata(0.0));
         public static DependencyProperty MoveToHeightProperty = DependencyProperty.Register(nameof(MoveToHeight), typeof(double), typeof(MainPage),
             new PropertyMetadata(0.0));
+        public static DependencyProperty MoveRectangeSeekTimeProperty = DependencyProperty.Register(nameof(MoveRectangeSeekTime), typeof(KeyTime), typeof(MainPage),
+            new PropertyMetadata(KeyTime.FromTimeSpan(TimeSpan.FromSeconds(1))));
+        public static DependencyProperty MoveRectangeSettleTimeProperty = DependencyProperty.Register(nameof(MoveRectangeSettleTime), typeof(KeyTime), typeof(MainPage),
+            new PropertyMetadata(KeyTime.FromTimeSpan(TimeSpan.FromSeconds(1.25))));
 
         private ApplicationModel _model;
 
@@ -166,6 +170,18 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             get { return (double)GetValue(MoveToHeightProperty); }
             set { SetValue(MoveToHeightProperty, value); }
+        }
+
+        public KeyTime MoveRectangeSeekTime
+        {
+            get => (KeyTime)GetValue(MoveRectangeSeekTimeProperty);
+            set => SetValue(MoveRectangeSeekTimeProperty, value);
+        }
+
+        public KeyTime MoveRectangeSettleTime
+        {
+            get => (KeyTime)GetValue(MoveRectangeSettleTimeProperty);
+            set => SetValue(MoveRectangeSettleTimeProperty, value);
         }
 
         private void ShowDemo(params string[] sentences)
@@ -729,6 +745,20 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         private void OnChinese(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             SetLanguageAsync("zh_cn_50k.txt");
+        }
+
+        private void OnTimingChange(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (MoveRectangeSeekTime.TimeSpan.TotalSeconds == 1)
+            {
+                MoveRectangeSeekTime = TimeSpan.FromSeconds(0.1);
+                MoveRectangeSettleTime = TimeSpan.FromSeconds(0.5);
+            }
+            else
+            {
+                MoveRectangeSeekTime = TimeSpan.FromSeconds(1);
+                MoveRectangeSettleTime = TimeSpan.FromSeconds(1.25);
+            }
         }
     }
 }
