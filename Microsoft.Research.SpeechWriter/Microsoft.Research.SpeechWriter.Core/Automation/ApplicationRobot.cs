@@ -79,22 +79,25 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return action;
         }
 
-        private static bool IsItemMatch<T>(ITile tile, string value, CultureInfo culture)
-        {
-            return tile is T && StringEquals(tile.Content, value, culture);
-        }
-
-        private static bool IsItemMatchExact<T>(ITile tile, string value, CultureInfo culture)
+        private static bool IsItemMatch<T>(ITile tile, TileData value, CultureInfo culture)
             where T : WordItem
         {
-            return tile is T &&
-                (StringEqualsExact(tile.Content, value, culture) ||
-                StringEqualsExact(tile.FormattedContent, value, culture));
+            var item = tile as T;
+            return item != null && StringEquals(item.Tile.Content, value.Content, culture);
+        }
+
+        private static bool IsItemMatchExact<T>(ITile tile, TileData value, CultureInfo culture)
+            where T : WordItem
+        {
+            var item = tile as T;
+            return item != null &&
+                (StringEqualsExact(item.Tile.Content, value.Content, culture) ||
+                StringEqualsExact(tile.FormattedContent, value.Content, culture));
         }
 
         private static ApplicationRobotAction CreateSuggestedWordAction(ApplicationModel model,
             bool complete,
-            string[] words,
+            TileSequence words,
             int wordsMatchLim,
             int index,
             CultureInfo culture)
@@ -108,14 +111,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 // See what words match exactly.
                 var subLim = 0;
                 while (enumerator.MoveNext() &&
-                    wordsMatchLim + subLim < words.Length &&
+                    wordsMatchLim + subLim < words.Count &&
                     IsItemMatchExact<SuggestedWordItem>(enumerator.Current, words[wordsMatchLim + subLim], culture))
                 {
                     subLim++;
                 }
 
                 if (complete &&
-                    wordsMatchLim + subLim == words.Length &&
+                    wordsMatchLim + subLim == words.Count &&
                     enumerator.Current is TailStopItem)
                 {
                     // We can complete the action.
@@ -123,7 +126,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 }
                 else
                 {
-                    if (wordsMatchLim + subLim < words.Length &&
+                    if (wordsMatchLim + subLim < words.Count &&
                         IsItemMatch<SuggestedWordItem>(enumerator.Current, words[wordsMatchLim + subLim], culture))
                     {
                         subLim++;
@@ -200,7 +203,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
         private static ApplicationRobotAction GetSuggestionsAction(ApplicationModel model,
             bool complete,
-            string[] words,
+            TileSequence words,
             int wordsMatchLim,
             CultureInfo culture)
         {
@@ -214,16 +217,16 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 var list = model.SuggestionLists[index];
                 var firstItem = list.First();
 
-                if (firstItem is SuggestedWordItem)
+                if (IsItem<SuggestedWordItem>(firstItem, out var suggestedWordItem))
                 {
-                    var suggestedWord = firstItem.Content;
+                    var suggestedWord = suggestedWordItem.Tile.Content;
 
-                    if (StringEquals(suggestedWord, targetWord, culture))
+                    if (StringEquals(suggestedWord, targetWord.Content, culture))
                     {
                         // Found our word.
                         action = CreateSuggestedWordAction(model, complete, words, wordsMatchLim, index, culture);
                     }
-                    else if (StringCompare(targetWord, suggestedWord, culture) < 0)
+                    else if (StringCompare(targetWord.Content, suggestedWord, culture) < 0)
                     {
                         // Need to step back.
                         action = ApplicationRobotAction.CreateInterstitial(index);
@@ -233,7 +236,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 {
                     var partial = firstItem.Content;
 
-                    if (StartsWith(targetWord, partial, culture))
+                    if (StartsWith(targetWord.Content, partial, culture))
                     {
                         var subIndex = 0;
                         using (var enumerator = list.GetEnumerator())
@@ -245,7 +248,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             more = enumerator.MoveNext();
                             while (more &&
                                 enumerator.Current is SuggestedSpellingSequenceItem &&
-                                StartsWith(targetWord, enumerator.Current.Content, culture))
+                                StartsWith(targetWord.Content, enumerator.Current.Content, culture))
                             {
                                 subIndex++;
                                 more = enumerator.MoveNext();
@@ -254,7 +257,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             if (complete &&
                                 more &&
                                 enumerator.Current is SuggestedWordItem &&
-                                StringEquals(enumerator.Current.Content, targetWord, culture))
+                                StringEquals(enumerator.Current.Content, targetWord.Content, culture))
                             {
                                 action = ApplicationRobotAction.CreateSuggestion(index, subIndex + 1);
                                 AssertGoodAction(model, action);
@@ -265,10 +268,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             }
                         }
                     }
-                    else if (!StartsWith(targetWord, partial.Substring(0, partial.Length - 1), culture))
+                    else if (!StartsWith(targetWord.Content, partial.Substring(0, partial.Length - 1), culture))
                     {
                         // Need to remove incorrectly spelled items.
-                        if (targetWord[0] != partial[0])
+                        if (targetWord.Content[0] != partial[0])
                         {
                             action = GetModeEscape(model);
                         }
@@ -284,7 +287,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             action = ApplicationRobotAction.CreateInterstitial(0);
                         }
                     }
-                    else if (StringCompare(partial.Substring(partial.Length - 1, 1), targetWord.Substring(partial.Length - 1, 1), culture) < 0)
+                    else if (StringCompare(partial.Substring(partial.Length - 1, 1), targetWord.Content.Substring(partial.Length - 1, 1), culture) < 0)
                     {
                         // Look at next item.
                     }
@@ -295,7 +298,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 }
                 else if (firstItem is SuggestedSpellingWordItem)
                 {
-                    if (StringEquals(firstItem.Content, targetWord, culture))
+                    if (StringEquals(firstItem.Content, targetWord.Content, culture))
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                         AssertGoodAction(model, action);
@@ -303,7 +306,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 }
                 else if (firstItem is SuggestedSpellingBackspaceItem)
                 {
-                    if (!StartsWith(targetWord, firstItem.Content, culture))
+                    if (!StartsWith(targetWord.Content, firstItem.Content, culture))
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                     }
@@ -321,15 +324,15 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                     Debug.Assert(((SuggestedUnicodeItem)firstItem).Symbol.Length == 1);
                     Debug.Assert(((SuggestedUnicodeItem)firstItem).Symbol[0] == partial[partial.Length - 1]);
 
-                    if (StartsWith(targetWord, partial, culture))
+                    if (StartsWith(targetWord.Content, partial, culture))
                     {
                         action = ApplicationRobotAction.CreateSuggestion(index, 0);
                     }
-                    else if (!StartsWith(targetWord, partial.Substring(0, partial.Length - 1), culture))
+                    else if (!StartsWith(targetWord.Content, partial.Substring(0, partial.Length - 1), culture))
                     {
                         action = GetModeEscape(model);
                     }
-                    else if (partial[partial.Length - 1] < targetWord[partial.Length - 1])
+                    else if (partial[partial.Length - 1] < targetWord.Content[partial.Length - 1])
                     {
                         // Can just move along.
                     }
@@ -437,7 +440,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
         /// <param name="complete">Finish by presssing a Stop button and returning IsComplete true in the action, otherwise don't press Stop button and return null.</param>
         /// <param name="words">The words to be spoken.</param>
         /// <returns>The next action to take.</returns>
-        private static ApplicationRobotAction FindNextAction(ApplicationModel model, bool complete, params string[] words)
+        private static ApplicationRobotAction FindNextAction(ApplicationModel model, bool complete, TileSequence words)
         {
             ApplicationRobotAction action;
 
@@ -447,14 +450,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
             // Find number of words already correctly entered.
             var wordsMatchLim = 0;
-            while (wordsMatchLim < words.Length &&
+            while (wordsMatchLim < words.Count &&
                 wordsMatchLim + 1 < model.HeadItems.Count &&
                 IsItemMatchExact<HeadWordItem>(model.HeadItems[wordsMatchLim + 1], words[wordsMatchLim], culture))
             {
                 wordsMatchLim++;
             }
 
-            if (wordsMatchLim < words.Length &&
+            if (wordsMatchLim < words.Count &&
                 wordsMatchLim + 1 < model.HeadItems.Count &&
                 IsItemMatch<HeadWordItem>(model.HeadItems[wordsMatchLim + 1], words[wordsMatchLim], culture))
             {
@@ -466,7 +469,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 else
                 {
                     var headWordItem = (HeadWordItem)model.HeadItems[wordsMatchLim + 1];
-                    action = GetCaseWordAction(model, headWordItem.Content, words[wordsMatchLim], culture);
+                    action = GetCaseWordAction(model, headWordItem.Content, words[wordsMatchLim].Content, culture);
                 }
             }
             else if (wordsMatchLim + 1 < model.HeadItems.Count &&
@@ -475,7 +478,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 // We have a word we don't want, so truncate.
                 action = ApplicationRobotAction.CreateHead(wordsMatchLim);
             }
-            else if (wordsMatchLim == words.Length)
+            else if (wordsMatchLim == words.Count)
             {
                 // We have all the words in the head we want.
                 if (!complete)
@@ -505,7 +508,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             {
                 // See how many ghost items match.
                 var ghostMatchLim = wordsMatchLim;
-                while (ghostMatchLim < words.Length &&
+                while (ghostMatchLim < words.Count &&
                     ghostMatchLim + 1 < model.HeadItems.Count &&
                     IsItemMatchExact<GhostWordItem>(model.HeadItems[ghostMatchLim + 1], words[ghostMatchLim], culture))
                 {
@@ -514,7 +517,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
                 // Have we got enough ghost words to complete?
                 if (complete &&
-                    ghostMatchLim == words.Length &&
+                    ghostMatchLim == words.Count &&
                     ghostMatchLim + 1 < model.HeadItems.Count &&
                     model.HeadItems[ghostMatchLim + 1] is GhostStopItem)
                 {
@@ -532,7 +535,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                             action.SubIndex <= ghostMatchLim - wordsMatchLim)
                         {
                             // See if we can snaffle one more ghost.
-                            if (ghostMatchLim < words.Length &&
+                            if (ghostMatchLim < words.Count &&
                                 ghostMatchLim + 1 < model.HeadItems.Count &&
                                 IsItemMatch<GhostWordItem>(model.HeadItems[ghostMatchLim + 1], words[ghostMatchLim], culture))
                             {
@@ -557,12 +560,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
         /// <returns>The next action to take with IsComplete set true if this is the action to complete the goal.</returns>
         public static ApplicationRobotAction GetNextCompletionAction(ApplicationModel model, TileSequence sequence)
         {
-            var words = new string[sequence.Count];
-            for (var i = 0; i < words.Length; i++)
-            {
-                words[i] = sequence[i].ToTokenString();
-            }
-            var action = FindNextAction(model, true, words);
+            var action = FindNextAction(model, true, sequence);
             return action;
         }
 
@@ -574,12 +572,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
         /// <returns>The next action to take or null if no action is needed..</returns>
         public static ApplicationRobotAction GetNextEstablishingAction(ApplicationModel model, TileSequence sequence)
         {
-            var words = new string[sequence.Count];
-            for (var i = 0; i < words.Length; i++)
-            {
-                words[i] = sequence[i].ToTokenString();
-            }
-            var action = FindNextAction(model, false, words);
+            var action = FindNextAction(model, false, sequence);
             return action;
         }
     }
