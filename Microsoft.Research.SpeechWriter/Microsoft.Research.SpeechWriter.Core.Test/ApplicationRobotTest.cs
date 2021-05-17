@@ -289,6 +289,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         }
 
         [Test]
+        public void PunctuationTest()
+        {
+            MultiTest("That'll be $10, please!", 0, 1, 2, 2);
+        }
+
+        [Test]
         public void BoldlyGoTest()
         {
             var model = new ApplicationModel();

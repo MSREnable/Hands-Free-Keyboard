@@ -92,7 +92,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             var item = tile as T;
             return item != null &&
                 (StringEqualsExact(item.Tile.Content, value.Content, culture) ||
-                StringEqualsExact(tile.FormattedContent, value.Content, culture));
+                StringEqualsExact(tile.FormattedContent, value.Content, culture)) &&
+                item.Tile.IsGlueAfter == value.IsGlueAfter &&
+                item.Tile.IsGlueBefore == value.IsGlueBefore;
         }
 
         private static ApplicationRobotAction CreateSuggestedWordAction(ApplicationModel model,
@@ -354,7 +356,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return action;
         }
 
-        private static ApplicationRobotAction GetCaseWordAction(ApplicationModel model, string startWord, string targetWord, CultureInfo culture)
+        private static ApplicationRobotAction GetCaseWordAction(ApplicationModel model, TileData startWord, TileData targetWord, CultureInfo culture)
         {
             ApplicationRobotAction action;
 
@@ -372,8 +374,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             }
             else
             {
-                var startTile = TileData.FromTokenString(startWord);
-                var targetTile = TileData.FromTokenString(targetWord);
+                var startTile = startWord;
+                var targetTile = targetWord;
 
                 var startMap = WordCaseMap.Create(startTile.Content);
                 var targetMap = WordCaseMap.Create(targetTile.Content);
@@ -469,7 +471,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 else
                 {
                     var headWordItem = (HeadWordItem)model.HeadItems[wordsMatchLim + 1];
-                    action = GetCaseWordAction(model, headWordItem.Content, words[wordsMatchLim].Content, culture);
+                    action = GetCaseWordAction(model, headWordItem.Tile, words[wordsMatchLim], culture);
                 }
             }
             else if (wordsMatchLim + 1 < model.HeadItems.Count &&
