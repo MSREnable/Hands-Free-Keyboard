@@ -3,7 +3,7 @@
     /// <summary>
     /// Backspace spelling error.
     /// </summary>
-    public class SuggestedSpellingBackspaceItem : Command<SpellingVocabularySource>
+    public class SuggestedSpellingBackspaceItem : Command<SpellingVocabularySource>, ISuggestionItem
     {
         internal SuggestedSpellingBackspaceItem(ITile predecessor, SpellingVocabularySource source, string prefix)
             : base(predecessor, source)
@@ -19,6 +19,11 @@
         internal override void Execute(SpellingVocabularySource source)
         {
             source.SpellingBackspace();
+        }
+
+        ISuggestionItem ISuggestionItem.GetNextItem(int token)
+        {
+            return null;
         }
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// <summary>
     /// The spelling source.
     /// </summary>
-    public class SpellingVocabularySource : PredictiveVocabularySource<SuggestedSpellingItem>
+    public class SpellingVocabularySource : PredictiveVocabularySource<ISuggestionItem>, ITokenTileFilter
     {
         private readonly List<int> _vocabularyList = new List<int>();
 
@@ -52,7 +52,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         internal override int Count => _vocabularyList.Count;
 
-        internal override ITokenTileFilter TokenFilter => DefaultTileFilter.Instance;
+        internal override ITokenTileFilter TokenFilter => this;
 
         internal void AddNewWord(string word)
         {
@@ -98,6 +98,19 @@ namespace Microsoft.Research.SpeechWriter.Core
             _tokenToIndex.Clear();
 
             var index = 0;
+
+            for (var i = 0; i < 3; i++)
+            {
+                var token = -i;
+
+                Debug.Assert(index == _vocabularyList.Count);
+
+                _vocabularyList.Add(token);
+                _tokenToIndex.Add(token, index);
+
+                index++;
+            }
+
             foreach (var token in tokens)
             {
                 Debug.Assert(index == _vocabularyList.Count);
@@ -116,7 +129,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <returns>The token at the give index</returns>
         internal override int GetIndexToken(int index)
         {
-            return index < 0 ? 0 : _vocabularyList[index];
+            return _vocabularyList[index];
         }
 
         /// <summary>
@@ -150,26 +163,68 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
+        bool ITileFilter.IsIndexVisible(int index)
+        {
+            var token = _vocabularyList[index];
+            var visible = ((ITokenTileFilter)this).IsTokenVisible(token);
+            return visible;
+        }
+
+        bool ITokenTileFilter.IsTokenVisible(int token)
+        {
+            bool visible;
+
+            switch(token)
+            {
+                case 0:
+                    visible = false;
+                    break;
+
+                case -1:
+                    visible = 1 < Context.Length;
+                    break;
+
+                case -2:
+                    visible = 2 < Context.Length;
+                    break;
+
+                default:
+                    visible = true;
+                    break;
+            }
+
+            return visible;
+        }
+
         internal override int GetTokenIndex(int token)
         {
-            int index;
-
-            if (token == 0)
-            {
-                index = -1;
-            }
-            else
-            {
-                index = _tokenToIndex[token];
-            }
+            var index = _tokenToIndex[token];
 
             return index;
         }
 
-        internal override SuggestedSpellingItem GetIndexItem(int index)
+        internal override ISuggestionItem GetIndexItem(int index)
         {
+            Debug.Assert(((ITileFilter)this).IsIndexVisible(index));
+
             var token = GetIndexToken(index);
-            var item = new SuggestedSpellingItem(_model.LastTile, this, Prefix, char.ConvertFromUtf32(token));
+
+            ISuggestionItem item;
+
+            switch (token)
+            {
+                case -1:
+                    item = new SuggestedSpellingBackspaceItem(_model.LastTile, this, Prefix);
+                    break;
+                case -2:
+                    item = _wordVocabularySource.CreateSuggestedSpellingWordItem(Prefix);
+                    break;
+                default:
+                    Debug.Assert(token != 0);
+                    item = new SuggestedSpellingItem(_model.LastTile, this, Prefix, char.ConvertFromUtf32(token));
+                    break;
+            }
+
             return item;
         }
 
