@@ -364,7 +364,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
             if (IsItem<CommandItem>(firstOfFirst, out var commandItem))
             {
-                Debug.Assert(commandItem.Command == TileCommand.CaSe);
+                Debug.Assert(commandItem.Command == TileCommand.Typing);
                 action = ApplicationRobotAction.CreateSuggestion(0, 0);
             }
             else if (!(firstOfFirst is ReplacementItem))

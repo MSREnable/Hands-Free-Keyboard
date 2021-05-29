@@ -6,8 +6,8 @@
     public enum TileCommand
     {
         /// <summary>
-        /// Alter the case of the current word.
+        /// Alter the case or spacing of the current word.
         /// </summary>
-        CaSe
+        Typing
     }
 }

@@ -248,50 +248,50 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("this is the dawning of the age of aquarius", 33, 1, 105, 90);
+            MultiTest("this is the dawning of the age of aquarius", 33, 1, 101, 90);
         }
 
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 175, 96);
+            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 166, 96);
         }
 
         [Test]
         public void HelloWorldTest()
         {
             // TODO: Find out why entering HELLO WORLD predicts HELLO WORLD HELLO WORLD as the next sentence.
-            MultiTest("hello world", 10, 1, 41, 10);
+            MultiTest("hello world", 10, 1, 48, 10);
         }
 
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("izzy wizzy lets get busy", 31, 1, 73, 105);
+            MultiTest("izzy wizzy lets get busy", 31, 1, 63, 105);
         }
 
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 94, 1, 67, 512);
+            MultiTest("공유하 고 즐기십시오", 94, 1, 69, 512);
         }
 
         [Test]
         public void ShareAndEnjoyCantoneseTest()
         {
-            MultiTest("分享 同 享受", 53, 1, 33, 176);
+            MultiTest("分享 同 享受", 53, 1, 34, 176);
         }
 
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 99, 577);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 101, 577);
         }
 
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 56, 1, 92, 171);
+            MultiTest("That'll be $10, please!", 56, 1, 102, 171);
         }
 
         [Test]

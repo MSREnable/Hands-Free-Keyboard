@@ -34,7 +34,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 default:
                     throw new NotImplementedException();
 
-                case TileCommand.CaSe:
+                case TileCommand.Typing:
                     var source = new CaseWordVocabularySource(_model, this, (HeadWordItem)LastTile);
                     source.SetSuggestionsView();
                     break;
@@ -124,7 +124,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             switch (command)
             {
-                case TileCommand.CaSe:
+                case TileCommand.Typing:
                     value = LastTile is HeadWordItem;
                     break;
 
