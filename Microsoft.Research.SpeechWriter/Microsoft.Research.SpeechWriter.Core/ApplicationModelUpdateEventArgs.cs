@@ -10,7 +10,10 @@ namespace Microsoft.Research.SpeechWriter.Core
     {
         internal ApplicationModelUpdateEventArgs(IEnumerable<string> words,
             int prevoiusWordsLength,
-            bool isComplete)
+            bool isComplete,
+            DateTimeOffset start,
+            TimeSpan duration,
+            int activationCount)
         {
             Words = new List<string>(words);
             PreviousWordsLength = prevoiusWordsLength;
@@ -34,5 +37,20 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// This is the final notification about the current utterance.
         /// </summary>
         public bool IsComplete { get; }
+
+        /// <summary>
+        /// Time utterance started.
+        /// </summary>
+        public DateTimeOffset Start { get; }
+
+        /// <summary>
+        /// Time delta from start to current activation.
+        /// </summary>
+        public TimeSpan Duration { get; }
+
+        /// <summary>
+        /// Number of activations.
+        /// </summary>
+        public int ActivationCount { get; }
     }
 }

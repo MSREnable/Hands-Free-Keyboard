@@ -24,6 +24,26 @@ namespace Microsoft.Research.SpeechWriter.Core
         private int _previousWordsLengthNotified;
 
         /// <summary>
+        /// Has the utterance been terminated.
+        /// </summary>
+        public bool _isUtteranceComplete = true;
+
+        /// <summary>
+        /// When was the first activation of the utterance.
+        /// </summary>
+        public DateTimeOffset _utteranceStartTime;
+
+        /// <summary>
+        /// How long has this utterance been going.
+        /// </summary>
+        public TimeSpan _utteranceDuration;
+
+        /// <summary>
+        /// How many activations have been made in this utterance.
+        /// </summary>
+        public int _utteranceActivationCount;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public ApplicationModel(IWriterEnvironment environment)
@@ -103,6 +123,19 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private void RaiseApplicationModelUpdateEvent(bool isComplete)
         {
+            if (_isUtteranceComplete)
+            {
+                _utteranceStartTime = DateTimeOffset.Now;
+                _utteranceDuration = TimeSpan.Zero;
+                _utteranceActivationCount = 1;
+            }
+            else
+            {
+                _utteranceDuration = DateTimeOffset.Now - _utteranceStartTime;
+                _utteranceActivationCount++;
+            }
+            _isUtteranceComplete = isComplete;
+
             var words = new List<string>();
             int nextPreviousWordsLength;
 
@@ -128,8 +161,8 @@ namespace Microsoft.Research.SpeechWriter.Core
                 nextPreviousWordsLength = words.Count;
             }
 
-
-            var e = new ApplicationModelUpdateEventArgs(words, _previousWordsLengthNotified, isComplete);
+            var e = new ApplicationModelUpdateEventArgs(words, _previousWordsLengthNotified, isComplete, 
+                _utteranceStartTime, _utteranceDuration, _utteranceActivationCount);
             _previousWordsLengthNotified = nextPreviousWordsLength;
 
             ApplicationModelUpdate?.Invoke(this, e);
