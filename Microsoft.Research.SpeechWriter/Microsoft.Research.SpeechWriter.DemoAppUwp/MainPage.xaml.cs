@@ -522,6 +522,12 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
         }
 
+        private void OnRestart(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            args.Handled = true;
+            Frame.Navigate(GetType(), string.Empty);
+        }
+
         private void OnClickKirk(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             args.Handled = true;
