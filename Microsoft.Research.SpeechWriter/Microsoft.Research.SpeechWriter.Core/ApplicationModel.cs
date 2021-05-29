@@ -146,8 +146,6 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void SetSuggestionsView(VocabularySource source, int lowerBound, int upperLimit, bool isComplete)
         {
-            Debug.Assert(!(source is SpellingVocabularySource));
-
             Source = source;
             _lowerBound = lowerBound;
             _upperLimit = upperLimit;

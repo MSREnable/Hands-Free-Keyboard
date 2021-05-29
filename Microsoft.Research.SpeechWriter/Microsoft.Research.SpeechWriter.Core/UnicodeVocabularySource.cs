@@ -12,9 +12,9 @@ namespace Microsoft.Research.SpeechWriter.Core
         private const int SurrogateCodePointsMinimum = 0xd800;
         private const int SurrogateCodePointsLimit = 0xe000;
 
-        private readonly OuterSpellingVocabularySource _parent;
+        private readonly SpellingVocabularySource _parent;
 
-        internal UnicodeVocabularySource(ApplicationModel model, OuterSpellingVocabularySource parent)
+        internal UnicodeVocabularySource(ApplicationModel model, SpellingVocabularySource parent)
             : base(model, CodeMinimum, CodeLimit - (SurrogateCodePointsLimit - SurrogateCodePointsMinimum))
         {
             _parent = parent;

@@ -11,6 +11,8 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// </summary>
     public class SpellingVocabularySource : PredictiveVocabularySource<ISuggestionItem>, ITokenTileFilter
     {
+        private const int HeaderSize = 3;
+
         private readonly List<int> _vocabularyList = new List<int>();
 
         private readonly Dictionary<int, int> _tokenToIndex = new Dictionary<int, int>();
@@ -19,13 +21,12 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private readonly WordVocabularySource _wordVocabularySource;
 
-        private readonly OuterSpellingVocabularySource _outerSpellingVocabularySource;
+        private readonly UnicodeVocabularySource _unicodeVocabularySource;
 
-        internal SpellingVocabularySource(ApplicationModel model, WordVocabularySource wordVocabularySource, OuterSpellingVocabularySource outerSpellingVocabularySource)
+        internal SpellingVocabularySource(ApplicationModel model, WordVocabularySource wordVocabularySource)
             : base(model: model, predictorWidth: 4)
         {
             _wordVocabularySource = wordVocabularySource;
-            _outerSpellingVocabularySource = outerSpellingVocabularySource;
 
             _characterSet = new SortedSet<string>(Environment);
 
@@ -43,6 +44,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 PersistantPredictor.AddSequence(sequence, WordVocabularySource.SeedSequenceWeight);
             }
+
+            _unicodeVocabularySource = new UnicodeVocabularySource(model, this);
 
             PopulateVocabularyList();
         }
@@ -174,7 +177,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             bool visible;
 
-            switch(token)
+            switch (token)
             {
                 case 0:
                     visible = false;
@@ -185,7 +188,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                     break;
 
                 case -2:
-                    visible = 2 < Context.Length;
+                    visible = 1 < Context.Length;
                     break;
 
                 default:
@@ -252,22 +255,102 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
+        internal override IEnumerable<int> GetTopIndices(int minIndex, int limIndex, int count)
+        {
+            var effectiveMinIndex = minIndex;
+            var effectiveCount = count;
+
+            while (effectiveMinIndex < HeaderSize && effectiveMinIndex < limIndex && 0 < effectiveCount)
+            {
+                if (((ITileFilter)this).IsIndexVisible(effectiveMinIndex))
+                {
+                    yield return effectiveMinIndex;
+
+                    effectiveCount--;
+                }
+                effectiveMinIndex++;
+            }
+            if (effectiveMinIndex < limIndex && 0 < effectiveCount)
+            {
+                var enumeration = base.GetTopIndices(effectiveMinIndex, limIndex, effectiveCount);
+                foreach (var index in enumeration)
+                {
+                    yield return index;
+                }
+            }
+        }
+
+        internal override ITile CreatePriorInterstitial(int index)
+        {
+            ITile interstitial;
+
+            if (index < HeaderSize)
+            {
+                interstitial = null;
+            }
+            else
+            {
+                interstitial = new InterstitialUnicodeItem(_model.LastTile, _unicodeVocabularySource);
+            }
+
+            return interstitial;
+        }
+
+        private static string RemoveAnySuffix(string decorated)
+        {
+            string value;
+
+            var nullPosition = decorated.IndexOf('\0');
+            if (nullPosition == -1)
+            {
+                value = decorated;
+            }
+            else
+            {
+                value = decorated.Substring(0, nullPosition);
+            }
+
+            return value;
+        }
+
         internal void StartSpelling(int index)
         {
             var context = new List<int> { 0 };
 
-            if (index != 0 && index != _wordVocabularySource.Count)
+            if (_wordVocabularySource.Count != index)
             {
-                var beforeWord = _wordVocabularySource.GetIndexWord(index - 1);
-                var afterWord = _wordVocabularySource.GetIndexWord(index);
-                var maxLength = Math.Min(beforeWord.Length, afterWord.Length);
-                for (var i = 0; i < maxLength && beforeWord[i] == afterWord[i]; i++)
+                var afterWordSuffixed = _wordVocabularySource.GetIndexWord(index);
+                var afterWord = RemoveAnySuffix(afterWordSuffixed);
+
+                if (afterWord != string.Empty)
                 {
-                    context.Add(beforeWord[i]);
+                    string beforeWord;
+                    var beforeIndex = index - 1;
+                    do
+                    {
+                        if (0 <= beforeIndex)
+                        {
+                            var beforeWordSuffixed = _wordVocabularySource.GetIndexWord(beforeIndex);
+                            beforeWord = RemoveAnySuffix(beforeWordSuffixed);
+                            beforeIndex--;
+                        }
+                        else
+                        {
+                            beforeWord = string.Empty;
+                        }
+                    }
+                    while (beforeWord == afterWord);
+
+                    var maxLength = Math.Min(beforeWord.Length, afterWord.Length);
+                    for (var i = 0; i < maxLength && beforeWord[i] == afterWord[i]; i++)
+                    {
+                        context.Add(beforeWord[i]);
+                    }
                 }
             }
 
             SetContext(context);
+            SetSuggestionsView();
         }
 
         internal void AddSpellingToken(int token)
@@ -278,8 +361,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 PopulateVocabularyList();
             }
-
-            _outerSpellingVocabularySource.SetSuggestionsView();
         }
 
         internal void SetSpellingPrefix(string prefix)
@@ -308,14 +389,14 @@ namespace Microsoft.Research.SpeechWriter.Core
                 PopulateVocabularyList();
             }
 
-            _outerSpellingVocabularySource.SetSuggestionsView();
+            SetSuggestionsView();
         }
 
         internal void SpellingBackspace()
         {
             var contextCount = Context.Length;
 
-            if (contextCount == 2)
+            if (contextCount == 1)
             {
                 _wordVocabularySource.SetSuggestionsView();
             }
@@ -327,6 +408,13 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 ResetSuggestionsView();
             }
+        }
+
+        internal void AddSymbol(string symbol)
+        {
+            var ch = char.ConvertToUtf32(symbol, 0);
+            AddSpellingToken(ch);
+            SetSuggestionsView();
         }
     }
 }

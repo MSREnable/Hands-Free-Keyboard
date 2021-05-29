@@ -3,9 +3,9 @@
     /// <summary>
     /// Unicode item.
     /// </summary>
-    public class SuggestedUnicodeItem : Command<OuterSpellingVocabularySource>
+    public class SuggestedUnicodeItem : Command<SpellingVocabularySource>
     {
-        internal SuggestedUnicodeItem(ITile predecessor, OuterSpellingVocabularySource source, int code)
+        internal SuggestedUnicodeItem(ITile predecessor, SpellingVocabularySource source, int code)
             : base(predecessor, source)
         {
             Prefix = source.Prefix;
@@ -28,7 +28,7 @@
         /// </summary>
         public string Symbol => char.ConvertFromUtf32(Code);
 
-        internal override void Execute(OuterSpellingVocabularySource source)
+        internal override void Execute(SpellingVocabularySource source)
         {
             source.AddSymbol(Symbol);
         }

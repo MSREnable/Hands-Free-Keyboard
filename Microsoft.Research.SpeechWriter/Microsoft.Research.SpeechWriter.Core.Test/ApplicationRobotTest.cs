@@ -248,7 +248,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("this is the dawning of the age of aquarius", 33, 1, 104, 90);
+            MultiTest("this is the dawning of the age of aquarius", 33, 1, 105, 90);
         }
 
         [Test]
@@ -267,7 +267,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("izzy wizzy lets get busy", 31, 1, 73, 133);
+            MultiTest("izzy wizzy lets get busy", 31, 1, 73, 105);
         }
 
         [Test]
@@ -285,13 +285,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 99, 571);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 99, 577);
         }
 
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 0, 1, 2, 2);
+            MultiTest("That'll be $10, please!", 56, 1, 92, 171);
         }
 
         [Test]

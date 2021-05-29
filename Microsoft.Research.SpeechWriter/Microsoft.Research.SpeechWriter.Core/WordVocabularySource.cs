@@ -43,7 +43,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private int _selectedIndex;
 
-        private readonly OuterSpellingVocabularySource _spellingSource;
+        private readonly SpellingVocabularySource _spellingSource;
 
         private readonly WordTileFilter _tileFilter;
 
@@ -67,7 +67,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             InitializeUtterance();
             SetRunOnSuggestions();
 
-            var spellingSource = new OuterSpellingVocabularySource(model, this);
+            var spellingSource = new SpellingVocabularySource(model, this);
             _spellingSource = spellingSource;
 
             ParanoidAssertValid();

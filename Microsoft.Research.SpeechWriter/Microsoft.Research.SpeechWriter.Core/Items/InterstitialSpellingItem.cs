@@ -3,17 +3,17 @@
     /// <summary>
     /// Word spelling item.
     /// </summary>
-    public class InterstitialSpellingItem : Command<OuterSpellingVocabularySource>
+    public class InterstitialSpellingItem : Command<SpellingVocabularySource>
     {
         private readonly int _index;
 
-        internal InterstitialSpellingItem(ITile predecessor, OuterSpellingVocabularySource source, int index)
+        internal InterstitialSpellingItem(ITile predecessor, SpellingVocabularySource source, int index)
             : base(predecessor, source)
         {
             _index = index;
         }
 
-        internal override void Execute(OuterSpellingVocabularySource source)
+        internal override void Execute(SpellingVocabularySource source)
         {
             source.StartSpelling(_index);
         }
