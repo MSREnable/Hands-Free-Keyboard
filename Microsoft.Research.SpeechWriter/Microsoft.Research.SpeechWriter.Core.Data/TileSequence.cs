@@ -17,23 +17,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         private static readonly TileData SingleSimpleSpace = new TileData(" ", isGlueBefore: true, isGlueAfter: true);
 
         /// <summary>
-        /// The settings used with <code>XmlWriter</code> instances.
-        /// </summary>
-        private static readonly XmlWriterSettings _xmlWriterSettings = new XmlWriterSettings
-        {
-            OmitXmlDeclaration = true,
-            ConformanceLevel = ConformanceLevel.Fragment
-        };
-
-        /// <summary>
-        /// The settings used with <code>XmlReader</code> instances.
-        /// </summary>
-        private static readonly XmlReaderSettings _xmlReaderSettings = new XmlReaderSettings
-        {
-            ConformanceLevel = ConformanceLevel.Fragment
-        };
-
-        /// <summary>
         /// Container for the <code>TileData</code> objects.
         /// </summary>
         private readonly List<TileData> _sequence;
@@ -83,12 +66,34 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         public static string RawToDefaultSimpleEncoded(string raw)
         {
             var output = new StringWriter();
-            using (var writer = XmlWriter.Create(output, _xmlWriterSettings))
+            using (var writer = XmlWriter.Create(output, XmlReaderHelper.WriterSettings))
             {
                 writer.WriteString(raw);
             }
             var encoded = output.ToString();
             return encoded;
+        }
+
+        /// <summary>
+        /// Convert a raw string to the simple encoded format.
+        /// </summary>
+        /// <param name="encoded">The raw string.</param>
+        /// <returns>A simple encoded string.</returns>
+        public static string DefaultSimpleEncodedToRaw(string encoded)
+        {
+            string raw;
+
+            var input = new StringReader(encoded);
+            using (var reader = XmlReader.Create(input, XmlReaderHelper.ReaderSettings))
+            {
+                Debug.Assert(reader.NodeType == XmlNodeType.None);
+                var done = reader.Read();
+                Debug.Assert(done);
+                Debug.Assert(reader.NodeType == XmlNodeType.Text);
+                raw = reader.Value;
+            }
+
+            return raw;
         }
 
         /// <summary>
@@ -122,7 +127,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             var output = new StringWriter();
 
-            using (var writer = XmlWriter.Create(output, _xmlWriterSettings))
+            using (var writer = XmlWriter.Create(output, XmlReaderHelper.WriterSettings))
             {
                 var isPreviousAttached = true;
                 foreach (var tile in _sequence)
@@ -142,8 +147,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
         public static TileSequence FromRaw(string raw)
         {
-            var encoded = RawToDefaultSimpleEncoded(raw);
-            var sequence = FromSimpleEncoded(encoded);
+            var sequence = FromSimpleEncoded(raw);
             return sequence;
         }
 
@@ -155,7 +159,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             var output = new StringWriter();
 
-            using (var writer = XmlWriter.Create(output, _xmlWriterSettings))
+            using (var writer = XmlWriter.Create(output, XmlReaderHelper.WriterSettings))
             {
                 foreach (var tile in _sequence)
                 {
@@ -294,7 +298,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             return sequence;
         }
 
-        private static TileSequence FromEncoded(XmlReader reader, XmlNodeType endNode)
+        internal static TileSequence FromEncoded(XmlReader reader, XmlNodeType endNode)
         {
             TileSequence sequence;
 
@@ -340,7 +344,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
             var input = new StringReader(encoded);
 
-            using (var reader = XmlReader.Create(input, _xmlReaderSettings))
+            using (var reader = XmlReader.Create(input, XmlReaderHelper.ReaderSettings))
             {
                 reader.Read();
 

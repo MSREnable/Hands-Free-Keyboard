@@ -65,6 +65,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
         }
 
         [Test]
+        public void RawJackAndJillTest()
+        {
+            RawSanityCheck("Jack & Jill");
+        }
+
+        [Test]
         public void HelloWorldSequenceCheck()
         {
             SequenceSanityCheck(new TileData("Hello"), new TileData("World"));

@@ -5,6 +5,23 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 {
     internal static class XmlReaderHelper
     {
+        /// <summary>
+        /// The settings used with <code>XmlWriter</code> instances.
+        /// </summary>
+        internal static XmlWriterSettings WriterSettings { get; } = new XmlWriterSettings
+        {
+            OmitXmlDeclaration = true,
+            ConformanceLevel = ConformanceLevel.Fragment
+        };
+
+        /// <summary>
+        /// The settings used with <code>XmlReader</code> instances.
+        /// </summary>
+        internal static XmlReaderSettings ReaderSettings { get; } = new XmlReaderSettings
+        {
+            ConformanceLevel = ConformanceLevel.Fragment
+        };
+
         internal static void ValidateData(bool truth)
         {
             if (!truth)
