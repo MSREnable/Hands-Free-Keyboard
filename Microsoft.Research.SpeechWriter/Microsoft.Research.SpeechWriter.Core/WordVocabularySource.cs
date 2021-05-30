@@ -169,7 +169,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 while (await enumerator.MoveNextAsync())
                 {
-                    var utterance = enumerator.Current;
+                    var utterance = enumerator.Current.Sequence;
                     Debug.Assert(utterance.Count != 0);
 
                     var sequence = new List<int>(new[] { 0 });

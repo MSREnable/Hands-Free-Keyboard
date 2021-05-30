@@ -306,9 +306,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
-        internal void SaveUtterance(TileSequence utterance)
+        internal void SaveUtterance(TileSequence sequence)
         {
-            Environment.SaveUtterance(utterance, _utteranceStartTime, _utteranceDuration, _utteranceActivationCount);
+            var utterance = new UtteranceData(sequence, _utteranceStartTime, _utteranceDuration, _utteranceActivationCount);
+            Environment.SaveUtterance(utterance);
         }
     }
 }

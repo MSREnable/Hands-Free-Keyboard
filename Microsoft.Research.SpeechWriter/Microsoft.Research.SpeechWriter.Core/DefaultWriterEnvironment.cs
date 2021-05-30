@@ -93,14 +93,8 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <summary>
         /// Persist an utterance.
         /// </summary>
-        /// <param name="tiles">The words of the utterance.</param>
-        /// <param name="start">The time the click that started the utterance was started.</param>
-        /// <param name="duration">The time difference between the first and last click.</param>
-        /// <param name="clickCount">The number of clicks used to form the utterance.</param>
-        void IWriterEnvironment.SaveUtterance(TileSequence tiles,
-            DateTimeOffset start,
-            TimeSpan duration,
-            int clickCount)
+        /// <param name="utterance">The utterance.</param>
+        void IWriterEnvironment.SaveUtterance(UtteranceData utterance)
         {
         }
 
@@ -108,9 +102,9 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Recall persisted utterances.
         /// </summary>
         /// <returns>The collection of utterances.</returns>
-        IAsyncEnumerable<TileSequence> IWriterEnvironment.RecallUtterances()
+        IAsyncEnumerable<UtteranceData> IWriterEnvironment.RecallUtterances()
         {
-            return new EmptyAsyncEnumerable<TileSequence>();
+            return new EmptyAsyncEnumerable<UtteranceData>();
         }
 
         private class EmptyAsyncEnumerable<T> : IAsyncEnumerable<T>

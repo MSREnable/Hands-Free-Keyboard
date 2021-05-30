@@ -51,7 +51,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                                 break;
 
                             case nameof(Duration):
-                                duration = TimeSpan.FromMilliseconds(int.Parse(reader.Value));
+                                duration = TimeSpan.FromMilliseconds(double.Parse(reader.Value));
                                 break;
 
                             case nameof(KeyCount):

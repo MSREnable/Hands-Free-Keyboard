@@ -17,22 +17,18 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         /// <summary>
         /// Persist an utterance.
         /// </summary>
-        /// <param name="words">The words of the utterance.</param>
-        void IWriterEnvironment.SaveUtterance(TileSequence tiles,
-            DateTimeOffset start,
-            TimeSpan duration,
-            int clickCount)
+        /// <param name="utterance">The utterance.</param>
+        void IWriterEnvironment.SaveUtterance(UtteranceData utterance)
         {
-            _ = SaveUtteranceAsync(tiles);
+            _ = SaveUtteranceAsync(utterance);
         }
 
-        private async Task SaveUtteranceAsync(IReadOnlyList<TileData> tiles)
+        private async Task SaveUtteranceAsync(UtteranceData utterance)
         {
             await AttachHistoryFileAsync();
 
-            var sequence = TileSequence.FromData(new List<TileData>(tiles).ToArray());
-            var utterance = sequence.ToHybridEncoded();
-            await FileIO.AppendLinesAsync(_historyFile, new[] { utterance });
+            var line = utterance.ToLine();
+            await FileIO.AppendLinesAsync(_historyFile, new[] { line });
         }
 
         private async Task AttachHistoryFileAsync()
@@ -53,12 +49,12 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         /// Recall persisted utterances.
         /// </summary>
         /// <returns>The collection of utterances.</returns>
-        IAsyncEnumerable<TileSequence> IWriterEnvironment.RecallUtterances()
+        IAsyncEnumerable<UtteranceData> IWriterEnvironment.RecallUtterances()
         {
             return new UtteranceEnumerable(this);
         }
 
-        private class UtteranceEnumerable : IAsyncEnumerable<TileSequence>
+        private class UtteranceEnumerable : IAsyncEnumerable<UtteranceData>
         {
             private readonly UwpWriterEnvironment _uwpWriterEnvironment;
 
@@ -67,12 +63,12 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 _uwpWriterEnvironment = uwpWriterEnvironment;
             }
 
-            public IAsyncEnumerator<TileSequence> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+            public IAsyncEnumerator<UtteranceData> GetAsyncEnumerator(CancellationToken cancellationToken = default)
             {
                 return new UtteranceEnumerator(_uwpWriterEnvironment);
             }
 
-            private class UtteranceEnumerator : IAsyncEnumerator<TileSequence>
+            private class UtteranceEnumerator : IAsyncEnumerator<UtteranceData>
             {
                 private readonly UwpWriterEnvironment _uwpWriterEnvironment;
                 private StreamReader _reader;
@@ -82,7 +78,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                     _uwpWriterEnvironment = uwpWriterEnvironment;
                 }
 
-                public TileSequence Current { get; private set; }
+                public UtteranceData Current { get; private set; }
 
                 public ValueTask DisposeAsync()
                 {
@@ -104,7 +100,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                         _reader = new StreamReader(stream.AsStreamForRead());
                     }
 
-                    TileSequence utterance;
+                    UtteranceData utterance;
                     var eof = false;
                     do
                     {
@@ -121,10 +117,10 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                         }
                         else
                         {
-                            utterance = TileSequence.FromEncoded(line);
+                            utterance = UtteranceData.FromLine(line);
                         }
                     }
-                    while (!eof && utterance == null); ;
+                    while (!eof && utterance == null);
 
                     Current = utterance;
 
