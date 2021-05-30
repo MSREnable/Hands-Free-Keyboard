@@ -1,4 +1,5 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Items;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using Microsoft.Research.SpeechWriter.Core.Items;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -303,6 +304,11 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var interstitial = new InterstitialGapItem(LastTile, this, Source, adjustedMin, adjustedLim);
                 _suggestionInterstitials.Add(interstitial);
             }
+        }
+
+        internal void SaveUtterance(TileSequence utterance)
+        {
+            Environment.SaveUtterance(utterance, _utteranceStartTime, _utteranceDuration, _utteranceActivationCount);
         }
     }
 }

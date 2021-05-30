@@ -442,19 +442,20 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             selection.RemoveAt(0);
             selection.RemoveAt(selection.Count - 1);
-            var utterance = new List<TileData>();
+            var tiles = new List<TileData>();
             foreach (var token in selection)
             {
                 var tokenString = _tokens.GetString(token);
                 var tile = TileData.FromTokenString(tokenString);
-                utterance.Add(tile);
+                tiles.Add(tile);
             }
+            var utterance = TileSequence.FromData(tiles);
 
             SetSelectedIndex(0);
             var tail = new GhostStopItem(predecessor, this);
             _headItems.Add(tail);
 
-            _model.Environment.SaveUtterance(utterance.ToArray());
+            _model.SaveUtterance(utterance);
 
             InitializeUtterance();
             SetSuggestionsViewComplete();

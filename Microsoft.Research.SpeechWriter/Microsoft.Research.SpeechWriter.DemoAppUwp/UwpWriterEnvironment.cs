@@ -18,7 +18,10 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         /// Persist an utterance.
         /// </summary>
         /// <param name="words">The words of the utterance.</param>
-        void IWriterEnvironment.SaveUtterance(IReadOnlyList<TileData> tiles)
+        void IWriterEnvironment.SaveUtterance(TileSequence tiles,
+            DateTimeOffset start,
+            TimeSpan duration,
+            int clickCount)
         {
             _ = SaveUtteranceAsync(tiles);
         }
@@ -50,12 +53,12 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         /// Recall persisted utterances.
         /// </summary>
         /// <returns>The collection of utterances.</returns>
-        IAsyncEnumerable<IReadOnlyList<TileData>> IWriterEnvironment.RecallUtterances()
+        IAsyncEnumerable<TileSequence> IWriterEnvironment.RecallUtterances()
         {
             return new UtteranceEnumerable(this);
         }
 
-        private class UtteranceEnumerable : IAsyncEnumerable<IReadOnlyList<TileData>>
+        private class UtteranceEnumerable : IAsyncEnumerable<TileSequence>
         {
             private readonly UwpWriterEnvironment _uwpWriterEnvironment;
 
@@ -64,12 +67,12 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 _uwpWriterEnvironment = uwpWriterEnvironment;
             }
 
-            public IAsyncEnumerator<IReadOnlyList<TileData>> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+            public IAsyncEnumerator<TileSequence> GetAsyncEnumerator(CancellationToken cancellationToken = default)
             {
                 return new UtteranceEnumerator(_uwpWriterEnvironment);
             }
 
-            private class UtteranceEnumerator : IAsyncEnumerator<IReadOnlyList<TileData>>
+            private class UtteranceEnumerator : IAsyncEnumerator<TileSequence>
             {
                 private readonly UwpWriterEnvironment _uwpWriterEnvironment;
                 private StreamReader _reader;
@@ -79,7 +82,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                     _uwpWriterEnvironment = uwpWriterEnvironment;
                 }
 
-                public IReadOnlyList<TileData> Current { get; private set; }
+                public TileSequence Current { get; private set; }
 
                 public ValueTask DisposeAsync()
                 {
@@ -101,7 +104,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                         _reader = new StreamReader(stream.AsStreamForRead());
                     }
 
-                    IReadOnlyList<TileData> utterance;
+                    TileSequence utterance;
                     var eof = false;
                     do
                     {
@@ -118,8 +121,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                         }
                         else
                         {
-                            var sequence = TileSequence.FromEncoded(line);
-                            utterance = sequence;
+                            utterance = TileSequence.FromEncoded(line);
                         }
                     }
                     while (!eof && utterance == null); ;
