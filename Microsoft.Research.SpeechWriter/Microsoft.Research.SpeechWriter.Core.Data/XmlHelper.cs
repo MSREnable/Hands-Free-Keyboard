@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core.Data
 {
-    internal static class XmlReaderHelper
+    internal static class XmlHelper
     {
         /// <summary>
         /// The settings used with <code>XmlWriter</code> instances.

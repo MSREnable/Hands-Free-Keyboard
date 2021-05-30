@@ -112,7 +112,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             reader.ValidateNodeType(XmlNodeType.Element);
             var nameIndex = Array.IndexOf(_elementNames, reader.Name);
-            XmlReaderHelper.ValidateData(0 <= nameIndex);
+            XmlHelper.ValidateData(0 <= nameIndex);
             reader.Read();
 
             reader.ValidateNodeType(XmlNodeType.Text);

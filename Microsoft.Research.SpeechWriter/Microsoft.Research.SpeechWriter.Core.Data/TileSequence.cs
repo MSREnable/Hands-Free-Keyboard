@@ -66,7 +66,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         public static string RawToDefaultSimpleEncoded(string raw)
         {
             var output = new StringWriter();
-            using (var writer = XmlWriter.Create(output, XmlReaderHelper.WriterSettings))
+            using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
             {
                 writer.WriteString(raw);
             }
@@ -84,7 +84,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             string raw;
 
             var input = new StringReader(encoded);
-            using (var reader = XmlReader.Create(input, XmlReaderHelper.ReaderSettings))
+            using (var reader = XmlReader.Create(input, XmlHelper.ReaderSettings))
             {
                 Debug.Assert(reader.NodeType == XmlNodeType.None);
                 var done = reader.Read();
@@ -127,7 +127,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             var output = new StringWriter();
 
-            using (var writer = XmlWriter.Create(output, XmlReaderHelper.WriterSettings))
+            using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
             {
                 var isPreviousAttached = true;
                 foreach (var tile in _sequence)
@@ -159,7 +159,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             var output = new StringWriter();
 
-            using (var writer = XmlWriter.Create(output, XmlReaderHelper.WriterSettings))
+            using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
             {
                 foreach (var tile in _sequence)
                 {
@@ -333,7 +333,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 sequence = FromData();
             }
 
-            XmlReaderHelper.ValidateNodeType(reader, endNode);
+            XmlHelper.ValidateNodeType(reader, endNode);
 
             return sequence;
         }
@@ -344,7 +344,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
             var input = new StringReader(encoded);
 
-            using (var reader = XmlReader.Create(input, XmlReaderHelper.ReaderSettings))
+            using (var reader = XmlReader.Create(input, XmlHelper.ReaderSettings))
             {
                 reader.Read();
 

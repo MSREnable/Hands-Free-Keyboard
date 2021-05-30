@@ -32,7 +32,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
             var input = new StringReader(line);
 
-            using (var reader = XmlReader.Create(input, XmlReaderHelper.ReaderSettings))
+            using (var reader = XmlReader.Create(input, XmlHelper.ReaderSettings))
             {
                 reader.Read();
 
@@ -94,7 +94,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             {
                 var output = new StringWriter();
 
-                using (var writer = XmlWriter.Create(output, XmlReaderHelper.WriterSettings))
+                using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
                 {
                     writer.WriteStartElement("U");
                     if (Started.HasValue)

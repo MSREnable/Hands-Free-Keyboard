@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Microsoft.Research.SpeechWriter.Core.Data.Test
 {
-    public class XmlReaderHelperTest
+    public class XmlHelperTest
     {
         [Test]
         public void ValidateDataTest()
@@ -13,7 +13,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
                 var threw = false;
                 try
                 {
-                    XmlReaderHelper.ValidateData(i == 0);
+                    XmlHelper.ValidateData(i == 0);
                 }
                 catch (InvalidDataException)
                 {
