@@ -1,5 +1,4 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Data;
-using System;
 using System.Collections.Generic;
 
 namespace Microsoft.Research.SpeechWriter.Core

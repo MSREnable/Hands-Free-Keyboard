@@ -162,7 +162,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 nextPreviousWordsLength = words.Count;
             }
 
-            var e = new ApplicationModelUpdateEventArgs(words, _previousWordsLengthNotified, isComplete, 
+            var e = new ApplicationModelUpdateEventArgs(words, _previousWordsLengthNotified, isComplete,
                 _utteranceStartTime, _utteranceDuration, _utteranceActivationCount);
             _previousWordsLengthNotified = nextPreviousWordsLength;
 
