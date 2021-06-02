@@ -94,7 +94,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Persist an utterance.
         /// </summary>
         /// <param name="utterance">The utterance.</param>
-        void IWriterEnvironment.SaveUtterance(UtteranceData utterance)
+        void IWriterEnvironment.SaveUtterance(string utterance)
         {
         }
 

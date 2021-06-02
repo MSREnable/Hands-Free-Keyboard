@@ -309,7 +309,8 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal void SaveUtterance(TileSequence sequence)
         {
             var utterance = new UtteranceData(sequence, _utteranceStartTime, _utteranceDuration, _utteranceActivationCount);
-            Environment.SaveUtterance(utterance);
+            var utteranceString = utterance.ToLine();
+            Environment.SaveUtterance(utteranceString);
         }
     }
 }

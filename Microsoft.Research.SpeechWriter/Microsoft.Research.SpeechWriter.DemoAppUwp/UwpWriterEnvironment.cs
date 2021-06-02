@@ -18,17 +18,16 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         /// Persist an utterance.
         /// </summary>
         /// <param name="utterance">The utterance.</param>
-        void IWriterEnvironment.SaveUtterance(UtteranceData utterance)
+        void IWriterEnvironment.SaveUtterance(string utterance)
         {
             _ = SaveUtteranceAsync(utterance);
         }
 
-        private async Task SaveUtteranceAsync(UtteranceData utterance)
+        private async Task SaveUtteranceAsync(string utterance)
         {
             await AttachHistoryFileAsync();
 
-            var line = utterance.ToLine();
-            await FileIO.AppendLinesAsync(_historyFile, new[] { line });
+            await FileIO.AppendLinesAsync(_historyFile, new[] { utterance });
         }
 
         private async Task AttachHistoryFileAsync()

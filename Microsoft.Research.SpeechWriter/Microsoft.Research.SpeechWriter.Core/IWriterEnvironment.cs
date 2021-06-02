@@ -23,7 +23,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Persist an utterance.
         /// </summary>
         /// <param name="utterance">The utterance</param>
-        void SaveUtterance(UtteranceData utterance);
+        void SaveUtterance(string utterance);
 
         /// <summary>
         /// Get utterance reader.
