@@ -94,40 +94,19 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Persist an utterance.
         /// </summary>
         /// <param name="utterance">The utterance.</param>
-        void IWriterEnvironment.SaveUtterance(string utterance)
+        Task IWriterEnvironment.SaveUtteranceAsync(string utterance)
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Recall persisted utterances.
         /// </summary>
         /// <returns>The collection of utterances.</returns>
-        IAsyncEnumerable<UtteranceData> IWriterEnvironment.RecallUtterances()
+        Task<TextReader> IWriterEnvironment.RecallUtterancesAsync()
         {
-            return new EmptyAsyncEnumerable<UtteranceData>();
-        }
-
-        private class EmptyAsyncEnumerable<T> : IAsyncEnumerable<T>
-        {
-            public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
-            {
-                return new EmptyAsyncEnumerator();
-            }
-
-            private class EmptyAsyncEnumerator : IAsyncEnumerator<T>
-            {
-                public T Current => default;
-
-                public ValueTask DisposeAsync()
-                {
-                    return new ValueTask(Task.CompletedTask);
-                }
-
-                public ValueTask<bool> MoveNextAsync()
-                {
-                    return new ValueTask<bool>(Task.FromResult(false));
-                }
-            }
+            var value = Task.FromResult(TextReader.Null);
+            return value;
         }
     }
 }

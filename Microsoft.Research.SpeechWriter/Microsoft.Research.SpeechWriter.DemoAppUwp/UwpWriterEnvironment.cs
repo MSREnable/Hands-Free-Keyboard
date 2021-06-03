@@ -1,7 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
-using Microsoft.Research.SpeechWriter.Core.Data;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,19 +16,13 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         /// Persist an utterance.
         /// </summary>
         /// <param name="utterance">The utterance.</param>
-        void IWriterEnvironment.SaveUtterance(string utterance)
+        async Task IWriterEnvironment.SaveUtteranceAsync(string utterance)
         {
-            _ = SaveUtteranceAsync(utterance);
+            var file = await GetHistoryFileAsync();
+            await FileIO.AppendLinesAsync(file, new[] { utterance });
         }
 
-        private async Task SaveUtteranceAsync(string utterance)
-        {
-            await AttachHistoryFileAsync();
-
-            await FileIO.AppendLinesAsync(_historyFile, new[] { utterance });
-        }
-
-        private async Task AttachHistoryFileAsync()
+        private async Task<IStorageFile> GetHistoryFileAsync()
         {
             if (_historyFile == null)
             {
@@ -42,90 +34,19 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 }
                 _semaphore.Release();
             }
+            return _historyFile;
         }
 
         /// <summary>
         /// Recall persisted utterances.
         /// </summary>
         /// <returns>The collection of utterances.</returns>
-        IAsyncEnumerable<UtteranceData> IWriterEnvironment.RecallUtterances()
+        async Task<TextReader> IWriterEnvironment.RecallUtterancesAsync()
         {
-            return new UtteranceEnumerable(this);
-        }
-
-        private class UtteranceEnumerable : IAsyncEnumerable<UtteranceData>
-        {
-            private readonly UwpWriterEnvironment _uwpWriterEnvironment;
-
-            public UtteranceEnumerable(UwpWriterEnvironment uwpWriterEnvironment)
-            {
-                _uwpWriterEnvironment = uwpWriterEnvironment;
-            }
-
-            public IAsyncEnumerator<UtteranceData> GetAsyncEnumerator(CancellationToken cancellationToken = default)
-            {
-                return new UtteranceEnumerator(_uwpWriterEnvironment);
-            }
-
-            private class UtteranceEnumerator : IAsyncEnumerator<UtteranceData>
-            {
-                private readonly UwpWriterEnvironment _uwpWriterEnvironment;
-                private StreamReader _reader;
-
-                public UtteranceEnumerator(UwpWriterEnvironment uwpWriterEnvironment)
-                {
-                    _uwpWriterEnvironment = uwpWriterEnvironment;
-                }
-
-                public UtteranceData Current { get; private set; }
-
-                public ValueTask DisposeAsync()
-                {
-                    if (_reader != null)
-                    {
-                        _reader.Close();
-                    }
-
-                    return new ValueTask(Task.CompletedTask);
-                }
-
-                public async ValueTask<bool> MoveNextAsync()
-                {
-                    await _uwpWriterEnvironment.AttachHistoryFileAsync();
-
-                    if (_reader == null)
-                    {
-                        var stream = await _uwpWriterEnvironment._historyFile.OpenSequentialReadAsync();
-                        _reader = new StreamReader(stream.AsStreamForRead());
-                    }
-
-                    UtteranceData utterance;
-                    var eof = false;
-                    do
-                    {
-                        var line = await _reader.ReadLineAsync();
-
-                        if (line == null)
-                        {
-                            utterance = null;
-                            eof = true;
-                        }
-                        else if (string.IsNullOrWhiteSpace(line))
-                        {
-                            utterance = null;
-                        }
-                        else
-                        {
-                            utterance = UtteranceData.FromLine(line);
-                        }
-                    }
-                    while (!eof && utterance == null);
-
-                    Current = utterance;
-
-                    return !eof;
-                }
-            }
+            var file = await GetHistoryFileAsync();
+            var stream = await file.OpenSequentialReadAsync();
+            var reader = new StreamReader(stream.AsStreamForRead());
+            return reader;
         }
     }
 }

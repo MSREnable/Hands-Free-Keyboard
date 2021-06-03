@@ -163,13 +163,15 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <returns>Task</returns>
         internal async Task LoadUtterancesAsync()
         {
-            var enumerable = Environment.RecallUtterances();
-            var enumerator = enumerable.GetAsyncEnumerator();
-            try
+            using (var reader = await Environment.RecallUtterancesAsync())
             {
-                while (await enumerator.MoveNextAsync())
+                for (var line = await reader.ReadLineAsync();
+                    line != null;
+                    line = await reader.ReadLineAsync())
                 {
-                    var utterance = enumerator.Current.Sequence;
+                    var utteranceData = UtteranceData.FromLine(line);
+                    var utterance = utteranceData.Sequence;
+
                     Debug.Assert(utterance.Count != 0);
 
                     var sequence = new List<int>(new[] { 0 });
@@ -184,13 +186,6 @@ namespace Microsoft.Research.SpeechWriter.Core
                     sequence.Add(0);
 
                     PersistantPredictor.AddSequence(sequence, PersistedSequenceWeight);
-                }
-            }
-            finally
-            {
-                if (enumerator != null)
-                {
-                    await enumerator.DisposeAsync();
                 }
             }
 

@@ -310,7 +310,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var utterance = new UtteranceData(sequence, _utteranceStartTime, _utteranceDuration, _utteranceActivationCount);
             var utteranceString = utterance.ToLine();
-            Environment.SaveUtterance(utteranceString);
+            Environment.SaveUtteranceAsync(utteranceString);
         }
     }
 }

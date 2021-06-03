@@ -1,5 +1,6 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Data;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -23,12 +24,12 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// Persist an utterance.
         /// </summary>
         /// <param name="utterance">The utterance</param>
-        void SaveUtterance(string utterance);
+        Task SaveUtteranceAsync(string utterance);
 
         /// <summary>
         /// Get utterance reader.
         /// </summary>
         /// <returns>The collection of utterances.</returns>
-        IAsyncEnumerable<UtteranceData> RecallUtterances();
+        Task<TextReader> RecallUtterancesAsync();
     }
 }
