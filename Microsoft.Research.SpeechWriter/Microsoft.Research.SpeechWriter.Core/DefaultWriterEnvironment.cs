@@ -1,10 +1,8 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Data;
-using Microsoft.Research.SpeechWriter.Core.Properties;
+﻿using Microsoft.Research.SpeechWriter.Core.Properties;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.Research.SpeechWriter.Core
