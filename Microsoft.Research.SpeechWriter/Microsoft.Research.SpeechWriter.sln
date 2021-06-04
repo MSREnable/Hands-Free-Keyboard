@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.Core.Data", "Microsoft.Research.SpeechWriter.Core.Data\Microsoft.Research.SpeechWriter.Core.Data.csproj", "{74414063-0447-4815-A4A0-3ED6CB49A2F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Research.SpeechWriter.Core.Data.Test", "Microsoft.Research.SpeechWriter.Core.Data.Test\Microsoft.Research.SpeechWriter.Core.Data.Test.csproj", "{159CF950-59E8-46E9-B10C-B593C52BF877}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.Core.Data.Test", "Microsoft.Research.SpeechWriter.Core.Data.Test\Microsoft.Research.SpeechWriter.Core.Data.Test.csproj", "{159CF950-59E8-46E9-B10C-B593C52BF877}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditBoxPrototype", "EditBoxPrototype\EditBoxPrototype.csproj", "{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -299,6 +301,32 @@ Global
 		{159CF950-59E8-46E9-B10C-B593C52BF877}.Release|x64.Build.0 = Release|Any CPU
 		{159CF950-59E8-46E9-B10C-B593C52BF877}.Release|x86.ActiveCfg = Release|Any CPU
 		{159CF950-59E8-46E9-B10C-B593C52BF877}.Release|x86.Build.0 = Release|Any CPU
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|ARM.Build.0 = Debug|ARM
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|ARM.Deploy.0 = Debug|ARM
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|ARM64.Build.0 = Debug|ARM64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|x64.ActiveCfg = Debug|x64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|x64.Build.0 = Debug|x64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|x64.Deploy.0 = Debug|x64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|x86.ActiveCfg = Debug|x86
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|x86.Build.0 = Debug|x86
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Debug|x86.Deploy.0 = Debug|x86
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|Any CPU.ActiveCfg = Release|x86
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|ARM.ActiveCfg = Release|ARM
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|ARM.Build.0 = Release|ARM
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|ARM.Deploy.0 = Release|ARM
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|ARM64.ActiveCfg = Release|ARM64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|ARM64.Build.0 = Release|ARM64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|ARM64.Deploy.0 = Release|ARM64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|x64.ActiveCfg = Release|x64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|x64.Build.0 = Release|x64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|x64.Deploy.0 = Release|x64
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|x86.ActiveCfg = Release|x86
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|x86.Build.0 = Release|x86
+		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

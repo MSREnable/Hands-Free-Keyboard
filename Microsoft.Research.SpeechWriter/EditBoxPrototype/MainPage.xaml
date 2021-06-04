@@ -1,0 +1,51 @@
+﻿<Page
+    x:Class="EditBoxPrototype.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:EditBoxPrototype"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:control="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:coreui="using:Microsoft.Research.SpeechWriter.Core.UI.Uwp"
+    xmlns:data="using:Microsoft.Research.SpeechWriter.Core.Data"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <Style TargetType="Button">
+            <Setter Property="MinHeight" Value="100"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <DataTemplate x:Key="TileData" x:DataType="data:TileData">
+            <coreui:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid RowSpacing="5">
+        <Grid.RowDefinitions >
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBox Grid.Row="0" TextChanged="OnTextChanged" SelectionChanged="OnTextChanged"/>
+        <TextBlock Grid.Row="1" x:Name="Block"/>
+        <ItemsControl x:Name="ItemsContainer" Grid.Row="2">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button>
+                        <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" ShowAttachedToNext="{Binding IsGlueAfter}" ShowAttachedToPrevious="{Binding IsGlueBefore}"/>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <control:WrapPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+    </Grid>
+</Page>

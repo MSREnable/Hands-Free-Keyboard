@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Microsoft.Research.SpeechWriter.DemoAppUwp"
+    xmlns:coreui="using:Microsoft.Research.SpeechWriter.Core.UI.Uwp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
@@ -44,20 +45,20 @@
             <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="5"/>
         </DataTemplate>
         <DataTemplate x:Key="SuggestedWordItem" x:DataType="lib:SuggestedWordItem">
-            <local:TileControl Background="LightYellow" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
+            <coreui:TileControl Background="LightYellow" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
         </DataTemplate>
         <DataTemplate x:Key="HeadWordItem" x:DataType="lib:HeadWordItem">
-            <local:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
+            <coreui:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
         </DataTemplate>
         <DataTemplate x:Key="ReplacementItem" x:DataType="lib:ReplacementItem">
             <StackPanel Orientation="Horizontal">
-                <local:TileControl Background="LightGreen" Caption="{Binding OldUnformattedContent}" ShowAttachedToNext="{Binding OldIsAttachedToNext}" ShowAttachedToPrevious="{Binding OldIsAttachedToPrevious}"/>
+                <coreui:TileControl Background="LightGreen" Caption="{Binding OldUnformattedContent}" ShowAttachedToNext="{Binding OldIsAttachedToNext}" ShowAttachedToPrevious="{Binding OldIsAttachedToPrevious}"/>
                 <TextBlock Text="&#x2192;" FontSize="25" FontWeight="Bold" Foreground="DarkGray" VerticalAlignment="Center"/>
-                <local:TileControl Background="LightGreen" Caption="{Binding UnformattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
+                <coreui:TileControl Background="LightGreen" Caption="{Binding UnformattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="GhostWordItem" x:DataType="lib:GhostWordItem">
-            <local:TileControl Background="LightBlue" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
+            <coreui:TileControl Background="LightBlue" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
         </DataTemplate>
         <DataTemplate x:Key="InterstitialNonItem" x:DataType="lib:InterstitialNonItem">
             <TextBlock Text="-" FontSize="25" FontWeight="Bold" Margin="5"/>
