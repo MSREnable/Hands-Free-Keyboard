@@ -26,13 +26,29 @@
     <Grid RowSpacing="5">
         <Grid.RowDefinitions >
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <TextBox Grid.Row="0" TextChanged="OnTextChanged" SelectionChanged="OnTextChanged"/>
-        <TextBlock Grid.Row="1" x:Name="Block"/>
-        <ItemsControl x:Name="ItemsContainer" Grid.Row="2">
+
+        <ItemsControl x:Name="ItemsContainer" Grid.Row="1">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button>
+                        <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" ShowAttachedToNext="{Binding IsGlueAfter}" ShowAttachedToPrevious="{Binding IsGlueBefore}"/>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <control:WrapPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+
+        <ItemsControl x:Name="CursedContainer" Grid.Row="2">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button>
