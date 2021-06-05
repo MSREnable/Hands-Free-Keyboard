@@ -11,7 +11,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
         public void IsSimpleWordTest()
         {
             {
-                var tile = new TileData("Hello");
+                var tile = TileData.Create("Hello");
                 Assert.IsTrue(tile.ToString() == "<T>Hello</T>");
                 Assert.IsTrue(tile.IsSimpleWord);
             }
@@ -19,26 +19,26 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
             var simples = new[] { "Hello", "This-is" };
             foreach (var simple in simples)
             {
-                var tile = new TileData(simple);
+                var tile = TileData.Create(simple);
                 Assert.IsTrue(tile.IsSimpleWord);
             }
 
             foreach (var simple in simples)
             {
-                var tile = new TileData(simple, isGlueBefore: true);
+                var tile = TileData.Create(simple, isGlueBefore: true);
                 Assert.IsFalse(tile.IsSimpleWord);
             }
 
             foreach (var simple in simples)
             {
-                var tile = new TileData(simple, isGlueAfter: true);
+                var tile = TileData.Create(simple, isGlueAfter: true);
                 Assert.IsFalse(tile.IsSimpleWord);
             }
 
             var complexes = new[] { "Hello World", "&^%^" };
             foreach (var complex in complexes)
             {
-                var tile = new TileData(complex);
+                var tile = TileData.Create(complex);
                 Assert.IsFalse(tile.IsSimpleWord);
             }
         }
@@ -54,7 +54,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
                     {
                         for (var k = 0; k < 2; k++)
                         {
-                            var element = new TileData(i.ToString(), k != 0, j != 0);
+                            var element = TileData.Create(i.ToString(), k != 0, j != 0);
                             yield return element;
                         }
                     }
@@ -79,8 +79,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
         [Test]
         public void TileEqualityTest()
         {
-            var unmatchable = new TileData("TEST");
-            var matchable = new TileData("1");
+            var unmatchable = TileData.Create("TEST");
+            var matchable = TileData.Create("1");
             var plainWrong = "Wibble";
 
             var matchCount = 0;
@@ -109,7 +109,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
                 var good = true;
                 try
                 {
-                    _ = new TileData(contents[i]);
+                    _ = TileData.Create(contents[i]);
                 }
                 catch (ArgumentException)
                 {
@@ -122,10 +122,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
         [Test]
         public void CheckTokenizationTest()
         {
-            CheckTokenization(new TileData("Simple"), "Simple");
-            CheckTokenization(new TileData("Before", isGlueAfter: true), "Before\0B");
-            CheckTokenization(new TileData("After", isGlueBefore: true), "After\0A");
-            CheckTokenization(new TileData("Before", isGlueBefore: true, isGlueAfter: true), "Before\0J");
+            CheckTokenization(TileData.Create("Simple"), "Simple");
+            CheckTokenization(TileData.Create("Before", isGlueAfter: true), "Before\0B");
+            CheckTokenization(TileData.Create("After", isGlueBefore: true), "After\0A");
+            CheckTokenization(TileData.Create("Before", isGlueBefore: true, isGlueAfter: true), "Before\0J");
 
             void CheckTokenization(TileData tile, string expected)
             {

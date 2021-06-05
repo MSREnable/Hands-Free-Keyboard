@@ -64,21 +64,21 @@ namespace EditBoxPrototype
                         var tile = sequence[tilePosition];
                         tilePosition++;
 
-                        var prefix = new TileData(tile.Content.Substring(0, start - charPosition),
+                        var prefix = TileData.Create(tile.Content.Substring(0, start - charPosition),
                             isGlueBefore: tile.IsGlueBefore,
                             isGlueAfter: true);
                         list.Add(prefix);
 
-                        var caret = new TileData("^");
+                        var caret = TileData.Create("^");
                         list.Add(caret);
 
-                        var suffix = new TileData(tile.Content.Substring(start - charPosition),
+                        var suffix = TileData.Create(tile.Content.Substring(start - charPosition),
                             isGlueAfter: tile.IsGlueAfter, isGlueBefore: true);
                         list.Add(suffix);
                     }
                     else
                     {
-                        var caret = new TileData("^",
+                        var caret = TileData.Create("^",
                             isGlueBefore: start < charPosition,
                             isGlueAfter: start == charPosition);
                         list.Add(caret);
@@ -86,7 +86,7 @@ namespace EditBoxPrototype
                 }
                 else
                 {
-                    var caret = new TileData("^", isGlueBefore: true);
+                    var caret = TileData.Create("^", isGlueBefore: true);
                     list.Add(caret);
                 }
 

@@ -73,32 +73,32 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
         [Test]
         public void HelloWorldSequenceCheck()
         {
-            SequenceSanityCheck(new TileData("Hello"), new TileData("World"));
+            SequenceSanityCheck(TileData.Create("Hello"), TileData.Create("World"));
         }
 
         [Test]
         public void SpacingThrashTest()
         {
             ThrashTestHelper.Run(8, v => SequenceSanityCheck(v),
-                new TileData("X", false, false),
-                new TileData("X", true, false),
-                new TileData("X", false, true),
-                new TileData("X", true, true));
+                TileData.Create("X", false, false),
+                TileData.Create("X", true, false),
+                TileData.Create("X", false, true),
+                TileData.Create("X", true, true));
             ThrashTestHelper.Run(8, v => SequenceSanityCheck(v),
-                new TileData("-", false, false),
-                new TileData("-", true, false),
-                new TileData("-", false, true),
-                new TileData("-", true, true));
+                TileData.Create("-", false, false),
+                TileData.Create("-", true, false),
+                TileData.Create("-", false, true),
+                TileData.Create("-", true, true));
 
             ThrashTestHelper.Run(4, v => SequenceSanityCheck(v),
-                new TileData("X", false, false),
-                new TileData("X", true, false),
-                new TileData("X", false, true),
-                new TileData("X", true, true),
-                new TileData("-", false, false),
-                new TileData("-", true, false),
-                new TileData("-", false, true),
-                new TileData("-", true, true));
+                TileData.Create("X", false, false),
+                TileData.Create("X", true, false),
+                TileData.Create("X", false, true),
+                TileData.Create("X", true, true),
+                TileData.Create("-", false, false),
+                TileData.Create("-", true, false),
+                TileData.Create("-", false, true),
+                TileData.Create("-", true, true));
         }
 
         private static void CheckRoundTrip(string expected)
@@ -150,7 +150,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
         [Test]
         public void ComplexishConstructionTest()
         {
-            var sequence = TileSequence.FromData(new TileData("hello"), new TileData("world"));
+            var sequence = TileSequence.FromData(TileData.Create("hello"), TileData.Create("world"));
             Assert.IsNotNull(sequence);
         }
 
@@ -177,8 +177,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
         [Test]
         public void EqualsTest()
         {
-            var a = new TileData("A");
-            var b = new TileData("B");
+            var a = TileData.Create("A");
+            var b = TileData.Create("B");
 
             var sequences = new[]
             {

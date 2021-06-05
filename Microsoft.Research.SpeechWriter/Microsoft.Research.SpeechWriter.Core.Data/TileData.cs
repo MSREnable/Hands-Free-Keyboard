@@ -13,12 +13,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
     {
         private static readonly string[] _elementNames = new[] { "T", "B", "A", "J" };
 
-        public TileData(string content)
+        private TileData(string content)
             : this(content, isGlueBefore: false, isGlueAfter: false)
         {
         }
 
-        public TileData(string content, bool isGlueBefore = false, bool isGlueAfter = false)
+        private TileData(string content, bool isGlueBefore = false, bool isGlueAfter = false)
         {
             if (content.Contains("\0"))
             {
@@ -30,6 +30,18 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             IsGlueAfter = isGlueAfter;
 
             Debug.Assert(!IsSpaces || (IsGlueBefore & IsGlueAfter), "Spaces must always be glued both sides");
+        }
+
+        public static TileData Create(string content)
+        {
+            var value = new TileData(content);
+            return value;
+        }
+
+        public static TileData Create(string content, bool isGlueBefore = false, bool isGlueAfter = false)
+        {
+            var value = new TileData(content: content, isGlueBefore: isGlueBefore, isGlueAfter: isGlueAfter);
+            return value;
         }
 
         public string ToTokenString()
@@ -60,11 +72,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 var content = token.Substring(0, nullIndex);
                 var elementName = token.Substring(nullIndex + 1);
                 var nameIndex = Array.IndexOf(_elementNames, elementName);
-                value = new TileData(content: content, isGlueBefore: (nameIndex & 2) != 0, isGlueAfter: (nameIndex & 1) != 0);
+                value = TileData.Create(content: content, isGlueBefore: (nameIndex & 2) != 0, isGlueAfter: (nameIndex & 1) != 0);
             }
             else
             {
-                value = new TileData(token);
+                value = TileData.Create(token);
             }
 
             return value;
@@ -117,7 +129,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
             reader.ValidateNodeType(XmlNodeType.Text);
             var text = reader.Value;
-            var tile = new TileData(content: text, isGlueBefore: (nameIndex & 2) != 0, isGlueAfter: (nameIndex & 1) != 0);
+            var tile = TileData.Create(content: text, isGlueBefore: (nameIndex & 2) != 0, isGlueAfter: (nameIndex & 1) != 0);
 
             reader.Read();
             reader.ReadNodeType(XmlNodeType.EndElement);
