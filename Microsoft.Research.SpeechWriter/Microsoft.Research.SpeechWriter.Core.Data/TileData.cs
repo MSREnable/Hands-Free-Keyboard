@@ -14,8 +14,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
     {
         private static readonly string[] _elementNames = new[] { "T", "B", "A", "J" };
 
-        private IReadOnlyDictionary<string, string> _attributes = null;
-
         private TileData(string content)
             : this(content, isGlueBefore: false, isGlueAfter: false)
         {
@@ -34,7 +32,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             Content = content;
             IsGlueBefore = isGlueBefore;
             IsGlueAfter = isGlueAfter;
-            _attributes = attributes != null && attributes.Count != 0 ? attributes : null;
+            Attributes = attributes != null && attributes.Count != 0 ? attributes : null;
 
             Debug.Assert(!IsSpaces || (IsGlueBefore & IsGlueAfter), "Spaces must always be glued both sides");
         }
@@ -61,7 +59,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             string value;
 
-            if (_attributes != null)
+            if (Attributes != null)
             {
                 var list = new SortedSet<string>();
 
@@ -72,7 +70,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                     list.Add(localName);
                 }
 
-                foreach (var pair in _attributes)
+                foreach (var pair in Attributes)
                 {
                     var attribute = $"{pair.Key}={pair.Value}";
                     list.Add(attribute);
@@ -140,15 +138,17 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
         public string Content { get; }
 
+        public IReadOnlyDictionary<string, string> Attributes { get; }
+
         public string this[string key]
         {
             get
             {
                 string value;
 
-                if (_attributes != null)
+                if (Attributes != null)
                 {
-                    _attributes.TryGetValue(key, out value);
+                    Attributes.TryGetValue(key, out value);
                 }
                 else
                 {
@@ -188,11 +188,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 var localName = _elementNames[nameIndex];
                 writer.WriteStartElement(localName);
 
-                if (_attributes != null)
+                if (Attributes != null)
                 {
                     var dictionary = new SortedDictionary<string, string>();
 
-                    foreach (var pair in _attributes)
+                    foreach (var pair in Attributes)
                     {
                         dictionary.Add(pair.Key, pair.Value);
                     }
@@ -254,14 +254,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
             if (value)
             {
-                if (_attributes != null)
+                if (Attributes != null)
                 {
-                    value = element._attributes != null &&
-                        _attributes.Count == element._attributes.Count;
+                    value = element.Attributes != null &&
+                        Attributes.Count == element.Attributes.Count;
 
                     if (value)
                     {
-                        using (var enumerable = _attributes.GetEnumerator())
+                        using (var enumerable = Attributes.GetEnumerator())
                         {
                             while (value && enumerable.MoveNext())
                             {
@@ -273,7 +273,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 }
                 else
                 {
-                    value = element._attributes == null;
+                    value = element.Attributes == null;
                 }
             }
 

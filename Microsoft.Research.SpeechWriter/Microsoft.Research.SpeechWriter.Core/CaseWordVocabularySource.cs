@@ -24,6 +24,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var content = tile.Content;
             var isGlueAfter = tile.IsGlueAfter;
             var isGlueBefore = tile.IsGlueBefore;
+            var attributes = tile.Attributes;
             var included = new HashSet<string> { target.Content };
 
             var map = WordCaseMap.Create(content);
@@ -47,7 +48,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 void CheckedAdd(string newContent)
                 {
-                    var newTile = TileData.Create(content: newContent, isGlueAfter: isGlueAfter, isGlueBefore: isGlueBefore);
+                    var newTile = TileData.Create(content: newContent, isGlueAfter: isGlueAfter, isGlueBefore: isGlueBefore, attributes: attributes);
                     var version = newTile.ToTokenString();
                     if (included.Add(version))
                     {
@@ -58,7 +59,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             for (var i = 0; i < 4; i++)
             {
-                var spacedTile = TileData.Create(content: content, isGlueAfter: (i & 1) != 0, isGlueBefore: (i & 2) != 0);
+                var spacedTile = TileData.Create(content: content, isGlueAfter: (i & 1) != 0, isGlueBefore: (i & 2) != 0, attributes: attributes);
                 var spacedContent = spacedTile.ToTokenString();
                 if (included.Add(spacedContent))
                 {
