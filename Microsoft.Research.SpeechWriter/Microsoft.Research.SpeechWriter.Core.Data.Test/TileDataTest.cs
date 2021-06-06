@@ -1,7 +1,9 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core.Data.Test
 {
@@ -134,6 +136,84 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
 
                 var reborn = TileData.FromTokenString(token);
                 Assert.AreEqual(tile, reborn);
+            }
+        }
+
+        private static readonly IReadOnlyDictionary<string, string> AB =
+            new Dictionary<string, string>(new[] { new KeyValuePair<string, string>("A", "B") });
+        private static readonly IReadOnlyDictionary<string, string> CD =
+            new Dictionary<string, string>(new[] { new KeyValuePair<string, string>("C", "D") });
+        private static readonly IReadOnlyDictionary<string, string> ABCD =
+            new Dictionary<string, string>(new[] { new KeyValuePair<string, string>("A", "B"),
+                    new KeyValuePair<string, string>("C", "D")});
+
+        private static readonly TileData[] EqualityTiles = new TileData[]
+        {
+                TileData.Create("A"),
+                TileData.Create("A", true),
+                TileData.Create("A", false, true),
+                TileData.Create("A", true, true),
+                TileData.Create("A", attributes:AB),
+                TileData.Create("A", attributes:CD),
+                TileData.Create("A", attributes:ABCD)
+        };
+
+        [Test]
+        public void EqualsTest()
+        {
+            for (var i = 0; i < EqualityTiles.Length; i++)
+            {
+                for (var j = 0; j < EqualityTiles.Length; j++)
+                {
+                    var comparison = Equals(EqualityTiles[i], EqualityTiles[j]);
+                    Assert.AreEqual(i == j, comparison);
+                }
+            }
+        }
+
+        [Test]
+        public void TokeniszationTest()
+        {
+            foreach (var expected in EqualityTiles)
+            {
+                var token = expected.ToTokenString();
+                var actual = TileData.FromTokenString(token);
+                Assert.AreEqual(expected, actual);
+            }
+        }
+
+        [Test]
+        public void XmlSerializationTest()
+        {
+            foreach (var expected in EqualityTiles)
+            {
+                var output = new StringWriter();
+                using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
+                {
+                    expected.ToXmlWriter(writer, true);
+                }
+
+                var xml = output.ToString();
+
+                TileData actual;
+
+                var input = new StringReader(xml);
+                using (var reader = XmlReader.Create(input, XmlHelper.ReaderSettings))
+                {
+                    reader.Read();
+                    actual = TileData.FromXmlReader(reader);
+                }
+
+                Assert.AreEqual(expected, actual);
+            }
+        }
+
+        [Test]
+        public void NonAttributeRecallTest()
+        {
+            foreach (var tile in EqualityTiles)
+            {
+                Assert.IsNull(tile["WIBBLE"]);
             }
         }
     }

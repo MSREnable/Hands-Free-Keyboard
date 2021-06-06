@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -13,12 +14,17 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
     {
         private static readonly string[] _elementNames = new[] { "T", "B", "A", "J" };
 
+        private IReadOnlyDictionary<string, string> _attributes = null;
+
         private TileData(string content)
             : this(content, isGlueBefore: false, isGlueAfter: false)
         {
         }
 
-        private TileData(string content, bool isGlueBefore = false, bool isGlueAfter = false)
+        private TileData(string content,
+            bool isGlueBefore = false,
+            bool isGlueAfter = false,
+            IReadOnlyDictionary<string, string> attributes = null)
         {
             if (content.Contains("\0"))
             {
@@ -28,6 +34,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             Content = content;
             IsGlueBefore = isGlueBefore;
             IsGlueAfter = isGlueAfter;
+            _attributes = attributes != null && attributes.Count != 0 ? attributes : null;
 
             Debug.Assert(!IsSpaces || (IsGlueBefore & IsGlueAfter), "Spaces must always be glued both sides");
         }
@@ -38,9 +45,15 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             return value;
         }
 
-        public static TileData Create(string content, bool isGlueBefore = false, bool isGlueAfter = false)
+        public static TileData Create(string content,
+            bool isGlueBefore = false,
+            bool isGlueAfter = false,
+            IReadOnlyDictionary<string, string> attributes = null)
         {
-            var value = new TileData(content: content, isGlueBefore: isGlueBefore, isGlueAfter: isGlueAfter);
+            var value = new TileData(content: content,
+                isGlueBefore: isGlueBefore,
+                isGlueAfter: isGlueAfter,
+                attributes: attributes);
             return value;
         }
 
@@ -48,7 +61,25 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             string value;
 
-            if (IsGlueBefore || IsGlueAfter)
+            if (_attributes != null)
+            {
+                var list = new SortedSet<string>();
+
+                var nameIndex = (IsGlueAfter ? 1 : 0) + (IsGlueBefore ? 2 : 0);
+                if (nameIndex != 0)
+                {
+                    var localName = _elementNames[nameIndex];
+                    list.Add(localName);
+                }
+
+                foreach (var pair in _attributes)
+                {
+                    var attribute = $"{pair.Key}={pair.Value}";
+                    list.Add(attribute);
+                }
+                value = Content + '\0' + string.Join("\0", list);
+            }
+            else if (IsGlueBefore || IsGlueAfter)
             {
                 var nameIndex = (IsGlueAfter ? 1 : 0) + (IsGlueBefore ? 2 : 0);
                 var localName = _elementNames[nameIndex];
@@ -66,23 +97,67 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             TileData value;
 
-            var nullIndex = token.IndexOf('\0');
-            if (nullIndex != -1)
+            var splits = token.Split('\0');
+            if (splits.Length == 1)
             {
-                var content = token.Substring(0, nullIndex);
-                var elementName = token.Substring(nullIndex + 1);
-                var nameIndex = Array.IndexOf(_elementNames, elementName);
-                value = TileData.Create(content: content, isGlueBefore: (nameIndex & 2) != 0, isGlueAfter: (nameIndex & 1) != 0);
+                value = TileData.Create(token);
             }
             else
             {
-                value = TileData.Create(token);
+                var content = splits[0];
+                var nameIndex = 0;
+
+                Dictionary<string, string> attributes = null;
+
+                for (var i = 1; i < splits.Length; i++)
+                {
+                    var attributeKeyValue = splits[i];
+
+                    if (attributeKeyValue.Length == 1)
+                    {
+                        nameIndex = Array.IndexOf(_elementNames, attributeKeyValue);
+                    }
+                    else
+                    {
+                        if (attributes == null)
+                        {
+                            attributes = new Dictionary<string, string>();
+                        }
+
+                        var keyValue = attributeKeyValue.Split(new[] { '=' }, 2);
+                        attributes.Add(keyValue[0], keyValue[1]);
+                    }
+                }
+
+                value = TileData.Create(content: content,
+                    isGlueBefore: (nameIndex & 2) != 0,
+                    isGlueAfter: (nameIndex & 1) != 0,
+                    attributes: attributes);
             }
 
             return value;
         }
 
         public string Content { get; }
+
+        public string this[string key]
+        {
+            get
+            {
+                string value;
+
+                if (_attributes != null)
+                {
+                    _attributes.TryGetValue(key, out value);
+                }
+                else
+                {
+                    value = null;
+                }
+
+                return value;
+            }
+        }
 
         private bool IsNoGlue => !IsGlueBefore && !IsGlueAfter;
 
@@ -112,6 +187,21 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 var nameIndex = (IsGlueAfter ? 1 : 0) + (IsGlueBefore ? 2 : 0);
                 var localName = _elementNames[nameIndex];
                 writer.WriteStartElement(localName);
+
+                if (_attributes != null)
+                {
+                    var dictionary = new SortedDictionary<string, string>();
+
+                    foreach (var pair in _attributes)
+                    {
+                        dictionary.Add(pair.Key, pair.Value);
+                    }
+
+                    foreach (var pair in dictionary)
+                    {
+                        writer.WriteAttributeString(pair.Key, pair.Value);
+                    }
+                }
             }
             writer.WriteString(Content);
             if (isElemental)
@@ -125,11 +215,30 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             reader.ValidateNodeType(XmlNodeType.Element);
             var nameIndex = Array.IndexOf(_elementNames, reader.Name);
             XmlHelper.ValidateData(0 <= nameIndex);
+
+            Dictionary<string, string> attributes;
+            if (reader.MoveToFirstAttribute())
+            {
+                attributes = new Dictionary<string, string>();
+
+                do
+                {
+                    attributes.Add(reader.Name, reader.Value);
+                }
+                while (reader.MoveToNextAttribute());
+            }
+            else
+            {
+                attributes = null;
+            }
             reader.Read();
 
             reader.ValidateNodeType(XmlNodeType.Text);
             var text = reader.Value;
-            var tile = TileData.Create(content: text, isGlueBefore: (nameIndex & 2) != 0, isGlueAfter: (nameIndex & 1) != 0);
+            var tile = TileData.Create(content: text,
+                isGlueBefore: (nameIndex & 2) != 0,
+                isGlueAfter: (nameIndex & 1) != 0,
+                attributes: attributes);
 
             reader.Read();
             reader.ReadNodeType(XmlNodeType.EndElement);
@@ -142,6 +251,32 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             var value = Content == element.Content &&
                 IsGlueBefore == element.IsGlueBefore &&
                 IsGlueAfter == element.IsGlueAfter;
+
+            if (value)
+            {
+                if (_attributes != null)
+                {
+                    value = element._attributes != null &&
+                        _attributes.Count == element._attributes.Count;
+
+                    if (value)
+                    {
+                        using (var enumerable = _attributes.GetEnumerator())
+                        {
+                            while (value && enumerable.MoveNext())
+                            {
+                                value = enumerable.Current.Value ==
+                                    element[enumerable.Current.Key];
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    value = element._attributes == null;
+                }
+            }
+
             return value;
         }
 
