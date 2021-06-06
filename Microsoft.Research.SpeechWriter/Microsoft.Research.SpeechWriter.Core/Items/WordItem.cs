@@ -41,16 +41,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         public override string Content => Tile.ToTokenString();
 
         /// <summary>
-        /// Is this item followed with out space by the next item.
-        /// </summary>
-        public bool IsAttachedToNext => Tile.IsGlueAfter;
-
-        /// <summary>
-        /// Does this item follow without space the preceeding item.
-        /// </summary>
-        public bool IsAttachedToPrevious => Tile.IsGlueBefore;
-
-        /// <summary>
         /// The unformatted content part.
         /// </summary>
         public string UnformattedContent => Tile.Content;

@@ -45,10 +45,10 @@
             <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="5"/>
         </DataTemplate>
         <DataTemplate x:Key="SuggestedWordItem" x:DataType="lib:SuggestedWordItem">
-            <coreui:TileControl Background="LightYellow" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
+            <coreui:TileControl Background="LightYellow" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding Tile.IsGlueAfter}" ShowAttachedToPrevious="{Binding Tile.IsGlueBefore}"/>
         </DataTemplate>
         <DataTemplate x:Key="HeadWordItem" x:DataType="lib:HeadWordItem">
-            <coreui:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
+            <coreui:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding Tile.IsGlueAfter}" ShowAttachedToPrevious="{Binding Tile.IsGlueBefore}"/>
         </DataTemplate>
         <DataTemplate x:Key="ReplacementItem" x:DataType="lib:ReplacementItem">
             <StackPanel Orientation="Horizontal">
@@ -58,7 +58,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="GhostWordItem" x:DataType="lib:GhostWordItem">
-            <coreui:TileControl Background="LightBlue" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
+            <coreui:TileControl Background="LightBlue" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding Tile.IsGlueAfter}" ShowAttachedToPrevious="{Binding Tile.IsGlueBefore}"/>
         </DataTemplate>
         <DataTemplate x:Key="InterstitialNonItem" x:DataType="lib:InterstitialNonItem">
             <TextBlock Text="-" FontSize="25" FontWeight="Bold" Margin="5"/>

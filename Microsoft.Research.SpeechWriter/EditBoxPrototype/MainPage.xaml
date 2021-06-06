@@ -19,7 +19,7 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
         <DataTemplate x:Key="TileData" x:DataType="data:TileData">
-            <coreui:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
+            <coreui:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding Tile.IsGlueAfter}" ShowAttachedToPrevious="{Binding Tile.IsGlueBefore}"/>
         </DataTemplate>
     </Page.Resources>
 
