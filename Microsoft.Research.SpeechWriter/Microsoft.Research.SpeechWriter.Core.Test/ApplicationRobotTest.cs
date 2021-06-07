@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
 {
@@ -393,6 +396,56 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             Assert.AreEqual("WORLD", model.HeadItems[2].Content);
             Assert.IsInstanceOf<GhostStopItem>(model.HeadItems[3]);
             */
+        }
+
+        private class PersistantEnvironment : DefaultWriterEnvironment, IWriterEnvironment
+        {
+            private readonly StringBuilder _builder = new StringBuilder(string.Empty);
+
+            /// <summary>
+            /// Persist an utterance.
+            /// </summary>
+            /// <param name="utterance">The utterance</param>
+            Task IWriterEnvironment.SaveUtteranceAsync(string utterance)
+            {
+                _builder.AppendLine(utterance);
+                return Task.CompletedTask;
+            }
+
+            /// <summary>
+            /// Get utterance reader.
+            /// </summary>
+            /// <returns>The collection of utterances.</returns>
+            Task<TextReader> IWriterEnvironment.RecallUtterancesAsync()
+            {
+                var text = _builder.ToString();
+                var reader = new StringReader(text);
+                return Task.FromResult<TextReader>(reader);
+            }
+        }
+
+        private static async Task CheckRecallAsync(string text, int expectedFirst, int expectedSecond)
+        {
+            var sequence = TileSequence.FromRaw(text);
+
+            var environment = new PersistantEnvironment();
+            var modelFirst = new ApplicationModel(environment);
+
+            var actualFirst = CountClicks(modelFirst, sequence);
+
+            var modelSecond = new ApplicationModel(environment);
+            await modelSecond.LoadUtterancesAsync();
+
+            var actualSecond = CountClicks(modelSecond, sequence);
+
+            Assert.AreEqual(expectedFirst, actualFirst);
+            Assert.AreEqual(expectedSecond, actualSecond);
+        }
+
+        [Test]
+        public async Task ShareAndEnjoyPersistance()
+        {
+            await CheckRecallAsync("share and enjoy, share and enjoy, journey though life with a plastic boy, or girl by your side", 69, 5);
         }
     }
 }
