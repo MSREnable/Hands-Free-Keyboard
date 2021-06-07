@@ -197,8 +197,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             // The current processing position.
             var position = 0;
 
-            var isPreviousGlueAfter = true;
-
             // Count the amount of leading white space.
             while (position < length && text[position] == ' ')
             {
@@ -210,8 +208,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 var nextIsPreviousGlueAfter = position < length;
                 var tile = TileData.Create(new string(' ', position), isPrefix: true, isSuffix: true);
                 list.Add(tile);
-
-                isPreviousGlueAfter = nextIsPreviousGlueAfter;
             }
 
             var previousTile = SingleSimpleSpace;
@@ -254,9 +250,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                     for (var i = groupStart; i < wordStart; i++)
                     {
                         var ch = text[i];
-                        var tile = TileData.Create(ch.ToString(), isSuffix: true);
+                        var tile = TileData.Create(TileType.Prefix, ch.ToString());
                         list.Add(tile);
                     }
+
                     if (wordStart < wordLimit)
                     {
                         var word = text.Substring(wordStart, wordLimit - wordStart);
@@ -265,10 +262,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
                         Debug.Assert(tile.IsSimpleWord);
                     }
+
                     for (var i = wordLimit; i < groupLimit; i++)
                     {
                         var ch = text[i];
-                        var tile = TileData.Create(ch.ToString(), isPrefix: true);
+                        var tile = TileData.Create(TileType.Suffix, ch.ToString());
                         list.Add(tile);
                     }
                 }

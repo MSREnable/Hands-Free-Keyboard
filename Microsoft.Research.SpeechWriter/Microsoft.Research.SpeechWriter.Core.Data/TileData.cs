@@ -12,14 +12,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 {
     public class TileData
     {
-        private TileData(string content,
-            bool isPrefix = false,
-            bool isSuffix = false,
-            IReadOnlyDictionary<string, string> attributes = null)
-            : this(TileTypeHelper.TypeFromGlue(isPrefix: isSuffix, isSuffix: isPrefix), content: content, attributes: attributes)
-        {
-        }
-
         private TileData(TileType type,
             string content,
             IReadOnlyDictionary<string, string> attributes = null)
@@ -48,9 +40,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             bool isSuffix = false,
             IReadOnlyDictionary<string, string> attributes = null)
         {
-            var value = new TileData(content: content,
-                isPrefix: isPrefix,
-                isSuffix: isSuffix,
+            var type = TileTypeHelper.TypeFromGlue(isPrefix: isPrefix, isSuffix: isSuffix);
+            var value = new TileData(type: type,
+                content: content,
                 attributes: attributes);
             return value;
         }

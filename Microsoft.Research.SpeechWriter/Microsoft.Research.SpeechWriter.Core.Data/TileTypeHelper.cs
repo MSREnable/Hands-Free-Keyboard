@@ -25,22 +25,22 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             TileType value;
 
-            if (isSuffix)
+            if (isPrefix)
             {
-                if (isPrefix)
+                if (isSuffix)
                 {
                     value = TileType.Infix;
                 }
                 else
                 {
-                    value = TileType.Suffix;
+                    value = TileType.Prefix;
                 }
             }
             else
             {
-                if (isPrefix)
+                if (isSuffix)
                 {
-                    value = TileType.Prefix;
+                    value = TileType.Suffix;
                 }
                 else
                 {

@@ -124,10 +124,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
         [Test]
         public void CheckTokenizationTest()
         {
-            CheckTokenization(TileData.Create("Simple"), "Simple");
-            CheckTokenization(TileData.Create("Before", isSuffix: true), "Before\0B");
-            CheckTokenization(TileData.Create("After", isPrefix: true), "After\0A");
-            CheckTokenization(TileData.Create("Before", isPrefix: true, isSuffix: true), "Before\0J");
+            CheckTokenization(TileData.Create("Normal"), "Normal");
+            CheckTokenization(TileData.Create("Prefix", isPrefix: true), "Prefix\0B");
+            CheckTokenization(TileData.Create("Suffix", isSuffix: true), "Suffix\0A");
+            CheckTokenization(TileData.Create("Infix", isPrefix: true, isSuffix: true), "Infix\0J");
 
             void CheckTokenization(TileData tile, string expected)
             {
