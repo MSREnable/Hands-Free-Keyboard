@@ -12,11 +12,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 {
     public class TileData
     {
-        private TileData(string content)
-            : this(content, isPrefix: false, isSuffix: false)
-        {
-        }
-
         private TileData(string content,
             bool isPrefix = false,
             bool isSuffix = false,
@@ -44,7 +39,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
         public static TileData Create(string content)
         {
-            var value = new TileData(content);
+            var value = new TileData(TileType.Normal, content);
             return value;
         }
 
