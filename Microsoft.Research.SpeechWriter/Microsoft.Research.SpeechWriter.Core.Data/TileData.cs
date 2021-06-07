@@ -13,15 +13,15 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
     public class TileData
     {
         private TileData(string content)
-            : this(content, isGlueBefore: false, isGlueAfter: false)
+            : this(content, isPrefix: false, isSuffix: false)
         {
         }
 
         private TileData(string content,
-            bool isGlueBefore = false,
-            bool isGlueAfter = false,
+            bool isPrefix = false,
+            bool isSuffix = false,
             IReadOnlyDictionary<string, string> attributes = null)
-            : this(TileTypeHelper.TypeFromGlue(isGlueBefore: isGlueBefore, isGlueAfter: isGlueAfter), content: content, attributes: attributes)
+            : this(TileTypeHelper.TypeFromGlue(isPrefix: isSuffix, isSuffix: isPrefix), content: content, attributes: attributes)
         {
         }
 
@@ -49,13 +49,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         }
 
         public static TileData Create(string content,
-            bool isGlueBefore = false,
-            bool isGlueAfter = false,
+            bool isPrefix = false,
+            bool isSuffix = false,
             IReadOnlyDictionary<string, string> attributes = null)
         {
             var value = new TileData(content: content,
-                isGlueBefore: isGlueBefore,
-                isGlueAfter: isGlueAfter,
+                isPrefix: isPrefix,
+                isSuffix: isSuffix,
                 attributes: attributes);
             return value;
         }

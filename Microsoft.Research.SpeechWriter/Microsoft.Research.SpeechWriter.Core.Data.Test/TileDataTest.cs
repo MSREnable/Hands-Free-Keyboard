@@ -27,13 +27,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
 
             foreach (var simple in simples)
             {
-                var tile = TileData.Create(simple, isGlueBefore: true);
+                var tile = TileData.Create(simple, isPrefix: true);
                 Assert.IsFalse(tile.IsSimpleWord);
             }
 
             foreach (var simple in simples)
             {
-                var tile = TileData.Create(simple, isGlueAfter: true);
+                var tile = TileData.Create(simple, isSuffix: true);
                 Assert.IsFalse(tile.IsSimpleWord);
             }
 
@@ -125,9 +125,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
         public void CheckTokenizationTest()
         {
             CheckTokenization(TileData.Create("Simple"), "Simple");
-            CheckTokenization(TileData.Create("Before", isGlueAfter: true), "Before\0B");
-            CheckTokenization(TileData.Create("After", isGlueBefore: true), "After\0A");
-            CheckTokenization(TileData.Create("Before", isGlueBefore: true, isGlueAfter: true), "Before\0J");
+            CheckTokenization(TileData.Create("Before", isSuffix: true), "Before\0B");
+            CheckTokenization(TileData.Create("After", isPrefix: true), "After\0A");
+            CheckTokenization(TileData.Create("Before", isPrefix: true, isSuffix: true), "Before\0J");
 
             void CheckTokenization(TileData tile, string expected)
             {

@@ -14,7 +14,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         /// <summary>
         /// A simple space that may be assumed before and after a sequence and also may be implied within a sequence.
         /// </summary>
-        private static readonly TileData SingleSimpleSpace = TileData.Create(" ", isGlueBefore: true, isGlueAfter: true);
+        private static readonly TileData SingleSimpleSpace = TileData.Create(" ", isPrefix: true, isSuffix: true);
 
         /// <summary>
         /// Container for the <code>TileData</code> objects.
@@ -208,7 +208,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             {
                 // There is leading space, so emit explicit space.
                 var nextIsPreviousGlueAfter = position < length;
-                var tile = TileData.Create(new string(' ', position), isGlueBefore: true, isGlueAfter: true);
+                var tile = TileData.Create(new string(' ', position), isPrefix: true, isSuffix: true);
                 list.Add(tile);
 
                 isPreviousGlueAfter = nextIsPreviousGlueAfter;
@@ -254,7 +254,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                     for (var i = groupStart; i < wordStart; i++)
                     {
                         var ch = text[i];
-                        var tile = TileData.Create(ch.ToString(), isGlueAfter: true);
+                        var tile = TileData.Create(ch.ToString(), isSuffix: true);
                         list.Add(tile);
                     }
                     if (wordStart < wordLimit)
@@ -268,7 +268,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                     for (var i = wordLimit; i < groupLimit; i++)
                     {
                         var ch = text[i];
-                        var tile = TileData.Create(ch.ToString(), isGlueBefore: true);
+                        var tile = TileData.Create(ch.ToString(), isPrefix: true);
                         list.Add(tile);
                     }
                 }
@@ -279,7 +279,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                     {
                         // Emit as one string.
                         var group = text.Substring(groupStart, groupLimit - groupStart);
-                        var tile = TileData.Create(group, isGlueAfter: false);
+                        var tile = TileData.Create(group, isSuffix: false);
                         list.Add(tile);
                     }
                 }
@@ -287,7 +287,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 // Add explicit whitespace if needed.
                 if (groupLimit + 1 < position || (groupLimit < position && position == length))
                 {
-                    var tile = TileData.Create(new string(' ', position - groupLimit), isGlueBefore: true, isGlueAfter: true);
+                    var tile = TileData.Create(new string(' ', position - groupLimit), isPrefix: true, isSuffix: true);
                     list.Add(tile);
 
                     Debug.Assert(tile.IsSpaces);

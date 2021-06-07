@@ -48,7 +48,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 void CheckedAdd(string newContent)
                 {
-                    var newTile = TileData.Create(content: newContent, isGlueAfter: isPrefix, isGlueBefore: isSuffix, attributes: attributes);
+                    var newTile = TileData.Create(content: newContent, isSuffix: isPrefix, isPrefix: isSuffix, attributes: attributes);
                     var version = newTile.ToTokenString();
                     if (included.Add(version))
                     {
@@ -59,7 +59,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             for (var i = 0; i < 4; i++)
             {
-                var spacedTile = TileData.Create(content: content, isGlueAfter: (i & 1) != 0, isGlueBefore: (i & 2) != 0, attributes: attributes);
+                var spacedTile = TileData.Create(content: content, isSuffix: (i & 1) != 0, isPrefix: (i & 2) != 0, attributes: attributes);
                 var spacedContent = spacedTile.ToTokenString();
                 if (included.Add(spacedContent))
                 {
