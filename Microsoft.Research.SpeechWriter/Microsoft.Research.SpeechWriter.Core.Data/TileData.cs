@@ -12,8 +12,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 {
     public class TileData
     {
-        private static readonly string[] _elementNames = new[] { "T", "B", "A", "J" };
-
         private TileData(string content)
             : this(content, isGlueBefore: false, isGlueAfter: false)
         {
@@ -23,15 +21,22 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             bool isGlueBefore = false,
             bool isGlueAfter = false,
             IReadOnlyDictionary<string, string> attributes = null)
+            : this(TileTypeHelper.TypeFromGlue(isGlueBefore: isGlueBefore, isGlueAfter: isGlueAfter), content: content, attributes: attributes)
         {
+        }
+
+        private TileData(TileType type,
+            string content,
+            IReadOnlyDictionary<string, string> attributes = null)
+        {
+
             if (content.Contains("\0"))
             {
                 throw new ArgumentException("content contains null character");
             }
 
+            Type = type;
             Content = content;
-            IsGlueBefore = isGlueBefore;
-            IsGlueAfter = isGlueAfter;
             Attributes = attributes != null && attributes.Count != 0 ? attributes : null;
 
             Debug.Assert(!IsSpaces || (IsGlueBefore & IsGlueAfter), "Spaces must always be glued both sides");
@@ -55,37 +60,36 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             return value;
         }
 
+        public static TileData Create(TileType type,
+            string content,
+            IReadOnlyDictionary<string, string> attributes = null)
+        {
+            var value = new TileData(type: type,
+                content: content,
+                attributes: attributes);
+            return value;
+        }
+
         public string ToTokenString()
         {
-            string value;
+            var value = Content;
+
+            if (Type != TileType.Normal)
+            {
+                value += '\0' + Type.ToElementName();
+            }
 
             if (Attributes != null)
             {
                 var list = new SortedSet<string>();
-
-                var nameIndex = (IsGlueAfter ? 1 : 0) + (IsGlueBefore ? 2 : 0);
-                if (nameIndex != 0)
-                {
-                    var localName = _elementNames[nameIndex];
-                    list.Add(localName);
-                }
 
                 foreach (var pair in Attributes)
                 {
                     var attribute = $"{pair.Key}={pair.Value}";
                     list.Add(attribute);
                 }
-                value = Content + '\0' + string.Join("\0", list);
-            }
-            else if (IsGlueBefore || IsGlueAfter)
-            {
-                var nameIndex = (IsGlueAfter ? 1 : 0) + (IsGlueBefore ? 2 : 0);
-                var localName = _elementNames[nameIndex];
-                value = $"{Content}\0{localName}";
-            }
-            else
-            {
-                value = Content;
+
+                value += '\0' + string.Join("\0", list);
             }
 
             return value;
@@ -103,7 +107,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             else
             {
                 var content = splits[0];
-                var nameIndex = 0;
+                var type = TileType.Normal;
 
                 Dictionary<string, string> attributes = null;
 
@@ -113,7 +117,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
                     if (attributeKeyValue.Length == 1)
                     {
-                        nameIndex = Array.IndexOf(_elementNames, attributeKeyValue);
+                        type = TileTypeHelper.FromElementName(attributeKeyValue);
                     }
                     else
                     {
@@ -128,13 +132,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 }
 
                 value = TileData.Create(content: content,
-                    isGlueBefore: (nameIndex & 2) != 0,
-                    isGlueAfter: (nameIndex & 1) != 0,
+                    type: type,
                     attributes: attributes);
             }
 
             return value;
         }
+
+        public TileType Type { get; }
 
         public string Content { get; }
 
@@ -165,13 +170,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         /// Attach without space to the previous item.
         /// </summary>
         [XmlIgnore]
-        public bool IsGlueAfter { get; }
+        public bool IsGlueAfter => Type.IsGlueAfter();
 
         /// <summary>
         /// Attach without space to the next item.
         /// </summary>
         [XmlIgnore]
-        public bool IsGlueBefore { get; }
+        public bool IsGlueBefore => Type.IsGlueBefore();
 
         [XmlIgnore]
         internal bool IsSimpleWord => IsNoGlue && 0 < Content.Length && char.IsLetterOrDigit(Content[0]) && char.IsLetterOrDigit(Content[Content.Length - 1]) &&
@@ -184,8 +189,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             if (isElemental)
             {
-                var nameIndex = (IsGlueAfter ? 1 : 0) + (IsGlueBefore ? 2 : 0);
-                var localName = _elementNames[nameIndex];
+                var localName = Type.ToElementName();
                 writer.WriteStartElement(localName);
 
                 if (Attributes != null)
@@ -203,7 +207,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                     }
                 }
             }
+
             writer.WriteString(Content);
+
             if (isElemental)
             {
                 writer.WriteEndElement();
@@ -213,8 +219,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         internal static TileData FromXmlReader(XmlReader reader)
         {
             reader.ValidateNodeType(XmlNodeType.Element);
-            var nameIndex = Array.IndexOf(_elementNames, reader.Name);
-            XmlHelper.ValidateData(0 <= nameIndex);
+            var type = TileTypeHelper.FromElementName(reader.Name);
 
             Dictionary<string, string> attributes;
             if (reader.MoveToFirstAttribute())
@@ -234,10 +239,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             reader.Read();
 
             reader.ValidateNodeType(XmlNodeType.Text);
-            var text = reader.Value;
-            var tile = TileData.Create(content: text,
-                isGlueBefore: (nameIndex & 2) != 0,
-                isGlueAfter: (nameIndex & 1) != 0,
+            var content = reader.Value;
+            var tile = TileData.Create(type: type,
+                content: content,
                 attributes: attributes);
 
             reader.Read();
