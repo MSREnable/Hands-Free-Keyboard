@@ -65,28 +65,29 @@ namespace EditBoxPrototype
                         tilePosition++;
 
                         var prefix = TileData.Create(tile.Content.Substring(0, start - charPosition),
-                            isPrefix: tile.IsSuffix,
-                            isSuffix: true);
+                            isPrefix: true,
+                            isSuffix: tile.IsSuffix);
                         list.Add(prefix);
 
                         var caret = TileData.Create("^");
                         list.Add(caret);
 
                         var suffix = TileData.Create(tile.Content.Substring(start - charPosition),
-                            isSuffix: tile.IsPrefix, isPrefix: true);
+                            isPrefix: tile.IsPrefix, 
+                            isSuffix: true);
                         list.Add(suffix);
                     }
                     else
                     {
                         var caret = TileData.Create("^",
-                            isPrefix: start < charPosition,
-                            isSuffix: start == charPosition);
+                            isPrefix: start == charPosition,
+                            isSuffix: start < charPosition);
                         list.Add(caret);
                     }
                 }
                 else
                 {
-                    var caret = TileData.Create("^", isPrefix: true);
+                    var caret = TileData.Create("^", isSuffix: true);
                     list.Add(caret);
                 }
 
