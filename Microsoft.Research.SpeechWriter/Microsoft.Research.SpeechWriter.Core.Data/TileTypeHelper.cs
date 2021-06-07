@@ -11,12 +11,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         private const string InfixElement = "J";
         private const string CommandElement = "C";
 
-        public static bool IsGlueAfter(this TileType type)
+        public static bool IsPrefix(this TileType type)
         {
             return type == TileType.Prefix || type == TileType.Infix;
         }
 
-        public static bool IsGlueBefore(this TileType type)
+        public static bool IsSuffix(this TileType type)
         {
             return type == TileType.Suffix || type == TileType.Infix;
         }

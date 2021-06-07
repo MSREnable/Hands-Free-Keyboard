@@ -19,7 +19,7 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
         <DataTemplate x:Key="TileData" x:DataType="data:TileData">
-            <coreui:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding Tile.IsGlueAfter}" ShowAttachedToPrevious="{Binding Tile.IsGlueBefore}"/>
+            <coreui:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" IsPrefix="{Binding Tile.IsPrefix}" IsSuffix="{Binding Tile.IsSuffix}"/>
         </DataTemplate>
     </Page.Resources>
 
@@ -36,7 +36,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button>
-                        <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" ShowAttachedToNext="{Binding IsGlueAfter}" ShowAttachedToPrevious="{Binding IsGlueBefore}"/>
+                        <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" IsPrefix="{Binding IsPrefix}" IsSuffix="{Binding IsSuffix}"/>
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
@@ -52,7 +52,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button>
-                        <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" ShowAttachedToNext="{Binding IsGlueAfter}" ShowAttachedToPrevious="{Binding IsGlueBefore}"/>
+                        <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" IsPrefix="{Binding IsPrefix}" IsSuffix="{Binding IsSuffix}"/>
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

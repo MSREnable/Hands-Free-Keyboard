@@ -39,7 +39,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             Content = content;
             Attributes = attributes != null && attributes.Count != 0 ? attributes : null;
 
-            Debug.Assert(!IsSpaces || (IsGlueBefore & IsGlueAfter), "Spaces must always be glued both sides");
+            Debug.Assert(!IsSpaces || (IsSuffix & IsPrefix), "Spaces must always be glued both sides");
         }
 
         public static TileData Create(string content)
@@ -164,19 +164,19 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             }
         }
 
-        private bool IsNoGlue => !IsGlueBefore && !IsGlueAfter;
+        private bool IsNoGlue => !IsSuffix && !IsPrefix;
 
         /// <summary>
         /// Attach without space to the previous item.
         /// </summary>
         [XmlIgnore]
-        public bool IsGlueAfter => Type.IsGlueAfter();
+        public bool IsPrefix => Type.IsPrefix();
 
         /// <summary>
         /// Attach without space to the next item.
         /// </summary>
         [XmlIgnore]
-        public bool IsGlueBefore => Type.IsGlueBefore();
+        public bool IsSuffix => Type.IsSuffix();
 
         [XmlIgnore]
         internal bool IsSimpleWord => IsNoGlue && 0 < Content.Length && char.IsLetterOrDigit(Content[0]) && char.IsLetterOrDigit(Content[Content.Length - 1]) &&
@@ -253,8 +253,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         public bool Equals(TileData element)
         {
             var value = Content == element.Content &&
-                IsGlueBefore == element.IsGlueBefore &&
-                IsGlueAfter == element.IsGlueAfter;
+                IsSuffix == element.IsSuffix &&
+                IsPrefix == element.IsPrefix;
 
             if (value)
             {
@@ -292,7 +292,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
         public override int GetHashCode()
         {
-            return Content.GetHashCode() ^ IsGlueBefore.GetHashCode() ^ IsGlueAfter.GetHashCode();
+            return Content.GetHashCode() ^ IsSuffix.GetHashCode() ^ IsPrefix.GetHashCode();
         }
 
         public override string ToString()

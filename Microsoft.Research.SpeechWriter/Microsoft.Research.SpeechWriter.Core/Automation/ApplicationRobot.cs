@@ -93,8 +93,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return item != null &&
                 (StringEqualsExact(item.Tile.Content, value.Content, culture) ||
                 StringEqualsExact(tile.FormattedContent, value.Content, culture)) &&
-                item.Tile.IsGlueAfter == value.IsGlueAfter &&
-                item.Tile.IsGlueBefore == value.IsGlueBefore;
+                item.Tile.IsPrefix == value.IsPrefix &&
+                item.Tile.IsSuffix == value.IsSuffix;
         }
 
         private static ApplicationRobotAction CreateSuggestedWordAction(ApplicationModel model,
@@ -382,11 +382,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 Debug.Assert(startMap.LetterCount == targetMap.LetterCount);
 
                 var startDistance = targetMap.GetDistanceTo(startMap);
-                if (targetTile.IsGlueAfter != startTile.IsGlueAfter)
+                if (targetTile.IsPrefix != startTile.IsPrefix)
                 {
                     startDistance++;
                 }
-                if (targetTile.IsGlueBefore != startTile.IsGlueBefore)
+                if (targetTile.IsSuffix != startTile.IsSuffix)
                 {
                     startDistance++;
                 }
@@ -403,11 +403,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                     Debug.Assert(suggestedMap.LetterCount == targetMap.LetterCount);
 
                     var suggestionDistance = targetMap.GetDistanceTo(suggestedMap);
-                    if (targetTile.IsGlueAfter != suggestedTile.IsGlueAfter)
+                    if (targetTile.IsPrefix != suggestedTile.IsPrefix)
                     {
                         suggestionDistance++;
                     }
-                    if (targetTile.IsGlueBefore != suggestedTile.IsGlueBefore)
+                    if (targetTile.IsSuffix != suggestedTile.IsSuffix)
                     {
                         suggestionDistance++;
                     }

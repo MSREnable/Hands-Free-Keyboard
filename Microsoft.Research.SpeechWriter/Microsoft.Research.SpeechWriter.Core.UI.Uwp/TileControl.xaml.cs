@@ -9,9 +9,9 @@ namespace Microsoft.Research.SpeechWriter.Core.UI.Uwp
     {
         public static readonly DependencyProperty CaptionProperty = DependencyProperty.Register(nameof(Caption), typeof(string), typeof(TileControl),
             new PropertyMetadata(null, UpdateBorder));
-        public static readonly DependencyProperty ShowAttachedToPreviousProperty = DependencyProperty.Register(nameof(ShowAttachedToPrevious), typeof(bool), typeof(TileControl),
+        public static readonly DependencyProperty ShowAttachedToPreviousProperty = DependencyProperty.Register(nameof(IsSuffix), typeof(bool), typeof(TileControl),
             new PropertyMetadata(false, UpdateBorder));
-        public static readonly DependencyProperty ShowAttachedToNextProperty = DependencyProperty.Register(nameof(ShowAttachedToNext), typeof(bool), typeof(TileControl),
+        public static readonly DependencyProperty ShowAttachedToNextProperty = DependencyProperty.Register(nameof(IsPrefix), typeof(bool), typeof(TileControl),
             new PropertyMetadata(false, UpdateBorder));
         public static readonly DependencyProperty BorderProperty = DependencyProperty.Register(nameof(Border), typeof(Thickness), typeof(TileControl),
             new PropertyMetadata(new Thickness(1), UpdateBorder));
@@ -29,13 +29,13 @@ namespace Microsoft.Research.SpeechWriter.Core.UI.Uwp
             set => SetValue(CaptionProperty, value);
         }
 
-        public bool ShowAttachedToPrevious
+        public bool IsSuffix
         {
             get => (bool)GetValue(ShowAttachedToPreviousProperty);
             set => SetValue(ShowAttachedToPreviousProperty, value);
         }
 
-        public bool ShowAttachedToNext
+        public bool IsPrefix
         {
             get => (bool)GetValue(ShowAttachedToNextProperty);
             set => SetValue(ShowAttachedToNextProperty, value);
@@ -56,11 +56,11 @@ namespace Microsoft.Research.SpeechWriter.Core.UI.Uwp
         private void UpdateBorder(DependencyPropertyChangedEventArgs e)
         {
             var border = Border;
-            var showAttachedToPrevious = ShowAttachedToPrevious;
-            var showAttachedToNext = ShowAttachedToNext;
+            var isSuffix = IsSuffix;
+            var isPrefix = IsPrefix;
 
-            var internalBorder = new Thickness(left: showAttachedToPrevious ? 0 : border.Left,
-                right: showAttachedToNext ? 0 : border.Right, top: border.Top, bottom: border.Bottom);
+            var internalBorder = new Thickness(left: isSuffix ? 0 : border.Left,
+                right: isPrefix ? 0 : border.Right, top: border.Top, bottom: border.Bottom);
             InternalBorder = internalBorder;
         }
 

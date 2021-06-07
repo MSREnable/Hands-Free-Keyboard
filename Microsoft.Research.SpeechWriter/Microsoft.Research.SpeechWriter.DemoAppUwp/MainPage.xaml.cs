@@ -669,7 +669,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                             break;
                     }
 
-                    if (isUtteranceEnding && !tile.IsGlueAfter)
+                    if (isUtteranceEnding && !tile.IsPrefix)
                     {
                         var utteranceSequence = TileSequence.FromData(utterance);
                         script.Add(utteranceSequence);

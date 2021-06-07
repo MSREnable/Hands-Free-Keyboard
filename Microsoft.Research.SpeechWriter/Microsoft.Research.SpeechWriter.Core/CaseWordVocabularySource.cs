@@ -22,8 +22,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             var tile = TileData.FromTokenString(target.Content);
             var content = tile.Content;
-            var isGlueAfter = tile.IsGlueAfter;
-            var isGlueBefore = tile.IsGlueBefore;
+            var isPrefix = tile.IsPrefix;
+            var isSuffix = tile.IsSuffix;
             var attributes = tile.Attributes;
             var included = new HashSet<string> { target.Content };
 
@@ -48,7 +48,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 void CheckedAdd(string newContent)
                 {
-                    var newTile = TileData.Create(content: newContent, isGlueAfter: isGlueAfter, isGlueBefore: isGlueBefore, attributes: attributes);
+                    var newTile = TileData.Create(content: newContent, isGlueAfter: isPrefix, isGlueBefore: isSuffix, attributes: attributes);
                     var version = newTile.ToTokenString();
                     if (included.Add(version))
                     {

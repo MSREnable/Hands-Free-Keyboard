@@ -16,13 +16,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
 
             var tile = TileData.FromTokenString(replacement);
             UnformattedContent = tile.Content;
-            IsAttachedToNext = tile.IsGlueAfter;
-            IsAttachedToPrevious = tile.IsGlueBefore;
+            IsAttachedToNext = tile.IsPrefix;
+            IsAttachedToPrevious = tile.IsSuffix;
 
             var oldTile = TileData.FromTokenString(predecessor.Content);
             OldUnformattedContent = oldTile.Content;
-            OldIsAttachedToNext = oldTile.IsGlueAfter;
-            OldIsAttachedToPrevious = oldTile.IsGlueBefore;
+            OldIsAttachedToNext = oldTile.IsPrefix;
+            OldIsAttachedToPrevious = oldTile.IsSuffix;
         }
 
         /// <summary>

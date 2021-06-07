@@ -107,12 +107,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             var isPreviousAttached = true;
             foreach (var tile in _sequence)
             {
-                if (!isPreviousAttached && !tile.IsGlueBefore)
+                if (!isPreviousAttached && !tile.IsSuffix)
                 {
                     output.Write(SingleSimpleSpace.Content);
                 }
                 output.Write(tile.Content);
-                isPreviousAttached = tile.IsGlueAfter;
+                isPreviousAttached = tile.IsPrefix;
             }
 
             var value = output.ToString();
@@ -132,12 +132,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 var isPreviousAttached = true;
                 foreach (var tile in _sequence)
                 {
-                    if (!isPreviousAttached && !tile.IsGlueBefore)
+                    if (!isPreviousAttached && !tile.IsSuffix)
                     {
                         SingleSimpleSpace.ToXmlWriter(writer, false);
                     }
                     tile.ToXmlWriter(writer, false);
-                    isPreviousAttached = tile.IsGlueAfter;
+                    isPreviousAttached = tile.IsPrefix;
                 }
             }
 

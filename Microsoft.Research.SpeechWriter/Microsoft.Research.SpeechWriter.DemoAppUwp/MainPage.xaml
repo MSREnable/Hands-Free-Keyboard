@@ -45,20 +45,20 @@
             <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="5"/>
         </DataTemplate>
         <DataTemplate x:Key="SuggestedWordItem" x:DataType="lib:SuggestedWordItem">
-            <coreui:TileControl Background="LightYellow" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding Tile.IsGlueAfter}" ShowAttachedToPrevious="{Binding Tile.IsGlueBefore}"/>
+            <coreui:TileControl Background="LightYellow" Caption="{Binding FormattedContent}" IsPrefix="{Binding Tile.IsPrefix}" IsSuffix="{Binding Tile.IsSuffix}"/>
         </DataTemplate>
         <DataTemplate x:Key="HeadWordItem" x:DataType="lib:HeadWordItem">
-            <coreui:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding Tile.IsGlueAfter}" ShowAttachedToPrevious="{Binding Tile.IsGlueBefore}"/>
+            <coreui:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" IsPrefix="{Binding Tile.IsPrefix}" IsSuffix="{Binding Tile.IsSuffix}"/>
         </DataTemplate>
         <DataTemplate x:Key="ReplacementItem" x:DataType="lib:ReplacementItem">
             <StackPanel Orientation="Horizontal">
-                <coreui:TileControl Background="LightGreen" Caption="{Binding OldUnformattedContent}" ShowAttachedToNext="{Binding OldIsAttachedToNext}" ShowAttachedToPrevious="{Binding OldIsAttachedToPrevious}"/>
+                <coreui:TileControl Background="LightGreen" Caption="{Binding OldUnformattedContent}" IsPrefix="{Binding OldIsAttachedToNext}" IsSuffix="{Binding OldIsAttachedToPrevious}"/>
                 <TextBlock Text="&#x2192;" FontSize="25" FontWeight="Bold" Foreground="DarkGray" VerticalAlignment="Center"/>
-                <coreui:TileControl Background="LightGreen" Caption="{Binding UnformattedContent}" ShowAttachedToNext="{Binding IsAttachedToNext}" ShowAttachedToPrevious="{Binding IsAttachedToPrevious}"/>
+                <coreui:TileControl Background="LightGreen" Caption="{Binding UnformattedContent}" IsPrefix="{Binding IsAttachedToNext}" IsSuffix="{Binding IsAttachedToPrevious}"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="GhostWordItem" x:DataType="lib:GhostWordItem">
-            <coreui:TileControl Background="LightBlue" Caption="{Binding FormattedContent}" ShowAttachedToNext="{Binding Tile.IsGlueAfter}" ShowAttachedToPrevious="{Binding Tile.IsGlueBefore}"/>
+            <coreui:TileControl Background="LightBlue" Caption="{Binding FormattedContent}" IsPrefix="{Binding Tile.IsPrefix}" IsSuffix="{Binding Tile.IsSuffix}"/>
         </DataTemplate>
         <DataTemplate x:Key="InterstitialNonItem" x:DataType="lib:InterstitialNonItem">
             <TextBlock Text="-" FontSize="25" FontWeight="Bold" Margin="5"/>

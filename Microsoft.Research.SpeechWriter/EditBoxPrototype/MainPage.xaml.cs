@@ -48,8 +48,8 @@ namespace EditBoxPrototype
                 charPosition += sequence[tilePosition].Content.Length;
                 tilePosition++;
                 if (tilePosition < sequence.Count &&
-                    !sequence[tilePosition - 1].IsGlueAfter &&
-                    !sequence[tilePosition].IsGlueBefore)
+                    !sequence[tilePosition - 1].IsPrefix &&
+                    !sequence[tilePosition].IsSuffix)
                 {
                     charPosition++;
                 }
@@ -65,7 +65,7 @@ namespace EditBoxPrototype
                         tilePosition++;
 
                         var prefix = TileData.Create(tile.Content.Substring(0, start - charPosition),
-                            isGlueBefore: tile.IsGlueBefore,
+                            isGlueBefore: tile.IsSuffix,
                             isGlueAfter: true);
                         list.Add(prefix);
 
@@ -73,7 +73,7 @@ namespace EditBoxPrototype
                         list.Add(caret);
 
                         var suffix = TileData.Create(tile.Content.Substring(start - charPosition),
-                            isGlueAfter: tile.IsGlueAfter, isGlueBefore: true);
+                            isGlueAfter: tile.IsPrefix, isGlueBefore: true);
                         list.Add(suffix);
                     }
                     else
