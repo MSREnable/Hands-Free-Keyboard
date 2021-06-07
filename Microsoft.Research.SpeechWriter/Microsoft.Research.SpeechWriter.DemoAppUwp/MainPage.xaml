@@ -220,6 +220,7 @@
                 <KeyboardAccelerator Key="R" Invoked="OnClickReset"/>
                 <KeyboardAccelerator Key="Space" Invoked="OnSpace"/>
                 <KeyboardAccelerator Key="S" Invoked="OnTimingChange"/>
+                <KeyboardAccelerator Key="L" Invoked="OnShowLogging"/>
                 <KeyboardAccelerator Key="NumberPad1" Invoked="OnFrench"/>
                 <KeyboardAccelerator Key="NumberPad2" Invoked="OnSpanish"/>
                 <KeyboardAccelerator Key="NumberPad3" Invoked="OnGerman"/>

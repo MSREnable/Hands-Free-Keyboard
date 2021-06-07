@@ -771,5 +771,18 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 MoveRectangeSettleTime = TimeSpan.FromSeconds(1.25);
             }
         }
+
+        private async void OnShowLogging(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            var environment = Model.Environment as UwpWriterEnvironment;
+            if (environment != null)
+            {
+                var file = await environment.GetHistoryFileAsync();
+                var path = file.Path;
+                var package = new DataPackage();
+                package.SetText(path);
+                Clipboard.SetContent(package);
+            }
+        }
     }
 }

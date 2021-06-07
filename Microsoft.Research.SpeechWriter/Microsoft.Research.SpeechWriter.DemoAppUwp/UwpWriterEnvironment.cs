@@ -22,7 +22,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             await FileIO.AppendLinesAsync(file, new[] { utterance });
         }
 
-        private async Task<IStorageFile> GetHistoryFileAsync()
+        internal async Task<IStorageFile> GetHistoryFileAsync()
         {
             if (_historyFile == null)
             {
