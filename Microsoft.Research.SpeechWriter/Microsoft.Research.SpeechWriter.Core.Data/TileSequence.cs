@@ -205,7 +205,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             if (position != 0)
             {
                 // There is leading space, so emit explicit space.
-                var nextIsPreviousGlueAfter = position < length;
                 var tile = TileData.Create(new string(' ', position), isPrefix: true, isSuffix: true);
                 list.Add(tile);
             }

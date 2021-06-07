@@ -40,7 +40,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             bool isSuffix = false,
             IReadOnlyDictionary<string, string> attributes = null)
         {
-            var type = TileTypeHelper.TypeFromGlue(isPrefix: isPrefix, isSuffix: isSuffix);
+            var type = TileTypeHelper.FromFixes(isPrefix: isPrefix, isSuffix: isSuffix);
             var value = new TileData(type: type,
                 content: content,
                 attributes: attributes);
@@ -151,7 +151,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             }
         }
 
-        private bool IsNoGlue => !IsSuffix && !IsPrefix;
+        private bool IsNotFixed => !IsSuffix && !IsPrefix;
 
         /// <summary>
         /// Attach without space to the previous item.
@@ -166,7 +166,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         public bool IsSuffix => Type.IsSuffix();
 
         [XmlIgnore]
-        internal bool IsSimpleWord => IsNoGlue && 0 < Content.Length && char.IsLetterOrDigit(Content[0]) && char.IsLetterOrDigit(Content[Content.Length - 1]) &&
+        internal bool IsSimpleWord => IsNotFixed && 0 < Content.Length && char.IsLetterOrDigit(Content[0]) && char.IsLetterOrDigit(Content[Content.Length - 1]) &&
             !Content.Contains(" ");
 
         [XmlIgnore]

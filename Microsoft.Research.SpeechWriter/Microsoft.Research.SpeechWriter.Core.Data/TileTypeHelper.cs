@@ -21,7 +21,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             return type == TileType.Suffix || type == TileType.Infix;
         }
 
-        public static TileType TypeFromGlue(bool isPrefix = false, bool isSuffix = false)
+        public static TileType FromFixes(bool isPrefix = false, bool isSuffix = false)
         {
             TileType value;
 
