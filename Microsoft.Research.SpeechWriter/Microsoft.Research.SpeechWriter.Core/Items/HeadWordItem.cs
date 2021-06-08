@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Research.SpeechWriter.Core.Items
+﻿using System.Collections.Generic;
+using System.Xml;
+
+namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     /// <summary>
     /// Selected word item.
@@ -13,6 +16,23 @@
         internal override void Execute(WordVocabularySource source)
         {
             source.TransferSuccessorsToRunOn(this);
+        }
+
+        internal override void TraceContent(XmlWriter writer)
+        {
+            var list = new List<string>();
+            var me = this;
+            do
+            {
+                list.Insert(0, me.FormattedContent);
+                me = me.Predecessor as HeadWordItem;
+            }
+            while (me != null);
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                writer.WriteAttributeString($"W{i}", list[i]);
+            }
         }
     }
 }

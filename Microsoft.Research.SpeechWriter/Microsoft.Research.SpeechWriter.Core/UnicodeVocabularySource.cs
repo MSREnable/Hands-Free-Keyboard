@@ -24,7 +24,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var unicode = value < SurrogateCodePointsMinimum ?
                 value : value - SurrogateCodePointsMinimum + SurrogateCodePointsLimit;
-            var item = new SuggestedUnicodeItem(_model.LastTile, _parent, unicode);
+            var item = new SuggestedUnicodeItem(Model.LastTile, _parent, unicode);
             return item;
         }
     }

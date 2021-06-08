@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core.Items
 {
@@ -63,6 +64,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         internal override void Execute(WordVocabularySource source)
         {
             source.ReplaceLastItem(_replacement);
+        }
+
+        internal override void TraceContent(XmlWriter writer)
+        {
+            writer.WriteAttributeString(nameof(OldUnformattedContent), OldUnformattedContent);
+            writer.WriteAttributeString(nameof(UnformattedContent), UnformattedContent);
         }
     }
 }

@@ -3,12 +3,12 @@ using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core.Data
 {
-    internal static class XmlHelper
+    public static class XmlHelper
     {
         /// <summary>
         /// The settings used with <code>XmlWriter</code> instances.
         /// </summary>
-        internal static XmlWriterSettings WriterSettings { get; } = new XmlWriterSettings
+        public static XmlWriterSettings WriterSettings { get; } = new XmlWriterSettings
         {
             OmitXmlDeclaration = true,
             ConformanceLevel = ConformanceLevel.Fragment

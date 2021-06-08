@@ -35,7 +35,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                     throw new NotImplementedException();
 
                 case TileCommand.Typing:
-                    var source = new CaseWordVocabularySource(_model, this, (HeadWordItem)LastTile);
+                    var source = new CaseWordVocabularySource(Model, this, (HeadWordItem)LastTile);
                     source.SetSuggestionsView();
                     break;
             }
@@ -190,7 +190,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             PopulateVocabularyList();
-            _model.SetSuggestionsView(this, 0, Count, false);
+            Model.SetSuggestionsView(this, 0, Count, false);
         }
 
         /// <summary>
@@ -450,7 +450,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var tail = new GhostStopItem(predecessor, this);
             _headItems.Add(tail);
 
-            _model.SaveUtterance(utterance);
+            Model.SaveUtterance(utterance);
 
             InitializeUtterance();
             SetSuggestionsViewComplete();

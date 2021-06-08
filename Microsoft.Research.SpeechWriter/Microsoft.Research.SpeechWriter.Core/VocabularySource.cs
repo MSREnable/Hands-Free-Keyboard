@@ -7,17 +7,17 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// </summary>
     public abstract class VocabularySource
     {
-        internal readonly ApplicationModel _model;
-
         internal VocabularySource(ApplicationModel model)
         {
-            _model = model;
+            Model = model;
         }
+
+        internal ApplicationModel Model { get; }
 
         /// <summary>
         /// The environment.
         /// </summary>
-        protected IWriterEnvironment Environment => _model.Environment;
+        protected IWriterEnvironment Environment => Model.Environment;
 
         internal abstract int Count { get; }
 
@@ -43,17 +43,17 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void ResetSuggestionsView()
         {
-            _model.SetSuggestionsView(_model.Source, 0, _model.Source.Count, false);
+            Model.SetSuggestionsView(Model.Source, 0, Model.Source.Count, false);
         }
 
         internal void SetSuggestionsView()
         {
-            _model.SetSuggestionsView(this, 0, Count, false);
+            Model.SetSuggestionsView(this, 0, Count, false);
         }
 
         internal void SetSuggestionsViewComplete()
         {
-            _model.SetSuggestionsView(this, 0, Count, true);
+            Model.SetSuggestionsView(this, 0, Count, true);
         }
     }
 }

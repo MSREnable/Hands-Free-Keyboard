@@ -217,14 +217,14 @@ namespace Microsoft.Research.SpeechWriter.Core
             switch (token)
             {
                 case -1:
-                    item = new SuggestedSpellingBackspaceItem(_model.LastTile, this, Prefix);
+                    item = new SuggestedSpellingBackspaceItem(Model.LastTile, this, Prefix);
                     break;
                 case -2:
                     item = _wordVocabularySource.CreateSuggestedSpellingWordItem(Prefix);
                     break;
                 default:
                     Debug.Assert(token != 0);
-                    item = new SuggestedSpellingItem(_model.LastTile, this, Prefix, char.ConvertFromUtf32(token));
+                    item = new SuggestedSpellingItem(Model.LastTile, this, Prefix, char.ConvertFromUtf32(token));
                     break;
             }
 
@@ -290,7 +290,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             else
             {
-                interstitial = new InterstitialUnicodeItem(_model.LastTile, _unicodeVocabularySource);
+                interstitial = new InterstitialUnicodeItem(Model.LastTile, _unicodeVocabularySource);
             }
 
             return interstitial;

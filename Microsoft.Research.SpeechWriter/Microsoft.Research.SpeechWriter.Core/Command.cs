@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -75,7 +76,13 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
         public void Execute(object parameter)
         {
+            _source.Model.Trace(this);
+
             Execute(_source);
+        }
+
+        internal virtual void TraceContent(XmlWriter writer)
+        {
         }
 
         internal abstract void Execute(TSource source);

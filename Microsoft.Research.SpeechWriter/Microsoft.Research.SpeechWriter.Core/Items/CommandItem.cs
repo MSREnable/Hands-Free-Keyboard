@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Research.SpeechWriter.Core.Items
+﻿using System.Xml;
+
+namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     /// <summary>
     /// Whole word item.
@@ -31,6 +33,11 @@
         internal override void Execute(WordVocabularySource source)
         {
             source.ExecuteCommand(_command);
+        }
+
+        internal override void TraceContent(XmlWriter writer)
+        {
+            writer.WriteAttributeString(nameof(_command), _command.ToString());
         }
     }
 }

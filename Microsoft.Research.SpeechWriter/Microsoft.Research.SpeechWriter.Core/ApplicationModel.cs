@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -311,6 +313,25 @@ namespace Microsoft.Research.SpeechWriter.Core
             var utterance = new UtteranceData(sequence, _utteranceStartTime, _utteranceDuration, _utteranceActivationCount);
             var utteranceString = utterance.ToLine();
             Environment.SaveUtteranceAsync(utteranceString);
+        }
+
+        internal void Trace<TSource>(Command<TSource> item)
+            where TSource : VocabularySource
+        {
+            var output = new StringWriter();
+            using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
+            {
+                var type = item.GetType();
+                var name = type.Name;
+                writer.WriteStartElement(name);
+
+                writer.WriteAttributeString("TS", DateTimeOffset.Now.ToString("o"));
+
+                item.TraceContent(writer);
+            }
+            var trace = output.ToString();
+
+            Debug.WriteLine(trace);
         }
     }
 }

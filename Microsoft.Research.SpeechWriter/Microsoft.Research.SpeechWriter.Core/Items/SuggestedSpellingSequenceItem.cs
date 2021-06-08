@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Research.SpeechWriter.Core.Items
+﻿using System.Xml;
+
+namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     /// <summary>
     /// A symbol in the suggestion list.
@@ -25,6 +27,12 @@
         internal override void Execute(SpellingVocabularySource source)
         {
             source.SetSpellingPrefix(Prefix + Symbol);
+        }
+
+        internal override void TraceContent(XmlWriter writer)
+        {
+            writer.WriteAttributeString(nameof(Prefix), Prefix);
+            writer.WriteAttributeString(nameof(Symbol), Symbol);
         }
 
         /// <summary>

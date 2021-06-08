@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Research.SpeechWriter.Core.Items
+﻿using System.Xml;
+
+namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     /// <summary>
     /// A word in the suggestion list for spelling where sorting semantics are slightly different..
@@ -13,6 +15,11 @@
         internal override void Execute(WordVocabularySource source)
         {
             source.AddSuggestedWord(Content);
+        }
+
+        internal override void TraceContent(XmlWriter writer)
+        {
+            writer.WriteAttributeString(nameof(Content), Content);
         }
 
         ISuggestionItem ISuggestionItem.GetNextItem(int token)

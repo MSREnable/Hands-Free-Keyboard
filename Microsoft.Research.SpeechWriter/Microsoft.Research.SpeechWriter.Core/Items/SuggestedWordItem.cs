@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core.Items
 {
@@ -46,6 +47,16 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         internal override void Execute(WordVocabularySource source)
         {
             source.AddSuggestedSequence(Words);
+        }
+
+        internal override void TraceContent(XmlWriter writer)
+        {
+            var words = Words;
+
+            for(var i = 0; i<words.Length;i++)
+            {
+                writer.WriteAttributeString($"S{i}", words[i]);
+            }
         }
 
         ISuggestionItem ISuggestionItem.GetNextItem(int token)

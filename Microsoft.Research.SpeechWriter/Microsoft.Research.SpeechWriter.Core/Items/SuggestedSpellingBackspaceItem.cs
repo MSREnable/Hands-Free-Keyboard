@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Research.SpeechWriter.Core.Items
+﻿using System.Xml;
+
+namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     /// <summary>
     /// Backspace spelling error.
@@ -19,6 +21,11 @@
         internal override void Execute(SpellingVocabularySource source)
         {
             source.SpellingBackspace();
+        }
+
+        internal override void TraceContent(XmlWriter writer)
+        {
+            writer.WriteAttributeString(nameof(Prefix), Prefix);
         }
 
         ISuggestionItem ISuggestionItem.GetNextItem(int token)

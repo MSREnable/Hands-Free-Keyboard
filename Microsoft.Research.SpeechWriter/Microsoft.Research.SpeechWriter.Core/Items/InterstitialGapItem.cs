@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core.Items
 {
@@ -25,6 +26,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         internal override void Execute(VocabularySource source)
         {
             _model.SetSuggestionsView(source, _lowerBound, _upperLimit, false);
+        }
+
+        internal override void TraceContent(XmlWriter writer)
+        {
+            writer.WriteAttributeString(nameof(_lowerBound), _lowerBound.ToString());
+            writer.WriteAttributeString(nameof(_upperLimit), _upperLimit.ToString());
         }
 
         /// <summary>

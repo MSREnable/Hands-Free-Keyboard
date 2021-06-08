@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Research.SpeechWriter.Core.Items
+﻿using System.Xml;
+
+namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     /// <summary>
     /// Unicode item.
@@ -31,6 +33,12 @@
         internal override void Execute(SpellingVocabularySource source)
         {
             source.AddSymbol(Symbol);
+        }
+
+        internal override void TraceContent(XmlWriter writer)
+        {
+            writer.WriteAttributeString(nameof(Prefix), Prefix);
+            writer.WriteAttributeString(nameof(Code), Code.ToString());
         }
 
         /// <summary>
