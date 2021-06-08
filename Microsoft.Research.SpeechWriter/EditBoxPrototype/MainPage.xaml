@@ -27,7 +27,7 @@
         <Grid.RowDefinitions >
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBox Grid.Row="0" TextChanged="OnTextChanged" SelectionChanged="OnTextChanged"/>
@@ -48,7 +48,7 @@
         </ItemsControl>
 
 
-        <ItemsControl x:Name="CursedContainer" Grid.Row="2">
+        <ItemsControl x:Name="CursedContainer" Grid.Row="2" Visibility="Collapsed">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button>
