@@ -14,6 +14,35 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 {
     public class ApplicationRobotTest
     {
+        private class TracingWriterEnvironment : DefaultWriterEnvironment, IWriterEnvironment
+        {
+            private DateTimeOffset _clock = new DateTimeOffset(2000, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            private readonly StringBuilder _trace = new StringBuilder();
+
+            /// <summary>
+            /// Get the current time.
+            /// </summary>
+            /// <returns>The local time.</returns>
+            DateTimeOffset IWriterEnvironment.GetTimestamp()
+            {
+                var timestamp = _clock;
+                _clock += TimeSpan.FromSeconds(1);
+
+                return timestamp;
+            }
+
+            /// <summary>
+            /// Save a trace ine.
+            /// </summary>
+            /// <param name="trace"></param>
+            /// <returns>The line to trace.</returns>
+            Task IWriterEnvironment.SaveTraceAsync(string trace)
+            {
+                _trace.AppendLine(trace);
+                return Task.CompletedTask;
+            }
+        }
+
         private static void CheckModelLinkage(ApplicationModel model)
         {
             ITile commonPredecessor;
@@ -209,7 +238,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             return clicks;
         }
 
-        private class EmptyEnvironment : DefaultWriterEnvironment, IWriterEnvironment
+        private class EmptyEnvironment : TracingWriterEnvironment, IWriterEnvironment
         {
             /// <summary>
             /// Dictionary of words, listed from most likely to least likely.
@@ -223,7 +252,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 
         private static void MultiTest(TileSequence words, int expectedFirstClicks, int expectedSecondClicks, int expectedEmptyClicks, int expectedClicksWithRandomErrors)
         {
-            var model = new ApplicationModel() { MaxNextSuggestionsCount = 9 };
+            var model = new ApplicationModel(new TracingWriterEnvironment()) { MaxNextSuggestionsCount = 9 };
 
             var actualFirstClicks = CountClicks(model, words);
             Assert.AreEqual(expectedFirstClicks, actualFirstClicks);
@@ -237,7 +266,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             var actualEmptyClicks = CountClicks(emptyModel, words);
             Assert.AreEqual(expectedEmptyClicks, actualEmptyClicks);
 
-            var errorModel = new ApplicationModel() { MaxNextSuggestionsCount = 9 };
+            var errorModel = new ApplicationModel(new TracingWriterEnvironment()) { MaxNextSuggestionsCount = 9 };
             var actualClicksWithRandomErrors = CountClicks(errorModel, words, 0.2);
             Assert.AreEqual(expectedClicksWithRandomErrors, actualClicksWithRandomErrors);
         }
@@ -300,7 +329,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void BoldlyGoTest()
         {
-            var model = new ApplicationModel();
+            var model = new ApplicationModel(new TracingWriterEnvironment());
 
             var script = new[]
             {
@@ -398,7 +427,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             */
         }
 
-        private class PersistantEnvironment : DefaultWriterEnvironment, IWriterEnvironment
+        private class PersistantEnvironment : TracingWriterEnvironment, IWriterEnvironment
         {
             private readonly StringBuilder _builder = new StringBuilder(string.Empty);
 

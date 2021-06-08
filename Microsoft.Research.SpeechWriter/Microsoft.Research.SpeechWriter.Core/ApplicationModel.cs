@@ -126,15 +126,16 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private void RaiseApplicationModelUpdateEvent(bool isComplete)
         {
+            var timestamp = Environment.GetTimestamp();
             if (_isUtteranceComplete)
             {
-                _utteranceStartTime = DateTimeOffset.Now;
+                _utteranceStartTime = timestamp;
                 _utteranceDuration = TimeSpan.Zero;
                 _utteranceActivationCount = 1;
             }
             else
             {
-                _utteranceDuration = DateTimeOffset.Now - _utteranceStartTime;
+                _utteranceDuration = timestamp - _utteranceStartTime;
                 _utteranceActivationCount++;
             }
             _isUtteranceComplete = isComplete;
@@ -271,7 +272,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             void EmitPriorInterstitial(int index)
             {
                 var interstitialItem = Source.CreatePriorInterstitial(index);
-                var actualItem = interstitialItem ?? new InterstitialNonItem();
+                var actualItem = interstitialItem ?? new InterstitialNonItem(this);
                 _suggestionInterstitials.Add(actualItem);
             }
 
@@ -312,12 +313,15 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var utterance = new UtteranceData(sequence, _utteranceStartTime, _utteranceDuration, _utteranceActivationCount);
             var utteranceString = utterance.ToLine();
-            Environment.SaveUtteranceAsync(utteranceString);
+            _ = Environment.SaveTraceAsync(utteranceString);
+            _ = Environment.SaveUtteranceAsync(utteranceString);
         }
 
         internal void Trace<TSource>(Command<TSource> item)
             where TSource : VocabularySource
         {
+            var timestamp = Environment.GetTimestamp();
+
             var output = new StringWriter();
             using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
             {
@@ -325,12 +329,13 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var name = type.Name;
                 writer.WriteStartElement(name);
 
-                writer.WriteAttributeString("TS", DateTimeOffset.Now.ToString("o"));
+                writer.WriteAttributeString("TS", timestamp.ToString("o"));
 
                 item.TraceContent(writer);
             }
             var trace = output.ToString();
 
+            _ = Environment.SaveTraceAsync(trace);
             Debug.WriteLine(trace);
         }
     }

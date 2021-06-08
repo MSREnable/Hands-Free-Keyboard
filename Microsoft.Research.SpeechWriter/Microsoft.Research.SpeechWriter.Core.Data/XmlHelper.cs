@@ -40,5 +40,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             reader.ValidateNodeType(type);
             reader.Read();
         }
+
+        public static string AttributeEscape(this string attribute)
+        {
+            var value = attribute.Replace("\0", "\\0");
+            return value;
+        }
     }
 }

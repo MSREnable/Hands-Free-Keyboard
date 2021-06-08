@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -19,6 +20,19 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         /// <returns>List of words.</returns>
         IEnumerable<string> GetOrderedSeedWords();
+
+        /// <summary>
+        /// Get the current time.
+        /// </summary>
+        /// <returns>The local time.</returns>
+        DateTimeOffset GetTimestamp();
+
+        /// <summary>
+        /// Save a trace ine.
+        /// </summary>
+        /// <param name="trace"></param>
+        /// <returns>The line to trace.</returns>
+        Task SaveTraceAsync(string trace);
 
         /// <summary>
         /// Persist an utterance.

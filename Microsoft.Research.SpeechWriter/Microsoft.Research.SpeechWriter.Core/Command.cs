@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 
@@ -11,12 +12,22 @@ namespace Microsoft.Research.SpeechWriter.Core
         where TSource : VocabularySource
     {
         private readonly ITile _predecessor;
+        private readonly ApplicationModel _model;
         private readonly TSource _source;
 
         internal Command(ITile predecessor, TSource source)
         {
+            Debug.Assert(source != null);
+
             _predecessor = predecessor;
+            _model = source.Model;
             _source = source;
+        }
+
+        internal Command(ITile predecessor, ApplicationModel model)
+        {
+            _predecessor = predecessor;
+            _model = model;
         }
 
         /// <summary>
@@ -76,7 +87,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
         public void Execute(object parameter)
         {
-            _source.Model.Trace(this);
+            _model.Trace(this);
 
             Execute(_source);
         }

@@ -9,8 +9,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         {
             internal bool _called;
 
-            internal TestCommand()
-                : base(null, null)
+            internal TestCommand(ApplicationModel model)
+                : base(null, model)
             {
             }
 
@@ -30,7 +30,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void CoverNonFunctions()
         {
-            ITile command = new TestCommand();
+            var model = new ApplicationModel();
+            ITile command = new TestCommand(model);
 
             OnCanExecuteChanged(this, EventArgs.Empty);
             command.CanExecuteChanged += OnCanExecuteChanged;

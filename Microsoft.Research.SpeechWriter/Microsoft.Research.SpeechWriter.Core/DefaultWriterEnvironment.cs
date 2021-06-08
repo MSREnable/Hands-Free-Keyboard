@@ -89,6 +89,26 @@ namespace Microsoft.Research.SpeechWriter.Core
         }
 
         /// <summary>
+        /// Get the current time.
+        /// </summary>
+        /// <returns>The local time.</returns>
+        DateTimeOffset IWriterEnvironment.GetTimestamp()
+        {
+            var timestamp = DateTimeOffset.Now;
+            return timestamp;
+        }
+
+        /// <summary>
+        /// Save a trace ine.
+        /// </summary>
+        /// <param name="trace"></param>
+        /// <returns>The line to trace.</returns>
+        Task IWriterEnvironment.SaveTraceAsync(string trace)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// Persist an utterance.
         /// </summary>
         /// <param name="utterance">The utterance.</param>

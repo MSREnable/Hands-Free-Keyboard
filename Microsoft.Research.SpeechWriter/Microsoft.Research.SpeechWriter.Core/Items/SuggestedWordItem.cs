@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using Microsoft.Research.SpeechWriter.Core.Data;
 
 namespace Microsoft.Research.SpeechWriter.Core.Items
 {
@@ -53,9 +54,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         {
             var words = Words;
 
-            for(var i = 0; i<words.Length;i++)
+            for (var i = 0; i < words.Length; i++)
             {
-                writer.WriteAttributeString($"S{i}", words[i]);
+                writer.WriteAttributeString($"S{i}", words[i].AttributeEscape());
             }
         }
 
