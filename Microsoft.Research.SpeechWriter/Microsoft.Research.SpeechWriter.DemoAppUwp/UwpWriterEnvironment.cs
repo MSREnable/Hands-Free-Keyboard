@@ -10,7 +10,19 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
     internal class UwpWriterEnvironment : DefaultWriterEnvironment, IWriterEnvironment
     {
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private IStorageFile _traceFile;
         private IStorageFile _historyFile;
+
+        /// <summary>
+        /// Save a trace ine.
+        /// </summary>
+        /// <param name="trace"></param>
+        /// <returns>The line to trace.</returns>
+        async Task IWriterEnvironment.SaveTraceAsync(string trace)
+        {
+            var file = await GetTraceFileAsync();
+            await FileIO.AppendLinesAsync(file, new[] { trace });
+        }
 
         /// <summary>
         /// Persist an utterance.
@@ -20,6 +32,21 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         {
             var file = await GetHistoryFileAsync();
             await FileIO.AppendLinesAsync(file, new[] { utterance });
+        }
+
+        internal async Task<IStorageFile> GetTraceFileAsync()
+        {
+            if (_traceFile == null)
+            {
+                await _semaphore.WaitAsync();
+                if (_traceFile == null)
+                {
+                    var roamingFolder = ApplicationData.Current.RoamingFolder;
+                    _traceFile = await roamingFolder.CreateFileAsync("Trace.log", CreationCollisionOption.OpenIfExists);
+                }
+                _semaphore.Release();
+            }
+            return _traceFile;
         }
 
         internal async Task<IStorageFile> GetHistoryFileAsync()
