@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core.Data
@@ -8,7 +9,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         /// <summary>
         /// The settings used with <code>XmlWriter</code> instances.
         /// </summary>
-        public static XmlWriterSettings WriterSettings { get; } = new XmlWriterSettings
+        private static XmlWriterSettings WriterSettings = new XmlWriterSettings
         {
             OmitXmlDeclaration = true,
             ConformanceLevel = ConformanceLevel.Fragment
@@ -45,6 +46,26 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             var value = attribute.Replace("\0", "\\0");
             return value;
+        }
+
+        public static string WriteXmlFragment(Action<XmlWriter> action)
+        {
+            var output = new StringWriter();
+            using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
+            {
+                action(writer);
+            }
+            return output.ToString();
+        }
+
+        public static void ReadXmlFragment(this string xml, Action<XmlReader> action)
+        {
+            var input = new StringReader(xml);
+            using (var reader = XmlReader.Create(input, XmlHelper.ReaderSettings))
+            {
+                reader.Read();
+                action(reader);
+            }
         }
     }
 }

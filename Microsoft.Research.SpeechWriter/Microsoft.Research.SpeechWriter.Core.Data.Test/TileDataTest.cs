@@ -187,13 +187,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
         {
             foreach (var expected in EqualityTiles)
             {
-                var output = new StringWriter();
-                using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
+                var xml = XmlHelper.WriteXmlFragment(writer =>
                 {
                     expected.ToXmlWriter(writer, true);
-                }
-
-                var xml = output.ToString();
+                });
 
                 TileData actual;
 

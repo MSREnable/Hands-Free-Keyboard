@@ -92,9 +92,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             }
             else
             {
-                var output = new StringWriter();
-
-                using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
+                value = XmlHelper.WriteXmlFragment(writer =>
                 {
                     writer.WriteStartElement("U");
                     if (Started.HasValue)
@@ -113,9 +111,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                     writer.WriteRaw(content);
 
                     writer.WriteEndElement();
-                }
-
-                value = output.ToString();
+                });
             }
 
             return value;

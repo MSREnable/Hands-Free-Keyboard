@@ -322,8 +322,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var timestamp = Environment.GetTimestamp();
 
-            var output = new StringWriter();
-            using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
+            var trace = XmlHelper.WriteXmlFragment(writer =>
             {
                 var type = item.GetType();
                 var name = type.Name;
@@ -332,8 +331,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 writer.WriteAttributeString("TS", timestamp.ToString("o"));
 
                 item.TraceContent(writer);
-            }
-            var trace = output.ToString();
+            });
 
             _ = Environment.SaveTraceAsync(trace);
             Debug.WriteLine(trace);

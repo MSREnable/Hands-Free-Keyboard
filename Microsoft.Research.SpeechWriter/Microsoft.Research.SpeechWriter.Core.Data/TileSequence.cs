@@ -65,12 +65,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         /// <returns>A simple encoded string.</returns>
         public static string RawToDefaultSimpleEncoded(string raw)
         {
-            var output = new StringWriter();
-            using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
+            var encoded = XmlHelper.WriteXmlFragment(writer =>
             {
                 writer.WriteString(raw);
-            }
-            var encoded = output.ToString();
+            });
             return encoded;
         }
 
@@ -127,7 +125,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             var output = new StringWriter();
 
-            using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
+            var value = XmlHelper.WriteXmlFragment(writer =>
             {
                 var isPreviousAttached = true;
                 foreach (var tile in _sequence)
@@ -139,9 +137,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                     tile.ToXmlWriter(writer, false);
                     isPreviousAttached = tile.IsPrefix;
                 }
-            }
+            });
 
-            var value = output.ToString();
             return value;
         }
 
@@ -157,17 +154,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         /// <returns>The tile encoded version of this tile sequence.</returns>
         public string ToTileEncoded()
         {
-            var output = new StringWriter();
-
-            using (var writer = XmlWriter.Create(output, XmlHelper.WriterSettings))
+            var value = XmlHelper.WriteXmlFragment(writer =>
             {
                 foreach (var tile in _sequence)
                 {
                     tile.ToXmlWriter(writer, true);
                 }
-            }
+            });
 
-            var value = output.ToString();
             return value;
         }
 
