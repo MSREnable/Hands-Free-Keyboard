@@ -223,7 +223,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             {
                 attributes = null;
             }
-            reader.Read();
+            reader.ValidatedRead();
 
             reader.ValidateNodeType(XmlNodeType.Text);
             var content = reader.Value;
@@ -231,7 +231,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 content: content,
                 attributes: attributes);
 
-            reader.Read();
+            reader.ValidatedRead();
             reader.ReadNodeType(XmlNodeType.EndElement);
 
             return tile;

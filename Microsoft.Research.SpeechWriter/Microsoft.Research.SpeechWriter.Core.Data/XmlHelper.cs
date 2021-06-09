@@ -36,10 +36,23 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             ValidateData(reader.NodeType == type);
         }
 
-        internal static void ReadNodeType(this XmlReader reader, XmlNodeType type)
+        internal static bool ReadNodeType(this XmlReader reader, XmlNodeType type)
         {
             reader.ValidateNodeType(type);
-            reader.Read();
+            var read = reader.Read();
+            return read;
+        }
+
+        internal static void ValidatedRead(this XmlReader reader)
+        {
+            var read = reader.Read();
+            ValidateData(read);
+        }
+
+        internal static void ReadEndOfFragment(this XmlReader reader)
+        {
+            var read = reader.Read();
+            ValidateData(!read);
         }
 
         public static string AttributeEscape(this string attribute)
@@ -67,7 +80,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             {
                 value = action(reader);
 
-                ValidateData(!reader.Read());
+                reader.ReadEndOfFragment();
             }
 
             return value;

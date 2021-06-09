@@ -30,7 +30,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         {
             UtteranceData value;
 
-            reader.Read();
+            reader.ValidatedRead();
 
             if (reader.NodeType == XmlNodeType.Element && reader.Name == "U")
             {
@@ -55,12 +55,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                             break;
                     }
                 }
-                reader.Read();
+                reader.ValidatedRead();
 
                 var sequence = TileSequence.FromEncoded(reader, XmlNodeType.EndElement);
-                reader.Read();
-
-                reader.ValidateNodeType(XmlNodeType.None);
+                reader.ReadEndOfFragment();
 
                 value = new UtteranceData(sequence, started, duration, keyCount);
             }

@@ -80,8 +80,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         public static string DefaultSimpleEncodedToRaw(string encoded) => encoded.ReadXmlFragment<string>(reader =>
         {
             Debug.Assert(reader.NodeType == XmlNodeType.None);
-            var done = reader.Read();
-            Debug.Assert(done);
+            reader.ValidatedRead();
             Debug.Assert(reader.NodeType == XmlNodeType.Text);
             var raw = reader.Value;
 
