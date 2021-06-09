@@ -67,7 +67,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             {
                 value = action(reader);
 
-                //ValidateData(!reader.Read());
+                ValidateData(!reader.Read());
             }
 
             return value;
