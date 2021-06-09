@@ -26,59 +26,54 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
         public int? KeyCount { get; }
 
-        public static UtteranceData FromLine(string line)
+        public static UtteranceData FromLine(string line) => line.ReadXmlFragment<UtteranceData>(reader =>
         {
             UtteranceData value;
 
-            var input = new StringReader(line);
+            reader.Read();
 
-            using (var reader = XmlReader.Create(input, XmlHelper.ReaderSettings))
+            if (reader.NodeType == XmlNodeType.Element && reader.Name == "U")
             {
+                DateTimeOffset? started = null;
+                TimeSpan? duration = null;
+                int? keyCount = null;
+
+                for (var work = reader.MoveToFirstAttribute(); work; work = reader.MoveToNextAttribute())
+                {
+                    switch (reader.Name)
+                    {
+                        case nameof(Started):
+                            started = DateTimeOffset.Parse(reader.Value, null, DateTimeStyles.RoundtripKind);
+                            break;
+
+                        case nameof(Duration):
+                            duration = TimeSpan.FromMilliseconds(double.Parse(reader.Value));
+                            break;
+
+                        case nameof(KeyCount):
+                            keyCount = int.Parse(reader.Value);
+                            break;
+                    }
+                }
                 reader.Read();
 
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "U")
-                {
-                    DateTimeOffset? started = null;
-                    TimeSpan? duration = null;
-                    int? keyCount = null;
+                var sequence = TileSequence.FromEncoded(reader, XmlNodeType.EndElement);
+                reader.Read();
 
-                    for (var work = reader.MoveToFirstAttribute(); work; work = reader.MoveToNextAttribute())
-                    {
-                        switch (reader.Name)
-                        {
-                            case nameof(Started):
-                                started = DateTimeOffset.Parse(reader.Value, null, DateTimeStyles.RoundtripKind);
-                                break;
+                reader.ValidateNodeType(XmlNodeType.None);
 
-                            case nameof(Duration):
-                                duration = TimeSpan.FromMilliseconds(double.Parse(reader.Value));
-                                break;
+                value = new UtteranceData(sequence, started, duration, keyCount);
+            }
+            else
+            {
+                var sequence = TileSequence.FromEncoded(line);
 
-                            case nameof(KeyCount):
-                                keyCount = int.Parse(reader.Value);
-                                break;
-                        }
-                    }
-                    reader.Read();
-
-                    var sequence = TileSequence.FromEncoded(reader, XmlNodeType.EndElement);
-                    reader.Read();
-
-                    reader.ValidateNodeType(XmlNodeType.None);
-
-                    value = new UtteranceData(sequence, started, duration, keyCount);
-                }
-                else
-                {
-                    var sequence = TileSequence.FromEncoded(line);
-
-                    value = new UtteranceData(sequence);
-                }
-
+                value = new UtteranceData(sequence);
             }
 
             return value;
-        }
+        });
+
 
         public string ToLine()
         {

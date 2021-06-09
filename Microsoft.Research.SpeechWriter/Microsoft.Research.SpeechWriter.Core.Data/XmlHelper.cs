@@ -9,7 +9,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         /// <summary>
         /// The settings used with <code>XmlWriter</code> instances.
         /// </summary>
-        private static XmlWriterSettings WriterSettings = new XmlWriterSettings
+        private static readonly XmlWriterSettings WriterSettings = new XmlWriterSettings
         {
             OmitXmlDeclaration = true,
             ConformanceLevel = ConformanceLevel.Fragment
@@ -18,7 +18,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         /// <summary>
         /// The settings used with <code>XmlReader</code> instances.
         /// </summary>
-        internal static XmlReaderSettings ReaderSettings { get; } = new XmlReaderSettings
+        private static readonly XmlReaderSettings ReaderSettings = new XmlReaderSettings
         {
             ConformanceLevel = ConformanceLevel.Fragment
         };
@@ -58,14 +58,19 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             return output.ToString();
         }
 
-        public static void ReadXmlFragment(this string xml, Action<XmlReader> action)
+        public static T ReadXmlFragment<T>(this string xml, Func<XmlReader, T> action)
         {
+            T value;
+
             var input = new StringReader(xml);
             using (var reader = XmlReader.Create(input, XmlHelper.ReaderSettings))
             {
-                reader.Read();
-                action(reader);
+                value = action(reader);
+
+                //ValidateData(!reader.Read());
             }
+
+            return value;
         }
     }
 }

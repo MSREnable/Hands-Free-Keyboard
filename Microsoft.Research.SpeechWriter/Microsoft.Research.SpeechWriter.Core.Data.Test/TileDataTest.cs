@@ -187,19 +187,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
         {
             foreach (var expected in EqualityTiles)
             {
-                var xml = XmlHelper.WriteXmlFragment(writer =>
-                {
-                    expected.ToXmlWriter(writer, true);
-                });
+                var xml = XmlHelper.WriteXmlFragment(writer => expected.ToXmlWriter(writer, true));
 
-                TileData actual;
-
-                var input = new StringReader(xml);
-                using (var reader = XmlReader.Create(input, XmlHelper.ReaderSettings))
+                var actual = xml.ReadXmlFragment<TileData>(reader =>
                 {
                     reader.Read();
-                    actual = TileData.FromXmlReader(reader);
-                }
+                    var tile = TileData.FromXmlReader(reader);
+                    return tile;
+                });
 
                 Assert.AreEqual(expected, actual);
             }

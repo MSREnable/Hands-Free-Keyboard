@@ -77,22 +77,16 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         /// </summary>
         /// <param name="encoded">The raw string.</param>
         /// <returns>A simple encoded string.</returns>
-        public static string DefaultSimpleEncodedToRaw(string encoded)
+        public static string DefaultSimpleEncodedToRaw(string encoded) => encoded.ReadXmlFragment<string>(reader =>
         {
-            string raw;
-
-            var input = new StringReader(encoded);
-            using (var reader = XmlReader.Create(input, XmlHelper.ReaderSettings))
-            {
-                Debug.Assert(reader.NodeType == XmlNodeType.None);
-                var done = reader.Read();
-                Debug.Assert(done);
-                Debug.Assert(reader.NodeType == XmlNodeType.Text);
-                raw = reader.Value;
-            }
+            Debug.Assert(reader.NodeType == XmlNodeType.None);
+            var done = reader.Read();
+            Debug.Assert(done);
+            Debug.Assert(reader.NodeType == XmlNodeType.Text);
+            var raw = reader.Value;
 
             return raw;
-        }
+        });
 
         /// <summary>
         /// Convert to raw string.
@@ -329,23 +323,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             return sequence;
         }
 
-        public static TileSequence FromEncoded(string encoded)
-        {
-            TileSequence value;
+        public static TileSequence FromEncoded(string encoded) => encoded.ReadXmlFragment<TileSequence>(reader =>
+          {
+              reader.Read();
 
-            var input = new StringReader(encoded);
+              var value = FromEncoded(reader, XmlNodeType.None);
 
-            using (var reader = XmlReader.Create(input, XmlHelper.ReaderSettings))
-            {
-                reader.Read();
-
-                value = FromEncoded(reader, XmlNodeType.None);
-
-                reader.ValidateNodeType(XmlNodeType.None);
-            }
-
-            return value;
-        }
+              return value;
+          });
 
         public bool Equals(TileSequence sequence)
         {
