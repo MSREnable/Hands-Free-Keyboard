@@ -17,7 +17,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         private class TracingWriterEnvironment : DefaultWriterEnvironment, IWriterEnvironment
         {
             private DateTimeOffset _clock = new DateTimeOffset(2000, 1, 1, 0, 0, 0, TimeSpan.Zero);
-            private readonly StringBuilder _trace = new StringBuilder();
+            internal readonly List<string> _trace = new List<string>();
 
             /// <summary>
             /// Get the current time.
@@ -38,7 +38,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             /// <returns>The line to trace.</returns>
             Task IWriterEnvironment.SaveTraceAsync(string trace)
             {
-                _trace.AppendLine(trace);
+                _trace.Add(trace);
                 return Task.CompletedTask;
             }
         }
@@ -280,50 +280,50 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("this is the dawning of the age of aquarius", 33, 1, 101, 90);
+            MultiTest("this is the dawning of the age of aquarius", 33, 1, 117, 90);
         }
 
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 166, 96);
+            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 186, 96);
         }
 
         [Test]
         public void HelloWorldTest()
         {
             // TODO: Find out why entering HELLO WORLD predicts HELLO WORLD HELLO WORLD as the next sentence.
-            MultiTest("hello world", 10, 1, 48, 10);
+            MultiTest("hello world", 10, 1, 45, 10);
         }
 
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("izzy wizzy lets get busy", 31, 1, 63, 105);
+            MultiTest("izzy wizzy lets get busy", 31, 1, 77, 105);
         }
 
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 94, 1, 69, 512);
+            MultiTest("공유하 고 즐기십시오", 94, 1, 65, 512);
         }
 
         [Test]
         public void ShareAndEnjoyCantoneseTest()
         {
-            MultiTest("分享 同 享受", 53, 1, 34, 176);
+            MultiTest("分享 同 享受", 53, 1, 33, 176);
         }
 
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 101, 577);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 94, 577);
         }
 
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 56, 1, 102, 171);
+            MultiTest("That'll be $10, please!", 56, 1, 103, 171);
         }
 
         [Test]
@@ -475,6 +475,85 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         public async Task ShareAndEnjoyPersistance()
         {
             await CheckRecallAsync("share and enjoy, share and enjoy, journey though life with a plastic boy, or girl by your side", 69, 5);
+        }
+
+        [Test]
+        public void EmptyHelloWorldTest()
+        {
+            var sequence = TileSequence.FromRaw("hello world");
+            var environment = new EmptyEnvironment();
+            var model = new ApplicationModel(environment);
+
+            var count = 0;
+            bool done;
+            do
+            {
+                var action = ApplicationRobot.GetNextCompletionAction(model, sequence);
+                action.ExecuteItem(model);
+                count++;
+
+                done = action.IsComplete;
+            }
+            while (!done);
+
+            Assert.AreEqual(count + 1, environment._trace.Count);
+
+            var expected = new[]
+            {
+                "<InterstitialSpellingItem TS=\"2000-01-01T00:00:01.0000000+00:00\" />",
+                "<InterstitialUnicodeItem TS=\"2000-01-01T00:00:03.0000000+00:00\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:05.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:07.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:09.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
+                "<SuggestedUnicodeItem TS=\"2000-01-01T00:00:11.0000000+00:00\" Prefix=\"\" Code=\"104\" />",
+                "<InterstitialUnicodeItem TS=\"2000-01-01T00:00:13.0000000+00:00\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:15.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:17.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:19.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:21.0000000+00:00\" _lowerBound=\"65\" _upperLimit=\"73\" />",
+                "<SuggestedUnicodeItem TS=\"2000-01-01T00:00:23.0000000+00:00\" Prefix=\"h\" Code=\"101\" />",
+                "<InterstitialUnicodeItem TS=\"2000-01-01T00:00:25.0000000+00:00\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:27.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:29.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:31.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
+                "<SuggestedUnicodeItem TS=\"2000-01-01T00:00:33.0000000+00:00\" Prefix=\"he\" Code=\"108\" />",
+                "<SuggestedSpellingItem TS=\"2000-01-01T00:00:35.0000000+00:00\" Prefix=\"hel\" Symbol=\"l\" />",
+                "<InterstitialUnicodeItem TS=\"2000-01-01T00:00:37.0000000+00:00\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:39.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:41.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:43.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
+                "<SuggestedUnicodeItem TS=\"2000-01-01T00:00:45.0000000+00:00\" Prefix=\"hell\" Code=\"111\" />",
+                "<SuggestedSpellingWordItem TS=\"2000-01-01T00:00:47.0000000+00:00\" Content=\"hello\" />",
+                "<InterstitialSpellingItem TS=\"2000-01-01T00:00:49.0000000+00:00\" />",
+                "<InterstitialUnicodeItem TS=\"2000-01-01T00:00:51.0000000+00:00\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:53.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:55.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:57.0000000+00:00\" _lowerBound=\"83\" _upperLimit=\"114\" />",
+                "<SuggestedUnicodeItem TS=\"2000-01-01T00:00:59.0000000+00:00\" Prefix=\"\" Code=\"119\" />",
+                "<SuggestedSpellingItem TS=\"2000-01-01T00:01:01.0000000+00:00\" Prefix=\"w\" Symbol=\"o\" />",
+                "<InterstitialUnicodeItem TS=\"2000-01-01T00:01:03.0000000+00:00\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:05.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:07.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:09.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:11.0000000+00:00\" _lowerBound=\"77\" _upperLimit=\"85\" />",
+                "<SuggestedUnicodeItem TS=\"2000-01-01T00:01:13.0000000+00:00\" Prefix=\"wo\" Code=\"114\" />",
+                "<SuggestedSpellingItem TS=\"2000-01-01T00:01:15.0000000+00:00\" Prefix=\"wor\" Symbol=\"l\" />",
+                "<InterstitialUnicodeItem TS=\"2000-01-01T00:01:17.0000000+00:00\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:19.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:21.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:23.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
+                "<SuggestedUnicodeItem TS=\"2000-01-01T00:01:25.0000000+00:00\" Prefix=\"worl\" Code=\"100\" />",
+                "<SuggestedSpellingWordItem TS=\"2000-01-01T00:01:27.0000000+00:00\" Content=\"world\" />",
+                "<TailStopItem TS=\"2000-01-01T00:01:29.0000000+00:00\" />",
+                "<U Started=\"2000-01-01T00:00:00.0000000+00:00\" Duration=\"88000\" KeyCount=\"45\">hello world</U>"
+            };
+
+            for (var i = 0; i < expected.Length; i++)
+            {
+                Assert.AreEqual(expected[i], environment._trace[i]);
+            }
+            Assert.AreEqual(expected.Length, count + 1);
+
         }
     }
 }

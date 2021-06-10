@@ -32,17 +32,27 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             foreach (var word in _wordVocabularySource.Words)
             {
-                var sequence = new List<int>(word.Length + 2)
+                var actualLength = word.Length;
+                var effectiveLength = 0;
+                while (effectiveLength < actualLength && word[effectiveLength] != 0)
                 {
-                    0
-                };
-                foreach (var ch in word.ToCharArray())
-                {
-                    sequence.Add(ch);
+                    effectiveLength++;
                 }
-                sequence.Add(0);
+                if (effectiveLength != 0)
+                {
+                    var sequence = new int[effectiveLength + 2];
 
-                PersistantPredictor.AddSequence(sequence, WordVocabularySource.SeedSequenceWeight);
+                    var index = 1;
+                    foreach (var ch in word.ToCharArray())
+                    {
+                        sequence[index] = ch;
+                        index++;
+                    }
+                    Debug.Assert(sequence[0] == 0);
+                    Debug.Assert(sequence[effectiveLength + 2 - 1] == 0);
+
+                    PersistantPredictor.AddSequence(sequence, WordVocabularySource.SeedSequenceWeight);
+                }
             }
 
             _unicodeVocabularySource = new UnicodeVocabularySource(model, this);
