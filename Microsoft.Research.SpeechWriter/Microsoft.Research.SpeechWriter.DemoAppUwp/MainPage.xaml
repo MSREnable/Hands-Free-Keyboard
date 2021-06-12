@@ -13,7 +13,6 @@
     gaze:GazeInput.Interaction="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-
     <Page.Resources>
 
         <local:TemplateTypeConverter x:Name="TemplateConverter"/>
@@ -221,6 +220,7 @@
                 <KeyboardAccelerator Key="Space" Invoked="OnSpace"/>
                 <KeyboardAccelerator Key="S" Invoked="OnTimingChange"/>
                 <KeyboardAccelerator Key="L" Invoked="OnShowLogging"/>
+                <KeyboardAccelerator Key="P" Invoked="OnShowTestCard"/>
                 <KeyboardAccelerator Key="NumberPad1" Invoked="OnFrench"/>
                 <KeyboardAccelerator Key="NumberPad2" Invoked="OnSpanish"/>
                 <KeyboardAccelerator Key="NumberPad3" Invoked="OnGerman"/>

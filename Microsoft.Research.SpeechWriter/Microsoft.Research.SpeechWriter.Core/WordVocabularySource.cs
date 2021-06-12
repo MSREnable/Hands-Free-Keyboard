@@ -73,6 +73,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             ParanoidAssertValid();
         }
 
+        internal SpellingVocabularySource SpellingSource => _spellingSource;
+
         /// <summary>
         /// The maximum number of run on word suggestions to make.
         /// </summary>
@@ -709,6 +711,24 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             PersistantPredictor.Subtract(TemporaryPredictor);
             PersistantPredictor.AddSequence(sequence, increment);
+        }
+
+        internal void ShowTestCard()
+        {
+            // Truncate head items.
+            for (var i = _headItems.Count - 1; 0 < i; i--)
+            {
+                _headItems.RemoveAt(i);
+            }
+
+            var headWordItem = new HeadWordItem(_headItems[0], this, "Word");
+            _headItems.Add(headWordItem);
+
+            var ghostWordItem = new GhostWordItem(_headItems[1], this, "Ghost");
+            _headItems.Add(ghostWordItem);
+
+            var ghostStopItem = new GhostStopItem(_headItems[2], this);
+            _headItems.Add(ghostStopItem);
         }
 
         [Conditional("DEBUG")]

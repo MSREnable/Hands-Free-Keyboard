@@ -60,6 +60,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             PopulateVocabularyList();
         }
 
+        internal UnicodeVocabularySource UnicodeSource => _unicodeVocabularySource;
+
         /// <summary>
         /// The number of items within the source.
         /// </summary>

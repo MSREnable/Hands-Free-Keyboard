@@ -784,5 +784,10 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 Clipboard.SetContent(package);
             }
         }
+
+        private void OnShowTestCard(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            Model.ShowTestCard();
+        }
     }
 }

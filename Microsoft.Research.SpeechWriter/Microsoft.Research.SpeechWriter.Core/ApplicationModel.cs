@@ -336,5 +336,53 @@ namespace Microsoft.Research.SpeechWriter.Core
             _ = Environment.SaveTraceAsync(trace);
             Debug.WriteLine(trace);
         }
+
+        /// <summary>
+        /// Debug function to show all tile types.
+        /// </summary>
+        public void ShowTestCard()
+        {
+            _wordSource.ShowTestCard();
+
+            _suggestionInterstitials.Clear();
+
+            var interstitialGapItem = new InterstitialGapItem(HeadItems[1], this, _wordSource, 1, 2);
+            _suggestionInterstitials.Add(interstitialGapItem);
+            _suggestionInterstitials.Add(interstitialGapItem);
+
+            _suggestionInterstitials.Add(new InterstitialNonItem(this));
+
+            var interstitialSpellingItem = new InterstitialSpellingItem(HeadItems[1], _wordSource.SpellingSource, 0);
+            _suggestionInterstitials.Add(interstitialSpellingItem);
+            _suggestionInterstitials.Add(interstitialSpellingItem);
+
+            _suggestionInterstitials.Add(new InterstitialNonItem(this));
+
+            var interstitialUnicodeItem = new InterstitialUnicodeItem(HeadItems[1], _wordSource.SpellingSource.UnicodeSource);
+            _suggestionInterstitials.Add(interstitialUnicodeItem);
+            _suggestionInterstitials.Add(interstitialUnicodeItem);
+
+            _nextSuggestions.Clear();
+            _nextSuggestions.Add(new ITile[] { new CommandItem(HeadItems[1], _wordSource, TileCommand.Typing) });
+            _nextSuggestions.Add(new ITile[] { new ReplacementItem((HeadWordItem)HeadItems[1], _wordSource, "Replacement") });
+
+            _nextSuggestions.Add(new ITile[] { new SuggestedWordItem(HeadItems[1], _wordSource, "Suggestion") });
+
+            var suggestedWordItem1 = new SuggestedWordItem(HeadItems[1], _wordSource, "One");
+            var suggestedWordItem2 = new SuggestedWordItem(suggestedWordItem1, _wordSource, "Two");
+            _nextSuggestions.Add(new ITile[] { suggestedWordItem1, suggestedWordItem2 });
+
+            _nextSuggestions.Add(new ITile[] { new SuggestedSpellingItem(HeadItems[1], _wordSource.SpellingSource, "Hell", "o") });
+
+            var suggestedSpellingItem = new SuggestedSpellingItem(HeadItems[1], _wordSource.SpellingSource, "Hel", "l");
+            var suggestedSpellinSequenceItem = new SuggestedSpellingSequenceItem(suggestedSpellingItem, _wordSource.SpellingSource, "Hell", "o");
+            var suggestedSpellingWordItem = new SuggestedSpellingWordItem(HeadItems[1], _wordSource, "Hello");
+            _nextSuggestions.Add(new ITile[] { suggestedSpellingItem, suggestedSpellinSequenceItem, suggestedSpellingWordItem });
+
+            _nextSuggestions.Add(new ITile[] { new SuggestedSpellingBackspaceItem(HeadItems[1], _wordSource.SpellingSource, "Hell") });
+
+            _wordSource.SpellingSource.SetContext(new int[] { 'H', 'e', 'l', 'l', 'o' });
+            _nextSuggestions.Add(new ITile[] { new SuggestedUnicodeItem(HeadItems[1], _wordSource.SpellingSource, 33) });
+        }
     }
 }
