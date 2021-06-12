@@ -370,7 +370,9 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             var suggestedWordItem1 = new SuggestedWordItem(HeadItems[1], _wordSource, "One");
             var suggestedWordItem2 = new SuggestedWordItem(suggestedWordItem1, _wordSource, "Two");
-            _nextSuggestions.Add(new ITile[] { suggestedWordItem1, suggestedWordItem2 });
+            var suggestedWordItem3 = new SuggestedWordItem(suggestedWordItem2, _wordSource, ".\0A");
+            var tailStopItem = new TailStopItem(suggestedWordItem3, _wordSource);
+            _nextSuggestions.Add(new ITile[] { suggestedWordItem1, suggestedWordItem2, suggestedWordItem3, tailStopItem });
 
             _nextSuggestions.Add(new ITile[] { new SuggestedSpellingItem(HeadItems[1], _wordSource.SpellingSource, "Hell", "o") });
 
@@ -381,7 +383,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             _nextSuggestions.Add(new ITile[] { new SuggestedSpellingBackspaceItem(HeadItems[1], _wordSource.SpellingSource, "Hell") });
 
-            _wordSource.SpellingSource.SetContext(new int[] { 'H', 'e', 'l', 'l', 'o' });
+            _wordSource.SpellingSource.SetContext(new int[] { 0, 'H', 'e', 'l', 'l', 'o' });
             _nextSuggestions.Add(new ITile[] { new SuggestedUnicodeItem(HeadItems[1], _wordSource.SpellingSource, 33) });
         }
     }
