@@ -8,10 +8,13 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly ApplicationModel _model = new ApplicationModel();
+        private readonly ApplicationModel _model;
 
         public MainWindow()
         {
+            var environment = new WpfEnvironment();
+            _model = new ApplicationModel(environment);
+
             DataContext = _model;
 
             InitializeComponent();
@@ -20,6 +23,13 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 
             var vocalizer = new NarratorVocalizer();
             _ = Narrator.AttachNarrator(_model, vocalizer);
+
+            Loaded += OnLoaded;
+        }
+
+        private async void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            await _model.LoadUtterancesAsync();
         }
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
