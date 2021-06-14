@@ -1,68 +1,47 @@
-﻿using Microsoft.Research.SpeechWriter.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Media.SpeechSynthesis;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml.Controls;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppUwp
+namespace Microsoft.Research.SpeechWriter.Core
 {
-    class Narrator
+    /// <summary>
+    /// Class of an object that will narrate what is happening in an ApplicationModel.
+    /// </summary>
+    public class Narrator
     {
         private readonly ApplicationModel _model;
-
-        private readonly SpeechSynthesizer _synthesizer = new SpeechSynthesizer();
 
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(0);
 
         private readonly Queue<ApplicationModelUpdateEventArgs> _speech = new Queue<ApplicationModelUpdateEventArgs>();
 
-        private readonly MediaElement _mediaElement;
-
-        private readonly SemaphoreSlim _mediaReady = new SemaphoreSlim(1);
-
         private int sent;
-
-        private readonly string _language;
 
         private DateTimeOffset _speechStarted;
 
-        private Narrator(ApplicationModel model, MediaElement mediaElement, string language)
+        private readonly INarratorVocalizer _vocalizer;
+
+        private Narrator(ApplicationModel model, INarratorVocalizer vocalizer)
         {
             _model = model;
-            _mediaElement = mediaElement;
-            _language = language;
 
-            _mediaElement.MediaEnded += (s, e) => _mediaReady.Release();
+            _vocalizer = vocalizer;
 
             _model.ApplicationModelUpdate += OnApplicationModelUpdate;
             _ = ConsumeSpeechAsync();
         }
 
-        internal static void AttachNarrator(ApplicationModel model, MediaElement mediaElement, string language)
+        /// <summary>
+        /// Attach a narrator to an ApplicationModel.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="vocalizer"></param>
+        public static Narrator AttachNarrator(ApplicationModel model, INarratorVocalizer vocalizer)
         {
-            var narrator = new Narrator(model, mediaElement, language);
-            narrator.Initialize();
-        }
-
-        private void Initialize()
-        {
-            var voiceChoice = new List<VoiceInformation>();
-            foreach (var voice in SpeechSynthesizer.AllVoices)
-            {
-                if (voice.Language.StartsWith(_language))
-                {
-                    voiceChoice.Add(voice);
-                }
-            }
-
-            if (voiceChoice.Count != 0)
-            {
-                _synthesizer.Voice = voiceChoice[0];
-            }
+            var narrator = new Narrator(model, vocalizer);
+            return narrator;
         }
 
         private void OnApplicationModelUpdate(object sender, ApplicationModelUpdateEventArgs e)
@@ -148,11 +127,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 if (e.IsComplete)
                 {
                     var speechTime = DateTimeOffset.UtcNow - _speechStarted;
-                    var join = string.Join(' ', spokenWords);
-                    var trueWordsPerMinute = spokenWords.Count / speechTime.TotalMinutes;
-                    var standardWordPerMinute = (join.Length / 5.0) / speechTime.TotalMinutes;
-                    var title = $"True wpm = {trueWordsPerMinute:0.0}, standard wpm = {standardWordPerMinute:0.0}";
-                    ApplicationView.GetForCurrentView().Title = title;
+                    _vocalizer.DisplayWordPerMinuteEstimate(spokenWords, speechTime);
 
                     spokenWords.Clear();
                 }
@@ -161,13 +136,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 {
                     Debug.WriteLine($"Saying \"{text}\"");
 
-                    Debug.WriteLine("Waiting for media");
-                    await _mediaReady.WaitAsync();
-                    Debug.WriteLine("Media ready");
-
-                    var stream = await _synthesizer.SynthesizeTextToStreamAsync(text);
-                    _mediaElement.SetSource(stream, stream.ContentType);
-                    _mediaElement.Play();
+                    await _vocalizer.SpeakSsmlAsync(text);
                 }
             }
         }

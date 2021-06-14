@@ -90,7 +90,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
             var environment = passedEnvironment ?? new UwpWriterEnvironment();
             _model = new ApplicationModel(environment);
-            Narrator.AttachNarrator(_model, TheMediaElement, "en");
+            var vocalizer = NarratorVocalization.Create(TheMediaElement, "en");
+            _ = Narrator.AttachNarrator(_model, vocalizer);
 
             if (e.Parameter != null && passedEnvironment == null)
             {
