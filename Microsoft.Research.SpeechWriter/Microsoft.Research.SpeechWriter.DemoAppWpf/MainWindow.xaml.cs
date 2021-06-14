@@ -1,8 +1,4 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
-using Microsoft.Research.SpeechWriter.Core.Items;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Speech.Synthesis;
 using System.Windows;
 
 namespace Microsoft.Research.SpeechWriter.DemoAppWpf
