@@ -20,7 +20,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private readonly Queue<ApplicationModelUpdateEventArgs> _speech = new Queue<ApplicationModelUpdateEventArgs>();
 
-        private readonly MediaElement TheMediaElement;
+        private readonly MediaElement _mediaElement;
 
         private readonly SemaphoreSlim _mediaReady = new SemaphoreSlim(1);
 
@@ -33,10 +33,10 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         private Narrator(ApplicationModel model, MediaElement mediaElement, string language)
         {
             _model = model;
-            TheMediaElement = mediaElement;
+            _mediaElement = mediaElement;
             _language = language;
 
-            TheMediaElement.MediaEnded += (s, e) => _mediaReady.Release();
+            _mediaElement.MediaEnded += (s, e) => _mediaReady.Release();
 
             _model.ApplicationModelUpdate += OnApplicationModelUpdate;
             _ = ConsumeSpeechAsync();
@@ -166,8 +166,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                     Debug.WriteLine("Media ready");
 
                     var stream = await _synthesizer.SynthesizeTextToStreamAsync(text);
-                    TheMediaElement.SetSource(stream, stream.ContentType);
-                    TheMediaElement.Play();
+                    _mediaElement.SetSource(stream, stream.ContentType);
+                    _mediaElement.Play();
                 }
             }
         }
