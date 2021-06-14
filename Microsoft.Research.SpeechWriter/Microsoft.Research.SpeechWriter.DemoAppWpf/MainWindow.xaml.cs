@@ -204,6 +204,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             //return (FrameworkElement)target;
         }
 
+        internal void ShowLogging()
+        {
+            Process.Start("explorer.exe", WpfEnvironment.DataPath);
+        }
+
         private UIElement GetInterstitialElement(int index)
         {
             var stack = GetPanel<StackPanel>(SuggestionInterstitialsContainer);
@@ -322,6 +327,12 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             await PlayStoryboardAsync(storyboard, MoveRectangeSettleTime.TimeSpan);
         }
 
+        internal async Task PlayTutorMoveStoryboardAsync()
+        {
+            var storyboard = (Storyboard)Resources["TutorMoveStoryboard"];
+            await PlayStoryboardAsync(storyboard, MoveRectangeSettleTime.TimeSpan);
+        }
+
         internal void ShowTargetOutline()
         {
             TargetOutline.Visibility = Visibility.Visible;
@@ -330,6 +341,16 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
         internal void HideTargetOutline()
         {
             TargetOutline.Visibility = Visibility.Collapsed;
+        }
+
+        internal void Restart()
+        {
+        }
+
+        internal Task<string> GetClipboardStringAsync()
+        {
+            var text = Clipboard.GetText();
+            return Task.FromResult(text);
         }
     }
 }

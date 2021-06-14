@@ -10,7 +10,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
     {
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        private static readonly string DataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SpeechWriter");
+        internal static readonly string DataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SpeechWriter");
         private static readonly string UtterancesPath = Path.Combine(DataPath, "utterances.log");
         private static readonly string TracePath = Path.Combine(DataPath, "trace.log");
 
