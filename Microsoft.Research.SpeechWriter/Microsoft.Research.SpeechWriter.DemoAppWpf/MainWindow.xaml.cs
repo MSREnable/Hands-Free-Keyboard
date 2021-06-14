@@ -17,17 +17,17 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
     public partial class MainWindow : Window
     {
         public static DependencyProperty MoveToCenterXProperty = DependencyProperty.Register(nameof(MoveToCenterX), typeof(double), typeof(MainWindow),
-            new PropertyMetadata(100.0));
+            new PropertyMetadata(0.0));
         public static DependencyProperty MoveToCenterYProperty = DependencyProperty.Register(nameof(MoveToCenterY), typeof(double), typeof(MainWindow),
-            new PropertyMetadata(100.0));
+            new PropertyMetadata(0.0));
         public static DependencyProperty MoveToXProperty = DependencyProperty.Register(nameof(MoveToX), typeof(double), typeof(MainWindow),
-            new PropertyMetadata(80.0));
+            new PropertyMetadata(0.0));
         public static DependencyProperty MoveToYProperty = DependencyProperty.Register(nameof(MoveToY), typeof(double), typeof(MainWindow),
-            new PropertyMetadata(80.0));
+            new PropertyMetadata(0.0));
         public static DependencyProperty MoveToWidthProperty = DependencyProperty.Register(nameof(MoveToWidth), typeof(double), typeof(MainWindow),
-            new PropertyMetadata(40.0));
+            new PropertyMetadata(0.0));
         public static DependencyProperty MoveToHeightProperty = DependencyProperty.Register(nameof(MoveToHeight), typeof(double), typeof(MainWindow),
-            new PropertyMetadata(40.0));
+            new PropertyMetadata(0.0));
         public static DependencyProperty MoveRectangeSeekTimeProperty = DependencyProperty.Register(nameof(MoveRectangeSeekTime), typeof(KeyTime), typeof(MainWindow),
             new PropertyMetadata(KeyTime.FromTimeSpan(TimeSpan.FromSeconds(1))));
         public static DependencyProperty MoveRectangeSettleTimeProperty = DependencyProperty.Register(nameof(MoveRectangeSettleTime), typeof(KeyTime), typeof(MainWindow),
@@ -56,7 +56,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             Loaded += OnLoaded;
 
             _demo = ApplicationDemo.Create(this);
-
         }
 
         internal ApplicationModel Model => _model;

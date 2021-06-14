@@ -162,8 +162,7 @@
         </ItemsControl>
 
         <Canvas x:Name="TargetPanel">
-            <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Visible" 
-                       Canvas.Left="30" Canvas.Top="30" Width="90" Height="90"/>
+            <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>
         </Canvas>
 
     </Grid>

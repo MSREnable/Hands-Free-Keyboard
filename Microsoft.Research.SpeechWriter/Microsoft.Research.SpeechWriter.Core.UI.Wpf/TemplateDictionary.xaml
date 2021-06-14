@@ -21,30 +21,20 @@
         <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="5"/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type lib:SuggestedWordItem}">
-        <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
-            <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-        </Border>
+        <local:TileControl Background="LightYellow" Caption="{Binding FormattedContent}" IsPrefix="{Binding Tile.IsPrefix}" IsSuffix="{Binding Tile.IsSuffix}"/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type lib:HeadWordItem}">
-        <Border BorderBrush="Black" BorderThickness="1" Background="LightGreen" Margin="5,2">
-            <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-        </Border>
+        <local:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" IsPrefix="{Binding Tile.IsPrefix}" IsSuffix="{Binding Tile.IsSuffix}"/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type lib:ReplacementItem}">
         <StackPanel Orientation="Horizontal">
-            <Border BorderBrush="Black" BorderThickness="1" Background="LightGreen" Margin="5,2">
-                <TextBlock Text="{Binding OldContent}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-            </Border>
+            <local:TileControl Background="LightGreen" Caption="{Binding OldUnformattedContent}" IsPrefix="{Binding OldIsAttachedToNext}" IsSuffix="{Binding OldIsAttachedToPrevious}"/>
             <TextBlock Text="&#x2192;" FontSize="25" FontWeight="Bold" Foreground="DarkGray" VerticalAlignment="Center"/>
-            <Border BorderBrush="Black" BorderThickness="1" Background="LightYellow" Margin="5,2">
-                <TextBlock Text="{Binding Content}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-            </Border>
+            <local:TileControl Background="LightGreen" Caption="{Binding UnformattedContent}" IsPrefix="{Binding IsAttachedToNext}" IsSuffix="{Binding IsAttachedToPrevious}"/>
         </StackPanel>
     </DataTemplate>
     <DataTemplate DataType="{x:Type lib:GhostWordItem}">
-        <Border BorderBrush="Black" BorderThickness="1" Background="LightBlue" Margin="5,2">
-            <TextBlock Text="{Binding FormattedContent}" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-        </Border>
+        <local:TileControl Background="LightBlue" Caption="{Binding FormattedContent}" IsPrefix="{Binding Tile.IsPrefix}" IsSuffix="{Binding Tile.IsSuffix}"/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type lib:InterstitialNonItem}">
         <TextBlock Text="-" FontSize="25" FontWeight="Bold" Margin="5"/>
