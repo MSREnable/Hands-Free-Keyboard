@@ -14,8 +14,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
     {
         private readonly ApplicationModel _model = new ApplicationModel();
 
-        private readonly SpeechSynthesizer _synthesizer = new SpeechSynthesizer();
-
         public MainWindow()
         {
             DataContext = _model;
@@ -24,24 +22,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 
             TheContent.SizeChanged += MainWindow_SizeChanged;
 
-            ((INotifyCollectionChanged)_model.HeadItems).CollectionChanged += OnCollectionChanged;
-        }
-
-        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null)
-            {
-                foreach (ITile item in e.NewItems)
-                {
-                    Debug.WriteLine(item);
-
-                    var headWordItem = item as HeadWordItem;
-                    if (headWordItem != null)
-                    {
-                        _synthesizer.SpeakAsync(item.Content);
-                    }
-                }
-            }
+            var vocalizer = new NarratorVocalizer();
+            _ = Narrator.AttachNarrator(_model, vocalizer);
         }
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
