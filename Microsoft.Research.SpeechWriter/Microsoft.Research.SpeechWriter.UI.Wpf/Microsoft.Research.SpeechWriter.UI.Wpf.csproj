@@ -1,18 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Unoffical.System.Speech" Version="1.0.0" />
+    <PackageReference Include="System.Runtime.WindowsRuntime" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.UI.Wpf\Microsoft.Research.SpeechWriter.UI.Wpf.csproj" />
+    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.UI\Microsoft.Research.SpeechWriter.UI.csproj" />
     <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.csproj" />
   </ItemGroup>
 

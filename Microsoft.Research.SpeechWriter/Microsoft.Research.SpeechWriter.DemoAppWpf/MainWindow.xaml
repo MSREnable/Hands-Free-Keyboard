@@ -10,7 +10,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Microsoft.Research.SpeechWriter.Core.UI.Wpf;component/TemplateDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Microsoft.Research.SpeechWriter.UI.Wpf;component/TemplateDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="ItemsControl">

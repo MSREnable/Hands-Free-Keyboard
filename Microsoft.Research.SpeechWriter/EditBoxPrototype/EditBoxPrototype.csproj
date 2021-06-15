@@ -162,9 +162,9 @@
       <Project>{74414063-0447-4815-a4a0-3ed6cb49a2f3}</Project>
       <Name>Microsoft.Research.SpeechWriter.Core.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core.UI.Uwp\Microsoft.Research.SpeechWriter.Core.UI.Uwp.csproj">
+    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.UI.Uwp\Microsoft.Research.SpeechWriter.UI.Uwp.csproj">
       <Project>{4251ee5a-3e60-4555-b592-8ac9dd9b401f}</Project>
-      <Name>Microsoft.Research.SpeechWriter.Core.UI.Uwp</Name>
+      <Name>Microsoft.Research.SpeechWriter.UI.Uwp</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

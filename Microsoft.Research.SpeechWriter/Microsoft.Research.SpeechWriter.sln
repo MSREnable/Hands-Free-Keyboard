@@ -11,11 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Research.SpeechWriter.DemoAppUwp", "Microsoft.Research.SpeechWriter.DemoAppUwp\Microsoft.Research.SpeechWriter.DemoAppUwp.csproj", "{853DE33F-80B9-4036-9B24-C9CA7A98E00B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.Core.UI", "Microsoft.Research.SpeechWriter.Core.UI\Microsoft.Research.SpeechWriter.Core.UI.csproj", "{179417A2-CEE3-4D76-8B27-75B20D8C853A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.UI", "Microsoft.Research.SpeechWriter.UI\Microsoft.Research.SpeechWriter.UI.csproj", "{179417A2-CEE3-4D76-8B27-75B20D8C853A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Research.SpeechWriter.Core.UI.Uwp", "Microsoft.Research.SpeechWriter.Core.UI.Uwp\Microsoft.Research.SpeechWriter.Core.UI.Uwp.csproj", "{4251EE5A-3E60-4555-B592-8AC9DD9B401F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Research.SpeechWriter.UI.Uwp", "Microsoft.Research.SpeechWriter.UI.Uwp\Microsoft.Research.SpeechWriter.UI.Uwp.csproj", "{4251EE5A-3E60-4555-B592-8AC9DD9B401F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.Core.UI.Wpf", "Microsoft.Research.SpeechWriter.Core.UI.Wpf\Microsoft.Research.SpeechWriter.Core.UI.Wpf.csproj", "{EA598CEB-2DF1-4CC4-916E-38C460990889}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.UI.Wpf", "Microsoft.Research.SpeechWriter.UI.Wpf\Microsoft.Research.SpeechWriter.UI.Wpf.csproj", "{EA598CEB-2DF1-4CC4-916E-38C460990889}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F25ACCE8-6E32-4C43-91B9-F674636582EC}"
 EndProject
@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHostUwp", "TestHostUwp\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHostWpf", "TestHostWpf\TestHostWpf.csproj", "{3715F693-FF24-4A90-8750-5FACDB601D4F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.Core.UI.Test", "Microsoft.Research.SpeechWriter.Core.UI.Test\Microsoft.Research.SpeechWriter.Core.UI.Test.csproj", "{0F3E3F12-12D0-4A65-8AC8-E63B640F0087}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.UI.Test", "Microsoft.Research.SpeechWriter.UI.Test\Microsoft.Research.SpeechWriter.UI.Test.csproj", "{0F3E3F12-12D0-4A65-8AC8-E63B640F0087}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.Core.Data", "Microsoft.Research.SpeechWriter.Core.Data\Microsoft.Research.SpeechWriter.Core.Data.csproj", "{74414063-0447-4815-A4A0-3ED6CB49A2F3}"
 EndProject

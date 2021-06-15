@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:control="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:coreui="using:Microsoft.Research.SpeechWriter.Core.UI.Uwp"
+    xmlns:coreui="using:Microsoft.Research.SpeechWriter.UI.Uwp"
     xmlns:data="using:Microsoft.Research.SpeechWriter.Core.Data"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

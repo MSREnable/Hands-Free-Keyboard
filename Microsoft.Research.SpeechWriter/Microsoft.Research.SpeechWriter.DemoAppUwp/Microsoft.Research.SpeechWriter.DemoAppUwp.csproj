@@ -208,9 +208,9 @@
       <Project>{74414063-0447-4815-A4A0-3ED6CB49A2F3}</Project>
       <Name>Microsoft.Research.SpeechWriter.Core.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core.UI.Uwp\Microsoft.Research.SpeechWriter.Core.UI.Uwp.csproj">
+    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.UI.Uwp\Microsoft.Research.SpeechWriter.UI.Uwp.csproj">
       <Project>{4251ee5a-3e60-4555-b592-8ac9dd9b401f}</Project>
-      <Name>Microsoft.Research.SpeechWriter.Core.UI.Uwp</Name>
+      <Name>Microsoft.Research.SpeechWriter.UI.Uwp</Name>
     </ProjectReference>
     <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.csproj">
       <Project>{b20b47f7-52d1-48ef-8acb-bd44bb78f023}</Project>

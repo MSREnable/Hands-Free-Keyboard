@@ -1,5 +1,5 @@
-﻿using Microsoft.Research.SpeechWriter.Core.UI;
-using Microsoft.Research.SpeechWriter.Core.UI.Wpf;
+﻿using Microsoft.Research.SpeechWriter.UI;
+using Microsoft.Research.SpeechWriter.UI.Wpf;
 using System.Windows;
 
 namespace TestHostWpf

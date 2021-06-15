@@ -1,7 +1,7 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
 using Microsoft.Research.SpeechWriter.Core.Data;
-using Microsoft.Research.SpeechWriter.Core.UI;
+using Microsoft.Research.SpeechWriter.UI;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
