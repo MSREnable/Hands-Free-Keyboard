@@ -1,20 +1,16 @@
-﻿using Microsoft.Research.SpeechWriter.Core;
-using Microsoft.Research.SpeechWriter.Core.Automation;
+﻿using Microsoft.Research.SpeechWriter.Core.Automation;
+using System;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Windows.Media.Animation;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppWpf
+namespace Microsoft.Research.SpeechWriter.Core.UI
 {
     public interface IApplicationHost
     {
         ApplicationModel Model { get; }
 
-        KeyTime MoveRectangeSeekTime { get; set; }
+        TimeSpan MoveRectangeSeekTimeSpan { get; set; }
 
-        KeyTime MoveRectangeSettleTime { get; set; }
-
-        event KeyEventHandler PreviewKeyDown;
+        TimeSpan MoveRectangeSettleTimeSpan { get; set; }
 
         void ShowTargetOutline();
 

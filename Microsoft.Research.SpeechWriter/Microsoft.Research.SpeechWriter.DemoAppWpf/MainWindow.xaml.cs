@@ -1,11 +1,13 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
+using Microsoft.Research.SpeechWriter.Core.UI;
 using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -104,10 +106,22 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             set => SetValue(MoveRectangeSeekTimeProperty, value);
         }
 
+        TimeSpan IApplicationHost.MoveRectangeSeekTimeSpan
+        {
+            get => MoveRectangeSeekTime.TimeSpan;
+            set => MoveRectangeSeekTime = value;
+        }
+
         public KeyTime MoveRectangeSettleTime
         {
             get => (KeyTime)GetValue(MoveRectangeSettleTimeProperty);
             set => SetValue(MoveRectangeSettleTimeProperty, value);
+        }
+
+        TimeSpan IApplicationHost.MoveRectangeSettleTimeSpan
+        {
+            get => MoveRectangeSettleTime.TimeSpan;
+            set => MoveRectangeSettleTime = value;
         }
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
@@ -202,13 +216,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             var innerStack = GetPanel<StackPanel>(innerPresenter);
             var target = innerStack.Children[subIndex];
             return target;
-
-            //var control = (StackPanel)SuggestionListsContainer.ItemsPanel;
-            //var intermediateTarget = (ContentPresenter)control.Children[index];
-            //var nextLevel = (ItemsControl)VisualTreeHelper.GetChild(intermediateTarget, 0);
-            //var nextPanel = (StackPanel)nextLevel.ItemsPanel;
-            //var target = nextPanel.Children[subIndex];
-            //return (FrameworkElement)target;
         }
 
         void IApplicationHost.ShowLogging()
@@ -221,9 +228,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             var stack = GetPanel<StackPanel>(SuggestionInterstitialsContainer);
             var target = stack.Children[index];
             return target;
-            //var panel = SuggestionInterstitialsContainer.ItemsPanel;
-            //var target = panel.Children[index];
-            //return (FrameworkElement)target;
         }
 
         private UIElement GetTailElement(int index)
@@ -231,9 +235,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             var stack = GetPanel<WrapPanel>(TailItemsContainer);
             var target = stack.Children[index];
             return target;
-            //var panel = TailItemsContainer.ItemsPanelRoot;
-            //var target = panel.Children[index];
-            //return (FrameworkElement)target;
         }
 
         private FrameworkElement GetHeadElement(int index)
@@ -354,6 +355,14 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
         {
             _loadHistory = loadHistory;
             NavigationService.Navigate(new MainWindow());
+        }
+
+        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (_demo.DoSpecialKey(e.Key))
+            {
+                e.Handled = true;
+            }
         }
 
         Task<string> IApplicationHost.GetClipboardStringAsync()

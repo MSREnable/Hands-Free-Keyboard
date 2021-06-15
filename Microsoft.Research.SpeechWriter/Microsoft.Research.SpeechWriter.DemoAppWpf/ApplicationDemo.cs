@@ -1,10 +1,11 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Data;
+﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
+using Microsoft.Research.SpeechWriter.Core.Data;
+using Microsoft.Research.SpeechWriter.Core.UI;
 using System;
 using System.Collections.Generic;
-using System.Windows.Input;
 using System.Threading.Tasks;
-using Microsoft.Research.SpeechWriter.Core;
+using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 {
@@ -26,16 +27,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
         internal static ApplicationDemo Create(MainWindow host)
         {
             var demo = new ApplicationDemo(host);
-            host.PreviewKeyDown += demo.OnPreviewKeyDown;
             return demo;
-        }
-
-        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (DoSpecialKey(e.Key))
-            {
-                e.Handled = true;
-            }
         }
 
         private async void ShowDemo(List<TileSequence> sentences)
@@ -102,7 +94,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 
         private void OnRestart()
         {
-            _host.PreviewKeyDown -= OnPreviewKeyDown;
             _host.Restart(true);
         }
 
@@ -247,21 +238,20 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 
         private void OnClickReset()
         {
-            _host.PreviewKeyDown -= OnPreviewKeyDown;
             _host.Restart(false);
         }
 
         private void OnTimingChange()
         {
-            if (_host.MoveRectangeSeekTime.TimeSpan.TotalSeconds == 1)
+            if (_host.MoveRectangeSeekTimeSpan.TotalSeconds == 1)
             {
-                _host.MoveRectangeSeekTime = TimeSpan.FromSeconds(0.1);
-                _host.MoveRectangeSettleTime = TimeSpan.FromSeconds(0.5);
+                _host.MoveRectangeSeekTimeSpan = TimeSpan.FromSeconds(0.1);
+                _host.MoveRectangeSettleTimeSpan = TimeSpan.FromSeconds(0.5);
             }
             else
             {
-                _host.MoveRectangeSeekTime = TimeSpan.FromSeconds(1);
-                _host.MoveRectangeSettleTime = TimeSpan.FromSeconds(1.25);
+                _host.MoveRectangeSeekTimeSpan = TimeSpan.FromSeconds(1);
+                _host.MoveRectangeSettleTimeSpan = TimeSpan.FromSeconds(1.25);
             }
         }
 
@@ -275,7 +265,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             _host.Model.ShowTestCard();
         }
 
-        private bool DoSpecialKey(Key key)
+        public bool DoSpecialKey(Key key)
         {
             var done = true;
 
