@@ -1,15 +1,13 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
 using Microsoft.Research.SpeechWriter.Core.Data;
-using Microsoft.Research.SpeechWriter.UI;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppWpf
+namespace Microsoft.Research.SpeechWriter.UI
 {
-    internal class ApplicationDemo
+    public class ApplicationDemo
     {
         private readonly IApplicationHost _host;
 
@@ -19,12 +17,12 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 
         private List<TileSequence> _tutorScript;
 
-        private ApplicationDemo(MainWindow host)
+        private ApplicationDemo(IApplicationHost host)
         {
             _host = host;
         }
 
-        internal static ApplicationDemo Create(MainWindow host)
+        public static ApplicationDemo Create(IApplicationHost host)
         {
             var demo = new ApplicationDemo(host);
             return demo;
@@ -265,31 +263,32 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             _host.Model.ShowTestCard();
         }
 
-        public bool DoSpecialKey(Key key)
+        public bool DoSpecialKey(object key)
         {
             var done = true;
 
-            switch (key)
+            var keyString = key.ToString();
+            switch (keyString)
             {
-                case Key.F5: OnRestart(); break;
+                case "F5": OnRestart(); break;
 
-                case Key.X: OnClickKirk(); break;
+                case "X": OnClickKirk(); break;
 
-                case Key.C: OnClickPicard(); break;
+                case "C": OnClickPicard(); break;
 
-                case Key.V: OnPaste(); break;
+                case "V": OnPaste(); break;
 
-                case Key.T: OnClickTutor(); break;
+                case "T": OnClickTutor(); break;
 
-                case Key.Q: OnClickQuick(); break;
+                case "Q": OnClickQuick(); break;
 
-                case Key.R: OnClickReset(); break;
+                case "R": OnClickReset(); break;
 
-                case Key.S: OnTimingChange(); break;
+                case "S": OnTimingChange(); break;
 
-                case Key.L: OnShowLogging(); break;
+                case "L": OnShowLogging(); break;
 
-                case Key.P: OnShowTestCard(); break;
+                case "P": OnShowTestCard(); break;
 
                 default:
                     done = false;
