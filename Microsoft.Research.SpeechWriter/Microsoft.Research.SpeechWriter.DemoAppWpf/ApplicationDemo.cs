@@ -15,7 +15,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
         private bool _demoMode;
 
         private bool _demoMovementAnimation;
-        
+
         private List<TileSequence> _tutorScript;
 
         private ApplicationDemo(MainWindow host)
@@ -26,14 +26,16 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
         internal static ApplicationDemo Create(MainWindow host)
         {
             var demo = new ApplicationDemo(host);
-            host.PreviewKeyDown += (s, e) =>
-              {
-                  if (demo.DoSpecialKey(e.Key))
-                  {
-                      e.Handled = true;
-                  }
-              };
+            host.PreviewKeyDown += demo.OnPreviewKeyDown;
             return demo;
+        }
+
+        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (DoSpecialKey(e.Key))
+            {
+                e.Handled = true;
+            }
         }
 
         private async void ShowDemo(List<TileSequence> sentences)
@@ -100,7 +102,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 
         private void OnRestart()
         {
-            _host.Restart();
+            _host.PreviewKeyDown -= OnPreviewKeyDown;
+            _host.Restart(true);
         }
 
         private void OnClickKirk()
@@ -244,7 +247,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 
         private void OnClickReset()
         {
-
+            _host.PreviewKeyDown -= OnPreviewKeyDown;
+            _host.Restart(false);
         }
 
         private void OnTimingChange()

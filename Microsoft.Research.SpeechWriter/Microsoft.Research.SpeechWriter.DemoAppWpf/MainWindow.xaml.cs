@@ -14,7 +14,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Page
     {
         public static DependencyProperty MoveToCenterXProperty = DependencyProperty.Register(nameof(MoveToCenterX), typeof(double), typeof(MainWindow),
             new PropertyMetadata(0.0));
@@ -32,6 +32,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             new PropertyMetadata(KeyTime.FromTimeSpan(TimeSpan.FromSeconds(1))));
         public static DependencyProperty MoveRectangeSettleTimeProperty = DependencyProperty.Register(nameof(MoveRectangeSettleTime), typeof(KeyTime), typeof(MainWindow),
             new PropertyMetadata(KeyTime.FromTimeSpan(TimeSpan.FromSeconds(1.25))));
+
+        private static bool _loadHistory = true;
 
         private readonly ApplicationModel _model;
 
@@ -110,7 +112,12 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            await _model.LoadUtterancesAsync();
+            Focusable = true;
+            Focus(); 
+            if (_loadHistory)
+            {
+                await _model.LoadUtterancesAsync();
+            }
         }
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -343,8 +350,10 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             TargetOutline.Visibility = Visibility.Collapsed;
         }
 
-        internal void Restart()
+        internal void Restart(bool loadHistory)
         {
+            _loadHistory = loadHistory;
+            NavigationService.Navigate(new MainWindow());
         }
 
         internal Task<string> GetClipboardStringAsync()
