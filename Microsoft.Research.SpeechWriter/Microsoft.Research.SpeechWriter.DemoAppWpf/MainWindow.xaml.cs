@@ -14,7 +14,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Page
+    public partial class MainWindow : Page, IApplicationHost
     {
         public static DependencyProperty MoveToCenterXProperty = DependencyProperty.Register(nameof(MoveToCenterX), typeof(double), typeof(MainWindow),
             new PropertyMetadata(0.0));
@@ -60,7 +60,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             _demo = ApplicationDemo.Create(this);
         }
 
-        internal ApplicationModel Model => _model;
+        public ApplicationModel Model => _model;
 
         public double MoveToCenterX
         {
@@ -113,7 +113,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
             Focusable = true;
-            Focus(); 
+            Focus();
             if (_loadHistory)
             {
                 await _model.LoadUtterancesAsync();
@@ -136,7 +136,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             return targetRect;
         }
 
-        internal void SetupStoryboardForAction(ApplicationRobotAction action)
+        void IApplicationHost.SetupStoryboardForAction(ApplicationRobotAction action)
         {
             var targetRect = GetTargetRect(action);
 
@@ -211,7 +211,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             //return (FrameworkElement)target;
         }
 
-        internal void ShowLogging()
+        void IApplicationHost.ShowLogging()
         {
             Process.Start("explorer.exe", WpfEnvironment.DataPath);
         }
@@ -328,35 +328,35 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             }
         }
 
-        internal async Task PlayMoveRectangleAsync()
+        async Task IApplicationHost.PlayMoveRectangleAsync()
         {
             var storyboard = (Storyboard)Resources["MoveRectangle"];
             await PlayStoryboardAsync(storyboard, MoveRectangeSettleTime.TimeSpan);
         }
 
-        internal async Task PlayTutorMoveStoryboardAsync()
+        async Task IApplicationHost.PlayTutorMoveStoryboardAsync()
         {
             var storyboard = (Storyboard)Resources["TutorMoveStoryboard"];
             await PlayStoryboardAsync(storyboard, MoveRectangeSettleTime.TimeSpan);
         }
 
-        internal void ShowTargetOutline()
+        void IApplicationHost.ShowTargetOutline()
         {
             TargetOutline.Visibility = Visibility.Visible;
         }
 
-        internal void HideTargetOutline()
+        void IApplicationHost.HideTargetOutline()
         {
             TargetOutline.Visibility = Visibility.Collapsed;
         }
 
-        internal void Restart(bool loadHistory)
+        public void Restart(bool loadHistory)
         {
             _loadHistory = loadHistory;
             NavigationService.Navigate(new MainWindow());
         }
 
-        internal Task<string> GetClipboardStringAsync()
+        Task<string> IApplicationHost.GetClipboardStringAsync()
         {
             var text = Clipboard.GetText();
             return Task.FromResult(text);

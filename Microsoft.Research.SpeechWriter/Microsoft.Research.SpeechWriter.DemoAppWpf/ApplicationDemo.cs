@@ -10,7 +10,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
 {
     internal class ApplicationDemo
     {
-        private readonly MainWindow _host;
+        private readonly IApplicationHost _host;
 
         private bool _demoMode;
 
