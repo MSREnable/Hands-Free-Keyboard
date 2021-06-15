@@ -1,6 +1,7 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
 using Microsoft.Research.SpeechWriter.Core.Data;
+using Microsoft.Research.SpeechWriter.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,7 +25,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, IApplicationHost
     {
         public static DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(ApplicationModel), typeof(MainPage),
             new PropertyMetadata(null, OnModelChanged));
@@ -151,10 +152,22 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             set => SetValue(MoveRectangeSeekTimeProperty, value);
         }
 
+        TimeSpan IApplicationHost.MoveRectangeSeekTimeSpan
+        {
+            get => MoveRectangeSeekTime.TimeSpan;
+            set => MoveRectangeSeekTime = value;
+        }
+
         public KeyTime MoveRectangeSettleTime
         {
             get => (KeyTime)GetValue(MoveRectangeSettleTimeProperty);
             set => SetValue(MoveRectangeSettleTimeProperty, value);
+        }
+
+        TimeSpan IApplicationHost.MoveRectangeSettleTimeSpan
+        {
+            get => MoveRectangeSettleTime.TimeSpan;
+            set => MoveRectangeSettleTime = value;
         }
 
         private void ShowDemo(params string[] sentences)
@@ -169,6 +182,16 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 }
             }
             ShowDemo(script);
+        }
+
+        void IApplicationHost.ShowTargetOutline()
+        {
+            TargetOutline.Visibility = Visibility.Visible;
+        }
+
+        void IApplicationHost.HideTargetOutline()
+        {
+            TargetOutline.Visibility = Visibility.Collapsed;
         }
 
         private async void ShowDemo(List<TileSequence> sentences)
@@ -193,7 +216,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                     {
                         var action = ApplicationRobot.GetNextCompletionAction(Model, sequence);
 
-                        SetupStoryboardForAction(action);
+                        ((IApplicationHost)this).SetupStoryboardForAction(action);
 
                         if (_demoMovementAnimation)
                         {
@@ -219,7 +242,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
         }
 
-        private void SetupStoryboardForAction(ApplicationRobotAction action)
+        Task IApplicationHost.PlayMoveRectangleAsync() => PlayStoryboardAsync(MoveRectangle);
+
+        Task IApplicationHost.PlayTutorMoveStoryboardAsync() => PlayStoryboardAsync(TutorMoveStoryboard);
+
+        void IApplicationHost.SetupStoryboardForAction(ApplicationRobotAction action)
         {
             var control = GetActionControl(action);
             Rect targetRect = GetElementRect(control);
@@ -416,6 +443,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             Frame.Navigate(GetType(), string.Empty);
         }
 
+        void IApplicationHost.Restart(bool loadHistory) => Frame.Navigate(GetType(), loadHistory ? string.Empty : null);
+
         private void OnClickKirk(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             args.Handled = true;
@@ -503,16 +532,15 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             await Task.Delay(50);
             var words = _tutorScript[0];
             var action = ApplicationRobot.GetNextCompletionAction(_model, words);
-            SetupStoryboardForAction(action);
+            ((IApplicationHost)this).SetupStoryboardForAction(action);
             _ = PlayStoryboardAsync(TutorMoveStoryboard);
         }
 
-        private static async Task<List<TileSequence>> GetClipboardContentAsync()
+        private async Task<List<TileSequence>> GetClipboardContentAsync()
         {
             var script = new List<TileSequence>();
 
-            var view = Clipboard.GetContent();
-            var text = await view.GetTextAsync();
+            string text = await ((IApplicationHost)this).GetClipboardStringAsync();
 
             var lines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -554,6 +582,13 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
 
             return script;
+        }
+
+        async Task<string> IApplicationHost.GetClipboardStringAsync()
+        {
+            var view = Clipboard.GetContent();
+            var text = await view.GetTextAsync();
+            return text;
         }
 
         private void OnClickQuick(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
@@ -651,6 +686,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
                 Clipboard.SetContent(package);
             }
         }
+
+        void IApplicationHost.ShowLogging() => OnShowLogging(null, null);
 
         private void OnShowTestCard(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
