@@ -270,6 +270,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
             _host.ShowLogging();
         }
 
+        private void OnShowTestCard()
+        {
+            _host.Model.ShowTestCard();
+        }
+
         private bool DoSpecialKey(Key key)
         {
             var done = true;
@@ -293,6 +298,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppWpf
                 case Key.S: OnTimingChange(); break;
 
                 case Key.L: OnShowLogging(); break;
+
+                case Key.P: OnShowTestCard(); break;
 
                 default:
                     done = false;
