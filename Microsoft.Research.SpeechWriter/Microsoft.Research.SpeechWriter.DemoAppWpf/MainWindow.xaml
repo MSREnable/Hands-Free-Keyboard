@@ -1,12 +1,12 @@
-﻿<Window x:Class="Microsoft.Research.SpeechWriter.DemoAppWpf.MainWindow"
+﻿<Page x:Class="Microsoft.Research.SpeechWriter.DemoAppWpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="SpeechWriter DemoApp WPF" Height="580" Width="1030">
+        Title="SpeechWriter DemoApp WPF">
 
-    <Window.Resources>
+    <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Microsoft.Research.SpeechWriter.Core.UI.Wpf;component/TemplateDictionary.xaml"/>
@@ -16,14 +16,96 @@
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <Button Content="{Binding}" Command="{Binding}" Opacity="{Binding Converter={StaticResource TemplateOpacityConverter}}"/>
+                            <Button Content="{Binding}" Command="{Binding}" Opacity="{Binding Converter={StaticResource TemplateOpacityConverter}}" Focusable="False"/>
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
 
+            <Storyboard x:Key="MoveRectangle">
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Left)">
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSeekTime, Mode=OneWay}" Value="{Binding MoveToX, Mode=OneWay}">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSettleTime, Mode=OneWay}" Value="{Binding MoveToCenterX, Mode=OneWay}">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Top)">
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSeekTime, Mode=OneWay}" Value="{Binding MoveToY, Mode=OneWay}">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSettleTime, Mode=OneWay}" Value="{Binding MoveToCenterY, Mode=OneWay}">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Height)">
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSeekTime, Mode=OneWay}" Value="{Binding MoveToHeight, Mode=OneWay}">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSettleTime, Mode=OneWay}" Value="0">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Width)">
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSeekTime, Mode=OneWay}" Value="{Binding MoveToWidth, Mode=OneWay}">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSettleTime, Mode=OneWay}" Value="0">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+
+            <Storyboard x:Key="TutorMoveStoryboard">
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Left)">
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSeekTime, Mode=OneWay}" Value="{Binding MoveToX, Mode=OneWay}">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Top)">
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSeekTime, Mode=OneWay}" Value="{Binding MoveToY, Mode=OneWay}">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Height)">
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSeekTime, Mode=OneWay}" Value="{Binding MoveToHeight, Mode=OneWay}">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Width)">
+                    <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSeekTime, Mode=OneWay}" Value="{Binding MoveToWidth, Mode=OneWay}">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <ExponentialEase EasingMode="EaseInOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+
         </ResourceDictionary>
-    </Window.Resources>
+    </Page.Resources>
 
     <Grid x:Name="TheContent">
         <Grid.ColumnDefinitions>
@@ -36,7 +118,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ItemsControl Grid.Column="0" Grid.Row="0" ItemsSource="{Binding HeadItems}">
+        <ItemsControl x:Name="HeadItemsContainer" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding HeadItems}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel/>
@@ -44,7 +126,7 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
 
-        <ItemsControl Grid.Column="0" Grid.Row="1" ItemsSource="{Binding TailItems}">
+        <ItemsControl x:Name="TailItemsContainer" Grid.Column="0" Grid.Row="1" ItemsSource="{Binding TailItems}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel HorizontalAlignment="Right"/>
@@ -52,7 +134,7 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
 
-        <ItemsControl Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{Binding SuggestionInterstitials}">
+        <ItemsControl x:Name="SuggestionInterstitialsContainer" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{Binding SuggestionInterstitials}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical"/>
@@ -60,7 +142,7 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
 
-        <ItemsControl Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{Binding SuggestionLists}">
+        <ItemsControl x:Name="SuggestionListsContainer" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{Binding SuggestionLists}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical" Margin="0,30,0,0"/>
@@ -79,5 +161,9 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
+        <Canvas x:Name="TargetPanel">
+            <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>
+        </Canvas>
+
     </Grid>
-</Window>
+</Page>

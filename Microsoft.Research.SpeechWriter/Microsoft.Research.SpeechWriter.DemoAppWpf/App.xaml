@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:Microsoft.Research.SpeechWriter.DemoAppWpf"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="{x:Type NavigationWindow}">
+            <Setter Property="ShowsNavigationUI" Value="False"/>
+        </Style>
     </Application.Resources>
 </Application>
