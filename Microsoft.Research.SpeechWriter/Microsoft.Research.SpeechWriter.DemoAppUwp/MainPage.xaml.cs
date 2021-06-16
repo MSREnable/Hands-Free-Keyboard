@@ -48,6 +48,8 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private ApplicationModel _model;
 
+        private ApplicationDemo _demo;
+
         private bool _demoMode;
 
         private bool _demoMovementAnimation;
@@ -91,6 +93,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
             var environment = passedEnvironment ?? new UwpWriterEnvironment();
             _model = new ApplicationModel(environment);
+            _demo = ApplicationDemo.Create(this);
             var vocalizer = NarratorVocalization.Create(TheMediaElement, "en");
             _ = Narrator.AttachNarrator(_model, vocalizer);
 
@@ -692,6 +695,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         private void OnShowTestCard(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             Model.ShowTestCard();
+        }
+
+        private void OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            _demo.DoSpecialKey(e.Key);
         }
     }
 }
