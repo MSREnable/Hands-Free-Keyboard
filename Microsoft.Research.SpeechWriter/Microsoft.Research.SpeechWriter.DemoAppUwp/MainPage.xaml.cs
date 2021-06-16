@@ -1,6 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
-using Microsoft.Research.SpeechWriter.Core.Data;
 using Microsoft.Research.SpeechWriter.UI;
 using System;
 using System.Collections.Generic;
@@ -50,12 +49,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
 
         private ApplicationDemo _demo;
 
-        private bool _demoMode;
-
-        private bool _demoMovementAnimation;
-
-        private List<TileSequence> _tutorScript;
-
         public MainPage()
         {
             this.InitializeComponent();
@@ -65,6 +58,11 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             SizeChanged += MainWindow_SizeChanged;
 
             _switchTimer.Tick += OnSwitchTimerTick;
+
+            Loaded += (s, e) =>
+            {
+                Frame.PreviewKeyDown += OnPreviewKeyDown;
+            };
         }
 
         private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -173,20 +171,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             set => MoveRectangeSettleTime = value;
         }
 
-        private void ShowDemo(params string[] sentences)
-        {
-            var script = new List<TileSequence>(sentences.Length);
-            foreach (var sentence in sentences)
-            {
-                if (!string.IsNullOrWhiteSpace(sentence))
-                {
-                    var sequence = TileSequence.FromRaw(sentence);
-                    script.Add(sequence);
-                }
-            }
-            ShowDemo(script);
-        }
-
         void IApplicationHost.ShowTargetOutline()
         {
             TargetOutline.Visibility = Visibility.Visible;
@@ -195,54 +179,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
         void IApplicationHost.HideTargetOutline()
         {
             TargetOutline.Visibility = Visibility.Collapsed;
-        }
-
-        private async void ShowDemo(List<TileSequence> sentences)
-        {
-            if (_demoMode)
-            {
-                _demoMode = false;
-            }
-            else
-            {
-                _demoMode = true;
-                _demoMovementAnimation = true;
-
-                for (var i = 0; _demoMode && i < sentences.Count; i++)
-                {
-                    TargetOutline.Visibility = Visibility.Visible;
-
-                    var sequence = sentences[i];
-
-                    bool done;
-                    do
-                    {
-                        var action = ApplicationRobot.GetNextCompletionAction(Model, sequence);
-
-                        ((IApplicationHost)this).SetupStoryboardForAction(action);
-
-                        if (_demoMovementAnimation)
-                        {
-                            await PlayStoryboardAsync(MoveRectangle);
-                        }
-
-                        var reaction = ApplicationRobot.GetNextCompletionAction(Model, sequence);
-                        if (action.Target == reaction.Target &&
-                            action.Index == reaction.Index &&
-                            action.SubIndex == reaction.SubIndex)
-                        {
-                            action.ExecuteItem(Model);
-                        }
-                        await Task.Delay(TimeSpan.FromSeconds(0.1));
-
-                        done = action.IsComplete;
-                    }
-                    while (_demoMode && !done);
-                }
-
-                _demoMode = false;
-                TargetOutline.Visibility = Visibility.Collapsed;
-            }
         }
 
         Task IApplicationHost.PlayMoveRectangleAsync() => PlayStoryboardAsync(MoveRectangle);
@@ -440,164 +376,13 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
         }
 
-        private void OnRestart(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = true;
-            Frame.Navigate(GetType(), string.Empty);
-        }
-
         void IApplicationHost.Restart(bool loadHistory) => Frame.Navigate(GetType(), loadHistory ? string.Empty : null);
-
-        private void OnClickKirk(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = true;
-            ShowDemo("space",
-                "the final frontier",
-                "these are the voyages of the starship Enterprise",
-                "its five year mission",
-                "to explore strange new worlds",
-                "to seek out new life",
-                "and new civilizations",
-                "to boldly go where no man has gone before");
-        }
-
-        private void OnClickPicard(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = true;
-            ShowDemo("these are the voyages of the starship Enterprise",
-                "its continuing mission",
-                "to explore strange new worlds",
-                "to seek out new life",
-                "and new civilizations",
-                "to boldly go where no one has gone before");
-        }
-
-        private async void OnPaste(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = true;
-            var script = await GetClipboardContentAsync();
-
-            if (script.Count != 0)
-            {
-                ShowDemo(script);
-            }
-        }
-
-        private async void OnClickTutor(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = true;
-
-            _demoMode = false;
-
-            var script = await GetClipboardContentAsync();
-            if (script.Count != 0)
-            {
-                _tutorScript = script;
-                TargetOutline.Visibility = Visibility.Visible;
-
-                _model.ApplicationModelUpdate += OnApplicationTutorReady;
-                _ = ShowNextTutorStepAsync();
-            }
-        }
-
-        private async void OnApplicationTutorReady(object sender, ApplicationModelUpdateEventArgs e)
-        {
-            if (_tutorScript != null)
-            {
-                if (e.IsComplete /* && string.Join(' ', e.Words) == _tutorScript[0] */ )
-                {
-                    if (_tutorScript.Count == 1)
-                    {
-                        _tutorScript = null;
-                        _model.ApplicationModelUpdate -= OnApplicationTutorReady;
-
-                        TargetOutline.Visibility = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        _tutorScript.RemoveAt(0);
-                        await ShowNextTutorStepAsync();
-                    }
-                }
-                else
-                {
-                    await ShowNextTutorStepAsync();
-                }
-            }
-            else
-            {
-                _model.ApplicationModelUpdate -= OnApplicationTutorReady;
-            }
-        }
-
-        private async Task ShowNextTutorStepAsync()
-        {
-            await Task.Delay(50);
-            var words = _tutorScript[0];
-            var action = ApplicationRobot.GetNextCompletionAction(_model, words);
-            ((IApplicationHost)this).SetupStoryboardForAction(action);
-            _ = PlayStoryboardAsync(TutorMoveStoryboard);
-        }
-
-        private async Task<List<TileSequence>> GetClipboardContentAsync()
-        {
-            var script = new List<TileSequence>();
-
-            string text = await ((IApplicationHost)this).GetClipboardStringAsync();
-
-            var lines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var line in lines)
-            {
-                var utterance = new List<TileData>();
-
-                var sequence = TileSequence.FromRaw(line);
-
-                var isUtteranceEnding = false;
-                foreach (var tile in sequence)
-                {
-                    utterance.Add(tile);
-
-                    switch (tile.Content)
-                    {
-                        case ".":
-                        case "?":
-                        case "!":
-                            isUtteranceEnding = true;
-                            break;
-                    }
-
-                    if (isUtteranceEnding && !tile.IsPrefix)
-                    {
-                        var utteranceSequence = TileSequence.FromData(utterance);
-                        script.Add(utteranceSequence);
-                        utterance.Clear();
-
-                        isUtteranceEnding = false;
-                    }
-                }
-
-                if (utterance.Count != 0)
-                {
-                    var utteranceSequence = TileSequence.FromData(utterance);
-                    script.Add(utteranceSequence);
-                }
-            }
-
-            return script;
-        }
 
         async Task<string> IApplicationHost.GetClipboardStringAsync()
         {
             var view = Clipboard.GetContent();
             var text = await view.GetTextAsync();
             return text;
-        }
-
-        private void OnClickQuick(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = true;
-            _demoMovementAnimation = false;
         }
 
         private async void SetLanguageAsync(string filename)
@@ -616,11 +401,6 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             var content = await FileIO.ReadTextAsync(file);
             var environment = new NonEnglishWriterEnvironment(filename.Substring(0, 2), content);
             Frame.Navigate(typeof(MainPage), environment);
-        }
-
-        private void OnClickReset(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            Frame.Navigate(GetType(), null);
         }
 
         private void OnFrench(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
@@ -663,21 +443,7 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             SetLanguageAsync("zh_cn_50k.txt");
         }
 
-        private void OnTimingChange(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            if (MoveRectangeSeekTime.TimeSpan.TotalSeconds == 1)
-            {
-                MoveRectangeSeekTime = TimeSpan.FromSeconds(0.1);
-                MoveRectangeSettleTime = TimeSpan.FromSeconds(0.5);
-            }
-            else
-            {
-                MoveRectangeSeekTime = TimeSpan.FromSeconds(1);
-                MoveRectangeSettleTime = TimeSpan.FromSeconds(1.25);
-            }
-        }
-
-        private async void OnShowLogging(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        async void IApplicationHost.ShowLogging()
         {
             var environment = Model.Environment as UwpWriterEnvironment;
             if (environment != null)
@@ -690,16 +456,14 @@ namespace Microsoft.Research.SpeechWriter.DemoAppUwp
             }
         }
 
-        void IApplicationHost.ShowLogging() => OnShowLogging(null, null);
-
-        private void OnShowTestCard(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            Model.ShowTestCard();
-        }
-
         private void OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            _demo.DoSpecialKey(e.Key);
+            Debug.WriteLine($"PreviewKeyDown {e.Key} from {sender}");
+
+            if (_demo.DoSpecialKey(e.Key))
+            {
+                e.Handled = true;
+            }
         }
     }
 }
