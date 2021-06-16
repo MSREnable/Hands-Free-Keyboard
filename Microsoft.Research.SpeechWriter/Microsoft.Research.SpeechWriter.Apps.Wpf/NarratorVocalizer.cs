@@ -5,7 +5,7 @@ using System.Speech.Synthesis;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppWpf
+namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 {
     class NarratorVocalizer : INarratorVocalizer
     {

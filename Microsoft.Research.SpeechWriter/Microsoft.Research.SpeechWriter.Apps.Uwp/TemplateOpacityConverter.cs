@@ -2,7 +2,7 @@
 using System;
 using Windows.UI.Xaml.Data;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppUwp
+namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 {
     public class TemplateOpacityCoverter : IValueConverter
     {

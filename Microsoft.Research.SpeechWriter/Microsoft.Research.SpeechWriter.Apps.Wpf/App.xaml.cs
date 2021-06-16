@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppWpf
+namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 {
     /// <summary>
     /// Interaction logic for App.xaml

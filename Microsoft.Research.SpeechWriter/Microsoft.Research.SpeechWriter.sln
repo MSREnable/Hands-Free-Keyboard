@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.Core.Test", "Microsoft.Research.SpeechWriter.Core.Test\Microsoft.Research.SpeechWriter.Core.Test.csproj", "{8A91FBD6-405E-4939-815F-ABAC8F64FBE4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.DemoAppWpf", "Microsoft.Research.SpeechWriter.DemoAppWpf\Microsoft.Research.SpeechWriter.DemoAppWpf.csproj", "{A85AEE21-3B49-4DC2-B3A1-47A7BC9C1AFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.Apps.Wpf", "Microsoft.Research.SpeechWriter.Apps.Wpf\Microsoft.Research.SpeechWriter.Apps.Wpf.csproj", "{A85AEE21-3B49-4DC2-B3A1-47A7BC9C1AFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Research.SpeechWriter.DemoAppUwp", "Microsoft.Research.SpeechWriter.DemoAppUwp\Microsoft.Research.SpeechWriter.DemoAppUwp.csproj", "{853DE33F-80B9-4036-9B24-C9CA7A98E00B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Research.SpeechWriter.Apps.Uwp", "Microsoft.Research.SpeechWriter.Apps.Uwp\Microsoft.Research.SpeechWriter.Apps.Uwp.csproj", "{853DE33F-80B9-4036-9B24-C9CA7A98E00B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.UI", "Microsoft.Research.SpeechWriter.UI\Microsoft.Research.SpeechWriter.UI.csproj", "{179417A2-CEE3-4D76-8B27-75B20D8C853A}"
 EndProject

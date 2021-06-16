@@ -8,7 +8,7 @@ using Windows.Media.SpeechSynthesis;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppUwp
+namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 {
     internal class NarratorVocalization : INarratorVocalizer
     {

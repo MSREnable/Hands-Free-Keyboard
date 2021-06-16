@@ -1,7 +1,7 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using System.IO;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppUwp
+namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 {
     internal class NonEnglishWriterEnvironment : DefaultWriterEnvironment, IWriterEnvironment
     {

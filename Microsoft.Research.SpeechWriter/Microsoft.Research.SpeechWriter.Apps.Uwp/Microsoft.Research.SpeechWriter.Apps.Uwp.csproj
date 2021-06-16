@@ -7,8 +7,8 @@
     <ProjectGuid>{853DE33F-80B9-4036-9B24-C9CA7A98E00B}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.Research.SpeechWriter.DemoAppUwp</RootNamespace>
-    <AssemblyName>Microsoft.Research.SpeechWriter.DemoAppUwp</AssemblyName>
+    <RootNamespace>Microsoft.Research.SpeechWriter.Apps.Uwp</RootNamespace>
+    <AssemblyName>Microsoft.Research.SpeechWriter.Apps.Uwp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>

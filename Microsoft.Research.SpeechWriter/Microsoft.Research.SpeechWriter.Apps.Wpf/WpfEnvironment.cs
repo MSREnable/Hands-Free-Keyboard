@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppWpf
+namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 {
     class WpfEnvironment : DefaultWriterEnvironment, IWriterEnvironment
     {

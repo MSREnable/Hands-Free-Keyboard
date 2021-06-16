@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppUwp
+namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 {
     internal class UwpWriterEnvironment : DefaultWriterEnvironment, IWriterEnvironment
     {

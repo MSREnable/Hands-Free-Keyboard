@@ -14,7 +14,7 @@
   <mp:PhoneIdentity PhoneProductId="dc086fec-bb30-4515-a3a5-95af7481c23b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Microsoft.Research.SpeechWriter.DemoAppUwp</DisplayName>
+    <DisplayName>Microsoft.Research.SpeechWriter.Apps.Uwp</DisplayName>
     <PublisherDisplayName>petea</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -30,9 +30,9 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="Microsoft.Research.SpeechWriter.DemoAppUwp">
+      EntryPoint="Microsoft.Research.SpeechWriter.Apps.Uwp">
       <uap:VisualElements
-        DisplayName="Microsoft.Research.SpeechWriter.DemoAppUwp"
+        DisplayName="Microsoft.Research.SpeechWriter.Apps.Uwp"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="Microsoft Research SpeechWriter DemoApp UWP"

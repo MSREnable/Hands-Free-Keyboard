@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace Microsoft.Research.SpeechWriter.DemoAppWpf
+namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
