@@ -13,12 +13,21 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             int? keyCount = null)
         {
             Sequence = sequence;
+            IsArtificial = false;
             Started = started;
             Duration = duration;
             KeyCount = keyCount;
         }
 
+        public UtteranceData(TileSequence sequence, bool isArtificial)
+        {
+            Sequence = sequence;
+            IsArtificial = isArtificial;
+        }
+
         public TileSequence Sequence { get; }
+
+        public bool IsArtificial { get; }
 
         public DateTimeOffset? Started { get; }
 
@@ -34,6 +43,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
             if (reader.NodeType == XmlNodeType.Element && reader.Name == "U")
             {
+                var isArtificial = false;
                 DateTimeOffset? started = null;
                 TimeSpan? duration = null;
                 int? keyCount = null;
@@ -42,6 +52,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 {
                     switch (reader.Name)
                     {
+                        case nameof(IsArtificial):
+                            isArtificial = true;
+                            break;
+
                         case nameof(Started):
                             started = DateTimeOffset.Parse(reader.Value, null, DateTimeStyles.RoundtripKind);
                             break;
@@ -60,13 +74,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                 var sequence = TileSequence.FromEncoded(reader, XmlNodeType.EndElement);
                 reader.ReadEndOfFragment();
 
-                value = new UtteranceData(sequence, started, duration, keyCount);
+                value = isArtificial ? new UtteranceData(sequence, true) : new UtteranceData(sequence, started, duration, keyCount);
             }
             else
             {
                 var sequence = TileSequence.FromEncoded(line);
 
-                value = new UtteranceData(sequence);
+                value = new UtteranceData(sequence, false);
             }
 
             return value;
@@ -75,37 +89,32 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
         public string ToLine()
         {
-            string value;
-
             var content = Sequence.ToHybridEncoded();
 
-            if (Started == null && Duration == null && KeyCount == 0)
+            var value = XmlHelper.WriteXmlFragment(writer =>
             {
-                value = content;
-            }
-            else
-            {
-                value = XmlHelper.WriteXmlFragment(writer =>
+                writer.WriteStartElement("U");
+                if (IsArtificial)
                 {
-                    writer.WriteStartElement("U");
-                    if (Started.HasValue)
-                    {
-                        writer.WriteAttributeString(nameof(Started), Started.Value.ToString("o"));
-                    }
-                    if (Duration.HasValue)
-                    {
-                        writer.WriteAttributeString(nameof(Duration), Duration.Value.TotalMilliseconds.ToString());
-                    }
-                    if (KeyCount.HasValue)
-                    {
-                        writer.WriteAttributeString(nameof(KeyCount), KeyCount.Value.ToString());
-                    }
+                    writer.WriteAttributeString(nameof(IsArtificial), IsArtificial.ToString());
+                }
+                if (Started.HasValue)
+                {
+                    writer.WriteAttributeString(nameof(Started), Started.Value.ToString("o"));
+                }
+                if (Duration.HasValue)
+                {
+                    writer.WriteAttributeString(nameof(Duration), Duration.Value.TotalMilliseconds.ToString());
+                }
+                if (KeyCount.HasValue)
+                {
+                    writer.WriteAttributeString(nameof(KeyCount), KeyCount.Value.ToString());
+                }
 
-                    writer.WriteRaw(content);
+                writer.WriteRaw(content);
 
-                    writer.WriteEndElement();
-                });
-            }
+                writer.WriteEndElement();
+            });
 
             return value;
         }

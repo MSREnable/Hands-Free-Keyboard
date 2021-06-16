@@ -263,6 +263,16 @@ namespace Microsoft.Research.SpeechWriter.UI
             _host.Model.ShowTestCard();
         }
 
+        private async void ImportClipboard()
+        {
+            var data = await GetClipboardContentAsync();
+            foreach (var sequence in data)
+            {
+                await _host.Model.SaveUtteranceAsync(sequence, true);
+            }
+            _host.Restart(true);
+        }
+
         public bool DoSpecialKey(object key)
         {
             var done = true;
@@ -289,6 +299,8 @@ namespace Microsoft.Research.SpeechWriter.UI
                 case "L": OnShowLogging(); break;
 
                 case "P": OnShowTestCard(); break;
+
+                case "I": ImportClipboard(); break;
 
                 default:
                     done = false;

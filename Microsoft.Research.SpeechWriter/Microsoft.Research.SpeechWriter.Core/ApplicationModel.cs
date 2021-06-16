@@ -317,6 +317,19 @@ namespace Microsoft.Research.SpeechWriter.Core
             _ = Environment.SaveUtteranceAsync(utteranceString);
         }
 
+        /// <summary>
+        /// Save an utterance.
+        /// </summary>
+        /// <param name="sequence"></param>
+        /// <param name="isArtificial">Was data generated automatically.</param>
+        public async Task SaveUtteranceAsync(TileSequence sequence, bool isArtificial = false)
+        {
+            var utterance = isArtificial ? new UtteranceData(sequence, true) : new UtteranceData(sequence, _utteranceStartTime, _utteranceDuration, _utteranceActivationCount);
+            var utteranceString = utterance.ToLine();
+            await Environment.SaveTraceAsync(utteranceString);
+            await Environment.SaveUtteranceAsync(utteranceString);
+        }
+
         internal void Trace<TSource>(Command<TSource> item)
             where TSource : VocabularySource
         {
