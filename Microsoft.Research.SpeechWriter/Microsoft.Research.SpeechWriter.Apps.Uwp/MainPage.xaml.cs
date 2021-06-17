@@ -53,8 +53,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
         {
             this.InitializeComponent();
 
-            TemplateConverter.LoadTemplates(Resources);
-
             SizeChanged += MainWindow_SizeChanged;
 
             _switchTimer.Tick += OnSwitchTimerTick;

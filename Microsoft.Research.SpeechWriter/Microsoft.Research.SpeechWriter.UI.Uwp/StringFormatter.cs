@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
 
-namespace Microsoft.Research.SpeechWriter.Apps.Uwp
+namespace Microsoft.Research.SpeechWriter.UI.Uwp
 {
     public class StringFormatter : IValueConverter
     {

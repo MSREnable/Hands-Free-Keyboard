@@ -125,12 +125,9 @@
     <Compile Include="NarratorVocalization.cs" />
     <Compile Include="NonEnglishWriterEnvironment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringFormatter.cs" />
     <Compile Include="SwitchTargetControl.xaml.cs">
       <DependentUpon>SwitchTargetControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TemplateOpacityConverter.cs" />
-    <Compile Include="TemplateTypeConverter.cs" />
     <Compile Include="MainPage.SwitchInterface.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
