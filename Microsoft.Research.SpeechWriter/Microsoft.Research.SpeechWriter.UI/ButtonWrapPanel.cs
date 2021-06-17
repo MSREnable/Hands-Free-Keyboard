@@ -32,13 +32,13 @@ namespace Microsoft.Research.SpeechWriter.UI
                     var item = enumerator.Current;
                     var element = Create(item, WidthBehavior.Minimum);
 
-                    var nextOffset = offset + element.RenderedWidth + UniformMargin;
+                    var nextOffset = offset + element.RenderedWidth;
 
                     if (Width < nextOffset)
                     {
                         row++;
                         offset = 0.0;
-                        nextOffset = element.RenderedWidth + UniformMargin;
+                        nextOffset = element.RenderedWidth;
                     }
 
                     if (row < Rows)

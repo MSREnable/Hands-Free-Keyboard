@@ -32,7 +32,7 @@ namespace Microsoft.Research.SpeechWriter.UI
                     var element = Create(item, WidthBehavior.Minimum);
                     _elementList.Add(element);
 
-                    offset -= element.RenderedWidth + UniformMargin;
+                    offset -= element.RenderedWidth;
                     Move(element, 0, offset);
                 }
             }

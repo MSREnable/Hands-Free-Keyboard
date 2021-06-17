@@ -19,14 +19,12 @@ namespace Microsoft.Research.SpeechWriter.UI
         private readonly ButtonListColumn<T> _selectionListsColumn;
 
         private readonly double _pitch;
-        private readonly double _uniformMargin;
         private int _rows;
 
-        public ApplicationLayout(IButtonSurfaceUI<T> surface, double pitch, double uniformMargin)
+        public ApplicationLayout(IButtonSurfaceUI<T> surface, double pitch)
         {
             _surface = surface;
             _pitch = pitch;
-            _uniformMargin = uniformMargin;
 
             _documentWrapPanel = new ButtonWrapPanel<T>(this, _model.HeadItems);
             _documentTailPanel = new ButtonReverseWrapPanel<T>(this, _model.TailItems);
@@ -40,20 +38,18 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         internal double Pitch => _pitch;
 
-        internal double UniformMargin => _uniformMargin;
-
-        private double WingWidth => (_surface.TotalWidth - _pitch - 2 * _uniformMargin) / 2;
+        private double WingWidth => (_surface.TotalWidth - _pitch) / 2;
 
         private void OnResized(object sender, EventArgs e)
         {
-            _rows = (int)Math.Floor((_surface.TotalHeight - _uniformMargin) / (_pitch + _uniformMargin));
+            _rows = (int)Math.Floor(_surface.TotalHeight / _pitch);
 
             _model.MaxNextSuggestionsCount = _rows;
 
-            _documentWrapPanel.Move(x: _uniformMargin, y: _uniformMargin, width: WingWidth, _rows - 1);
-            _documentTailPanel.Move(x: _uniformMargin, y: _uniformMargin + (_rows - 1) * (_pitch + _uniformMargin), width: WingWidth, 1);
-            _navigationColumn.Move(x: _uniformMargin + WingWidth, y: _uniformMargin, width: _pitch, _rows);
-            _selectionListsColumn.Move(x: _surface.TotalWidth - WingWidth, y: _uniformMargin + (_uniformMargin + _pitch) / 2, width: WingWidth, _rows - 1);
+            _documentWrapPanel.Move(x: 0, y: 0, width: WingWidth, _rows - 1);
+            _documentTailPanel.Move(x: 0, y: (_rows - 1) * _pitch, width: WingWidth, 1);
+            _navigationColumn.Move(x: WingWidth, y: 0, width: _pitch, _rows);
+            _selectionListsColumn.Move(x: _surface.TotalWidth - WingWidth, y: _pitch / 2, width: WingWidth, _rows - 1);
         }
     }
 }

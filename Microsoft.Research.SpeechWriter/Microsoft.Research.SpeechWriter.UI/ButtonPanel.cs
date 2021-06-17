@@ -26,8 +26,6 @@ namespace Microsoft.Research.SpeechWriter.UI
             ((INotifyCollectionChanged)_list).CollectionChanged += OnCollectionChanged;
         }
 
-        protected double UniformMargin => _layout.UniformMargin;
-
         protected double Width { get; private set; }
 
         protected int Rows { get; private set; }
@@ -91,7 +89,7 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         protected void Move(TButton element, int row, double offset)
         {
-            _surface.Move(element, _left + offset, _top + row * (_layout.Pitch + _layout.UniformMargin));
+            _surface.Move(element, _left + offset, _top + row * _layout.Pitch);
         }
 
         protected void Remove(TButton element)

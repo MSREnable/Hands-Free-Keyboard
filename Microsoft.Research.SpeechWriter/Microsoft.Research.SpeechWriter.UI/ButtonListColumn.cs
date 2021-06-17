@@ -39,7 +39,7 @@ namespace Microsoft.Research.SpeechWriter.UI
                         var command = enumerator.Current;
                         var element = Create(command, WidthBehavior.Minimum);
 
-                        var nextOffset = offset + element.RenderedWidth + UniformMargin;
+                        var nextOffset = offset + element.RenderedWidth;
                         if (nextOffset < Width)
                         {
                             elementList.Add(element);

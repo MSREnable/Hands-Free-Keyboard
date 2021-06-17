@@ -10,7 +10,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Test
         public void SimpleCreation()
         {
             var surface = new MockButtonSurfaceUI();
-            var application = new ApplicationLayout<MockButton>(surface, 8, 2);
+            var application = new ApplicationLayout<MockButton>(surface, 8);
 
             surface.RaiseResize(11, 8);
 

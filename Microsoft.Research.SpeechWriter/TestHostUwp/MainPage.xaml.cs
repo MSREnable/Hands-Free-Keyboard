@@ -17,7 +17,7 @@ namespace TestHostUwp
         {
             InitializeComponent();
 
-            _applicationLayout = new ApplicationLayout<TileButton>(TheContent, 110, 0);
+            _applicationLayout = new ApplicationLayout<TileButton>(TheContent, 110);
         }
     }
 }

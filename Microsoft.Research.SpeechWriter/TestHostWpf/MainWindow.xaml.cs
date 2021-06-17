@@ -15,7 +15,7 @@ namespace TestHostWpf
         {
             InitializeComponent();
 
-            _applicationLayout = new ApplicationLayout<TileButton>(TheContent, 110, 5);
+            _applicationLayout = new ApplicationLayout<TileButton>(TheContent, 110);
         }
     }
 }
