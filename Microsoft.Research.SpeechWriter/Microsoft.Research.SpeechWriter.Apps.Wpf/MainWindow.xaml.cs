@@ -136,11 +136,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var head = GetTargetRect(new ApplicationRobotAction(ApplicationRobotActionTarget.Head, 0, 0, false));
-            var tail = GetTargetRect(new ApplicationRobotAction(ApplicationRobotActionTarget.Tail, 0, 0, false));
-            var interstitial = GetTargetRect(new ApplicationRobotAction(ApplicationRobotActionTarget.Interstitial, 0, 0, false));
-            var suggestion = GetTargetRect(new ApplicationRobotAction(ApplicationRobotActionTarget.Suggestion, 0, 0, false));
-            _model.MaxNextSuggestionsCount = (int)(e.NewSize.Height) / 60;
+            _model.MaxNextSuggestionsCount = (int)(e.NewSize.Height) / 110;
         }
 
         private Rect GetTargetRect(ApplicationRobotAction action)
