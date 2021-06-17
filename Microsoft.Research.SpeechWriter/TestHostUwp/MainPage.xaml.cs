@@ -11,13 +11,13 @@ namespace TestHostUwp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private readonly ApplicationLayout<ButtonUI> _applicationLayout;
+        private readonly ApplicationLayout<TileButton> _applicationLayout;
 
         public MainPage()
         {
             InitializeComponent();
 
-            _applicationLayout = new ApplicationLayout<ButtonUI>(TheContent, 50, 5);
+            _applicationLayout = new ApplicationLayout<TileButton>(TheContent, 110, 0);
         }
     }
 }

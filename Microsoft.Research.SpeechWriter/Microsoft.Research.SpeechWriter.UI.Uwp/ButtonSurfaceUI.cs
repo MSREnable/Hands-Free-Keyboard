@@ -6,13 +6,13 @@ using Windows.UI.Xaml.Controls;
 
 namespace Microsoft.Research.SpeechWriter.UI.Uwp
 {
-    public class ButtonSurfaceUI : Canvas, IButtonSurfaceUI<ButtonUI>
+    public class ButtonSurfaceUI : Canvas, IButtonSurfaceUI<TileButton>
     {
-        double IButtonSurfaceUI<ButtonUI>.TotalWidth => ActualWidth;
+        double IButtonSurfaceUI<TileButton>.TotalWidth => ActualWidth;
 
-        double IButtonSurfaceUI<ButtonUI>.TotalHeight => ActualHeight;
+        double IButtonSurfaceUI<TileButton>.TotalHeight => ActualHeight;
 
-        event EventHandler IButtonSurfaceUI<ButtonUI>.Resized
+        event EventHandler IButtonSurfaceUI<TileButton>.Resized
         {
             add
             {
@@ -31,11 +31,11 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
             SizeChanged += (s, e) => _resized?.Invoke(s, EventArgs.Empty);
         }
 
-        ButtonUI IButtonSurfaceUI<ButtonUI>.Create(ITile tile, double width, double height, WidthBehavior behavior)
+        TileButton IButtonSurfaceUI<TileButton>.Create(ITile tile, double width, double height, WidthBehavior behavior)
         {
-            var element = new ButtonUI
+            var element = new TileButton
             {
-                Content = tile,
+                Item = tile,
                 Height = height
             };
             switch (behavior)
@@ -57,12 +57,12 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
             return element;
         }
 
-        void IButtonSurfaceUI<ButtonUI>.Remove(ButtonUI element)
+        void IButtonSurfaceUI<TileButton>.Remove(TileButton element)
         {
             Children.Remove(element);
         }
 
-        void IButtonSurfaceUI<ButtonUI>.Move(ButtonUI element, double x, double y)
+        void IButtonSurfaceUI<TileButton>.Move(TileButton element, double x, double y)
         {
             SetLeft(element, x);
             SetTop(element, y);

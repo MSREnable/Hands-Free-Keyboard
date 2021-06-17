@@ -7,7 +7,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
     /// <summary>
     /// Interaction logic for TileButton.xaml
     /// </summary>
-    public partial class TileButton : UserControl
+    public partial class TileButton : UserControl, IButtonUI
     {
         public static readonly DependencyProperty ItemProperty = DependencyProperty.Register(nameof(Item), typeof(ITile), typeof(TileButton));
 
@@ -21,5 +21,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             get => (ITile)GetValue(ItemProperty);
             set => SetValue(ItemProperty, value);
         }
+
+        double IButtonUI.RenderedWidth => DesiredSize.Width;
     }
 }
