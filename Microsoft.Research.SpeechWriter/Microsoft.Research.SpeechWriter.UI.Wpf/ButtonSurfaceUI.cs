@@ -42,6 +42,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             var element = new TileButton
             {
                 Item = tile,
+                Opacity = (double)_opacityConverter.Convert(tile, null, null, null),
                 Height = height
             };
             switch (behavior)
