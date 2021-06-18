@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using System;
 using System.Xml;
-using Microsoft.Research.SpeechWriter.Core.Data;
 
 namespace Microsoft.Research.SpeechWriter.Core.Items
 {

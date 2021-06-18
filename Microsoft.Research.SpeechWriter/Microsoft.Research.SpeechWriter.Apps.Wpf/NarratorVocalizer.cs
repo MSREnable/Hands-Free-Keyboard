@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 {
-    class NarratorVocalizer : INarratorVocalizer
+    internal class NarratorVocalizer : INarratorVocalizer
     {
         private readonly SpeechSynthesizer _synthesizer = new SpeechSynthesizer();
 

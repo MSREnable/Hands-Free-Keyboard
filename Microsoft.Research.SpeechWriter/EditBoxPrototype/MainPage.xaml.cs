@@ -73,7 +73,7 @@ namespace EditBoxPrototype
                         list.Add(caret);
 
                         var suffix = TileData.Create(tile.Content.Substring(start - charPosition),
-                            isPrefix: tile.IsPrefix, 
+                            isPrefix: tile.IsPrefix,
                             isSuffix: true);
                         list.Add(suffix);
                     }

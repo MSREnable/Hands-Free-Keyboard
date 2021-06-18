@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 {
-    class WpfEnvironment : DefaultWriterEnvironment, IWriterEnvironment
+    internal class WpfEnvironment : DefaultWriterEnvironment, IWriterEnvironment
     {
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 

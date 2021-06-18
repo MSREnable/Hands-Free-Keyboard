@@ -1,4 +1,5 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Items;
+﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.Core.Items;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Windows.UI.Xaml;
@@ -10,7 +11,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
 {
     public sealed partial class TileButton : UserControl, IButtonUI
     {
-        public readonly static DependencyProperty ItemProperty = DependencyProperty.Register(nameof(Item), typeof(object), typeof(TileButton),
+        public static readonly DependencyProperty ItemProperty = DependencyProperty.Register(nameof(Item), typeof(ITile), typeof(TileButton),
             new PropertyMetadata(null, OnItemChanged));
 
         public TileButton()
@@ -18,9 +19,9 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
             this.InitializeComponent();
         }
 
-        public object Item
+        public ITile Item
         {
-            get => (object)GetValue(ItemProperty);
+            get => (ITile)GetValue(ItemProperty);
             set
             {
                 SetValue(ItemProperty, value);
