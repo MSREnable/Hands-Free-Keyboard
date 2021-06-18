@@ -1,6 +1,7 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
 using Microsoft.Research.SpeechWriter.UI;
+using Microsoft.Research.SpeechWriter.UI.Uwp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,7 +28,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
     public sealed partial class MainPage : Page, IApplicationHost
     {
         public static DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(ApplicationModel), typeof(MainPage),
-            new PropertyMetadata(null, OnModelChanged));
+            new PropertyMetadata(null));
         public static DependencyProperty MoveToCenterXProperty = DependencyProperty.Register(nameof(MoveToCenterX), typeof(double), typeof(MainPage),
             new PropertyMetadata(0.0));
         public static DependencyProperty MoveToCenterYProperty = DependencyProperty.Register(nameof(MoveToCenterY), typeof(double), typeof(MainPage),
@@ -49,6 +50,8 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
         private ApplicationDemo _demo;
 
+        private ApplicationLayout<TileButton> _layout;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -63,24 +66,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             };
         }
 
-        private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var page = (MainPage)d;
-            var model = (ApplicationModel)e.NewValue;
-
-            if (page._model != null)
-            {
-                page._model.ApplicationModelUpdate -= page.OnApplicationModelUpdate;
-            }
-
-            page._model = model;
-
-            if (page._model != null)
-            {
-                page._model.ApplicationModelUpdate += page.OnApplicationModelUpdate;
-            }
-        }
-
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -89,6 +74,8 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
             var environment = passedEnvironment ?? new UwpWriterEnvironment();
             _model = new ApplicationModel(environment);
+            _model.ApplicationModelUpdate += OnApplicationModelUpdate;
+            _layout = new ApplicationLayout<TileButton>(_model, TheHost, 110);
             _demo = ApplicationDemo.Create(this);
             var vocalizer = NarratorVocalization.Create(TheMediaElement, "en");
             _ = Narrator.AttachNarrator(_model, vocalizer);

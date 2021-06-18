@@ -21,8 +21,9 @@ namespace Microsoft.Research.SpeechWriter.UI
         private readonly double _pitch;
         private int _rows;
 
-        public ApplicationLayout(IButtonSurfaceUI<T> surface, double pitch)
+        public ApplicationLayout(ApplicationModel model, IButtonSurfaceUI<T> surface, double pitch)
         {
+            _model = model;
             _surface = surface;
             _pitch = pitch;
 
@@ -32,6 +33,11 @@ namespace Microsoft.Research.SpeechWriter.UI
             _selectionListsColumn = new ButtonListColumn<T>(this, _model.SuggestionLists);
 
             _surface.Resized += OnResized;
+        }
+
+        public ApplicationLayout(IButtonSurfaceUI<T> surface, double pitch)
+            : this(new ApplicationModel(), surface, pitch)
+        {
         }
 
         internal IButtonSurfaceUI<T> Surface => _surface;

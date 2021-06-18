@@ -1,6 +1,7 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
 using Microsoft.Research.SpeechWriter.UI;
+using Microsoft.Research.SpeechWriter.UI.Wpf;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -41,6 +42,8 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 
         private readonly ApplicationDemo _demo;
 
+        private readonly ApplicationLayout<TileButton> _layout;
+
         public MainWindow()
         {
             var environment = new WpfEnvironment();
@@ -56,6 +59,8 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 
             var vocalizer = new NarratorVocalizer();
             _ = Narrator.AttachNarrator(_model, vocalizer);
+
+            _layout = new  ApplicationLayout<TileButton>(_model, TheHost, 110);
 
             Loaded += OnLoaded;
 
