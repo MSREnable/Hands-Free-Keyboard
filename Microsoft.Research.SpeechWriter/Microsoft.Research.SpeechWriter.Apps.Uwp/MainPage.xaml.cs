@@ -172,82 +172,14 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
         void IApplicationHost.SetupStoryboardForAction(ApplicationRobotAction action)
         {
-            var control = GetActionControl(action);
-            Rect targetRect = GetElementRect(control);
+            var targetRect = _layout.GetTargetRect(action);
 
-            MoveToCenterX = targetRect.X + control.ActualWidth / 2;
-            MoveToCenterY = targetRect.Y + control.ActualHeight / 2;
+            MoveToCenterX = targetRect.X + targetRect.Width / 2;
+            MoveToCenterY = targetRect.Y + targetRect.Height / 2;
             MoveToX = targetRect.X;
             MoveToY = targetRect.Y;
             MoveToWidth = targetRect.Width;
             MoveToHeight = targetRect.Height;
-        }
-
-        private Rect GetElementRect(FrameworkElement control)
-        {
-            var transform = control.TransformToVisual(TargetPanel);
-            var controlRect = new Rect(0, 0, control.ActualWidth, control.ActualHeight);
-            var targetRect = transform.TransformBounds(controlRect);
-            return targetRect;
-        }
-
-        private FrameworkElement GetActionControl(ApplicationRobotAction action)
-        {
-            UIElement target;
-            switch (action.Target)
-            {
-                case ApplicationRobotActionTarget.Head:
-                    target = GetHeadElement(action.Index);
-                    break;
-
-                case ApplicationRobotActionTarget.Tail:
-                    target = GetTailElement(action.Index);
-                    break;
-
-                case ApplicationRobotActionTarget.Interstitial:
-                    target = GetInterstitialElement(action.Index);
-                    break;
-
-                default:
-                case ApplicationRobotActionTarget.Suggestion:
-                    Debug.Assert(action.Target == ApplicationRobotActionTarget.Suggestion);
-                    target = GetSuggestionElement(action.Index, action.SubIndex);
-                    break;
-
-            }
-            var targetControl = (FrameworkElement)target;
-            return targetControl;
-        }
-
-        private FrameworkElement GetSuggestionElement(int index, int subIndex)
-        {
-            var control = SuggestionListsContainer.ItemsPanelRoot;
-            var intermediateTarget = (ContentPresenter)control.Children[index];
-            var nextLevel = (ItemsControl)VisualTreeHelper.GetChild(intermediateTarget, 0);
-            var nextPanel = nextLevel.ItemsPanelRoot;
-            var target = nextPanel.Children[subIndex];
-            return (FrameworkElement)target;
-        }
-
-        private FrameworkElement GetInterstitialElement(int index)
-        {
-            var panel = SuggestionInterstitialsContainer.ItemsPanelRoot;
-            var target = panel.Children[index];
-            return (FrameworkElement)target;
-        }
-
-        private FrameworkElement GetTailElement(int index)
-        {
-            var panel = TailItemsContainer.ItemsPanelRoot;
-            var target = panel.Children[index];
-            return (FrameworkElement)target;
-        }
-
-        private FrameworkElement GetHeadElement(int index)
-        {
-            var panel = HeadItemsContainer.ItemsPanelRoot;
-            var target = panel.Children[index];
-            return (FrameworkElement)target;
         }
 
         private static bool GetAs<T>(Timeline timeline, out T value)
