@@ -14,6 +14,12 @@ namespace Microsoft.Research.SpeechWriter.UI
         {
         }
 
+        internal T GetButton(int index)
+        {
+            var button = _elementList[index];
+            return button;
+        }
+
         protected override void ResetContent(IList<ITile> list)
         {
             foreach (var element in _elementList)

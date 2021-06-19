@@ -11,16 +11,6 @@
     <Page.Resources>
         <ResourceDictionary>
 
-            <Style TargetType="ItemsControl">
-                <Setter Property="ItemTemplate">
-                    <Setter.Value>
-                        <DataTemplate>
-                            <coreui:TileButton Item="{Binding}"/>
-                        </DataTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
             <Storyboard x:Key="MoveRectangle">
                 <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Left)">
                     <EasingDoubleKeyFrame KeyTime="{Binding MoveRectangeSeekTime, Mode=OneWay}" Value="{Binding MoveToX, Mode=OneWay}">
@@ -107,69 +97,9 @@
     </Page.Resources>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <coreui:ButtonSurfaceUI Grid.Column="0" x:Name="TheHost"/>
-        <Grid Grid.Column="1" x:Name="TheContent">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-
-            <ItemsControl x:Name="HeadItemsContainer" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding HeadItems}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-
-            <ItemsControl x:Name="TailItemsContainer" Grid.Column="0" Grid.Row="1" ItemsSource="{Binding TailItems}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel HorizontalAlignment="Right"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-
-            <ItemsControl x:Name="SuggestionInterstitialsContainer" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{Binding SuggestionInterstitials}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-
-            <ItemsControl x:Name="SuggestionListsContainer" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{Binding SuggestionLists}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical" Margin="0,30,0,0"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <ItemsControl ItemsSource="{Binding}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-            <Canvas x:Name="TargetPanel">
-                <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>
-            </Canvas>
-
-        </Grid>
+        <Canvas x:Name="TargetPanel">
+            <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>
+        </Canvas>
     </Grid>
 </Page>

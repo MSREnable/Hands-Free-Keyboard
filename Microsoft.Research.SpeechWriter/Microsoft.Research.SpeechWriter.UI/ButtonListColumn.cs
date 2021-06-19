@@ -14,6 +14,12 @@ namespace Microsoft.Research.SpeechWriter.UI
         {
         }
 
+        internal T GetButton(int index, int subIndex)
+        {
+            var button = _elementLists[index][subIndex];
+            return button;
+        }
+
         protected override void ResetContent(IList<IEnumerable<ITile>> list)
         {
             foreach (var elementList in _elementLists)
@@ -34,21 +40,21 @@ namespace Microsoft.Research.SpeechWriter.UI
                 {
                     var offset = 0.0;
 
-                    while (offset < Width && enumerator.MoveNext())
+                    while (/*offset < Width &&*/ enumerator.MoveNext())
                     {
                         var command = enumerator.Current;
                         var element = Create(command, WidthBehavior.Minimum);
 
                         var nextOffset = offset + element.RenderedWidth;
-                        if (nextOffset < Width)
+                        //if (nextOffset < Width)
                         {
                             elementList.Add(element);
                             Move(element, row, offset);
                         }
-                        else
-                        {
-                            Remove(element);
-                        }
+                        //else
+                        //{
+                        //    Remove(element);
+                        //}
 
                         offset = nextOffset;
                     }

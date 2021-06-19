@@ -4,6 +4,7 @@ using Microsoft.Research.SpeechWriter.UI;
 using Microsoft.Research.SpeechWriter.UI.Wpf;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -53,14 +54,10 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 
             InitializeComponent();
 
-            TheContent.DataContext = _model;
-
-            TheContent.SizeChanged += MainWindow_SizeChanged;
-
             var vocalizer = new NarratorVocalizer();
             _ = Narrator.AttachNarrator(_model, vocalizer);
 
-            _layout = new  ApplicationLayout<TileButton>(_model, TheHost, 110);
+            _layout = new ApplicationLayout<TileButton>(_model, TheHost, 110);
 
             Loaded += OnLoaded;
 
@@ -139,15 +136,9 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
             }
         }
 
-        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        private RectangleF GetTargetRect(ApplicationRobotAction action)
         {
-            _model.MaxNextSuggestionsCount = (int)(e.NewSize.Height) / 110;
-        }
-
-        private Rect GetTargetRect(ApplicationRobotAction action)
-        {
-            var control = GetActionControl(action);
-            var targetRect = GetElementRect(control);
+            var targetRect = _layout.GetTargetRect(action);
             return targetRect;
         }
 
@@ -163,42 +154,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
             MoveToHeight = targetRect.Height;
         }
 
-        private Rect GetElementRect(FrameworkElement control)
-        {
-            var transform = control.TransformToVisual(TargetPanel);
-            var controlRect = new Rect(0, 0, control.ActualWidth, control.ActualHeight);
-            var targetRect = transform.TransformBounds(controlRect);
-            return targetRect;
-        }
-
-        private FrameworkElement GetActionControl(ApplicationRobotAction action)
-        {
-            UIElement target;
-            switch (action.Target)
-            {
-                case ApplicationRobotActionTarget.Head:
-                    target = GetHeadElement(action.Index);
-                    break;
-
-                case ApplicationRobotActionTarget.Tail:
-                    target = GetTailElement(action.Index);
-                    break;
-
-                case ApplicationRobotActionTarget.Interstitial:
-                    target = GetInterstitialElement(action.Index);
-                    break;
-
-                default:
-                case ApplicationRobotActionTarget.Suggestion:
-                    Debug.Assert(action.Target == ApplicationRobotActionTarget.Suggestion);
-                    target = GetSuggestionElement(action.Index, action.SubIndex);
-                    break;
-
-            }
-            var targetControl = (FrameworkElement)target;
-            return targetControl;
-        }
-
         private T GetPanel<T>(ItemsControl itemsContainer)
             where T : Panel
         {
@@ -208,43 +163,9 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
             return panel;
         }
 
-        private UIElement GetSuggestionElement(int index, int subIndex)
-        {
-            var outerStack = GetPanel<StackPanel>(SuggestionListsContainer);
-            var untypedInnerPresenter = (ContentPresenter)outerStack.Children[index];
-            var wibble = VisualTreeHelper.GetChild(untypedInnerPresenter, 0);
-            var innerPresenter = (ItemsControl)wibble;
-            var innerStack = GetPanel<StackPanel>(innerPresenter);
-            var target = innerStack.Children[subIndex];
-            return target;
-        }
-
         void IApplicationHost.ShowLogging()
         {
             Process.Start("explorer.exe", WpfEnvironment.DataPath);
-        }
-
-        private UIElement GetInterstitialElement(int index)
-        {
-            var stack = GetPanel<StackPanel>(SuggestionInterstitialsContainer);
-            var target = stack.Children[index];
-            return target;
-        }
-
-        private UIElement GetTailElement(int index)
-        {
-            var stack = GetPanel<WrapPanel>(TailItemsContainer);
-            var target = stack.Children[index];
-            return target;
-        }
-
-        private FrameworkElement GetHeadElement(int index)
-        {
-            var border = (Border)VisualTreeHelper.GetChild(HeadItemsContainer, 0);
-            var presenter = (ItemsPresenter)border.Child;
-            var panel = (WrapPanel)VisualTreeHelper.GetChild(presenter, 0);
-            var target = panel.Children[index];
-            return (FrameworkElement)target;
         }
 
         private static bool GetAs<T>(Timeline timeline, out T value)

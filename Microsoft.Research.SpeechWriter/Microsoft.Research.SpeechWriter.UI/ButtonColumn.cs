@@ -14,6 +14,12 @@ namespace Microsoft.Research.SpeechWriter.UI
         {
         }
 
+        internal T GetButton(int index)
+        {
+            var button = _elements[index];
+            return button;
+        }
+
         protected override void AddContent(IList<ITile> list, int startIndex, int count)
         {
             for (var i = 0; i < count; i++)

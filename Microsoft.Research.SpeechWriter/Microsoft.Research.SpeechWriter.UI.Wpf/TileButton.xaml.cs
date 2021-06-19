@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -23,5 +24,8 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
         }
 
         double IButtonUI.RenderedWidth => DesiredSize.Width;
+
+        RectangleF IButtonUI.GetRenderedRectangle() => new RectangleF((float)Canvas.GetLeft(this), (float)Canvas.GetTop(this),
+            (float)DesiredSize.Width, (float)DesiredSize.Height);
     }
 }

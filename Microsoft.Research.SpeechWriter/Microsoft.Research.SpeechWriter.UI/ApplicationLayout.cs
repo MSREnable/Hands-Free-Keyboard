@@ -1,5 +1,8 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.Core.Automation;
 using System;
+using System.Diagnostics;
+using System.Drawing;
 
 namespace Microsoft.Research.SpeechWriter.UI
 {
@@ -56,6 +59,41 @@ namespace Microsoft.Research.SpeechWriter.UI
             _documentTailPanel.Move(x: 0, y: (_rows - 1) * _pitch, width: WingWidth, 1);
             _navigationColumn.Move(x: WingWidth, y: 0, width: _pitch, _rows);
             _selectionListsColumn.Move(x: _surface.TotalWidth - WingWidth, y: _pitch / 2, width: WingWidth, _rows - 1);
+        }
+
+        private T GetButton(ApplicationRobotAction action)
+        {
+            T button;
+
+            switch (action.Target)
+            {
+                case ApplicationRobotActionTarget.Head:
+                    button = _documentWrapPanel.GetButton(action.Index);
+                    break;
+
+                case ApplicationRobotActionTarget.Tail:
+                    button = _documentTailPanel.GetButton(action.Index);
+                    break;
+
+                case ApplicationRobotActionTarget.Interstitial:
+                    button = _navigationColumn.GetButton(action.Index);
+                    break;
+
+                case ApplicationRobotActionTarget.Suggestion:
+                default:
+                    Debug.Assert(action.Target == ApplicationRobotActionTarget.Suggestion);
+                    button = _selectionListsColumn.GetButton(action.Index, action.SubIndex);
+                    break;
+            }
+
+            return button;
+        }
+
+        public RectangleF GetTargetRect(ApplicationRobotAction action)
+        {
+            var button = GetButton(action);
+            var rectangle = button.GetRenderedRectangle();
+            return rectangle;
         }
     }
 }

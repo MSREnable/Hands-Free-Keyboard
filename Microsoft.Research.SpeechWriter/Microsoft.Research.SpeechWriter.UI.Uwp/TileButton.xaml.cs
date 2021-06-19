@@ -2,6 +2,7 @@
 using Microsoft.Research.SpeechWriter.Core.Items;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -30,6 +31,9 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
         }
 
         double IButtonUI.RenderedWidth => DesiredSize.Width;
+
+        RectangleF IButtonUI.GetRenderedRectangle() => new RectangleF((float)Canvas.GetLeft(this), (float)Canvas.GetTop(this),
+            (float)DesiredSize.Width, (float)DesiredSize.Height);
 
         private void OnItemChanged(object value)
         {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
+using System.Drawing;
 using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.UI.Test
@@ -39,5 +40,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Test
         internal void Invoke() => _command.Execute(null);
 
         double IButtonUI.RenderedWidth => Width;
+
+        RectangleF IButtonUI.GetRenderedRectangle() => new RectangleF((float)X, (float)Y, (float)Width, (float)Height);
     }
 }
