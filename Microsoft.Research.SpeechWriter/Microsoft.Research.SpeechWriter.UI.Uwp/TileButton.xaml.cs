@@ -26,7 +26,6 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
             set
             {
                 SetValue(ItemProperty, value);
-                Debug.WriteLine($"Binding: {value}");
             }
         }
 
