@@ -30,6 +30,14 @@ namespace EditBoxPrototype
             {
                 ItemsContainer.Items.Add(child);
             }
+        }
+
+        private void OnCursedTextChanged(object sender, RoutedEventArgs e)
+        {
+            var box = (TextBox)sender;
+            var text = box.Text;
+
+            var sequence = TileSequence.FromRaw(text);
 
             var start = box.SelectionStart;
             var length = box.SelectionLength;
@@ -90,7 +98,6 @@ namespace EditBoxPrototype
                     var caret = TileData.Create("^", isSuffix: true);
                     list.Add(caret);
                 }
-
             }
             else
             {
@@ -108,7 +115,6 @@ namespace EditBoxPrototype
             {
                 CursedContainer.Items.Add(child);
             }
-
         }
     }
 }
