@@ -43,9 +43,9 @@ namespace Microsoft.Research.SpeechWriter.Core
                     var sequence = new int[effectiveLength + 2];
 
                     var index = 1;
-                    foreach (var ch in word.ToCharArray())
+                    for (var i = 0; i < effectiveLength; i++)
                     {
-                        sequence[index] = ch;
+                        sequence[index] = word[i];
                         index++;
                     }
                     Debug.Assert(sequence[0] == 0);

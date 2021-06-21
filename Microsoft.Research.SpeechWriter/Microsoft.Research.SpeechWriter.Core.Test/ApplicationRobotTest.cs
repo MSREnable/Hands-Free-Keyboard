@@ -317,13 +317,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 139, 1, 94, 577);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 140, 1, 94, 578);
         }
 
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 56, 1, 103, 171);
+            MultiTest("That'll be $10, please!", 37, 1, 103, 140);
         }
 
         [Test]
@@ -474,7 +474,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public async Task ShareAndEnjoyPersistance()
         {
-            await CheckRecallAsync("share and enjoy, share and enjoy, journey though life with a plastic boy, or girl by your side", 69, 5);
+            await CheckRecallAsync("share and enjoy, share and enjoy, journey though life with a plastic boy, or girl by your side", 61, 5);
         }
 
         [Test]
