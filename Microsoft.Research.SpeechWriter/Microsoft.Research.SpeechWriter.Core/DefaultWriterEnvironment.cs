@@ -53,7 +53,6 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         IEnumerable<string> IWriterEnvironment.GetOrderedSeedWords()
         {
-#if true
             var delimiters = "\t \r\n".ToCharArray();
             using (var reader = CreateOrderedSeedWordsReader())
             {
@@ -79,14 +78,56 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
             }
 
+            foreach (var symbol in new[]
+            {
+                ".\0A",
+                ",\0A",
+                "!\0A",
+                "?\0A",
+                ":\0A",
+                ";\0A",
+                "\"\0B",
+                "\"\0A",
+                "'\0B",
+                "'\0A",
+                "'\0J",
+                "-",
+                "#\0B",
+                "$\0B",
+                "%\0A",
+                "&",
+                "(\0B",
+                ")\0A",
+                "*",
+                "+",
+                "/\0J",
+                "<",
+                "=",
+                ">",
+                "@\0J",
+                "£\0A" })
+            {
+                yield return symbol;
+            }
+
             bool IsValidChar(char ch)
             {
                 return char.IsLetter(ch) || ch == '-' || ch == '\'' || ch == '/';
             }
-#else
-            return new string[0];
-#endif
         }
+
+        /// <summary>
+        /// Get additional seed symbols not included in any words.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<char> IWriterEnvironment.GetAdditionalSymbols()
+        {
+            for (var ch = '0'; ch <= '9'; ch++)
+            {
+                yield return ch;
+            }
+        }
+
 
         /// <summary>
         /// Get the current time.

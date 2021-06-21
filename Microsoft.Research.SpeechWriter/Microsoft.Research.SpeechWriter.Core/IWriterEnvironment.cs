@@ -22,6 +22,12 @@ namespace Microsoft.Research.SpeechWriter.Core
         IEnumerable<string> GetOrderedSeedWords();
 
         /// <summary>
+        /// Get additional seed symbols not included in any words.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<char> GetAdditionalSymbols();
+
+        /// <summary>
         /// Get the current time.
         /// </summary>
         /// <returns>The local time.</returns>
