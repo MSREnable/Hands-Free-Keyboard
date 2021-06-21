@@ -78,11 +78,11 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
             }
 
-            foreach (var symbol in new[] 
-            { 
+            foreach (var symbol in new[]
+            {
                 ".\0A",
                 ",\0A",
-                "!\0A", 
+                "!\0A",
                 "?\0A",
                 ":\0A",
                 ";\0A",
@@ -91,20 +91,20 @@ namespace Microsoft.Research.SpeechWriter.Core
                 "'\0B",
                 "'\0A",
                 "'\0J",
-                "-", 
-                "#\0B", 
-                "$\0B", 
-                "%\0A", 
-                "&", 
-                "(\0B", 
-                ")\0A", 
-                "*", 
-                "+", 
-                "/\0J", 
-                "<", 
-                "=", 
-                ">", 
-                "@\0J", 
+                "-",
+                "#\0B",
+                "$\0B",
+                "%\0A",
+                "&",
+                "(\0B",
+                ")\0A",
+                "*",
+                "+",
+                "/\0J",
+                "<",
+                "=",
+                ">",
+                "@\0J",
                 "£\0A" })
             {
                 yield return symbol;
@@ -115,6 +115,19 @@ namespace Microsoft.Research.SpeechWriter.Core
                 return char.IsLetter(ch) || ch == '-' || ch == '\'' || ch == '/';
             }
         }
+
+        /// <summary>
+        /// Get additional seed symbols not included in any words.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<char> IWriterEnvironment.GetAdditionalSymbols()
+        {
+            for (var ch = '0'; ch <= '9'; ch++)
+            {
+                yield return ch;
+            }
+        }
+
 
         /// <summary>
         /// Get the current time.

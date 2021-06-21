@@ -244,9 +244,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             /// Dictionary of words, listed from most likely to least likely.
             /// </summary>
             /// <returns>List of words.</returns>
-            public IEnumerable<string> GetOrderedSeedWords()
+            IEnumerable<string> IWriterEnvironment.GetOrderedSeedWords()
             {
                 return new string[0];
+            }
+
+            IEnumerable<char> IWriterEnvironment.GetAdditionalSymbols()
+            {
+                return new char[0];
             }
         }
 
@@ -323,7 +328,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 37, 1, 103, 140);
+            MultiTest("That'll be $10, please!", 33, 1, 103, 136);
         }
 
         [Test]
