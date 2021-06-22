@@ -1,4 +1,5 @@
-﻿using Microsoft.Research.SpeechWriter.UI;
+﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.UI;
 using Microsoft.Research.SpeechWriter.UI.Uwp;
 using Windows.UI.Xaml.Controls;
 
@@ -18,6 +19,7 @@ namespace TestHostUwp
             InitializeComponent();
 
             _applicationLayout = new ApplicationLayout<TileButton>(TheContent, 110);
+            TheOtherContent.Model = new ApplicationModel();
         }
     }
 }

@@ -9,5 +9,13 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <host:ButtonSurfaceUI x:Name="TheContent"/>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <host:ButtonSurfaceUI x:Name="TheContent"/>
+        <host:ApplicationPanel x:Name="TheOtherContent"/>
+    </Grid>
 </Page>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Research.SpeechWriter.UI;
+﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.UI;
 using Microsoft.Research.SpeechWriter.UI.Wpf;
 using System.Windows;
 
@@ -16,6 +17,7 @@ namespace TestHostWpf
             InitializeComponent();
 
             _applicationLayout = new ApplicationLayout<TileButton>(TheContent, 110);
+            TheOtherContent.Model = new ApplicationModel();
         }
     }
 }

@@ -120,6 +120,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ApplicationPanel.cs" />
     <Compile Include="ButtonSurfaceUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringFormatter.cs" />

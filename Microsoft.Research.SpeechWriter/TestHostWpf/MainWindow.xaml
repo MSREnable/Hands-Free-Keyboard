@@ -7,7 +7,14 @@
         xmlns:host="clr-namespace:Microsoft.Research.SpeechWriter.UI.Wpf;assembly=Microsoft.Research.SpeechWriter.UI.Wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <host:ButtonSurfaceUI x:Name="TheContent"/>
 
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
+        <host:ButtonSurfaceUI x:Name="TheContent"/>
+        <host:ApplicationPanel x:Name="TheOtherContent"/>
+    </Grid>
 </Window>
