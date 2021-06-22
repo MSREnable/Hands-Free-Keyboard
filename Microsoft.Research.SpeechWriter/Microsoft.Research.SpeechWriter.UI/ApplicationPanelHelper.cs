@@ -13,6 +13,8 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         private ApplicationModel _model;
 
+        private HeadTileLayoutHelper<TControl, TSize, TRect> _head;
+        private TailTileLayoutHelper<TControl, TSize, TRect> _tail;
         private InterstitialTileLayoutHelper<TControl, TSize, TRect> _interstitial;
 
         public ApplicationPanelHelper(IApplicationPanel<TControl, TSize, TRect> panel)
@@ -22,8 +24,18 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         public double Pitch { get; set; } = 110;
 
+        internal double HeadLeft { get; private set; }
+        internal double HeadTop { get; private set; }
+        internal double HeadRight => InterstitialLeft;
+        internal double TailLeft { get; private set; }
+        internal double TailTop { get; private set; }
+        internal double TailRight => InterstitialLeft;
         internal double InterstitialLeft { get; private set; }
         internal double InterstitialTop { get; private set; }
+        internal double InterstitialRight => SuggestionsLeft;
+
+        internal double SuggestionsLeft { get; private set; }
+        internal double SuggestionsTop { get; private set; }
 
         public void SetModel(ApplicationModel value)
         {
@@ -36,6 +48,8 @@ namespace Microsoft.Research.SpeechWriter.UI
 
             if (_model != null)
             {
+                _head = new HeadTileLayoutHelper<TControl, TSize, TRect>(this, _model.HeadItems);
+                _tail = new TailTileLayoutHelper<TControl, TSize, TRect>(this, _model.TailItems);
                 _interstitial = new InterstitialTileLayoutHelper<TControl, TSize, TRect>(this, _model.SuggestionInterstitials);
             }
         }
@@ -49,8 +63,14 @@ namespace Microsoft.Research.SpeechWriter.UI
             var height = rows * Pitch;
             var size = _panel.ToTSize(_panel.WidthFromTSize(availableSize), height);
 
+            HeadLeft = 0;
+            HeadTop = 0;
+            TailLeft = 0;
+            TailTop = (rows - 1) * Pitch;
             InterstitialLeft = (totalWidth - Pitch) / 2;
             InterstitialTop = 0;
+            SuggestionsLeft = InterstitialLeft + Pitch;
+            SuggestionsTop = Pitch / 2.0;
 
             foreach (var control in _panel.Children)
             {
@@ -63,6 +83,8 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         public TSize ArrangeOverride(TSize finalSize)
         {
+            _head.Arrange();
+            _tail.Arrange();
             _interstitial.Arrange();
 
             Debug.WriteLine($"Final panel size is {_panel.WidthFromTSize(finalSize)},{_panel.HeightFromTSize(finalSize)}");
