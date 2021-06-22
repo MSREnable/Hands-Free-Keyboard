@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
+using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -46,11 +47,37 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
             Children.Clear();
         }
 
+        IEnumerable<Control> IApplicationPanel<Control, Size, Rect>.Children
+        {
+            get
+            {
+                foreach (Control control in Children)
+                {
+                    yield return control;
+                }
+            }
+        }
+
         Control IApplicationPanel<Control, Size, Rect>.CreateControl(ITile tile)
         {
             var button = new TileButton { Item = tile };
             Children.Add(button);
             return button;
+        }
+
+        void IApplicationPanel<Control, Size, Rect>.Measure(Control control, Size availableSize)
+        {
+            control.Measure(availableSize);
+        }
+
+        Size IApplicationPanel<Control, Size, Rect>.GetDesiredSize(Control control)
+        {
+            return control.DesiredSize;
+        }
+
+        void IApplicationPanel<Control, Size, Rect>.Arrange(Control control, Rect rect)
+        {
+            control.Arrange(rect);
         }
 
         void IApplicationPanel<Control, Size, Rect>.DeleteControl(Control control)

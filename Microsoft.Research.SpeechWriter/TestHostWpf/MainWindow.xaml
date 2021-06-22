@@ -15,6 +15,6 @@
         </Grid.ColumnDefinitions>
 
         <host:ButtonSurfaceUI x:Name="TheContent"/>
-        <host:ApplicationPanel x:Name="TheOtherContent"/>
+        <host:ApplicationPanel x:Name="TheOtherContent" Grid.Column="1"/>
     </Grid>
 </Window>

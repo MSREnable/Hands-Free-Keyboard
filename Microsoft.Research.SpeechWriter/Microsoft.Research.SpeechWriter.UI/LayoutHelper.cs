@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
@@ -10,14 +9,15 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
-        private readonly ApplicationPanelHelper<TControl, TSize, TRect> _helper;
+        internal readonly ApplicationPanelHelper<TControl, TSize, TRect> _helper;
         private readonly ReadOnlyObservableCollection<T> _list;
-        private readonly List<TControl> _controls = new List<TControl>();
+        internal List<TControl> _controls;
 
         internal LayoutHelper(ApplicationPanelHelper<TControl, TSize, TRect> helper, ReadOnlyObservableCollection<T> list)
         {
             _helper = helper;
             _list = list;
+            _controls = CreateControls(list);
 
             ((INotifyCollectionChanged)list).CollectionChanged += OnCollectionChanged;
         }
@@ -65,13 +65,17 @@ namespace Microsoft.Research.SpeechWriter.UI
         {
             while (_controls.Count != 0)
             {
-                _helper._panel.ResetControls();
+                _helper._panel.DeleteControl(_controls[0]);
+                _controls.RemoveAt(0);
             }
 
-            foreach (var tile in list)
-            {
-                //CreateItem(tile);
-            }
+            _controls = CreateControls(list);
         }
+
+        protected abstract List<TControl> CreateControls(IEnumerable<T> list);
+
+        internal abstract TSize MeasureOverride(TSize availableSize);
+
+        internal abstract void Arrange();
     }
 }

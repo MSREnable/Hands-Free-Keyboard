@@ -20,6 +20,7 @@ namespace TestHostUwp
 
             _applicationLayout = new ApplicationLayout<TileButton>(TheContent, 110);
             TheOtherContent.Model = new ApplicationModel();
+            TheOtherContent.SizeChanged += (s, e) => TheOtherContent.Model.MaxNextSuggestionsCount = (int)(e.NewSize.Height / 110);
         }
     }
 }
