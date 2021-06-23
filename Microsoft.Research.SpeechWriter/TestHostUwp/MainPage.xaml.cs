@@ -1,6 +1,4 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
-using Microsoft.Research.SpeechWriter.UI;
-using Microsoft.Research.SpeechWriter.UI.Uwp;
 using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -12,13 +10,10 @@ namespace TestHostUwp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private readonly ApplicationLayout<TileButton> _applicationLayout;
-
         public MainPage()
         {
             InitializeComponent();
 
-            _applicationLayout = new ApplicationLayout<TileButton>(TheContent, 110);
             TheOtherContent.Model = new ApplicationModel();
             TheOtherContent.SizeChanged += (s, e) => TheOtherContent.Model.MaxNextSuggestionsCount = (int)(e.NewSize.Height / 110);
         }
