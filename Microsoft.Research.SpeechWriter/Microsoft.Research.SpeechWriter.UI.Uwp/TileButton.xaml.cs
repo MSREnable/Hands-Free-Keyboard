@@ -1,8 +1,6 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Items;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -10,7 +8,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Microsoft.Research.SpeechWriter.UI.Uwp
 {
-    public sealed partial class TileButton : UserControl, IButtonUI
+    public sealed partial class TileButton : UserControl
     {
         public static readonly DependencyProperty ItemProperty = DependencyProperty.Register(nameof(Item), typeof(ITile), typeof(TileButton),
             new PropertyMetadata(null, OnItemChanged));
@@ -28,11 +26,6 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
                 SetValue(ItemProperty, value);
             }
         }
-
-        double IButtonUI.RenderedWidth => DesiredSize.Width;
-
-        RectangleF IButtonUI.GetRenderedRectangle() => new RectangleF((float)Canvas.GetLeft(this), (float)Canvas.GetTop(this),
-            (float)DesiredSize.Width, (float)DesiredSize.Height);
 
         private void OnItemChanged(object value)
         {

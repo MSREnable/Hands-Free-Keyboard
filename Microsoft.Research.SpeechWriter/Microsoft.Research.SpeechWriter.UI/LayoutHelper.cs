@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 
 namespace Microsoft.Research.SpeechWriter.UI
 {
-    abstract class LayoutHelper<TControl, TSize, TRect, T>
+    internal abstract class LayoutHelper<TControl, TSize, TRect, T>
         where TControl : class
         where TSize : struct
         where TRect : struct

@@ -1,10 +1,8 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
 using Microsoft.Research.SpeechWriter.UI;
-using Microsoft.Research.SpeechWriter.UI.Wpf;
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;

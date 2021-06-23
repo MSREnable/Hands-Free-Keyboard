@@ -19,7 +19,7 @@ namespace Microsoft.Research.SpeechWriter.UI
             var x = _helper.InterstitialLeft;
             var y = _helper.InterstitialTop;
 
-            foreach(var control in _controls)
+            foreach (var control in _controls)
             {
                 var controlSize = _helper._panel.GetDesiredSize(control);
                 var rect = _helper._panel.ToTRect(x, y, controlSize);

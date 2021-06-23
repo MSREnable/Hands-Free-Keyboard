@@ -55,7 +55,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
             }
 
-            foreach(var symbol in model.Environment.GetAdditionalSymbols())
+            foreach (var symbol in model.Environment.GetAdditionalSymbols())
             {
                 var sequence = new int[] { symbol };
                 PersistantPredictor.AddSequence(sequence, WordVocabularySource.SeedSequenceWeight);

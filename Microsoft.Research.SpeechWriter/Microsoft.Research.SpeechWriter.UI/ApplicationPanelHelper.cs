@@ -53,7 +53,7 @@ namespace Microsoft.Research.SpeechWriter.UI
                 _head = new HeadTileLayoutHelper<TControl, TSize, TRect>(this, _model.HeadItems);
                 _tail = new TailTileLayoutHelper<TControl, TSize, TRect>(this, _model.TailItems);
                 _interstitial = new InterstitialTileLayoutHelper<TControl, TSize, TRect>(this, _model.SuggestionInterstitials);
-                _suggestions= new SuggestionsLayoutHelper<TControl, TSize, TRect>(this, _model.SuggestionLists);
+                _suggestions = new SuggestionsLayoutHelper<TControl, TSize, TRect>(this, _model.SuggestionLists);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Microsoft.Research.SpeechWriter.UI
         {
             TControl control;
 
-            switch(action.Target)
+            switch (action.Target)
             {
                 case ApplicationRobotActionTarget.Head:
                     control = _head.GetControl(action.Index);
