@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.Core.Automation;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -79,6 +80,11 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             control.Arrange(rect);
         }
 
+        public Rect GetTargetRect(ApplicationRobotAction action)
+        {
+            return _helper.GetTargetRect(action);
+        }
+
         void IApplicationPanel<Control, Size, Rect>.DeleteControl(Control control)
         {
             Children.Remove(control);
@@ -102,6 +108,13 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
         Rect IApplicationPanel<Control, Size, Rect>.ToTRect(double x, double y, Size size)
         {
             return new Rect(x, y, size.Width, size.Height);
+        }
+
+        Rect IApplicationPanel<Control, Size, Rect>.GetRect(Control control)
+        {
+            var point = control.TranslatePoint(new Point(0, 0), this);
+            var rect = new Rect(point.X, point.Y, control.ActualWidth, control.ActualHeight);
+            return rect;
         }
     }
 }

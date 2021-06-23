@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.Core.Automation;
 using System.Collections.Generic;
 
 namespace Microsoft.Research.SpeechWriter.UI
@@ -22,6 +23,8 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         void DeleteControl(TControl control);
 
+        TRect GetTargetRect(ApplicationRobotAction action);
+
         TSize ToTSize(double width, double height);
 
         double WidthFromTSize(TSize size);
@@ -29,5 +32,7 @@ namespace Microsoft.Research.SpeechWriter.UI
         double HeightFromTSize(TSize size);
 
         TRect ToTRect(double x, double y, TSize size);
+
+        TRect GetRect(TControl control);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.Core.Automation;
 using System;
 using System.Diagnostics;
 
@@ -54,6 +55,36 @@ namespace Microsoft.Research.SpeechWriter.UI
                 _interstitial = new InterstitialTileLayoutHelper<TControl, TSize, TRect>(this, _model.SuggestionInterstitials);
                 _suggestions= new SuggestionsLayoutHelper<TControl, TSize, TRect>(this, _model.SuggestionLists);
             }
+        }
+
+        public TRect GetTargetRect(ApplicationRobotAction action)
+        {
+            TControl control;
+
+            switch(action.Target)
+            {
+                case ApplicationRobotActionTarget.Head:
+                    control = _head.GetControl(action.Index);
+                    break;
+
+                case ApplicationRobotActionTarget.Tail:
+                    control = _tail.GetControl(action.Index);
+                    break;
+
+                case ApplicationRobotActionTarget.Interstitial:
+                    control = _interstitial.GetControl(action.Index);
+                    break;
+
+                case ApplicationRobotActionTarget.Suggestion:
+                default:
+                    Debug.Assert(action.Target == ApplicationRobotActionTarget.Suggestion);
+                    control = _suggestions.GetControl(action.Index, action.SubIndex);
+                    break;
+            }
+
+            var rect = _panel.GetRect(control);
+
+            return rect;
         }
 
         public TSize MeasureOverride(TSize availableSize)

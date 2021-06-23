@@ -9,7 +9,7 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
-        private IEnumerable<IEnumerable<TControl>> _groupedControls;
+        private List<List<TControl>> _groupedControls;
 
         internal SuggestionsLayoutHelper(ApplicationPanelHelper<TControl, TSize, TRect> panel,
             ReadOnlyObservableCollection<IEnumerable<ITile>> list)
@@ -21,7 +21,7 @@ namespace Microsoft.Research.SpeechWriter.UI
         {
             var controls = new List<TControl>();
 
-            var groupedControls = new List<IEnumerable<TControl>>();
+            var groupedControls = new List<List<TControl>>();
 
             foreach (var subList in list)
             {
@@ -64,6 +64,11 @@ namespace Microsoft.Research.SpeechWriter.UI
 
                 y += _helper.Pitch;
             }
+        }
+
+        internal TControl GetControl(int index, int subIndex)
+        {
+            return _groupedControls[index][subIndex];
         }
     }
 }

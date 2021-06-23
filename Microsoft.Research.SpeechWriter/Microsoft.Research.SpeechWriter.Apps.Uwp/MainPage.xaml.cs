@@ -1,20 +1,17 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
 using Microsoft.Research.SpeechWriter.UI;
-using Microsoft.Research.SpeechWriter.UI.Uwp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Windows.Media.SpeechSynthesis;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
@@ -50,13 +47,9 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
         private ApplicationDemo _demo;
 
-        private ApplicationLayout<TileButton> _layout;
-
         public MainPage()
         {
             this.InitializeComponent();
-
-            SizeChanged += MainWindow_SizeChanged;
 
             _switchTimer.Tick += OnSwitchTimerTick;
 
@@ -75,7 +68,8 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             var environment = passedEnvironment ?? new UwpWriterEnvironment();
             _model = new ApplicationModel(environment);
             _model.ApplicationModelUpdate += OnApplicationModelUpdate;
-            _layout = new ApplicationLayout<TileButton>(_model, TheHost, 110);
+            TheHost.Model = _model;
+            TheHost.SizeChanged += (s, ee) => TheHost.Model.MaxNextSuggestionsCount = (int)(ee.NewSize.Height / 110);
             _demo = ApplicationDemo.Create(this);
             var vocalizer = NarratorVocalization.Create(TheMediaElement, "en");
             _ = Narrator.AttachNarrator(_model, vocalizer);
@@ -172,7 +166,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
         void IApplicationHost.SetupStoryboardForAction(ApplicationRobotAction action)
         {
-            var targetRect = _layout.GetTargetRect(action);
+            var targetRect = TheHost.GetTargetRect(action);
 
             MoveToCenterX = targetRect.X + targetRect.Width / 2;
             MoveToCenterY = targetRect.Y + targetRect.Height / 2;
@@ -283,14 +277,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
         {
             var count = Math.Max(1, (int)(ActualHeight) / 110);
             _model.MaxNextSuggestionsCount = count;
-        }
-
-        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (Model != null)
-            {
-                SetMaxNextSuggestionsCount();
-            }
         }
 
         void IApplicationHost.Restart(bool loadHistory) => Frame.Navigate(GetType(), loadHistory ? string.Empty : null);

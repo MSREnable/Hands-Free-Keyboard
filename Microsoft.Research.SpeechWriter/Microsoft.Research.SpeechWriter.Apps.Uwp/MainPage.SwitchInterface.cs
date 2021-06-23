@@ -42,7 +42,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
                         for (var index = 0; index < _model.HeadItems.Count; index++)
                         {
                             var element = new ApplicationRobotAction(ApplicationRobotActionTarget.Head, index, 0, false);
-                            var rect = _layout.GetTargetRect(element);
+                            var rect = TheHost.GetTargetRect(element);
 
                             AddRectangle(rect, () => element.ExecuteItem(_model));
                         }
@@ -50,7 +50,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
                         for (var index = 0; index < _model.TailItems.Count; index++)
                         {
                             var element = new ApplicationRobotAction(ApplicationRobotActionTarget.Tail, index, 0, false);
-                            var rect = _layout.GetTargetRect(element);
+                            var rect = TheHost.GetTargetRect(element);
 
                             AddRectangle(rect, () => element.ExecuteItem(_model));
                         }
@@ -65,7 +65,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
                         for (var subIndex = 0; subIndex < list.Count(); subIndex++)
                         {
                             var element = new ApplicationRobotAction(ApplicationRobotActionTarget.Suggestion, _switchSuggestionListsIndex, subIndex, false);
-                            var rect = _layout.GetTargetRect(element);
+                            var rect = TheHost.GetTargetRect(element);
 
                             AddRectangle(rect, () => element.ExecuteItem(_model));
                         }
@@ -81,7 +81,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
                         for (var index = 0; index < _model.SuggestionLists.Count; index++)
                         {
                             var element = new ApplicationRobotAction(ApplicationRobotActionTarget.Head, index, 0, false);
-                            var rect = _layout.GetTargetRect(element);
+                            var rect = TheHost.GetTargetRect(element);
 
                             var list = _model.SuggestionLists[index];
                             var count = list.Count();
@@ -90,8 +90,8 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
                             if (1 < count)
                             {
                                 var lastElement = new ApplicationRobotAction(ApplicationRobotActionTarget.Head, index, count - 1, false);
-                                var lastRect = _layout.GetTargetRect(lastElement);
-                                rect = RectangleF.Union(rect, lastRect);
+                                var lastRect = TheHost.GetTargetRect(lastElement);
+                                rect.Union(lastRect);
 
                                 var uncapturedIndex = index;
                                 action = () => { _switchTarget = ApplicationRobotActionTarget.Tail; _switchSuggestionListsIndex = uncapturedIndex; ShowSwitchInterface(); };
@@ -119,7 +119,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
                         for (var index = 0; index < _model.SuggestionInterstitials.Count; index++)
                         {
                             var element = new ApplicationRobotAction(ApplicationRobotActionTarget.Interstitial, index, 0, false);
-                            var rect = _layout.GetTargetRect(element);
+                            var rect = TheHost.GetTargetRect(element);
                             AddRectangle(rect, () => element.ExecuteItem(_model));
                         }
                     }
@@ -129,12 +129,12 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
         private void AddSwitchToInterstitials()
         {
-            var overallRect = RectangleF.Empty;
+            var overallRect = Rect.Empty;
             for (var index = 0; index < _model.SuggestionInterstitials.Count; index++)
             {
                 var element = new ApplicationRobotAction(ApplicationRobotActionTarget.Interstitial, index, 0, false);
-                var rect = _layout.GetTargetRect(element);
-                overallRect = RectangleF.Union(overallRect, rect);
+                var rect = TheHost.GetTargetRect(element);
+                overallRect.Union(rect);
             }
 
             AddRectangle(overallRect, () => { _switchTarget = ApplicationRobotActionTarget.Interstitial; ShowSwitchInterface(); });
@@ -143,31 +143,31 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
         private void AddSwitchToHead()
         {
             var headElement = new ApplicationRobotAction(ApplicationRobotActionTarget.Head, 0, 0, false);
-            var overallRect = _layout.GetTargetRect(headElement);
+            var overallRect = TheHost.GetTargetRect(headElement);
 
             var tailElement = new ApplicationRobotAction(ApplicationRobotActionTarget.Tail, _model.TailItems.Count - 1, 0, false);
-            var tailRect = _layout.GetTargetRect(tailElement);
-            overallRect = RectangleF.Union(overallRect, tailRect);
+            var tailRect = TheHost.GetTargetRect(tailElement);
+            overallRect.Union(tailRect);
 
             AddRectangle(overallRect, () => { _switchTarget = ApplicationRobotActionTarget.Head; ShowSwitchInterface(); });
         }
 
         private void AddSwitchToSuggestions()
         {
-            var overallRect = RectangleF.Empty;
+            var overallRect = Rect.Empty;
             for (var index = 0; index < _model.SuggestionLists.Count; index++)
             {
                 var firstElement = new ApplicationRobotAction(ApplicationRobotActionTarget.Suggestion, index, 0, false);
-                var firstRect = _layout.GetTargetRect(firstElement);
-                overallRect = RectangleF.Union(overallRect, firstRect);
+                var firstRect = TheHost.GetTargetRect(firstElement);
+                overallRect.Union(firstRect);
 
                 var list = _model.SuggestionLists[index];
                 var count = list.Count();
                 if (1 < count)
                 {
                     var lastElement = new ApplicationRobotAction(ApplicationRobotActionTarget.Suggestion, index, list.Count() - 1, false);
-                    var lastRect = _layout.GetTargetRect(lastElement);
-                    overallRect = RectangleF.Union(overallRect, lastRect);
+                    var lastRect = TheHost.GetTargetRect(lastElement);
+                    overallRect.Union(lastRect);
                 }
             }
 
@@ -181,7 +181,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             ShowSwitchInterface();
         }
 
-        private void AddRectangle(RectangleF overallRect, Action action)
+        private void AddRectangle(Rect overallRect, Action action)
         {
             var target = new SwitchTargetControl
             {

@@ -32,5 +32,10 @@ namespace Microsoft.Research.SpeechWriter.UI
         {
             return availableSize;
         }
+
+        internal TControl GetControl(int index)
+        {
+            return _controls[index];
+        }
     }
 }

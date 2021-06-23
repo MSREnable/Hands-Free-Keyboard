@@ -97,7 +97,7 @@
     </Page.Resources>
 
     <Grid>
-        <coreui:ButtonSurfaceUI Grid.Column="0" x:Name="TheHost"/>
+        <coreui:ApplicationPanel x:Name="TheHost"/>
         <Canvas x:Name="TargetPanel">
             <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>
         </Canvas>

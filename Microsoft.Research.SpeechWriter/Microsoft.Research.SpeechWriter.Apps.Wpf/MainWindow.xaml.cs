@@ -43,8 +43,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 
         private readonly ApplicationDemo _demo;
 
-        private readonly ApplicationLayout<TileButton> _layout;
-
         public MainWindow()
         {
             var environment = new WpfEnvironment();
@@ -57,7 +55,8 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
             var vocalizer = new NarratorVocalizer();
             _ = Narrator.AttachNarrator(_model, vocalizer);
 
-            _layout = new ApplicationLayout<TileButton>(_model, TheHost, 110);
+            TheHost.Model = _model;
+            TheHost.SizeChanged += (s, e) => TheHost.Model.MaxNextSuggestionsCount = (int)(e.NewSize.Height / 110);
 
             Loaded += OnLoaded;
 
@@ -136,9 +135,9 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
             }
         }
 
-        private RectangleF GetTargetRect(ApplicationRobotAction action)
+        private Rect GetTargetRect(ApplicationRobotAction action)
         {
-            var targetRect = _layout.GetTargetRect(action);
+            var targetRect = TheHost.GetTargetRect(action);
             return targetRect;
         }
 
