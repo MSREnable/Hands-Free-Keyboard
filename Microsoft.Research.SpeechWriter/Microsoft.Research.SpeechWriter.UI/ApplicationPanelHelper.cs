@@ -16,6 +16,7 @@ namespace Microsoft.Research.SpeechWriter.UI
         private HeadTileLayoutHelper<TControl, TSize, TRect> _head;
         private TailTileLayoutHelper<TControl, TSize, TRect> _tail;
         private InterstitialTileLayoutHelper<TControl, TSize, TRect> _interstitial;
+        private SuggestionsLayoutHelper<TControl, TSize, TRect> _suggestions;
 
         public ApplicationPanelHelper(IApplicationPanel<TControl, TSize, TRect> panel)
         {
@@ -51,6 +52,7 @@ namespace Microsoft.Research.SpeechWriter.UI
                 _head = new HeadTileLayoutHelper<TControl, TSize, TRect>(this, _model.HeadItems);
                 _tail = new TailTileLayoutHelper<TControl, TSize, TRect>(this, _model.TailItems);
                 _interstitial = new InterstitialTileLayoutHelper<TControl, TSize, TRect>(this, _model.SuggestionInterstitials);
+                _suggestions= new SuggestionsLayoutHelper<TControl, TSize, TRect>(this, _model.SuggestionLists);
             }
         }
 
@@ -86,6 +88,7 @@ namespace Microsoft.Research.SpeechWriter.UI
             _head.Arrange();
             _tail.Arrange();
             _interstitial.Arrange();
+            _suggestions.Arrange();
 
             Debug.WriteLine($"Final panel size is {_panel.WidthFromTSize(finalSize)},{_panel.HeightFromTSize(finalSize)}");
             return finalSize;
