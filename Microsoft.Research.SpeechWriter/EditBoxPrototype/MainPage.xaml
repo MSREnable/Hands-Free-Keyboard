@@ -23,45 +23,64 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid RowSpacing="5">
-        <Grid.RowDefinitions >
-            <RowDefinition Height="Auto"/>
+    <Grid RowSpacing="5" Margin="10">
+        <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TextBox Grid.Row="0" TextChanged="OnTextChanged" SelectionChanged="OnTextChanged"/>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0"/>
+        </Grid>
 
-        <ItemsControl x:Name="ItemsContainer" Grid.Row="1">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button>
-                        <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" IsPrefix="{Binding IsPrefix}" IsSuffix="{Binding IsSuffix}"/>
-                    </Button>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <control:WrapPanel/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" TextChanged="OnTextChanged" SelectionChanged="OnTextChanged"/>
+            <ItemsControl x:Name="ItemsContainer" Grid.Row="1">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button>
+                            <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" IsPrefix="{Binding IsPrefix}" IsSuffix="{Binding IsSuffix}"/>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <control:WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Grid>
 
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" TextChanged="OnCursedTextChanged" SelectionChanged="OnCursedTextChanged"/>
 
-        <ItemsControl x:Name="CursedContainer" Grid.Row="2" Visibility="Collapsed">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button>
-                        <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" IsPrefix="{Binding IsPrefix}" IsSuffix="{Binding IsSuffix}"/>
-                    </Button>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <control:WrapPanel/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-
+            <ItemsControl x:Name="CursedContainer" Grid.Row="1">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button>
+                            <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" IsPrefix="{Binding IsPrefix}" IsSuffix="{Binding IsSuffix}"/>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <control:WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Grid>
     </Grid>
 </Page>
