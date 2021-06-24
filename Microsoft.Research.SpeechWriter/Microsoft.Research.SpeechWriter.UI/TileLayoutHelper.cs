@@ -28,11 +28,6 @@ namespace Microsoft.Research.SpeechWriter.UI
             return controls;
         }
 
-        internal override TSize MeasureOverride(TSize availableSize)
-        {
-            return availableSize;
-        }
-
         internal TControl GetControl(int index)
         {
             return _controls[index];

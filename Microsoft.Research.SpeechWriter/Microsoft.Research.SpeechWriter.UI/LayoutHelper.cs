@@ -74,8 +74,6 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         protected abstract List<TControl> CreateControls(IEnumerable<T> list);
 
-        internal abstract TSize MeasureOverride(TSize availableSize);
-
         internal abstract void Arrange();
     }
 }

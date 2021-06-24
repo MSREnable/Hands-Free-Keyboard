@@ -41,11 +41,6 @@ namespace Microsoft.Research.SpeechWriter.UI
             return controls;
         }
 
-        internal override TSize MeasureOverride(TSize availableSize)
-        {
-            return availableSize;
-        }
-
         internal override void Arrange()
         {
             var y = _helper.SuggestionsTop;
