@@ -56,10 +56,10 @@ namespace Microsoft.Research.SpeechWriter.UI
                 foreach (var control in subGroup)
                 {
                     var controlSize = _helper._panel.GetDesiredSize(control);
-                    var rect = _helper._panel.ToTRect(x, y, controlSize);
+                    var rect = _helper._panel.GetRect(x, y, controlSize);
                     _helper._panel.Arrange(control, rect);
 
-                    x += _helper._panel.WidthFromTSize(controlSize);
+                    x += _helper._panel.GetWidth(controlSize);
                 }
 
                 y += _helper.Pitch;

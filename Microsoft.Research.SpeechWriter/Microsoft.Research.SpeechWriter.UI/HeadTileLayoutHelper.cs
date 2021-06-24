@@ -22,16 +22,16 @@ namespace Microsoft.Research.SpeechWriter.UI
             foreach (var control in _controls)
             {
                 var controlSize = _helper._panel.GetDesiredSize(control);
-                var right = x + _helper._panel.WidthFromTSize(controlSize);
+                var right = x + _helper._panel.GetWidth(controlSize);
                 if (_helper.HeadRight < right && x != _helper.HeadLeft)
                 {
                     x = _helper.HeadLeft;
                     y += _helper.Pitch;
                 }
-                var rect = _helper._panel.ToTRect(x, y, controlSize);
+                var rect = _helper._panel.GetRect(x, y, controlSize);
                 _helper._panel.Arrange(control, rect);
 
-                x += _helper._panel.WidthFromTSize(controlSize);
+                x += _helper._panel.GetWidth(controlSize);
             }
         }
     }

@@ -57,7 +57,7 @@ namespace Microsoft.Research.SpeechWriter.UI
             }
         }
 
-        public TRect GetTargetRect(ApplicationRobotAction action)
+        public TRect GetTargetRect(TControl parent, ApplicationRobotAction action)
         {
             TControl control;
 
@@ -82,19 +82,19 @@ namespace Microsoft.Research.SpeechWriter.UI
                     break;
             }
 
-            var rect = _panel.GetRect(control);
+            var rect = _panel.GetRect(parent, control);
 
             return rect;
         }
 
         public TSize MeasureOverride(TSize availableSize)
         {
-            var totalHeight = _panel.HeightFromTSize(availableSize);
-            var totalWidth = _panel.WidthFromTSize(availableSize);
+            var totalHeight = _panel.GetHeight(availableSize);
+            var totalWidth = _panel.GetWidth(availableSize);
 
-            var rows = (int)Math.Floor(_panel.HeightFromTSize(availableSize) / Pitch);
+            var rows = (int)Math.Floor(_panel.GetHeight(availableSize) / Pitch);
             var height = rows * Pitch;
-            var size = _panel.ToTSize(_panel.WidthFromTSize(availableSize), height);
+            var size = _panel.GetSize(_panel.GetWidth(availableSize), height);
 
             HeadLeft = 0;
             HeadTop = 0;
@@ -110,7 +110,7 @@ namespace Microsoft.Research.SpeechWriter.UI
                 _panel.Measure(control, availableSize);
             }
 
-            Debug.WriteLine($"Available panel size is {_panel.WidthFromTSize(availableSize)},{_panel.HeightFromTSize(availableSize)}");
+            Debug.WriteLine($"Available panel size is {_panel.GetWidth(availableSize)},{_panel.GetHeight(availableSize)}");
             return size;
         }
 
@@ -121,7 +121,7 @@ namespace Microsoft.Research.SpeechWriter.UI
             _interstitial.Arrange();
             _suggestions.Arrange();
 
-            Debug.WriteLine($"Final panel size is {_panel.WidthFromTSize(finalSize)},{_panel.HeightFromTSize(finalSize)}");
+            Debug.WriteLine($"Final panel size is {_panel.GetWidth(finalSize)},{_panel.GetHeight(finalSize)}");
             return finalSize;
         }
     }

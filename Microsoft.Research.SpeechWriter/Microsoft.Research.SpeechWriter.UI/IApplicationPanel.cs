@@ -23,16 +23,16 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         void DeleteControl(TControl control);
 
-        TRect GetTargetRect(ApplicationRobotAction action);
+        TRect GetTargetRect(TControl parent, ApplicationRobotAction action);
 
-        TSize ToTSize(double width, double height);
+        TSize GetSize(double width, double height);
 
-        double WidthFromTSize(TSize size);
+        double GetWidth(TSize size);
 
-        double HeightFromTSize(TSize size);
+        double GetHeight(TSize size);
 
-        TRect ToTRect(double x, double y, TSize size);
+        TRect GetRect(double x, double y, TSize size);
 
-        TRect GetRect(TControl control);
+        TRect GetRect(TControl parent, TControl control);
     }
 }

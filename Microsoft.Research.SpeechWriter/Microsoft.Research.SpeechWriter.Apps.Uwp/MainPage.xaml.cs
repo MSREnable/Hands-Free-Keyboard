@@ -166,7 +166,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
         void IApplicationHost.SetupStoryboardForAction(ApplicationRobotAction action)
         {
-            var targetRect = TheHost.GetTargetRect(action);
+            var targetRect = TheHost.GetTargetRect(TargetPanel, action);
 
             MoveToCenterX = targetRect.X + targetRect.Width / 2;
             MoveToCenterY = targetRect.Y + targetRect.Height / 2;

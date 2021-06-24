@@ -26,14 +26,14 @@ namespace Microsoft.Research.SpeechWriter.UI
             foreach (var control in reversedControls)
             {
                 var controlSize = _helper._panel.GetDesiredSize(control);
-                var left = x - _helper._panel.WidthFromTSize(controlSize);
+                var left = x - _helper._panel.GetWidth(controlSize);
                 if (left < _helper.TailLeft && x != _helper.HeadRight)
                 {
                     x = _helper.TailRight;
                     y -= _helper.Pitch;
-                    left = x - _helper._panel.WidthFromTSize(controlSize);
+                    left = x - _helper._panel.GetWidth(controlSize);
                 }
-                var rect = _helper._panel.ToTRect(left, y, controlSize);
+                var rect = _helper._panel.GetRect(left, y, controlSize);
                 _helper._panel.Arrange(control, rect);
 
                 x = left;

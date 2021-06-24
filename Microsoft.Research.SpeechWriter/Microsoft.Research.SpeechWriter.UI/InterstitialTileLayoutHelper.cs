@@ -22,10 +22,10 @@ namespace Microsoft.Research.SpeechWriter.UI
             foreach (var control in _controls)
             {
                 var controlSize = _helper._panel.GetDesiredSize(control);
-                var rect = _helper._panel.ToTRect(x, y, controlSize);
+                var rect = _helper._panel.GetRect(x, y, controlSize);
                 _helper._panel.Arrange(control, rect);
 
-                y += _helper._panel.HeightFromTSize(controlSize);
+                y += _helper._panel.GetHeight(controlSize);
             }
         }
     }

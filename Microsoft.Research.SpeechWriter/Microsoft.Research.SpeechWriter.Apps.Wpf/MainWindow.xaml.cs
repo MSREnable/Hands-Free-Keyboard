@@ -135,7 +135,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 
         private Rect GetTargetRect(ApplicationRobotAction action)
         {
-            var targetRect = TheHost.GetTargetRect(action);
+            var targetRect = TheHost.GetTargetRect(TargetPanel, action);
             return targetRect;
         }
 

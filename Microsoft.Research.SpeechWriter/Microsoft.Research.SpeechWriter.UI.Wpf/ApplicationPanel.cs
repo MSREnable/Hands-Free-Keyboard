@@ -6,13 +6,13 @@ using System.Windows.Controls;
 
 namespace Microsoft.Research.SpeechWriter.UI.Wpf
 {
-    public class ApplicationPanel : Panel, IApplicationPanel<Control, Size, Rect>
+    public class ApplicationPanel : Panel, IApplicationPanel<FrameworkElement, Size, Rect>
     {
-        private readonly ApplicationPanelHelper<Control, Size, Rect> _helper;
+        private readonly ApplicationPanelHelper<FrameworkElement, Size, Rect> _helper;
 
         public ApplicationPanel()
         {
-            _helper = new ApplicationPanelHelper<Control, Size, Rect>(this);
+            _helper = new ApplicationPanelHelper<FrameworkElement, Size, Rect>(this);
         }
 
         public ApplicationModel Model
@@ -42,79 +42,80 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             return size;
         }
 
-        void IApplicationPanel<Control, Size, Rect>.ResetControls()
+        void IApplicationPanel<FrameworkElement, Size, Rect>.ResetControls()
         {
             Children.Clear();
         }
 
-        IEnumerable<Control> IApplicationPanel<Control, Size, Rect>.Children
+        IEnumerable<FrameworkElement> IApplicationPanel<FrameworkElement, Size, Rect>.Children
         {
             get
             {
-                foreach (Control control in Children)
+                foreach (FrameworkElement control in Children)
                 {
                     yield return control;
                 }
             }
         }
 
-        Control IApplicationPanel<Control, Size, Rect>.CreateControl(ITile tile)
+        FrameworkElement IApplicationPanel<FrameworkElement, Size, Rect>.CreateControl(ITile tile)
         {
             var button = new TileButton { Item = tile };
             Children.Add(button);
             return button;
         }
 
-        void IApplicationPanel<Control, Size, Rect>.Measure(Control control, Size availableSize)
+        void IApplicationPanel<FrameworkElement, Size, Rect>.Measure(FrameworkElement control, Size availableSize)
         {
             control.Measure(availableSize);
         }
 
-        Size IApplicationPanel<Control, Size, Rect>.GetDesiredSize(Control control)
+        Size IApplicationPanel<FrameworkElement, Size, Rect>.GetDesiredSize(FrameworkElement control)
         {
             return control.DesiredSize;
         }
 
-        void IApplicationPanel<Control, Size, Rect>.Arrange(Control control, Rect rect)
+        void IApplicationPanel<FrameworkElement, Size, Rect>.Arrange(FrameworkElement control, Rect rect)
         {
             control.Arrange(rect);
         }
 
-        public Rect GetTargetRect(ApplicationRobotAction action)
+        public Rect GetTargetRect(FrameworkElement parent, ApplicationRobotAction action)
         {
-            return _helper.GetTargetRect(action);
+            return _helper.GetTargetRect(parent, action);
         }
 
-        void IApplicationPanel<Control, Size, Rect>.DeleteControl(Control control)
+        void IApplicationPanel<FrameworkElement, Size, Rect>.DeleteControl(FrameworkElement control)
         {
             Children.Remove(control);
         }
 
-        Size IApplicationPanel<Control, Size, Rect>.ToTSize(double width, double height)
+        Size IApplicationPanel<FrameworkElement, Size, Rect>.GetSize(double width, double height)
         {
             return new Size(width, height);
         }
 
-        double IApplicationPanel<Control, Size, Rect>.WidthFromTSize(Size size)
+        double IApplicationPanel<FrameworkElement, Size, Rect>.GetWidth(Size size)
         {
             return size.Width;
         }
 
-        double IApplicationPanel<Control, Size, Rect>.HeightFromTSize(Size size)
+        double IApplicationPanel<FrameworkElement, Size, Rect>.GetHeight(Size size)
         {
             return size.Height;
         }
 
-        Rect IApplicationPanel<Control, Size, Rect>.ToTRect(double x, double y, Size size)
+        Rect IApplicationPanel<FrameworkElement, Size, Rect>.GetRect(double x, double y, Size size)
         {
             return new Rect(x, y, size.Width, size.Height);
         }
 
-        Rect IApplicationPanel<Control, Size, Rect>.GetRect(Control control)
+        Rect IApplicationPanel<FrameworkElement, Size, Rect>.GetRect(FrameworkElement parent, FrameworkElement control)
         {
-            var point = control.TranslatePoint(new Point(0, 0), this);
-            var rect = new Rect(point.X, point.Y, control.ActualWidth, control.ActualHeight);
-            return rect;
+            var transform = control.TransformToVisual(parent);
+            var sourceRect = new Rect(new Point(0, 0), new Point(control.ActualWidth, control.ActualHeight));
+            var targetRect = transform.TransformBounds(sourceRect);
+            return targetRect;
         }
     }
 }
