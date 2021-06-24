@@ -19,6 +19,6 @@
         <Button MinHeight="100" MinWidth="100" Margin="5" HorizontalAlignment="Center" 
                 Content="{Binding Item, ElementName=TheControl}" 
                 Command="{Binding Item, ElementName=TheControl}"
-                Opacity="{Binding Converter={StaticResource TemplateOpacityConverter}}" Focusable="False"/>
+                Opacity="{Binding Item, ElementName=TheControl, Converter={StaticResource TemplateOpacityConverter}}" Focusable="False"/>
     </Grid>
 </UserControl>
