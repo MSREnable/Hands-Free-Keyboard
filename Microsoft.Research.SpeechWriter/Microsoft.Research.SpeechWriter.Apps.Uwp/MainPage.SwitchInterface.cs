@@ -79,7 +79,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
                         for (var index = 0; index < _model.SuggestionLists.Count; index++)
                         {
-                            var element = new ApplicationRobotAction(ApplicationRobotActionTarget.Head, index, 0, false);
+                            var element = new ApplicationRobotAction(ApplicationRobotActionTarget.Suggestion, index, 0, false);
                             var rect = TheHost.GetTargetRect(SwitchPanel, element);
 
                             var list = _model.SuggestionLists[index];
@@ -88,7 +88,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
                             Action action;
                             if (1 < count)
                             {
-                                var lastElement = new ApplicationRobotAction(ApplicationRobotActionTarget.Head, index, count - 1, false);
+                                var lastElement = new ApplicationRobotAction(ApplicationRobotActionTarget.Suggestion, index, count - 1, false);
                                 var lastRect = TheHost.GetTargetRect(SwitchPanel, lastElement);
                                 rect.Union(lastRect);
 
