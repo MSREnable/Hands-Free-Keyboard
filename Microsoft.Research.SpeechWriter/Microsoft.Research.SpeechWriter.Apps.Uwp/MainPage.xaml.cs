@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.Media.SpeechSynthesis;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -51,13 +52,15 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
         {
             this.InitializeComponent();
 
-            _switchTimer.Tick += OnSwitchTimerTick;
-
             Loaded += (s, e) =>
             {
                 Frame.PreviewKeyDown += OnPreviewKeyDown;
             };
         }
+
+        internal IApplicationPanel<FrameworkElement, Size, Rect> AppPanel => TheHost;
+
+        internal Canvas SwitchCanvas => SwitchPanel;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -67,7 +70,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
             var environment = passedEnvironment ?? new UwpWriterEnvironment();
             _model = new ApplicationModel(environment);
-            _model.ApplicationModelUpdate += OnApplicationModelUpdate;
             TheHost.Model = _model;
             TheHost.SizeChanged += (s, ee) => TheHost.Model.MaxNextSuggestionsCount = (int)(ee.NewSize.Height / 110);
             _demo = ApplicationDemo.Create(this);
@@ -259,14 +261,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             }
         }
 
-        private void OnApplicationModelUpdate(object sender, ApplicationModelUpdateEventArgs e)
-        {
-            if (_switchMode)
-            {
-                _ = ShowSwitchInterfaceAsync();
-            }
-        }
-
         public ApplicationModel Model
         {
             get => (ApplicationModel)GetValue(ModelProperty);
@@ -357,6 +351,31 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
                 package.SetText(path);
                 Clipboard.SetContent(package);
             }
+        }
+
+        private SwitchInterface _switchMode;
+
+        private void OnSpace(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            Debug.WriteLine("Got space");
+
+            args.Handled = true;
+
+            if (_switchMode == null)
+            {
+                Debug.WriteLine("New SwitchMode");
+                _switchMode = new SwitchInterface(this);
+            }
+            else
+            {
+                Debug.WriteLine("Calling into SwitchMode");
+                _switchMode.OnSpace();
+            }
+        }
+
+        internal void EndSwitchMode()
+        {
+            _switchMode = null;
         }
 
         private void OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)

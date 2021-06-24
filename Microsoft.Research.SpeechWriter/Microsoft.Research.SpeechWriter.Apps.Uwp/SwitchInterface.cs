@@ -1,4 +1,6 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Automation;
+﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.Core.Automation;
+using Microsoft.Research.SpeechWriter.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,22 +9,44 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 
 namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 {
-    public sealed partial class MainPage
+    public partial class SwitchInterface
     {
-        private bool _switchMode;
+        private readonly ApplicationModel _model;
+        private readonly MainPage _mainPage;
         private ApplicationRobotActionTarget _switchTarget;
         private int _switchClickCount;
         private readonly DispatcherTimer _switchTimer = new DispatcherTimer();
         private readonly List<SwitchTargetControl> _targets = new List<SwitchTargetControl>();
         private int _switchSuggestionListsIndex;
 
+        internal SwitchInterface(MainPage mainPage)
+        {
+            _model = mainPage.Model;
+            _mainPage = mainPage;
+
+            _switchTimer.Tick += OnSwitchTimerTick;
+
+            _model.ApplicationModelUpdate += OnApplicationModelUpdate;
+
+            Debug.WriteLine("Enter switch mode");
+            _switchTarget = ApplicationRobotActionTarget.Interstitial;
+            ShowSwitchInterface();
+        }
+
+        private IApplicationPanel<FrameworkElement, Size, Rect> TheHost => _mainPage.AppPanel;
+
+        private Canvas SwitchPanel => _mainPage.SwitchCanvas;
+
+        private void OnApplicationModelUpdate(object sender, ApplicationModelUpdateEventArgs e)
+        {
+            _ = ShowSwitchInterfaceAsync();
+        }
+
         private void ShowSwitchInterface()
         {
-            _switchMode = true;
             _switchClickCount = 0;
             _switchTimer.Interval = TimeSpan.FromSeconds(10);
             _switchTimer.Start();
@@ -194,39 +218,28 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             AddRectangle(action, robotAction);
         }
 
-        private void OnSpace(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        internal void OnSpace()
         {
-            args.Handled = true;
-
             _switchTimer.Stop();
 
-            if (!_switchMode)
+            if (_switchClickCount != 0)
             {
-                Debug.WriteLine("Enter switch mode");
-                _switchTarget = ApplicationRobotActionTarget.Interstitial;
-                ShowSwitchInterface();
+                var oldIndex = (_switchClickCount - 1) % _targets.Count;
+                Debug.Assert(_targets[oldIndex].IsSelected);
+                _targets[oldIndex].IsSelected = false;
             }
-            else
-            {
-                if (_switchClickCount != 0)
-                {
-                    var oldIndex = (_switchClickCount - 1) % _targets.Count;
-                    Debug.Assert(_targets[oldIndex].IsSelected);
-                    _targets[oldIndex].IsSelected = false;
-                }
 
-                _switchClickCount++;
-                _switchTimer.Interval = TimeSpan.FromSeconds(2);
-                _switchTimer.Start();
+            _switchClickCount++;
+            _switchTimer.Interval = TimeSpan.FromSeconds(2);
+            _switchTimer.Start();
 
-                Debug.WriteLine($"Clicked to {_switchClickCount}");
+            Debug.WriteLine($"Clicked to {_switchClickCount}");
 
-                var index = (_switchClickCount - 1) % _targets.Count;
-                Debug.Assert(!_targets[index].IsSelected);
-                _targets[index].IsSelected = true;
+            var index = (_switchClickCount - 1) % _targets.Count;
+            Debug.Assert(!_targets[index].IsSelected);
+            _targets[index].IsSelected = true;
 
-                _targets[index].HighlightColor = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
-            }
+            _targets[index].HighlightColor = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
         }
         private void OnSwitchTimerTick(object sender, object e)
         {
@@ -234,8 +247,8 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             if (_switchClickCount == 0)
             {
                 Debug.WriteLine("Exit switch mode");
-                _switchMode = false;
                 SwitchPanel.Children.Clear();
+                _mainPage.EndSwitchMode();
             }
             else
             {
