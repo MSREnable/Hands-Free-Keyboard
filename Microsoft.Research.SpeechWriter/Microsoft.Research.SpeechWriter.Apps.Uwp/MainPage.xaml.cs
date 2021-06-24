@@ -364,7 +364,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             if (_switchMode == null)
             {
                 Debug.WriteLine("New SwitchMode");
-                _switchMode = new SwitchInterface(this);
+                _switchMode = new SwitchInterface(this, this.TheHost, this.SwitchPanel);
             }
             else
             {
@@ -373,7 +373,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             }
         }
 
-        internal void EndSwitchMode()
+        void IApplicationHost.EndSwitchMode()
         {
             _switchMode = null;
         }

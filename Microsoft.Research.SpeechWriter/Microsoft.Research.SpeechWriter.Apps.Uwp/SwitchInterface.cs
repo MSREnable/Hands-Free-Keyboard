@@ -15,17 +15,21 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
     public partial class SwitchInterface
     {
         private readonly ApplicationModel _model;
-        private readonly MainPage _mainPage;
+        private readonly IApplicationHost _host;
+        private readonly IApplicationPanel<FrameworkElement, Size, Rect> _panel;
+        private readonly Canvas SwitchPanel;
         private ApplicationRobotActionTarget _switchTarget;
         private int _switchClickCount;
         private readonly DispatcherTimer _switchTimer = new DispatcherTimer();
         private readonly List<SwitchTargetControl> _targets = new List<SwitchTargetControl>();
         private int _switchSuggestionListsIndex;
 
-        internal SwitchInterface(MainPage mainPage)
+        internal SwitchInterface(IApplicationHost host, IApplicationPanel<FrameworkElement, Size, Rect> panel, Canvas targetCanvas)
         {
-            _model = mainPage.Model;
-            _mainPage = mainPage;
+            _host = host;
+            _panel = panel;
+            _model = host.Model;
+            SwitchPanel = targetCanvas;
 
             _switchTimer.Tick += OnSwitchTimerTick;
 
@@ -35,10 +39,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             _switchTarget = ApplicationRobotActionTarget.Interstitial;
             ShowSwitchInterface();
         }
-
-        private IApplicationPanel<FrameworkElement, Size, Rect> TheHost => _mainPage.AppPanel;
-
-        private Canvas SwitchPanel => _mainPage.SwitchCanvas;
 
         private void OnApplicationModelUpdate(object sender, ApplicationModelUpdateEventArgs e)
         {
@@ -201,10 +201,10 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
         private void AddRectangle(Action action, ApplicationRobotAction robotAction, params ApplicationRobotAction[] otherRobotActions)
         {
-            var overallRect = TheHost.GetTargetRect(SwitchPanel, robotAction);
+            var overallRect = _panel.GetTargetRect(SwitchPanel, robotAction);
             foreach (var otherRobotAction in otherRobotActions)
             {
-                var otherRect = TheHost.GetTargetRect(SwitchPanel, otherRobotAction);
+                var otherRect = _panel.GetTargetRect(SwitchPanel, otherRobotAction);
                 overallRect.Union(otherRect);
             }
 
@@ -248,7 +248,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             {
                 Debug.WriteLine("Exit switch mode");
                 SwitchPanel.Children.Clear();
-                _mainPage.EndSwitchMode();
+                _host.EndSwitchMode();
             }
             else
             {

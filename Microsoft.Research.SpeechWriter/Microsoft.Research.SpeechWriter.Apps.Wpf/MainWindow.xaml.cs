@@ -289,5 +289,10 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
             var text = Clipboard.GetText();
             return Task.FromResult(text);
         }
+
+        void IApplicationHost.EndSwitchMode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

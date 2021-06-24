@@ -28,5 +28,7 @@ namespace Microsoft.Research.SpeechWriter.UI
         void Restart(bool loadHistory);
 
         void ShowLogging();
+
+        void EndSwitchMode();
     }
 }
