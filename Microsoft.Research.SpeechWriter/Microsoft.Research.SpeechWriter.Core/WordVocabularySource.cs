@@ -278,7 +278,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _headItems.Insert(_selectedIndex + 1, item);
             SetSelectedIndex(_selectedIndex + 1);
 
-            AddSequence(Context, LiveSequenceWeight);
+            AddSequence(Context, PersistedSequenceWeight);
 
             SetRunOnSuggestions();
             SetSuggestionsView();
@@ -315,7 +315,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _headItems.Insert(_selectedIndex + 1, item);
                 SetSelectedIndex(_selectedIndex + 1);
 
-                AddSequence(Context, LiveSequenceWeight);
+                AddSequence(Context, PersistedSequenceWeight);
             }
 
             if (newWords)
@@ -379,7 +379,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _headItems[_selectedIndex + 1] = selected;
                 SetSelectedIndex(_selectedIndex + 1);
 
-                AddSequence(Context, LiveSequenceWeight);
+                AddSequence(Context, PersistedSequenceWeight);
 
                 done = ReferenceEquals(item, runOn);
             }
@@ -471,6 +471,17 @@ namespace Microsoft.Research.SpeechWriter.Core
             Debug.Assert(index <= _selectedIndex);
 
             var predecessor = _headItems[index];
+
+            if (index != _selectedIndex)
+            {
+                var subContext = new List<int>(Context);
+                subContext.RemoveRange(_selectedIndex + 1, subContext.Count - _selectedIndex - 1);
+                for (var i = _selectedIndex; index < i; i--)
+                {
+                    AddSequence(subContext, LiveSequenceWeight);
+                    subContext.RemoveAt(i);
+                }
+            }
 
             var ghostIndex = index + 1;
             var ghostLimit = _headItems.Count;

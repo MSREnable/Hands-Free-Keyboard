@@ -291,7 +291,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 186, 96);
+            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 186, 93);
         }
 
         [Test]
@@ -328,7 +328,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 33, 1, 103, 136);
+            MultiTest("That'll be $10, please!", 33, 1, 103, 140);
         }
 
         [Test]
