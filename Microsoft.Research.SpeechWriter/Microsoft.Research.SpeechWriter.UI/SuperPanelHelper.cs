@@ -82,8 +82,31 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         public TRect GetTargetRect(TControl target, ApplicationRobotAction action)
         {
-            var control = _headPanelHelper._panel.Children.First();
+            TControl control;
+
+            switch (action.Target)
+            {
+                case ApplicationRobotActionTarget.Head:
+                    control = _headPanelHelper.GetControl(action.Index);
+                    break;
+
+                case ApplicationRobotActionTarget.Tail:
+                    control = _tailPanelHelper.GetControl(action.Index);
+                    break;
+
+                case ApplicationRobotActionTarget.Interstitial:
+                    control = _interstitialPanelHelper.GetControl(action.Index);
+                    break;
+
+                case ApplicationRobotActionTarget.Suggestion:
+                default:
+                    Debug.Assert(action.Target == ApplicationRobotActionTarget.Suggestion);
+                    control = _suggestionsPanelHelper.GetControl(action.Index, action.SubIndex);
+                    break;
+            }
+
             var rect = _headPanelHelper._panel.CreateRect(target, control);
+
             return rect;
         }
     }
