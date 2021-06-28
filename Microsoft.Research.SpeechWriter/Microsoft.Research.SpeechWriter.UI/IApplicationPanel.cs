@@ -26,7 +26,5 @@ namespace Microsoft.Research.SpeechWriter.UI
         void Arrange(TControl control, TRect rect);
 
         void DeleteControl(TControl control);
-
-        TRect GetTargetRect(TControl parent, ApplicationRobotAction action);
     }
 }

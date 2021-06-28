@@ -75,11 +75,6 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             control.Arrange(rect);
         }
 
-        public Rect GetTargetRect(FrameworkElement parent, ApplicationRobotAction action)
-        {
-            return _helper.GetTargetRect(parent, action);
-        }
-
         void IApplicationPanel<FrameworkElement, Size, Rect>.DeleteControl(FrameworkElement control)
         {
             Children.Remove(control);
