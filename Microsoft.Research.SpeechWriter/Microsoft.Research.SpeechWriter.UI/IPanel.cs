@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microsoft.Research.SpeechWriter.UI
+﻿namespace Microsoft.Research.SpeechWriter.UI
 {
     public interface IPanel<TControl, TSize, TRect>
         where TControl : class

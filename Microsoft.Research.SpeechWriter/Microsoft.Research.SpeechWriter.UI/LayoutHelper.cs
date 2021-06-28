@@ -1,5 +1,4 @@
-﻿using Microsoft.Research.SpeechWriter.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 

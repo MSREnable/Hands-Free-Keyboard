@@ -14,7 +14,7 @@
 
         public TSize MeasureOverride(TSize availableSize)
         {
-            foreach(var control in _panel.Children)
+            foreach (var control in _panel.Children)
             {
                 _panel.Measure(control, availableSize);
             }

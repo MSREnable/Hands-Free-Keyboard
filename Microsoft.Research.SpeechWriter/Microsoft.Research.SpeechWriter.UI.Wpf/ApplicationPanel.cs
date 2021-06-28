@@ -1,5 +1,4 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
-using Microsoft.Research.SpeechWriter.Core.Automation;
 using System.Collections.Generic;
 #if WINDOWS_UWP
 using Windows.Foundation;
