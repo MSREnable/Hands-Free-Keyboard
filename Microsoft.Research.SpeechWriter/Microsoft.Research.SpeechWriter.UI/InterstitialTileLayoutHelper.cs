@@ -8,25 +8,29 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
-        internal InterstitialTileLayoutHelper(ApplicationPanelHelper<TControl, TSize, TRect> panel,
+        internal InterstitialTileLayoutHelper(SuperPanelHelper<TControl, TSize, TRect> panel,
             ReadOnlyObservableCollection<ITile> list)
             : base(panel, list)
         {
         }
 
-        internal override void Arrange()
+        public override TSize ArrangeOverride(TSize finalSize)
         {
-            var x = _helper.InterstitialLeft;
-            var y = _helper.InterstitialTop;
+            var x = 0.0;
+            var y = 0.0;
 
             foreach (var control in _controls)
             {
-                var controlSize = _helper._panel.GetDesiredSize(control);
-                var rect = _helper._panel.CreateRect(x, y, controlSize);
-                _helper._panel.Arrange(control, rect);
+                var controlSize = _panel.GetDesiredSize(control);
+                var controlWidth = _panel.GetWidth(controlSize);
+                var controlHeight = _panel.GetHeight(controlSize);
+                var rect = _panel.CreateRect(x, y, controlWidth, controlHeight);
+                _panel.Arrange(control, rect);
 
-                y += _helper._panel.GetHeight(controlSize);
+                y += controlHeight;
             }
+
+            return finalSize;
         }
     }
 }

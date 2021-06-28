@@ -11,7 +11,9 @@ namespace Microsoft.Research.SpeechWriter.UI
     {
         ApplicationModel Model { get; set; }
 
-        IApplicationPanel<TControl, TSize, TRect> CreateChild();
+        void ResetChildren();
+
+        IApplicationPanel<TControl, TSize, TRect> CreateChild(ApplicationPanelHelper<TControl, TSize, TRect> helper);
 
         TRect GetTargetRect(TControl control, ApplicationRobotAction action);
     }

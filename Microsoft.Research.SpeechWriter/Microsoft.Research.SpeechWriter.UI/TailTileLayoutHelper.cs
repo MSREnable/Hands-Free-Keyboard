@@ -9,35 +9,40 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
-        internal TailTileLayoutHelper(ApplicationPanelHelper<TControl, TSize, TRect> panel,
+        internal TailTileLayoutHelper(SuperPanelHelper<TControl, TSize, TRect> panel,
             ReadOnlyObservableCollection<ITile> list)
             : base(panel, list)
         {
         }
 
-        internal override void Arrange()
+        public override TSize ArrangeOverride(TSize finalSize)
         {
             var reversedControls = new List<TControl>(_controls);
             reversedControls.Reverse();
 
-            var x = _helper.TailRight;
-            var y = _helper.TailTop;
+            var panelWidth = _panel.GetWidth(finalSize);
+            var x = panelWidth;
+            var y = 0.0;
 
             foreach (var control in reversedControls)
             {
-                var controlSize = _helper._panel.GetDesiredSize(control);
-                var left = x - _helper._panel.GetWidth(controlSize);
-                if (left < _helper.TailLeft && x != _helper.HeadRight)
+                var controlSize = _panel.GetDesiredSize(control);
+                var controlWidth = _panel.GetWidth(controlSize);
+                var controlHeight = _panel.GetHeight(controlSize);
+
+                var left = x - controlWidth;
+                if (left < 0 && x != panelWidth)
                 {
-                    x = _helper.TailRight;
-                    y -= _helper.Pitch;
-                    left = x - _helper._panel.GetWidth(controlSize);
+                    y -= controlHeight;
+                    left = x - controlWidth;
                 }
-                var rect = _helper._panel.CreateRect(left, y, controlSize);
-                _helper._panel.Arrange(control, rect);
+                var rect = _panel.CreateRect(left, y, controlWidth, controlHeight);
+                _panel.Arrange(control, rect);
 
                 x = left;
             }
+
+            return finalSize;
         }
     }
 }

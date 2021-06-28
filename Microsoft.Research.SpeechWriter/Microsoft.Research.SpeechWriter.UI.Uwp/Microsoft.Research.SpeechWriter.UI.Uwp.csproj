@@ -120,10 +120,14 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ApplicationPanel.cs" />
+    <Compile Include="..\Microsoft.Research.SpeechWriter.UI.Wpf\ApplicationPanel.cs">
+      <Link>ApplicationPanel.cs</Link>
+    </Compile>
+    <Compile Include="..\Microsoft.Research.SpeechWriter.UI.Wpf\SuperPanel.cs">
+      <Link>SuperPanel.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringFormatter.cs" />
-    <Compile Include="SuperPanel.cs" />
     <Compile Include="TileButton.xaml.cs">
       <DependentUpon>TileButton.xaml</DependentUpon>
     </Compile>

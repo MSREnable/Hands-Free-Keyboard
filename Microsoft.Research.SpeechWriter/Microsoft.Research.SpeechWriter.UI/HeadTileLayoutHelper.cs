@@ -8,31 +8,39 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
-        internal HeadTileLayoutHelper(ApplicationPanelHelper<TControl, TSize, TRect> panel,
+        internal HeadTileLayoutHelper(SuperPanelHelper<TControl, TSize, TRect> panel,
             ReadOnlyObservableCollection<ITile> list)
             : base(panel, list)
         {
         }
 
-        internal override void Arrange()
+        public override TSize ArrangeOverride(TSize finalSize)
         {
-            var x = _helper.HeadLeft;
-            var y = _helper.HeadTop;
+            var panelWidth = _panel.GetWidth(finalSize);
+
+            var x = 0.0;
+            var y = 0.0;
 
             foreach (var control in _controls)
             {
-                var controlSize = _helper._panel.GetDesiredSize(control);
-                var right = x + _helper._panel.GetWidth(controlSize);
-                if (_helper.HeadRight < right && x != _helper.HeadLeft)
-                {
-                    x = _helper.HeadLeft;
-                    y += _helper.Pitch;
-                }
-                var rect = _helper._panel.CreateRect(x, y, controlSize);
-                _helper._panel.Arrange(control, rect);
+                var controlSize = _panel.GetDesiredSize(control);
+                var controlWidth = _panel.GetWidth(controlSize);
+                var controlHeight = _panel.GetHeight(controlSize);
 
-                x += _helper._panel.GetWidth(controlSize);
+                var controlRight = x + controlWidth;
+                if (panelWidth < controlRight && x != 0.0)
+                {
+                    x = 0;
+                    y += controlHeight;
+                }
+
+                var rect = _panel.CreateRect(x, y, controlWidth, controlHeight);
+                _panel.Arrange(control, rect);
+
+                x += controlWidth;
             }
+
+            return finalSize;
         }
     }
 }

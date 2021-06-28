@@ -11,7 +11,7 @@ namespace Microsoft.Research.SpeechWriter.UI
     {
         private List<List<TControl>> _groupedControls;
 
-        internal SuggestionsLayoutHelper(ApplicationPanelHelper<TControl, TSize, TRect> panel,
+        internal SuggestionsLayoutHelper(SuperPanelHelper<TControl, TSize, TRect> panel,
             ReadOnlyObservableCollection<IEnumerable<ITile>> list)
             : base(panel, list)
         {
@@ -29,7 +29,7 @@ namespace Microsoft.Research.SpeechWriter.UI
 
                 foreach (var item in subList)
                 {
-                    var control = _helper._panel.CreateControl(item);
+                    var control = _panel.CreateControl(item);
                     controls.Add(control);
                     subGroupedControls.Add(control);
                 }
@@ -41,24 +41,31 @@ namespace Microsoft.Research.SpeechWriter.UI
             return controls;
         }
 
-        internal override void Arrange()
+        public override TSize ArrangeOverride(TSize finalSize)
         {
-            var y = _helper.SuggestionsTop;
+            var y = 0.0;
             foreach (var subGroup in _groupedControls)
             {
-                var x = _helper.SuggestionsLeft;
+                var x = 0.0;
+
+                var controlHeight = 0.0;
 
                 foreach (var control in subGroup)
                 {
-                    var controlSize = _helper._panel.GetDesiredSize(control);
-                    var rect = _helper._panel.CreateRect(x, y, controlSize);
-                    _helper._panel.Arrange(control, rect);
+                    var controlSize = _panel.GetDesiredSize(control);
+                    var controlWidth = _panel.GetWidth(controlSize);
+                    /*var*/
+                    controlHeight = _panel.GetHeight(controlSize);
+                    var rect = _panel.CreateRect(x, y, controlWidth, controlHeight);
+                    _panel.Arrange(control, rect);
 
-                    x += _helper._panel.GetWidth(controlSize);
+                    x += controlWidth;
                 }
 
-                y += _helper.Pitch;
+                y += controlHeight;
             }
+
+            return finalSize;
         }
 
         internal TControl GetControl(int index, int subIndex)

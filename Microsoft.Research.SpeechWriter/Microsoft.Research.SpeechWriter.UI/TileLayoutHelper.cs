@@ -9,7 +9,7 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
-        internal TileLayoutHelper(ApplicationPanelHelper<TControl, TSize, TRect> panel,
+        internal TileLayoutHelper(SuperPanelHelper<TControl, TSize, TRect> panel,
             ReadOnlyObservableCollection<ITile> list)
             : base(panel, list)
         {
@@ -21,7 +21,7 @@ namespace Microsoft.Research.SpeechWriter.UI
 
             foreach (var item in list)
             {
-                var control = _helper._panel.CreateControl(item);
+                var control = _panel.CreateControl(item);
                 controls.Add(control);
             }
 

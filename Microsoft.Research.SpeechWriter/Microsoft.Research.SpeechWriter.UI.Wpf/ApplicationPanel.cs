@@ -1,33 +1,28 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
 using System.Collections.Generic;
+#if WINDOWS_UWP
+using Windows.Foundation;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+#else
 using System.Windows;
 using System.Windows.Controls;
+#endif
 
+#if WINDOWS_UWP
+namespace Microsoft.Research.SpeechWriter.UI.Uwp
+#else
 namespace Microsoft.Research.SpeechWriter.UI.Wpf
+#endif
 {
     public class ApplicationPanel : Panel, IApplicationPanel<FrameworkElement, Size, Rect>
     {
         private readonly ApplicationPanelHelper<FrameworkElement, Size, Rect> _helper;
 
-        public ApplicationPanel()
+        public ApplicationPanel(ApplicationPanelHelper<FrameworkElement, Size, Rect> helper)
         {
-            _helper = new ApplicationPanelHelper<FrameworkElement, Size, Rect>(this);
-        }
-
-        public ApplicationModel Model
-        {
-            get => (ApplicationModel)GetValue(ModelProperty);
-            set => SetValue(ModelProperty, value);
-        }
-
-        public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(ApplicationModel), typeof(ApplicationPanel),
-            new PropertyMetadata(null, SetHelperModel));
-
-        private static void SetHelperModel(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var panel = (ApplicationPanel)d;
-            panel._helper.SetModel(panel.Model);
+            _helper = helper;
         }
 
         protected override Size MeasureOverride(Size availableSize)

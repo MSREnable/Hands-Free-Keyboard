@@ -2,6 +2,7 @@
 using Microsoft.Research.SpeechWriter.Core.Automation;
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Microsoft.Research.SpeechWriter.UI
 {
@@ -10,70 +11,80 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
-        private readonly ISuperPanel<TControl, TSize, TRect> _panel;
+        internal readonly ISuperPanel<TControl, TSize, TRect> _panel;
 
-        private readonly IApplicationPanel<TControl, TSize, TRect> _headPanel;
-        private readonly IApplicationPanel<TControl, TSize, TRect> _tailPanel;
-        private readonly IApplicationPanel<TControl, TSize, TRect> _interstitialPanel;
-        private readonly IApplicationPanel<TControl, TSize, TRect> _suggestionsPanel;
+        private HeadTileLayoutHelper<TControl, TSize, TRect> _headPanelHelper;
+        private TailTileLayoutHelper<TControl, TSize, TRect> _tailPanelHelper;
+        private InterstitialTileLayoutHelper<TControl, TSize, TRect> _interstitialPanelHelper;
+        private SuggestionsLayoutHelper<TControl, TSize, TRect> _suggestionsPanelHelper;
 
         public SuperPanelHelper(ISuperPanel<TControl, TSize, TRect> panel)
         {
             _panel = panel;
-
-            _headPanel = panel.CreateChild();
-            _tailPanel = panel.CreateChild();
-            _interstitialPanel = panel.CreateChild();
-            _suggestionsPanel = panel.CreateChild();
         }
 
         public void SetModel(ApplicationModel model)
         {
-            _suggestionsPanel.Model = model;
+            if (model != null)
+            {
+                _panel.ResetChildren();
+                _headPanelHelper = new HeadTileLayoutHelper<TControl, TSize, TRect>(this, model.HeadItems);
+                _tailPanelHelper = new TailTileLayoutHelper<TControl, TSize, TRect>(this, model.TailItems);
+                _interstitialPanelHelper = new InterstitialTileLayoutHelper<TControl, TSize, TRect>(this, model.SuggestionInterstitials);
+                _suggestionsPanelHelper = new SuggestionsLayoutHelper<TControl, TSize, TRect>(this, model.SuggestionLists);
+            }
+        }
+
+        internal IApplicationPanel<TControl, TSize, TRect> CreateChild(ApplicationPanelHelper<TControl, TSize, TRect> helper)
+        {
+            var child = _panel.CreateChild(helper);
+            return child;
         }
 
         public TSize MeasureOverride(TSize availableSize)
         {
             Debug.WriteLine($"SuperPanel.MeasureOverride {availableSize}");
 
-            _interstitialPanel.Measure(availableSize);
+            _interstitialPanelHelper._panel.Measure(availableSize);
 
-            var pitch = _interstitialPanel.GetWidth(_interstitialPanel.DesiredSize);
+            var pitch = _interstitialPanelHelper._panel.GetWidth(_interstitialPanelHelper._panel.DesiredSize);
             pitch = 110;
-            var totalHeight = _interstitialPanel.GetHeight(_interstitialPanel.DesiredSize);
-            var availableWidth = _interstitialPanel.GetWidth(availableSize);
+            var totalHeight = _interstitialPanelHelper._panel.GetHeight(_interstitialPanelHelper._panel.DesiredSize);
+            var availableWidth = _interstitialPanelHelper._panel.GetWidth(availableSize);
             var sideWidth = (availableWidth - pitch) / 2;
 
-            _headPanel.Measure(_interstitialPanel.CreateSize(sideWidth, totalHeight - pitch));
-            _tailPanel.Measure(_interstitialPanel.CreateSize(sideWidth, pitch));
-            _suggestionsPanel.Measure(_interstitialPanel.CreateSize(sideWidth, totalHeight - pitch));
+            _headPanelHelper._panel.Measure(_interstitialPanelHelper._panel.CreateSize(sideWidth, totalHeight - pitch));
+            _tailPanelHelper._panel.Measure(_interstitialPanelHelper._panel.CreateSize(sideWidth, pitch));
+            _suggestionsPanelHelper._panel.Measure(_interstitialPanelHelper._panel.CreateSize(sideWidth, totalHeight - pitch));
 
-            return _interstitialPanel.CreateSize(availableWidth, totalHeight);
+            return _interstitialPanelHelper._panel.CreateSize(availableWidth, totalHeight);
         }
 
         public TSize ArrangeOverride(TSize finalSize)
         {
             Debug.WriteLine($"SuperPanel.ArrangeOverride {finalSize}");
 
-            var pitch = _interstitialPanel.GetWidth(_interstitialPanel.DesiredSize);
+            var pitch = _interstitialPanelHelper._panel.GetWidth(_interstitialPanelHelper._panel.DesiredSize);
             pitch = 110;
-            var totalHeight = _interstitialPanel.GetHeight(_interstitialPanel.DesiredSize);
-            var finalWidth = _interstitialPanel.GetWidth(finalSize);
+            var totalHeight = _interstitialPanelHelper._panel.GetHeight(_interstitialPanelHelper._panel.DesiredSize);
+            var finalWidth = _interstitialPanelHelper._panel.GetWidth(finalSize);
             var sideWidth = (finalWidth - pitch) / 2;
 
-            var top = (_interstitialPanel.GetHeight(finalSize) - totalHeight) / 2;
+            var top = (_interstitialPanelHelper._panel.GetHeight(finalSize) - totalHeight) / 2;
 
-            _headPanel.Arrange(_interstitialPanel.CreateRect(0, top, sideWidth, totalHeight - pitch));
-            _tailPanel.Arrange(_interstitialPanel.CreateRect(0, top + totalHeight - pitch, sideWidth, pitch));
-            _interstitialPanel.Arrange(_interstitialPanel.CreateRect(sideWidth, top, pitch, totalHeight));
-            _suggestionsPanel.Arrange(_interstitialPanel.CreateRect(sideWidth + pitch, top + pitch / 2, sideWidth, totalHeight - pitch));
+            _headPanelHelper._panel.Arrange(_interstitialPanelHelper._panel.CreateRect(0, top, sideWidth, totalHeight - pitch));
+            _tailPanelHelper._panel.Arrange(_interstitialPanelHelper._panel.CreateRect(0, top + totalHeight - pitch, sideWidth, pitch));
+            _interstitialPanelHelper._panel.Arrange(_interstitialPanelHelper._panel.CreateRect(sideWidth, top, pitch, totalHeight));
+            _suggestionsPanelHelper._panel.Arrange(_interstitialPanelHelper._panel.CreateRect(sideWidth + pitch, top + pitch / 2, sideWidth, totalHeight - pitch));
 
-            return _interstitialPanel.CreateSize(finalWidth, totalHeight);
+            return finalSize;
         }
 
         public TRect GetTargetRect(TControl target, ApplicationRobotAction action)
         {
-            throw new System.NotImplementedException();
+            var control = _headPanelHelper._panel.Children.First();
+            var rect = _headPanelHelper._panel.CreateRect(target, control);
+            return rect;
         }
     }
 }

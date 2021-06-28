@@ -9,8 +9,6 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
-        ApplicationModel Model { get; set; }
-
         TSize DesiredSize { get; }
         void Measure(TSize availableSize);
         void Arrange(TRect finalRect);

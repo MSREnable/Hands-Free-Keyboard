@@ -4,18 +4,19 @@ using System.Collections.Specialized;
 
 namespace Microsoft.Research.SpeechWriter.UI
 {
-    internal abstract class LayoutHelper<TControl, TSize, TRect, T>
+    internal abstract class LayoutHelper<TControl, TSize, TRect, T> : ApplicationPanelHelper<TControl, TSize, TRect>
         where TControl : class
         where TSize : struct
         where TRect : struct
     {
-        internal readonly ApplicationPanelHelper<TControl, TSize, TRect> _helper;
+        private readonly SuperPanelHelper<TControl, TSize, TRect> _superPanel;
         private readonly ReadOnlyObservableCollection<T> _list;
         internal List<TControl> _controls;
 
-        internal LayoutHelper(ApplicationPanelHelper<TControl, TSize, TRect> helper, ReadOnlyObservableCollection<T> list)
+        internal LayoutHelper(SuperPanelHelper<TControl, TSize, TRect> superPanel, ReadOnlyObservableCollection<T> list)
+            : base(superPanel)
         {
-            _helper = helper;
+            _superPanel = superPanel;
             _list = list;
             _controls = CreateControls(list);
 
@@ -65,7 +66,7 @@ namespace Microsoft.Research.SpeechWriter.UI
         {
             while (_controls.Count != 0)
             {
-                _helper._panel.DeleteControl(_controls[0]);
+                _panel.DeleteControl(_controls[0]);
                 _controls.RemoveAt(0);
             }
 
@@ -73,7 +74,5 @@ namespace Microsoft.Research.SpeechWriter.UI
         }
 
         protected abstract List<TControl> CreateControls(IEnumerable<T> list);
-
-        internal abstract void Arrange();
     }
 }

@@ -1,10 +1,19 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Automation;
-using System;
+#if WINDOWS_UWP
+using Windows.Foundation;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+#else
 using System.Windows;
 using System.Windows.Controls;
+#endif
 
+#if WINDOWS_UWP
+namespace Microsoft.Research.SpeechWriter.UI.Uwp
+#else
 namespace Microsoft.Research.SpeechWriter.UI.Wpf
+#endif
 {
     public class SuperPanel : Panel, ISuperPanel<FrameworkElement, Size, Rect>
     {
@@ -18,9 +27,14 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             _helper = new SuperPanelHelper<FrameworkElement, Size, Rect>(this);
         }
 
-        IApplicationPanel<FrameworkElement, Size, Rect> ISuperPanel<FrameworkElement, Size, Rect>.CreateChild()
+        void ISuperPanel<FrameworkElement, Size, Rect>.ResetChildren()
         {
-            var panel = new ApplicationPanel();
+            Children.Clear();
+        }
+
+        IApplicationPanel<FrameworkElement, Size, Rect> ISuperPanel<FrameworkElement, Size, Rect>.CreateChild(ApplicationPanelHelper<FrameworkElement, Size, Rect> helper)
+        {
+            var panel = new ApplicationPanel(helper);
             Children.Add(panel);
             return panel;
         }
