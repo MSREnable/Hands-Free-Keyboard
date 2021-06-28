@@ -33,7 +33,7 @@ namespace Microsoft.Research.SpeechWriter.UI
                     y -= _helper.Pitch;
                     left = x - _helper._panel.GetWidth(controlSize);
                 }
-                var rect = _helper._panel.GetRect(left, y, controlSize);
+                var rect = _helper._panel.CreateRect(left, y, controlSize);
                 _helper._panel.Arrange(control, rect);
 
                 x = left;

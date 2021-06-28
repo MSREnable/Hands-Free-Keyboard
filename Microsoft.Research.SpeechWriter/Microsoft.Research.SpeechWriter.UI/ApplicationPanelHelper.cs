@@ -82,7 +82,7 @@ namespace Microsoft.Research.SpeechWriter.UI
                     break;
             }
 
-            var rect = _panel.GetRect(parent, control);
+            var rect = _panel.CreateRect(parent, control);
 
             return rect;
         }
@@ -94,7 +94,7 @@ namespace Microsoft.Research.SpeechWriter.UI
 
             var rows = (int)Math.Floor(_panel.GetHeight(availableSize) / Pitch);
             var height = rows * Pitch;
-            var size = _panel.GetSize(_panel.GetWidth(availableSize), height);
+            var size = _panel.CreateSize(_panel.GetWidth(availableSize), height);
 
             HeadLeft = 0;
             HeadTop = 0;

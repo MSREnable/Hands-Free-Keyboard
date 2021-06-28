@@ -90,7 +90,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             Children.Remove(control);
         }
 
-        Size IApplicationPanel<FrameworkElement, Size, Rect>.GetSize(double width, double height)
+        Size IApplicationPanel<FrameworkElement, Size, Rect>.CreateSize(double width, double height)
         {
             return new Size(width, height);
         }
@@ -105,12 +105,17 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             return size.Height;
         }
 
-        Rect IApplicationPanel<FrameworkElement, Size, Rect>.GetRect(double x, double y, Size size)
+        Rect IApplicationPanel<FrameworkElement, Size, Rect>.CreateRect(double x, double y, Size size)
         {
             return new Rect(x, y, size.Width, size.Height);
         }
 
-        Rect IApplicationPanel<FrameworkElement, Size, Rect>.GetRect(FrameworkElement parent, FrameworkElement control)
+        Rect IApplicationPanel<FrameworkElement, Size, Rect>.CreateRect(double x, double y, double width, double height)
+        {
+            return new Rect(x, y, width, height);
+        }
+
+        Rect IApplicationPanel<FrameworkElement, Size, Rect>.CreateRect(FrameworkElement parent, FrameworkElement control)
         {
             var transform = control.TransformToVisual(parent);
             var sourceRect = new Rect(new Point(0, 0), new Point(control.ActualWidth, control.ActualHeight));

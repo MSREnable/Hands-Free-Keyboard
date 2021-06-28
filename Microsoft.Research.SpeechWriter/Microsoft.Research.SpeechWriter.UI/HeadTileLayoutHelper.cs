@@ -28,7 +28,7 @@ namespace Microsoft.Research.SpeechWriter.UI
                     x = _helper.HeadLeft;
                     y += _helper.Pitch;
                 }
-                var rect = _helper._panel.GetRect(x, y, controlSize);
+                var rect = _helper._panel.CreateRect(x, y, controlSize);
                 _helper._panel.Arrange(control, rect);
 
                 x += _helper._panel.GetWidth(controlSize);

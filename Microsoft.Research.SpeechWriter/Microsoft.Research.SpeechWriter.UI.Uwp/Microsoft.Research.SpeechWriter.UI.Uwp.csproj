@@ -123,6 +123,7 @@
     <Compile Include="ApplicationPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringFormatter.cs" />
+    <Compile Include="SuperPanel.cs" />
     <Compile Include="TileButton.xaml.cs">
       <DependentUpon>TileButton.xaml</DependentUpon>
     </Compile>

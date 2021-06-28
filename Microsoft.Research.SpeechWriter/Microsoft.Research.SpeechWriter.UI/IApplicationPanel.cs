@@ -9,6 +9,10 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
+        TSize DesiredSize { get; }
+        void Measure(TSize availableSize);
+        void Arrange(TRect finalRect);
+
         IEnumerable<TControl> Children { get; }
 
         void ResetControls();
@@ -25,14 +29,15 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         TRect GetTargetRect(TControl parent, ApplicationRobotAction action);
 
-        TSize GetSize(double width, double height);
-
         double GetWidth(TSize size);
 
         double GetHeight(TSize size);
 
-        TRect GetRect(double x, double y, TSize size);
+        TRect CreateRect(double x, double y, TSize size);
+        TRect CreateRect(double x, double y, double width, double height);
 
-        TRect GetRect(TControl parent, TControl control);
+        TSize CreateSize(double width, double height);
+
+        TRect CreateRect(TControl parent, TControl control);
     }
 }
