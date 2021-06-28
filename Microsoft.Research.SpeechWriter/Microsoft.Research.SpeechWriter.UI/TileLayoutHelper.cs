@@ -15,6 +15,44 @@ namespace Microsoft.Research.SpeechWriter.UI
         {
         }
 
+        protected override void AddContent(IList<ITile> list, int startIndex, int count)
+        {
+            if (startIndex == _controls.Count)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    var control = _panel.CreateControl(list[startIndex + i]);
+                    _controls.Add(control);
+                }
+            }
+            else
+            {
+                ResetContent(list);
+            }
+        }
+
+        protected override void RemoveContent(IList<ITile> list, int startIndex, int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                var oldControl = _controls[startIndex];
+                _controls.RemoveAt(startIndex);
+                _panel.DeleteControl(oldControl);
+            }
+        }
+
+        protected override void ReplaceContent(IList<ITile> list, int startIndex, int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                var oldControl = _controls[startIndex + i];
+                var newControl = _panel.CreateControl(list[startIndex + i]);
+
+                _controls[startIndex + i] = newControl;
+                _panel.DeleteControl(oldControl);
+            }
+        }
+
         protected override List<TControl> CreateControls(IEnumerable<ITile> list)
         {
             var controls = new List<TControl>();
