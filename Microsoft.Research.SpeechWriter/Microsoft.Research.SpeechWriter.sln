@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditBoxPrototype", "EditBoxPrototype\EditBoxPrototype.csproj", "{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiPanel", "MultiPanel\MultiPanel.csproj", "{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -277,6 +279,26 @@ Global
 		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|x86.ActiveCfg = Release|x86
 		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|x86.Build.0 = Release|x86
 		{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}.Release|x86.Deploy.0 = Release|x86
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Debug|ARM.Build.0 = Debug|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Debug|x64.Build.0 = Debug|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Debug|x86.Build.0 = Debug|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|ARM.ActiveCfg = Release|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|ARM.Build.0 = Release|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|ARM64.Build.0 = Release|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|x64.ActiveCfg = Release|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|x64.Build.0 = Release|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|x86.ActiveCfg = Release|Any CPU
+		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
