@@ -58,7 +58,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             };
         }
 
-        internal IApplicationPanel<FrameworkElement, Size, Rect> AppPanel => TheHost;
+        //internal IApplicationPanel<FrameworkElement, Size, Rect> AppPanel => TheHost;
 
         internal Canvas SwitchCanvas => SwitchPanel;
 

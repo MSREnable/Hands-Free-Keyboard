@@ -100,7 +100,7 @@
     </Page.Resources>
 
     <Grid>
-        <coreui:ApplicationPanel x:Name="TheHost"/>
+        <coreui:SuperPanel x:Name="TheHost"/>
 
         <CommandBar Margin="-10000,-10000,0,0">
             <CommandBar.KeyboardAccelerators>

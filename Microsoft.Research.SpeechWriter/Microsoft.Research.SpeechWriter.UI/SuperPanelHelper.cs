@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.Core.Automation;
+using System;
+using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.UI
 {
@@ -24,6 +27,11 @@ namespace Microsoft.Research.SpeechWriter.UI
             _suggestionsPanel = panel.CreateChild();
         }
 
+        public void SetModel(ApplicationModel model)
+        {
+            _suggestionsPanel.Model = model;
+        }
+
         public TSize MeasureOverride(TSize availableSize)
         {
             Debug.WriteLine($"SuperPanel.MeasureOverride {availableSize}");
@@ -31,6 +39,7 @@ namespace Microsoft.Research.SpeechWriter.UI
             _interstitialPanel.Measure(availableSize);
 
             var pitch = _interstitialPanel.GetWidth(_interstitialPanel.DesiredSize);
+            pitch = 110;
             var totalHeight = _interstitialPanel.GetHeight(_interstitialPanel.DesiredSize);
             var availableWidth = _interstitialPanel.GetWidth(availableSize);
             var sideWidth = (availableWidth - pitch) / 2;
@@ -47,6 +56,7 @@ namespace Microsoft.Research.SpeechWriter.UI
             Debug.WriteLine($"SuperPanel.ArrangeOverride {finalSize}");
 
             var pitch = _interstitialPanel.GetWidth(_interstitialPanel.DesiredSize);
+            pitch = 110;
             var totalHeight = _interstitialPanel.GetHeight(_interstitialPanel.DesiredSize);
             var finalWidth = _interstitialPanel.GetWidth(finalSize);
             var sideWidth = (finalWidth - pitch) / 2;
@@ -59,6 +69,11 @@ namespace Microsoft.Research.SpeechWriter.UI
             _suggestionsPanel.Arrange(_interstitialPanel.CreateRect(sideWidth + pitch, top + pitch / 2, sideWidth, totalHeight - pitch));
 
             return _interstitialPanel.CreateSize(finalWidth, totalHeight);
+        }
+
+        public TRect GetTargetRect(TControl target, ApplicationRobotAction action)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

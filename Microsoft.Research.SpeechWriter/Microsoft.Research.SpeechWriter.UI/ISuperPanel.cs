@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.Core.Automation;
 using System;
 
 namespace Microsoft.Research.SpeechWriter.UI
@@ -10,8 +11,8 @@ namespace Microsoft.Research.SpeechWriter.UI
     {
         ApplicationModel Model { get; set; }
 
-        event EventHandler ModelChanged;
-
         IApplicationPanel<TControl, TSize, TRect> CreateChild();
+
+        TRect GetTargetRect(TControl control, ApplicationRobotAction action);
     }
 }

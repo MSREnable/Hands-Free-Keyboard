@@ -116,10 +116,10 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         public TSize ArrangeOverride(TSize finalSize)
         {
-            _head.Arrange();
-            _tail.Arrange();
-            _interstitial.Arrange();
-            _suggestions.Arrange();
+            _head?.Arrange();
+            _tail?.Arrange();
+            _interstitial?.Arrange();
+            _suggestions?.Arrange();
 
             Debug.WriteLine($"Final panel size is {_panel.GetWidth(finalSize)},{_panel.GetHeight(finalSize)}");
             return finalSize;

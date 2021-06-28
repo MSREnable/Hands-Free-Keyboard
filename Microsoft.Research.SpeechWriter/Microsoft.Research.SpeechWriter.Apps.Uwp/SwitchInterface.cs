@@ -16,7 +16,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
     {
         private readonly ApplicationModel _model;
         private readonly IApplicationHost _host;
-        private readonly IApplicationPanel<FrameworkElement, Size, Rect> _panel;
+        private readonly ISuperPanel<FrameworkElement, Size, Rect> _panel;
         private readonly Canvas SwitchPanel;
         private ApplicationRobotActionTarget _switchTarget;
         private int _switchClickCount;
@@ -24,7 +24,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
         private readonly List<SwitchTargetControl> _targets = new List<SwitchTargetControl>();
         private int _switchSuggestionListsIndex;
 
-        internal SwitchInterface(IApplicationHost host, IApplicationPanel<FrameworkElement, Size, Rect> panel, Canvas targetCanvas)
+        internal SwitchInterface(IApplicationHost host, ISuperPanel<FrameworkElement, Size, Rect> panel, Canvas targetCanvas)
         {
             _host = host;
             _panel = panel;
