@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Research.SpeechWriter.UI
 {
-    public interface IApplicationPanel<TControl, TSize, TRect>
+    public interface IApplicationPanel<TControl, TSize, TRect> : IPanel<TControl, TSize, TRect>
         where TControl : class
         where TSize : struct
         where TRect : struct
@@ -28,16 +28,5 @@ namespace Microsoft.Research.SpeechWriter.UI
         void DeleteControl(TControl control);
 
         TRect GetTargetRect(TControl parent, ApplicationRobotAction action);
-
-        double GetWidth(TSize size);
-
-        double GetHeight(TSize size);
-
-        TRect CreateRect(double x, double y, TSize size);
-        TRect CreateRect(double x, double y, double width, double height);
-
-        TSize CreateSize(double width, double height);
-
-        TRect CreateRect(TControl parent, TControl control);
     }
 }

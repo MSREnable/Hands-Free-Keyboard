@@ -2,7 +2,6 @@
 using Microsoft.Research.SpeechWriter.Core.Automation;
 using System;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Microsoft.Research.SpeechWriter.UI
 {
@@ -11,7 +10,7 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
-        internal readonly ISuperPanel<TControl, TSize, TRect> _panel;
+        private readonly ISuperPanel<TControl, TSize, TRect> _panel;
 
         private HeadTileLayoutHelper<TControl, TSize, TRect> _headPanelHelper;
         private TailTileLayoutHelper<TControl, TSize, TRect> _tailPanelHelper;
@@ -43,39 +42,39 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         public TSize MeasureOverride(TSize availableSize)
         {
-            Debug.WriteLine($"SuperPanel.MeasureOverride {availableSize}");
+            var availableWidth = _panel.GetWidth(availableSize);
+            var availableHeight = _panel.GetHeight(availableSize);
 
-            _interstitialPanelHelper._panel.Measure(availableSize);
+            var horizontalPitch = _panel.HorizontalPitch;
+            var verticalPitch = _panel.VerticalPitch;
 
-            var pitch = _interstitialPanelHelper._panel.GetWidth(_interstitialPanelHelper._panel.DesiredSize);
-            pitch = 110;
-            var totalHeight = _interstitialPanelHelper._panel.GetHeight(_interstitialPanelHelper._panel.DesiredSize);
-            var availableWidth = _interstitialPanelHelper._panel.GetWidth(availableSize);
-            var sideWidth = (availableWidth - pitch) / 2;
+            var rows = Math.Floor(availableHeight / verticalPitch);
+            var finalHeight = rows * verticalPitch;
+            var sideWidth = (availableWidth - horizontalPitch) / 2.0;
 
-            _headPanelHelper._panel.Measure(_interstitialPanelHelper._panel.CreateSize(sideWidth, totalHeight - pitch));
-            _tailPanelHelper._panel.Measure(_interstitialPanelHelper._panel.CreateSize(sideWidth, pitch));
-            _suggestionsPanelHelper._panel.Measure(_interstitialPanelHelper._panel.CreateSize(sideWidth, totalHeight - pitch));
+            _interstitialPanelHelper._panel.Measure(_panel.CreateSize(horizontalPitch, finalHeight));
+            _headPanelHelper._panel.Measure(_panel.CreateSize(sideWidth, finalHeight - verticalPitch));
+            _tailPanelHelper._panel.Measure(_panel.CreateSize(sideWidth, verticalPitch));
+            _suggestionsPanelHelper._panel.Measure(_panel.CreateSize(sideWidth, finalHeight - verticalPitch));
 
-            return _interstitialPanelHelper._panel.CreateSize(availableWidth, totalHeight);
+            return _interstitialPanelHelper._panel.CreateSize(availableWidth, finalHeight);
         }
 
         public TSize ArrangeOverride(TSize finalSize)
         {
             Debug.WriteLine($"SuperPanel.ArrangeOverride {finalSize}");
 
-            var pitch = _interstitialPanelHelper._panel.GetWidth(_interstitialPanelHelper._panel.DesiredSize);
-            pitch = 110;
-            var totalHeight = _interstitialPanelHelper._panel.GetHeight(_interstitialPanelHelper._panel.DesiredSize);
-            var finalWidth = _interstitialPanelHelper._panel.GetWidth(finalSize);
-            var sideWidth = (finalWidth - pitch) / 2;
+            var horizontalPitch = _panel.HorizontalPitch;
+            var verticalPitch = _panel.VerticalPitch;
 
-            var top = (_interstitialPanelHelper._panel.GetHeight(finalSize) - totalHeight) / 2;
+            var finalHeight = _panel.GetHeight(_interstitialPanelHelper._panel.DesiredSize);
+            var finalWidth = _panel.GetWidth(finalSize);
+            var sideWidth = (finalWidth - horizontalPitch) / 2;
 
-            _headPanelHelper._panel.Arrange(_interstitialPanelHelper._panel.CreateRect(0, top, sideWidth, totalHeight - pitch));
-            _tailPanelHelper._panel.Arrange(_interstitialPanelHelper._panel.CreateRect(0, top + totalHeight - pitch, sideWidth, pitch));
-            _interstitialPanelHelper._panel.Arrange(_interstitialPanelHelper._panel.CreateRect(sideWidth, top, pitch, totalHeight));
-            _suggestionsPanelHelper._panel.Arrange(_interstitialPanelHelper._panel.CreateRect(sideWidth + pitch, top + pitch / 2, sideWidth, totalHeight - pitch));
+            _headPanelHelper._panel.Arrange(_panel.CreateRect(0, 0, sideWidth, finalHeight - verticalPitch));
+            _tailPanelHelper._panel.Arrange(_panel.CreateRect(0, finalHeight - verticalPitch, sideWidth, verticalPitch));
+            _interstitialPanelHelper._panel.Arrange(_panel.CreateRect(sideWidth, 0, horizontalPitch, finalHeight));
+            _suggestionsPanelHelper._panel.Arrange(_panel.CreateRect(sideWidth + horizontalPitch, verticalPitch / 2.0, sideWidth, finalHeight - verticalPitch));
 
             return finalSize;
         }
@@ -105,7 +104,7 @@ namespace Microsoft.Research.SpeechWriter.UI
                     break;
             }
 
-            var rect = _headPanelHelper._panel.CreateRect(target, control);
+            var rect = _panel.CreateRect(target, control);
 
             return rect;
         }

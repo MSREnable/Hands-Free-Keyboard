@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:coreui="clr-namespace:Microsoft.Research.SpeechWriter.UI.Wpf;assembly=Microsoft.Research.SpeechWriter.UI.Wpf"
+        xmlns:ui="clr-namespace:Microsoft.Research.SpeechWriter.UI.Wpf;assembly=Microsoft.Research.SpeechWriter.UI.Wpf"
         mc:Ignorable="d"
         PreviewKeyDown="OnPreviewKeyDown"
         WindowTitle="SpeechWriter DemoApp WPF">
@@ -97,7 +97,7 @@
     </Page.Resources>
 
     <Grid>
-        <coreui:SuperPanel x:Name="TheHost"/>
+        <ui:SuperPanel x:Name="TheHost" VerticalAlignment="Center"/>
         <Canvas x:Name="TargetPanel">
             <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>
         </Canvas>

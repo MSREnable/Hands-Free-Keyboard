@@ -16,7 +16,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
 namespace Microsoft.Research.SpeechWriter.UI.Wpf
 #endif
 {
-    public class ApplicationPanel : Panel, IApplicationPanel<FrameworkElement, Size, Rect>
+    public class ApplicationPanel : BasePanel, IApplicationPanel<FrameworkElement, Size, Rect>
     {
         private readonly ApplicationPanelHelper<FrameworkElement, Size, Rect> _helper;
 
@@ -83,39 +83,6 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
         void IApplicationPanel<FrameworkElement, Size, Rect>.DeleteControl(FrameworkElement control)
         {
             Children.Remove(control);
-        }
-
-        Size IApplicationPanel<FrameworkElement, Size, Rect>.CreateSize(double width, double height)
-        {
-            return new Size(width, height);
-        }
-
-        double IApplicationPanel<FrameworkElement, Size, Rect>.GetWidth(Size size)
-        {
-            return size.Width;
-        }
-
-        double IApplicationPanel<FrameworkElement, Size, Rect>.GetHeight(Size size)
-        {
-            return size.Height;
-        }
-
-        Rect IApplicationPanel<FrameworkElement, Size, Rect>.CreateRect(double x, double y, Size size)
-        {
-            return new Rect(x, y, size.Width, size.Height);
-        }
-
-        Rect IApplicationPanel<FrameworkElement, Size, Rect>.CreateRect(double x, double y, double width, double height)
-        {
-            return new Rect(x, y, width, height);
-        }
-
-        Rect IApplicationPanel<FrameworkElement, Size, Rect>.CreateRect(FrameworkElement parent, FrameworkElement control)
-        {
-            var transform = control.TransformToVisual(parent);
-            var sourceRect = new Rect(new Point(0, 0), new Point(control.ActualWidth, control.ActualHeight));
-            var targetRect = transform.TransformBounds(sourceRect);
-            return targetRect;
         }
     }
 }

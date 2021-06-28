@@ -15,10 +15,14 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
 namespace Microsoft.Research.SpeechWriter.UI.Wpf
 #endif
 {
-    public class SuperPanel : Panel, ISuperPanel<FrameworkElement, Size, Rect>
+    public class SuperPanel : BasePanel, ISuperPanel<FrameworkElement, Size, Rect>
     {
         public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(ApplicationModel), typeof(SuperPanel),
             new PropertyMetadata(null, OnModelChanged));
+        public static readonly DependencyProperty HorizontalPitchProperty = DependencyProperty.Register(nameof(HorizontalPitch), typeof(double), typeof(SuperPanel),
+            new PropertyMetadata(110.0));
+        public static readonly DependencyProperty VerticalPitchProperty = DependencyProperty.Register(nameof(VerticalPitch), typeof(double), typeof(SuperPanel),
+            new PropertyMetadata(110.0));
 
         private readonly SuperPanelHelper<FrameworkElement, Size, Rect> _helper;
 
@@ -43,6 +47,18 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
         {
             get => (ApplicationModel)GetValue(ModelProperty);
             set => SetValue(ModelProperty, value);
+        }
+
+        public double HorizontalPitch
+        {
+            get => (double)GetValue(HorizontalPitchProperty);
+            set => SetValue(HorizontalPitchProperty, value);
+        }
+
+        public double VerticalPitch
+        {
+            get => (double)GetValue(VerticalPitchProperty);
+            set => SetValue(VerticalPitchProperty, value);
         }
 
         private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
