@@ -9,14 +9,12 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
-        private readonly SuperPanelHelper<TControl, TSize, TRect> _superPanel;
         private readonly ReadOnlyObservableCollection<T> _list;
         internal List<TControl> _controls;
 
-        internal LayoutHelper(SuperPanelHelper<TControl, TSize, TRect> superPanel, ReadOnlyObservableCollection<T> list)
-            : base(superPanel)
+        internal LayoutHelper(SuperPanelHelper<TControl, TSize, TRect> superHelper, ReadOnlyObservableCollection<T> list)
+            : base(superHelper)
         {
-            _superPanel = superPanel;
             _list = list;
             _controls = CreateControls(list);
 

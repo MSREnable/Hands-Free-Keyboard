@@ -118,6 +118,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal ITile LastTile => _wordSource.LastTile;
 
         /// <summary>
+        /// The index of the selected item.
+        /// </summary>
+        public int SelectedHeadIndex => _wordSource.SelectedIndex;
+
+        /// <summary>
         /// Event occurring afer every model update.
         /// </summary>
         public event EventHandler<ApplicationModelUpdateEventArgs> ApplicationModelUpdate;

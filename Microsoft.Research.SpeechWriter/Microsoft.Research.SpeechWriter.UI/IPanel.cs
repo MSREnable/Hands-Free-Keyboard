@@ -6,12 +6,15 @@
         where TRect : struct
     {
         double GetWidth(TSize size);
-
         double GetHeight(TSize size);
-
         TSize CreateSize(double width, double height);
 
-        TRect CreateRect(TControl parent, TControl control);
+        double GetX(TRect rect);
+        double GetY(TRect rect);
+        double GetWidth(TRect rect);
+        double GetHeight(TRect rect);
         TRect CreateRect(double x, double y, double width, double height);
+
+        TRect GetControlRect(TControl parent, TControl control);
     }
 }

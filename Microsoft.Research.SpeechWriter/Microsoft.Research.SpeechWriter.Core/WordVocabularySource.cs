@@ -73,6 +73,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             ParanoidAssertValid();
         }
 
+        internal int SelectedIndex => _selectedIndex;
+
         internal SpellingVocabularySource SpellingSource => _spellingSource;
 
         /// <summary>

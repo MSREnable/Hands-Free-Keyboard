@@ -7,9 +7,9 @@
     {
         internal readonly IApplicationPanel<TControl, TSize, TRect> _panel;
 
-        public ApplicationPanelHelper(SuperPanelHelper<TControl, TSize, TRect> helper)
+        public ApplicationPanelHelper(SuperPanelHelper<TControl, TSize, TRect> superHelper)
         {
-            _panel = helper.CreateChild(this);
+            _panel = superHelper.CreateChild(this);
         }
 
         public TSize MeasureOverride(TSize availableSize)

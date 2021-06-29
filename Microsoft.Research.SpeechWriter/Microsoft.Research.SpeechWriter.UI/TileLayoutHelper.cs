@@ -9,9 +9,9 @@ namespace Microsoft.Research.SpeechWriter.UI
         where TSize : struct
         where TRect : struct
     {
-        internal TileLayoutHelper(SuperPanelHelper<TControl, TSize, TRect> panel,
+        internal TileLayoutHelper(SuperPanelHelper<TControl, TSize, TRect> superHelper,
             ReadOnlyObservableCollection<ITile> list)
-            : base(panel, list)
+            : base(superHelper, list)
         {
         }
 

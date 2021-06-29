@@ -12,6 +12,8 @@ namespace Microsoft.Research.SpeechWriter.UI
     {
         private readonly ISuperPanel<TControl, TSize, TRect> _panel;
 
+        private ApplicationModel _model;
+
         private HeadTileLayoutHelper<TControl, TSize, TRect> _headPanelHelper;
         private TailTileLayoutHelper<TControl, TSize, TRect> _tailPanelHelper;
         private InterstitialTileLayoutHelper<TControl, TSize, TRect> _interstitialPanelHelper;
@@ -22,8 +24,16 @@ namespace Microsoft.Research.SpeechWriter.UI
             _panel = panel;
         }
 
+        internal double HorizontalPitch => _panel.HorizontalPitch;
+
+        internal double VerticalPitch => _panel.VerticalPitch;
+
+        internal int SelectedHeadIndex => _model.SelectedHeadIndex;
+
         public void SetModel(ApplicationModel model)
         {
+            _model = model;
+
             if (model != null)
             {
                 _panel.ResetChildren();
@@ -104,7 +114,7 @@ namespace Microsoft.Research.SpeechWriter.UI
                     break;
             }
 
-            var rect = _panel.CreateRect(target, control);
+            var rect = _panel.GetControlRect(target, control);
 
             return rect;
         }
