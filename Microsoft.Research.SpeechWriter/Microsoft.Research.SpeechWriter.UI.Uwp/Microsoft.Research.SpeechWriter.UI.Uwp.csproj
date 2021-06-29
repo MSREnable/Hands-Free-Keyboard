@@ -129,6 +129,9 @@
     <Compile Include="..\Microsoft.Research.SpeechWriter.UI.Wpf\SuperPanel.cs">
       <Link>SuperPanel.cs</Link>
     </Compile>
+    <Compile Include="ButtonResourceHelper.xaml.cs">
+      <DependentUpon>ButtonResourceHelper.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringFormatter.cs" />
     <Compile Include="TileButton.xaml.cs">
@@ -155,6 +158,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="ButtonResourceHelper.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TileButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

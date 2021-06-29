@@ -1,6 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Items;
-using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -12,6 +11,8 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
     {
         public static readonly DependencyProperty ItemProperty = DependencyProperty.Register(nameof(Item), typeof(ITile), typeof(TileButton),
             new PropertyMetadata(null, OnItemChanged));
+
+        private static ButtonResourceHelper _helper = new ButtonResourceHelper();
 
         public TileButton()
         {
@@ -42,24 +43,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
                 Opacity = 1.0;
             }
 
-            var typeName = value.GetType().Name;
-
-            var resources = (IEnumerable<KeyValuePair<object, object>>)Resources;
-
-            using (var enumerator = resources.GetEnumerator())
-            {
-                DataTemplate template = null;
-
-                while (template == null && enumerator.MoveNext())
-                {
-                    if (Equals(enumerator.Current.Key, typeName))
-                    {
-                        template = enumerator.Current.Value as DataTemplate;
-                    }
-                }
-
-                TheButton.ContentTemplate = template;
-            }
+            TheButton.ContentTemplate = _helper.GetTemplate(value);
         }
 
         private static void OnItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
