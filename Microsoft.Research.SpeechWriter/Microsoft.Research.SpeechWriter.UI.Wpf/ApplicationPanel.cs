@@ -19,6 +19,8 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
     {
         private readonly ApplicationPanelHelper<FrameworkElement, Size, Rect> _helper;
 
+        private readonly Queue<TileButton> _buttons = new Queue<TileButton>();
+
         public ApplicationPanel(ApplicationPanelHelper<FrameworkElement, Size, Rect> helper)
         {
             _helper = helper;
@@ -54,7 +56,18 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
 
         FrameworkElement IApplicationPanel<FrameworkElement, Size, Rect>.CreateControl(ITile tile)
         {
-            var button = new TileButton { Item = tile };
+            TileButton button;
+
+            if (_buttons.Count == 0)
+            {
+                button = new TileButton();
+            }
+            else
+            {
+                button = _buttons.Dequeue();
+            }
+
+            button.Item = tile;
             Children.Add(button);
             return button;
         }
@@ -77,6 +90,8 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
         void IApplicationPanel<FrameworkElement, Size, Rect>.DeleteControl(FrameworkElement control)
         {
             Children.Remove(control);
+
+            _buttons.Enqueue((TileButton)control);
         }
     }
 }
