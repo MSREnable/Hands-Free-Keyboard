@@ -12,7 +12,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
         public static readonly DependencyProperty ItemProperty = DependencyProperty.Register(nameof(Item), typeof(ITile), typeof(TileButton),
             new PropertyMetadata(null, OnItemChanged));
 
-        private static ButtonResourceHelper _helper = new ButtonResourceHelper();
+        private static readonly ButtonResourceHelper _helper = new ButtonResourceHelper();
 
         public TileButton()
         {
