@@ -1,0 +1,136 @@
+﻿<Page
+    x:Class="Microsoft.Research.SpeechWriter.Apps.Uwp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Microsoft.Research.SpeechWriter.Apps.Uwp"
+    xmlns:ui="using:Microsoft.Research.SpeechWriter.UI.Uwp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:lib="using:Microsoft.Research.SpeechWriter.Core.Items"
+    xmlns:gaze="using:Microsoft.Toolkit.Uwp.Input.GazeInteraction"
+    mc:Ignorable="d"
+    gaze:GazeInput.Interaction="Enabled"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+
+        <Storyboard x:Name="MoveRectangle">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Left)">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToX, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSettleTime, Mode=OneWay}" Value="{x:Bind MoveToCenterX, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Top)">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToY, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSettleTime, Mode=OneWay}" Value="{x:Bind MoveToCenterY, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Height)">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToHeight, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSettleTime, Mode=OneWay}" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Width)">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToWidth, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSettleTime, Mode=OneWay}" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Name="TutorMoveStoryboard">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Left)">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToX, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Canvas.Top)">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToY, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Height)">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToHeight, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00.00" EnableDependentAnimation="True" Storyboard.TargetName="TargetOutline" Storyboard.TargetProperty="(Width)">
+                <EasingDoubleKeyFrame KeyTime="{x:Bind MoveRectangeSeekTime, Mode=OneWay}" Value="{x:Bind MoveToWidth, Mode=OneWay}">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+    </Page.Resources>
+
+    <Grid>
+        <ui:SuperPanel x:Name="TheHost" VerticalAlignment="Center"/>
+
+        <CommandBar Margin="-10000,-10000,0,0">
+            <CommandBar.KeyboardAccelerators>
+                <KeyboardAccelerator Key="Space" Invoked="OnSpace"/>
+                <KeyboardAccelerator Key="NumberPad1" Invoked="OnFrench"/>
+                <KeyboardAccelerator Key="NumberPad2" Invoked="OnSpanish"/>
+                <KeyboardAccelerator Key="NumberPad3" Invoked="OnGerman"/>
+                <KeyboardAccelerator Key="NumberPad4" Invoked="OnThai"/>
+                <KeyboardAccelerator Key="NumberPad5" Invoked="OnPortuguese"/>
+                <KeyboardAccelerator Key="NumberPad6" Invoked="OnItalian"/>
+                <KeyboardAccelerator Key="NumberPad7" Invoked="OnArabic"/>
+                <KeyboardAccelerator Key="NumberPad8" Invoked="OnChinese"/>
+                <KeyboardAccelerator Key="Number1" Invoked="OnFrench"/>
+                <KeyboardAccelerator Key="Number2" Invoked="OnSpanish"/>
+                <KeyboardAccelerator Key="Number3" Invoked="OnGerman"/>
+                <KeyboardAccelerator Key="Number4" Invoked="OnThai"/>
+                <KeyboardAccelerator Key="Number5" Invoked="OnPortuguese"/>
+                <KeyboardAccelerator Key="Number6" Invoked="OnItalian"/>
+                <KeyboardAccelerator Key="Number7" Invoked="OnArabic"/>
+                <KeyboardAccelerator Key="Number8" Invoked="OnChinese"/>
+            </CommandBar.KeyboardAccelerators>
+        </CommandBar>
+
+        <MediaElement x:Name="TheMediaElement"/>
+
+        <Canvas x:Name="TargetPanel">
+            <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>
+        </Canvas>
+
+        <Canvas x:Name="SwitchPanel"/>
+
+    </Grid>
+</Page>

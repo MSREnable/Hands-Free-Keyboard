@@ -37,6 +37,7 @@ ipch/
 *.opensdf
 *.sdf
 *.cachefile
+project.lock.json
 
 # =========================
 # Build results
@@ -51,6 +52,7 @@ build/
 bld/
 /*/[Bb]in/
 [Oo]bj/
+Generated Files/
 
 .vs
 .vscode
@@ -78,8 +80,11 @@ bld/
 *.pidb
 *.svclog
 *.scc
+*.xbf
+*.g.cpp
 *.pfx
 
+packages/
 packages/*
 publish/
 apps/Hands-Free-Keyboard/TestResults/
@@ -90,3 +95,8 @@ AppPackages
 secrets.env
 exportsecrets.env
 node_modules/
+/Microsoft.HandsFree.Speaker/Microsoft.HandsFree.Speaker.Models/NarratableCommand.cs
+/Microsoft.HandsFree.Speaker/Microsoft.HandsFree.Speaker.Models/NarratableCommand.cs
+/Microsoft.HandsFree.Speaker/Microsoft.HandsFree.Speaker.VS2015.VC.db
+*.coverage
+/Playground/PeteAnsell.Tile.Library/Microsoft.Research.RankWriter.Library/Microsoft.Research.RankWriter.Library.xml

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.WindowsRuntime" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.UI\Microsoft.Research.SpeechWriter.UI.csproj" />
+    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.csproj" />
+  </ItemGroup>
+
+</Project>
