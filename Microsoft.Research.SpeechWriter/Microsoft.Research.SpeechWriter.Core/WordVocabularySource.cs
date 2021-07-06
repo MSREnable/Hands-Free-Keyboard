@@ -402,8 +402,20 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             ParanoidAssertValid();
 
+            // Find position from which to work backwards to rebirth ghost items.
+            ITile position;
+            if (_selectedIndex == 0 && 
+                !ReferenceEquals(stopTile, _headItems[_headItems.Count - 1]) &&
+                _headItems[_headItems.Count-1] is GhostStopItem)
+            {
+                position = _headItems[_headItems.Count - 1].Predecessor;
+            }
+            else
+            {
+                position = stopTile.Predecessor;
+            }
+
             var wordList = new List<string>();
-            var position = stopTile.Predecessor;
             while (!ReferenceEquals(LastTile, position))
             {
                 wordList.Insert(0, position.Content);
