@@ -15,6 +15,11 @@
         /// </summary>
         public override string Content => ":";
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization(":");
+
         internal override void Execute(UnicodeVocabularySource source)
         {
             source.SetSuggestionsView();

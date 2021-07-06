@@ -23,6 +23,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
             _previous = null;
         }
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization(Tile.Type, Tile.ToTokenString(), TileColor.SuggestionBackground);
+
         internal string[] Words
         {
             get

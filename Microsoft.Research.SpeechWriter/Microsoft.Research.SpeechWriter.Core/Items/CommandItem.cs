@@ -5,7 +5,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
     /// <summary>
     /// Whole word item.
     /// </summary>
-    public class CommandItem : Command<WordVocabularySource>
+    public sealed class CommandItem : Command<WordVocabularySource>
     {
         private readonly TileCommand _command;
 
@@ -29,6 +29,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// The formatted content of the tile.
         /// </summary>
         public override string FormattedContent => _command.ToString();
+
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization(_command.ToString());
 
         internal override void Execute(WordVocabularySource source)
         {

@@ -18,6 +18,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         {
         }
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization(TileVisualizationType.Hidden);
 
         /// <summary>
         /// The basic content of the tile.

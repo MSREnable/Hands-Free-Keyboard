@@ -66,6 +66,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         protected TSource Source => _source;
 
         /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public abstract TileVisualization Visualization { get; }
+
+        /// <summary>
         /// Occurs when changes occur that affect whether or not the command should execute.
         /// </summary>
         public event EventHandler CanExecuteChanged

@@ -13,6 +13,11 @@
             _index = index;
         }
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization("*");
+
         internal override void Execute(SpellingVocabularySource source)
         {
             source.StartSpelling(_index);

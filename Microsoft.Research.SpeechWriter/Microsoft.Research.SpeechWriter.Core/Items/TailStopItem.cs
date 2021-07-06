@@ -12,6 +12,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         {
         }
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization("\xBB;");
+
         internal override void Execute(WordVocabularySource source)
         {
             source.Commit(this);

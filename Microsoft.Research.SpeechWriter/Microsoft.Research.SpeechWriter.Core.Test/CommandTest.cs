@@ -19,6 +19,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             /// </summary>
             public override string Content => "Wibble";
 
+            /// <summary>
+            /// Visualization description.
+            /// </summary>
+            public override TileVisualization Visualization => new TileVisualization("TODO");
+
             internal override void Execute(WordVocabularySource source)
             {
                 Assert.IsNull(source);

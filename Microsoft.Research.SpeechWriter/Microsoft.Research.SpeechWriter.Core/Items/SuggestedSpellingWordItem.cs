@@ -12,6 +12,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         {
         }
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization("TODO");
+
         internal override void Execute(WordVocabularySource source)
         {
             source.AddSuggestedWord(Content);

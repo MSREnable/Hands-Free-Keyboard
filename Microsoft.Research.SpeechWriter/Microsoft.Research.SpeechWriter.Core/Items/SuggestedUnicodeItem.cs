@@ -30,6 +30,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public string Symbol => char.ConvertFromUtf32(Code);
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization("TODO");
+
         internal override void Execute(SpellingVocabularySource source)
         {
             source.AddSymbol(Symbol);

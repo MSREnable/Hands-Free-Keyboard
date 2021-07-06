@@ -34,5 +34,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
                 writer.WriteAttributeString($"W{i}", list[i]);
             }
         }
+
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization(TileVisualizationType.Normal, 
+            new TileVisualizationElement(Tile.Type, Tile.ToTokenString(), TileColor.Text, TileColor.HeadBackground));
     }
 }

@@ -13,6 +13,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         {
         }
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization(Tile.Type, Tile.ToTokenString(), TileColor.HeadBackground);
+
         internal override void Execute(WordVocabularySource source)
         {
             source.TransferSuccessorsToRunOn(this);

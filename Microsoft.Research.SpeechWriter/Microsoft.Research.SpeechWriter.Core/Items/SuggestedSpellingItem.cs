@@ -24,6 +24,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public string Symbol { get; }
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization("TODO");
+
         internal override void Execute(SpellingVocabularySource source)
         {
             source.SetSpellingPrefix(Prefix + Symbol);

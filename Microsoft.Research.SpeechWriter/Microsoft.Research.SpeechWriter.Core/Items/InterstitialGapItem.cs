@@ -24,6 +24,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
             _upperLimit = upperLimit;
         }
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization(":");
+
         internal override void Execute(VocabularySource source)
         {
             _model.SetSuggestionsView(source, _lowerBound, _upperLimit, false);

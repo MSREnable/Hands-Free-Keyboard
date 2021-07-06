@@ -32,6 +32,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public override string Content => "<<";
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization("\xAB;");
+
         internal override void Execute(WordVocabularySource source)
         {
             source.TransferSuccessorsToRunOn(this);

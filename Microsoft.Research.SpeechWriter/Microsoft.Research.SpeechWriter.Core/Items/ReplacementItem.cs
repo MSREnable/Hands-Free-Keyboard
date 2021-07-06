@@ -61,6 +61,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public bool OldIsAttachedToPrevious { get; }
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization("TODO");
+
         internal override void Execute(WordVocabularySource source)
         {
             source.ReplaceLastItem(_replacement);

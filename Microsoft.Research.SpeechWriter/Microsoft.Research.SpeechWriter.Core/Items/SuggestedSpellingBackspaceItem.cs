@@ -18,6 +18,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public string Prefix { get; }
 
+        /// <summary>
+        /// Visualization description.
+        /// </summary>
+        public override TileVisualization Visualization => new TileVisualization("TODO");
+
         internal override void Execute(SpellingVocabularySource source)
         {
             source.SpellingBackspace();
