@@ -35,7 +35,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => new TileVisualization("\xAB;");
+        public override TileVisualization Visualization => new TileVisualization("\xAB");
 
         internal override void Execute(WordVocabularySource source)
         {
