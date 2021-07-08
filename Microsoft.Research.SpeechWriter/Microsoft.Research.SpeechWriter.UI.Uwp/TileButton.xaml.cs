@@ -50,5 +50,10 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
         {
             ((TileButton)d).OnItemChanged(e.NewValue);
         }
+
+        internal void Recycle()
+        {
+            // TODO: Will bring UWP into line with WPF later.
+        }
     }
 }

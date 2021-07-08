@@ -1,5 +1,6 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
 using Microsoft.Research.SpeechWriter.Core.Data;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -31,7 +32,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
 
         private void OnItemUpdated(ITile tile)
         {
-            TheStack.Children.Clear();
+            Debug.Assert(TheStack.Children.Count == 0);
 
             TheButton.Command = tile;
 
@@ -51,16 +52,39 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
                 switch (element.Type)
                 {
                     case TileType.Command:
-                        child = new TextControl { VisualizationElement = element };
+                        var textControl = RecyclingFactory<TextControl>.Create();
+                        textControl.VisualizationElement = element;
+                        child = textControl;
                         break;
 
                     default:
-                        child = new TileControl { VisualizationElement = element };
+                        var tileControl = RecyclingFactory.Create<TileControl>();
+                        tileControl.VisualizationElement = element;
+                        child = tileControl;
                         break;
                 }
 
                 TheStack.Children.Add(child);
             }
+        }
+
+        internal void Recycle()
+        {
+            foreach (var child in TheStack.Children)
+            {
+                var tileControl = child as TileControl;
+                if (tileControl != null)
+                {
+                    RecyclingFactory.Recycle(tileControl);
+                }
+                else
+                {
+                    RecyclingFactory.Recycle((TextControl)child);
+                }
+            }
+            TheStack.Children.Clear();
+
+            RecyclingFactory.Recycle(this);
         }
     }
 }
