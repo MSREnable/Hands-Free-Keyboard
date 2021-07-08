@@ -22,7 +22,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             /// <summary>
             /// Visualization description.
             /// </summary>
-            public override TileVisualization Visualization => new TileVisualization("TODO");
+            public override TileVisualization Visualization => new TileVisualization(this, "TODO");
 
             internal override void Execute(WordVocabularySource source)
             {

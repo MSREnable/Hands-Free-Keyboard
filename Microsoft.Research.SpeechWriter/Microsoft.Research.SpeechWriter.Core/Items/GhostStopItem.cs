@@ -13,6 +13,6 @@
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => new TileVisualization(TileVisualizationType.Ghosted, "\xBB");
+        public override TileVisualization Visualization => new TileVisualization(this, TileVisualizationType.Ghosted, "\xBB");
     }
 }

@@ -16,7 +16,7 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         void ResetControls();
 
-        TControl CreateControl(ITile tile);
+        TControl CreateControl(TileVisualization tile);
 
         TSize GetDesiredSize(TControl control);
 

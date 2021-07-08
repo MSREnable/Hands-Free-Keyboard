@@ -18,7 +18,7 @@
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => new TileVisualization("\xE775");
+        public override TileVisualization Visualization => new TileVisualization(this, "\xE775");
 
         internal override void Execute(UnicodeVocabularySource source)
         {

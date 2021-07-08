@@ -28,7 +28,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => new TileVisualization(TileType.Normal, Symbol, TileColor.Text, TileColor.SuggestionPartBackground);
+        public override TileVisualization Visualization => new TileVisualization(this, TileType.Normal, Symbol, TileColor.Text, TileColor.SuggestionPartBackground);
 
         internal override void Execute(SpellingVocabularySource source)
         {

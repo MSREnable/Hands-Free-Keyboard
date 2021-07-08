@@ -67,7 +67,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// Visualization description.
         /// </summary>
         public override TileVisualization Visualization =>
-            new TileVisualization(new TileVisualizationElement(((HeadWordItem)Predecessor).Tile.Type,
+            new TileVisualization(this, new TileVisualizationElement(((HeadWordItem)Predecessor).Tile.Type,
                 OldUnformattedContent, TileColor.Text, TileColor.HeadBackground),
             new TileVisualizationElement("\x2192"),
             new TileVisualizationElement(Tile.Type, Tile.Content, TileColor.Text, TileColor.HeadBackground));

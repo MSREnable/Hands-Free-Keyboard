@@ -52,7 +52,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             }
         }
 
-        FrameworkElement IApplicationPanel<FrameworkElement, Size, Rect>.CreateControl(ITile tile)
+        FrameworkElement IApplicationPanel<FrameworkElement, Size, Rect>.CreateControl(TileVisualization tile)
         {
             var button = RecyclingFactory.Create<TileButton>();
 

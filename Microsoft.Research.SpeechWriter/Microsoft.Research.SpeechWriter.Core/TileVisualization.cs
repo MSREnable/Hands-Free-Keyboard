@@ -1,6 +1,7 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Data;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -9,39 +10,45 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// </summary>
     public class TileVisualization
     {
-        internal TileVisualization(TileVisualizationType type, params TileVisualizationElement[] elements)
+        internal TileVisualization(ICommand command, TileVisualizationType type, params TileVisualizationElement[] elements)
         {
             Debug.Assert(elements != null);
             Debug.Assert((elements.Length != 0) == (type != TileVisualizationType.Hidden));
 
+            Command = command;
             Type = type;
             Elements = elements;
         }
 
-        internal TileVisualization(TileType type, string text, TileColor foreground, TileColor background)
-            : this(new TileVisualizationElement(type, text, foreground, background))
+        internal TileVisualization(ICommand command, TileType type, string text, TileColor foreground, TileColor background)
+            : this(command, new TileVisualizationElement(type, text, foreground, background))
         {
         }
 
-        internal TileVisualization(params TileVisualizationElement[] elements)
-            : this(TileVisualizationType.Normal, elements)
+        internal TileVisualization(ICommand command, params TileVisualizationElement[] elements)
+            : this(command, TileVisualizationType.Normal, elements)
         {
         }
 
-        internal TileVisualization(TileType type, string text, TileColor background)
-            : this(new TileVisualizationElement(type, text, TileColor.Text, background))
+        internal TileVisualization(ICommand command, TileType type, string text, TileColor background)
+            : this(command, new TileVisualizationElement(type, text, TileColor.Text, background))
         {
         }
 
-        internal TileVisualization(string text)
-            : this(new TileVisualizationElement(text))
+        internal TileVisualization(ICommand command, string text)
+            : this(command, new TileVisualizationElement(text))
         {
         }
 
-        internal TileVisualization(TileVisualizationType type, string text)
-            : this(type, new TileVisualizationElement(text))
+        internal TileVisualization(ICommand command, TileVisualizationType type, string text)
+            : this(command, type, new TileVisualizationElement(text))
         {
         }
+
+        /// <summary>
+        /// The associated command.
+        /// </summary>
+        public ICommand Command { get; }
 
         /// <summary>
         /// Is tile to be rendered as disabled to indicate it is ghosted, hidden or as a normal tile.

@@ -33,7 +33,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => new TileVisualization(_command.ToString());
+        public override TileVisualization Visualization => new TileVisualization(this, _command.ToString());
 
         internal override void Execute(WordVocabularySource source)
         {

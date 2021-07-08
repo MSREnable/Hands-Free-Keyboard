@@ -16,7 +16,7 @@
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => new TileVisualization("*");
+        public override TileVisualization Visualization => new TileVisualization(this, "*");
 
         internal override void Execute(SpellingVocabularySource source)
         {

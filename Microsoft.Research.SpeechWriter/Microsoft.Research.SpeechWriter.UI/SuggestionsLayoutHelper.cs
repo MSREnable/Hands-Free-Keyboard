@@ -27,7 +27,7 @@ namespace Microsoft.Research.SpeechWriter.UI
 
                     foreach (var item in list[startIndex + i])
                     {
-                        var control = _panel.CreateControl(item);
+                        var control = _panel.CreateControl(item.Visualization);
                         _controls.Add(control);
                         subGroupedControls.Add(control);
                     }
@@ -52,7 +52,7 @@ namespace Microsoft.Research.SpeechWriter.UI
 
                 foreach (var item in subList)
                 {
-                    var control = _panel.CreateControl(item);
+                    var control = _panel.CreateControl(item.Visualization);
                     controls.Add(control);
                     subGroupedControls.Add(control);
                 }

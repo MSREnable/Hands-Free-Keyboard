@@ -22,7 +22,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => new TileVisualization(TileType.Command, Prefix, TileColor.GrayText, TileColor.None);
+        public override TileVisualization Visualization => new TileVisualization(this, TileType.Command, Prefix, TileColor.GrayText, TileColor.None);
 
         internal override void Execute(SpellingVocabularySource source)
         {

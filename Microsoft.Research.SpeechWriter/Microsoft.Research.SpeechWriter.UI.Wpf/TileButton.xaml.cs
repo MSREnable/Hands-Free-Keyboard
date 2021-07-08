@@ -11,7 +11,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
     /// </summary>
     public partial class TileButton : UserControl
     {
-        public static readonly DependencyProperty ItemProperty = DependencyProperty.Register(nameof(Item), typeof(ITile), typeof(TileButton),
+        public static readonly DependencyProperty ItemProperty = DependencyProperty.Register(nameof(Item), typeof(TileVisualization), typeof(TileButton),
             new PropertyMetadata(null, OnItemUpdated));
 
         public TileButton()
@@ -19,24 +19,24 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             InitializeComponent();
         }
 
-        public ITile Item
+        public TileVisualization Item
         {
-            get => (ITile)GetValue(ItemProperty);
+            get => (TileVisualization)GetValue(ItemProperty);
             set => SetValue(ItemProperty, value);
         }
 
         private static void OnItemUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((TileButton)d).OnItemUpdated((ITile)e.NewValue);
+            ((TileButton)d).OnItemUpdated((TileVisualization)e.NewValue);
         }
 
-        private void OnItemUpdated(ITile tile)
+        private void OnItemUpdated(TileVisualization tile)
         {
             Debug.Assert(TheStack.Children.Count == 0);
 
-            TheButton.Command = tile;
+            TheButton.Command = tile.Command;
 
-            var visualization = tile.Visualization;
+            var visualization = tile;
 
             switch (visualization.Type)
             {

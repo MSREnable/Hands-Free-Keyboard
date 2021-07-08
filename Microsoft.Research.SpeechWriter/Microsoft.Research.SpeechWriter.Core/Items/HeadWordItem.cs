@@ -16,7 +16,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => new TileVisualization(Tile.Type, FormattedContent, TileColor.HeadBackground);
+        public override TileVisualization Visualization => new TileVisualization(this, Tile.Type, FormattedContent, TileColor.HeadBackground);
 
         internal override void Execute(WordVocabularySource source)
         {

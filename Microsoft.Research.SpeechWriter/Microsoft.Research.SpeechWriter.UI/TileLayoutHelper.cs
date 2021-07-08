@@ -21,7 +21,7 @@ namespace Microsoft.Research.SpeechWriter.UI
             {
                 for (var i = 0; i < count; i++)
                 {
-                    var control = _panel.CreateControl(list[startIndex + i]);
+                    var control = _panel.CreateControl(list[startIndex + i].Visualization);
                     _controls.Add(control);
                 }
             }
@@ -46,7 +46,7 @@ namespace Microsoft.Research.SpeechWriter.UI
             for (var i = 0; i < count; i++)
             {
                 var oldControl = _controls[startIndex + i];
-                var newControl = _panel.CreateControl(list[startIndex + i]);
+                var newControl = _panel.CreateControl(list[startIndex + i].Visualization);
 
                 _controls[startIndex + i] = newControl;
                 _panel.DeleteControl(oldControl);
@@ -59,7 +59,7 @@ namespace Microsoft.Research.SpeechWriter.UI
 
             foreach (var item in list)
             {
-                var control = _panel.CreateControl(item);
+                var control = _panel.CreateControl(item.Visualization);
                 controls.Add(control);
             }
 
