@@ -129,13 +129,14 @@
     <Compile Include="..\Microsoft.Research.SpeechWriter.UI.Wpf\SuperPanel.cs">
       <Link>SuperPanel.cs</Link>
     </Compile>
-    <Compile Include="ButtonResourceHelper.xaml.cs">
-      <DependentUpon>ButtonResourceHelper.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="ColorHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringFormatter.cs" />
     <Compile Include="TileButton.xaml.cs">
       <DependentUpon>TileButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextControl.xaml.cs">
+      <DependentUpon>TextControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="TileControl.xaml.cs">
       <DependentUpon>TileControl.xaml</DependentUpon>
@@ -148,6 +149,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Research.SpeechWriter.Core.Data\Microsoft.Research.SpeechWriter.Core.Data.csproj">
+      <Project>{74414063-0447-4815-A4A0-3ED6CB49A2F3}</Project>
+      <Name>Microsoft.Research.SpeechWriter.Core.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Microsoft.Research.SpeechWriter.UI\Microsoft.Research.SpeechWriter.UI.csproj">
       <Project>{de2241ea-da07-4fe1-a5fc-1216533467aa}</Project>
       <Name>Microsoft.Research.SpeechWriter.UI</Name>
@@ -158,13 +163,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ButtonResourceHelper.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="TileButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TextControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="TileControl.xaml">
       <Generator>MSBuild:Compile</Generator>

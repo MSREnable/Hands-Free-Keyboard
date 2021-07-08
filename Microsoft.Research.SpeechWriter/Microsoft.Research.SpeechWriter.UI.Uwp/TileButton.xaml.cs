@@ -1,5 +1,6 @@
 ﻿using Microsoft.Research.SpeechWriter.Core;
-using Microsoft.Research.SpeechWriter.Core.Items;
+using Microsoft.Research.SpeechWriter.Core.Data;
+using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -10,9 +11,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
     public sealed partial class TileButton : UserControl
     {
         public static readonly DependencyProperty ItemProperty = DependencyProperty.Register(nameof(Item), typeof(ITile), typeof(TileButton),
-            new PropertyMetadata(null, OnItemChanged));
-
-        private static readonly ButtonResourceHelper _helper = new ButtonResourceHelper();
+            new PropertyMetadata(null, OnItemUpdated));
 
         public TileButton()
         {
@@ -22,38 +21,69 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
         public ITile Item
         {
             get => (ITile)GetValue(ItemProperty);
-            set
-            {
-                SetValue(ItemProperty, value);
-            }
+            set => SetValue(ItemProperty, value);
         }
 
-        private void OnItemChanged(object value)
+        private static void OnItemUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (value is InterstitialNonItem)
-            {
-                Opacity = 0.0;
-            }
-            else if (value is GhostWordItem || value is GhostStopItem)
-            {
-                Opacity = 0.2;
-            }
-            else
-            {
-                Opacity = 1.0;
-            }
-
-            TheButton.ContentTemplate = _helper.GetTemplate(value);
+            ((TileButton)d).OnItemUpdated((ITile)e.NewValue);
         }
 
-        private static void OnItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private void OnItemUpdated(ITile tile)
         {
-            ((TileButton)d).OnItemChanged(e.NewValue);
+            Debug.Assert(TheStack.Children.Count == 0);
+
+            TheButton.Command = tile;
+
+            var visualization = tile.Visualization;
+
+            switch (visualization.Type)
+            {
+                case TileVisualizationType.Normal: TheButton.Opacity = 1; break;
+                case TileVisualizationType.Ghosted: TheButton.Opacity = 0.2; break;
+                case TileVisualizationType.Hidden: TheButton.Opacity = 0; break;
+            }
+
+            foreach (var element in visualization.Elements)
+            {
+                UIElement child;
+
+                switch (element.Type)
+                {
+                    case TileType.Command:
+                        var textControl = RecyclingFactory<TextControl>.Create();
+                        textControl.VisualizationElement = element;
+                        child = textControl;
+                        break;
+
+                    default:
+                        var tileControl = RecyclingFactory.Create<TileControl>();
+                        tileControl.VisualizationElement = element;
+                        child = tileControl;
+                        break;
+                }
+
+                TheStack.Children.Add(child);
+            }
         }
 
         internal void Recycle()
         {
-            // TODO: Will bring UWP into line with WPF later.
+            foreach (var child in TheStack.Children)
+            {
+                var tileControl = child as TileControl;
+                if (tileControl != null)
+                {
+                    RecyclingFactory.Recycle(tileControl);
+                }
+                else
+                {
+                    RecyclingFactory.Recycle((TextControl)child);
+                }
+            }
+            TheStack.Children.Clear();
+
+            RecyclingFactory.Recycle(this);
         }
     }
 }
