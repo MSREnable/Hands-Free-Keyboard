@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using NUnit.Framework;
 using System;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test

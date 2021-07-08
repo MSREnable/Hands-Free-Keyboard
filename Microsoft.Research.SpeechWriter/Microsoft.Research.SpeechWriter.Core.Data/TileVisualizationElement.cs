@@ -1,13 +1,11 @@
-﻿using Microsoft.Research.SpeechWriter.Core.Data;
-
-namespace Microsoft.Research.SpeechWriter.Core
+﻿namespace Microsoft.Research.SpeechWriter.Core.Data
 {
     /// <summary>
     /// Labelling component of tile visualization.
     /// </summary>
     public class TileVisualizationElement
     {
-        internal TileVisualizationElement(TileType type,
+        public TileVisualizationElement(TileType type,
             string text,
             TileColor foreground,
             TileColor background)
@@ -18,7 +16,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             Background = background;
         }
 
-        internal TileVisualizationElement(string text,
+        public TileVisualizationElement(string text,
             TileColor foreground)
             : this(TileType.Command, text, foreground, TileColor.None)
         {
@@ -28,7 +26,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// 
         /// </summary>
         /// <param name="text"></param>
-        internal TileVisualizationElement(string text)
+        public TileVisualizationElement(string text)
             : this(TileType.Command, text, TileColor.Text, TileColor.None)
         {
         }

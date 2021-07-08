@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Research.SpeechWriter.Core
+﻿namespace Microsoft.Research.SpeechWriter.Core.Data
 {
     /// <summary>
     /// Describes the general tile type.

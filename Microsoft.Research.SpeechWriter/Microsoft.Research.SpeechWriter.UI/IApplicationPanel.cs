@@ -1,4 +1,4 @@
-﻿using Microsoft.Research.SpeechWriter.Core;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
 using System.Collections.Generic;
 
 namespace Microsoft.Research.SpeechWriter.UI

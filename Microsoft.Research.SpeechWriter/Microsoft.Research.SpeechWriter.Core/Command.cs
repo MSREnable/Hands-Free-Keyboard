@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using System;
 
 namespace Microsoft.Research.SpeechWriter.Core.Items
 {

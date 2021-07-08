@@ -1,4 +1,4 @@
-﻿using Microsoft.Research.SpeechWriter.Core;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

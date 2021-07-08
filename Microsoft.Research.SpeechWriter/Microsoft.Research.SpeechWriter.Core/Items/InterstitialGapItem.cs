@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using System.Diagnostics;
 using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core.Items

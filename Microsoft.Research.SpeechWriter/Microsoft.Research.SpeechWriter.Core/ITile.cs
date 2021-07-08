@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using System.Globalization;
 using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core
