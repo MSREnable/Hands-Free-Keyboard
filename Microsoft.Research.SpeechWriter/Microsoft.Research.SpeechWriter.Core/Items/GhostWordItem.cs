@@ -38,7 +38,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => new TileVisualization(TileVisualizationType.Normal, 
-            new TileVisualizationElement(Tile.Type, Tile.ToTokenString(), TileColor.Text, TileColor.HeadBackground));
+        public override TileVisualization Visualization => new TileVisualization(TileVisualizationType.Ghosted,
+            new TileVisualizationElement(Tile.Type, FormattedContent, TileColor.Text, TileColor.GhostBackground));
     }
 }

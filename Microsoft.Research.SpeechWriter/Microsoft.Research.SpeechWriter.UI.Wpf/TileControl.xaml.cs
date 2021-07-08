@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Microsoft.Research.SpeechWriter.Core;
+using Microsoft.Research.SpeechWriter.Core.Data;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Microsoft.Research.SpeechWriter.UI.Wpf
@@ -8,15 +10,10 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
     /// </summary>
     public partial class TileControl : UserControl
     {
-        public static readonly DependencyProperty CaptionProperty = DependencyProperty.Register(nameof(Caption), typeof(string), typeof(TileControl),
-            new PropertyMetadata(null, UpdateBorder));
-        public static readonly DependencyProperty ShowAttachedToPreviousProperty = DependencyProperty.Register(nameof(IsSuffix), typeof(bool), typeof(TileControl),
-            new PropertyMetadata(false, UpdateBorder));
-        public static readonly DependencyProperty ShowAttachedToNextProperty = DependencyProperty.Register(nameof(IsPrefix), typeof(bool), typeof(TileControl),
-            new PropertyMetadata(false, UpdateBorder));
+        public static readonly DependencyProperty VisualizationElementProperty = DependencyProperty.Register(nameof(TileVisualizationElement), typeof(TileVisualizationElement), typeof(TileControl),
+            new PropertyMetadata(null, OnVisualizationElementChanged));
+
         public static readonly DependencyProperty BorderProperty = DependencyProperty.Register(nameof(Border), typeof(Thickness), typeof(TileControl),
-            new PropertyMetadata(new Thickness(1), UpdateBorder));
-        public static readonly DependencyProperty InternalBorderProperty = DependencyProperty.Register(nameof(InternalBorder), typeof(Thickness), typeof(TileControl),
             new PropertyMetadata(new Thickness(1)));
 
         public TileControl()
@@ -24,22 +21,10 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             InitializeComponent();
         }
 
-        public string Caption
+        public TileVisualizationElement VisualizationElement
         {
-            get => (string)GetValue(CaptionProperty);
-            set => SetValue(CaptionProperty, value);
-        }
-
-        public bool IsSuffix
-        {
-            get => (bool)GetValue(ShowAttachedToPreviousProperty);
-            set => SetValue(ShowAttachedToPreviousProperty, value);
-        }
-
-        public bool IsPrefix
-        {
-            get => (bool)GetValue(ShowAttachedToNextProperty);
-            set => SetValue(ShowAttachedToNextProperty, value);
+            get => (TileVisualizationElement)GetValue(VisualizationElementProperty);
+            set => SetValue(VisualizationElementProperty, value);
         }
 
         public Thickness Border
@@ -48,26 +33,20 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
             set => SetValue(BorderProperty, value);
         }
 
-        public Thickness InternalBorder
-        {
-            get => (Thickness)GetValue(InternalBorderProperty);
-            set => SetValue(InternalBorderProperty, value);
-        }
-
-        private void UpdateBorder(DependencyPropertyChangedEventArgs e)
+        private void OnVisualizationElementChanged(TileVisualizationElement element)
         {
             var border = Border;
-            var isSuffix = IsSuffix;
-            var isPrefix = IsPrefix;
-
-            var internalBorder = new Thickness(left: isSuffix ? 0 : border.Left,
-                right: isPrefix ? 0 : border.Right, top: border.Top, bottom: border.Bottom);
-            InternalBorder = internalBorder;
+            var isSuffix = element.Type == TileType.Suffix || element.Type == TileType.Infix;
+            var isPrefix = element.Type == TileType.Prefix || element.Type == TileType.Infix;
+            TheBorder.BorderThickness = new Thickness(left: isSuffix ? 0 : border.Left,
+                right: isPrefix ? 0 : border.Right, top: border.Top, bottom: border.Bottom); ;
+            TheBorder.Background = element.Background.ToBrush();
+            TheTextBlock.Text = element.Text;
         }
 
-        private static void UpdateBorder(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnVisualizationElementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((TileControl)d).UpdateBorder(e);
+            ((TileControl)d).OnVisualizationElementChanged((TileVisualizationElement)e.NewValue);
         }
     }
 }

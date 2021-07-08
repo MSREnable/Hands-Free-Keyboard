@@ -14,11 +14,10 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
     <Grid>
-        <Button MinHeight="100" MinWidth="100" Margin="5" HorizontalAlignment="Center" 
-                Content="{Binding Item, ElementName=TheControl}" 
-                Command="{Binding Item, ElementName=TheControl}"
-                Opacity="{Binding Item, ElementName=TheControl, Converter={StaticResource TemplateOpacityConverter}}" Focusable="False"/>
+        <Button x:Name="TheButton" MinHeight="100" MinWidth="100" Margin="5" HorizontalAlignment="Center">
+            <StackPanel x:Name="TheStack" Orientation="Horizontal"/>
+        </Button>
     </Grid>
 </UserControl>

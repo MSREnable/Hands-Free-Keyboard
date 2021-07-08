@@ -12,7 +12,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             TileColor foreground,
             TileColor background)
         {
-
+            Type = type;
+            Text = text;
+            Foreground = foreground;
+            Background = background;
         }
 
         internal TileVisualizationElement(string text,
@@ -21,6 +24,10 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
         internal TileVisualizationElement(string text)
             : this(TileType.Command, text, TileColor.Text, TileColor.None)
         {

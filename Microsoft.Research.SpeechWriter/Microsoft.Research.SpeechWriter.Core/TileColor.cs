@@ -18,7 +18,7 @@
         /// <summary>
         /// Disabled text color.
         /// </summary>
-        Gray,
+        GrayText,
 
         /// <summary>
         /// Background for head tiles.
@@ -31,8 +31,18 @@
         SuggestionBackground,
 
         /// <summary>
+        /// Background for suggested part tiles.
+        /// </summary>
+        SuggestionPartBackground,
+
+        /// <summary>
         /// Background used
         /// </summary>
-        SymbolBackground
+        SymbolBackground,
+
+        /// <summary>
+        /// Background of ghost word.
+        /// </summary>
+        GhostBackground
     }
 }

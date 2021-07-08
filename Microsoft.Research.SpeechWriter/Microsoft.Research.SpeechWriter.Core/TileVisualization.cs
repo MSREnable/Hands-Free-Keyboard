@@ -38,6 +38,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
         }
 
+        internal TileVisualization(TileVisualizationType type, string text)
+            : this(type, new TileVisualizationElement(text))
+        {
+        }
+
         /// <summary>
         /// Is tile to be rendered as disabled to indicate it is ghosted, hidden or as a normal tile.
         /// </summary>
@@ -46,6 +51,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <summary>
         /// Get the one or more elements that constitute the tile.
         /// </summary>
-        IEnumerable<TileVisualizationElement> Elements { get; }
+        public IEnumerable<TileVisualizationElement> Elements { get; }
     }
 }

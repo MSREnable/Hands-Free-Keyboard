@@ -15,10 +15,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         {
             _replacement = replacement;
 
-            var tile = TileData.FromTokenString(replacement);
-            UnformattedContent = tile.Content;
-            IsAttachedToNext = tile.IsPrefix;
-            IsAttachedToPrevious = tile.IsSuffix;
+            Tile = TileData.FromTokenString(replacement);
+            UnformattedContent = Tile.Content;
+            IsAttachedToNext = Tile.IsPrefix;
+            IsAttachedToPrevious = Tile.IsSuffix;
 
             var oldTile = TileData.FromTokenString(predecessor.Content);
             OldUnformattedContent = oldTile.Content;
@@ -61,10 +61,16 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public bool OldIsAttachedToPrevious { get; }
 
+        private TileData Tile { get; }
+
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => new TileVisualization("TODO");
+        public override TileVisualization Visualization =>
+            new TileVisualization(new TileVisualizationElement(((HeadWordItem)Predecessor).Tile.Type,
+                OldUnformattedContent, TileColor.Text, TileColor.HeadBackground),
+            new TileVisualizationElement("\x2192"),
+            new TileVisualizationElement(Tile.Type, Tile.Content, TileColor.Text, TileColor.HeadBackground));
 
         internal override void Execute(WordVocabularySource source)
         {

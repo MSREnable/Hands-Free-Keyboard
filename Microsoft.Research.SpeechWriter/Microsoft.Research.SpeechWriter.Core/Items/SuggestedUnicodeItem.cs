@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core.Items
 {
@@ -33,7 +34,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => new TileVisualization("TODO");
+        public override TileVisualization Visualization => 
+            new TileVisualization(new TileVisualizationElement(TileType.Command, Prefix, TileColor.GrayText, TileColor.None),
+            new TileVisualizationElement(TileType.Normal, Symbol, TileColor.Text, TileColor.SuggestionPartBackground),
+            new TileVisualizationElement($"&#{Code};"));
 
         internal override void Execute(SpellingVocabularySource source)
         {

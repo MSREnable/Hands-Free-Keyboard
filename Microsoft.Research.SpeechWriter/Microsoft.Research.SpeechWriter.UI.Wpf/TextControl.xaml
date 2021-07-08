@@ -1,5 +1,5 @@
 ﻿<UserControl x:Name="userControl"
-             x:Class="Microsoft.Research.SpeechWriter.UI.Wpf.TileControl"
+             x:Class="Microsoft.Research.SpeechWriter.UI.Wpf.TextControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,7 +7,5 @@
              xmlns:local="clr-namespace:Microsoft.Research.SpeechWriter.UI.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Border x:Name="TheBorder" BorderBrush="Black" Background="{Binding Background, ElementName=userControl}">
-        <TextBlock x:Name="TheTextBlock" FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
-    </Border>
+        <TextBlock x:Name="TheTextBlock"  FontSize="25" FontWeight="Bold" Margin="7,0" Foreground="Black"/>
 </UserControl>

@@ -404,9 +404,9 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             // Find position from which to work backwards to rebirth ghost items.
             ITile position;
-            if (_selectedIndex == 0 && 
+            if (_selectedIndex == 0 &&
                 !ReferenceEquals(stopTile, _headItems[_headItems.Count - 1]) &&
-                _headItems[_headItems.Count-1] is GhostStopItem)
+                _headItems[_headItems.Count - 1] is GhostStopItem)
             {
                 position = _headItems[_headItems.Count - 1].Predecessor;
             }
