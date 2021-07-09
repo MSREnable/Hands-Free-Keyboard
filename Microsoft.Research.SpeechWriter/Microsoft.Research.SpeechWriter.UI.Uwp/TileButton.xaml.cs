@@ -1,5 +1,4 @@
-﻿using Microsoft.Research.SpeechWriter.Core;
-using Microsoft.Research.SpeechWriter.Core.Data;
+﻿using Microsoft.Research.SpeechWriter.Core.Data;
 using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

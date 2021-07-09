@@ -1,8 +1,17 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Data;
 using System.Diagnostics;
+#if WINDOWS_UWP
+using Windows.UI;
+using Windows.UI.Xaml.Media;
+#else
 using System.Windows.Media;
+#endif
 
+#if WINDOWS_UWP
+namespace Microsoft.Research.SpeechWriter.UI.Uwp
+#else
 namespace Microsoft.Research.SpeechWriter.UI.Wpf
+#endif
 {
     public static class ColorHelper
     {

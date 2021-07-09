@@ -34,7 +34,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// Visualization description.
         /// </summary>
-        public override TileVisualization Visualization => 
+        public override TileVisualization Visualization =>
             new TileVisualization(this, new TileVisualizationElement(TileType.Command, Prefix, TileColor.GrayText, TileColor.None),
             new TileVisualizationElement(TileType.Normal, Symbol, TileColor.Text, TileColor.SuggestionPartBackground),
             new TileVisualizationElement($"&#{Code};"));

@@ -126,10 +126,12 @@
     <Compile Include="..\Microsoft.Research.SpeechWriter.UI.Wpf\BasePanel.cs">
       <Link>BasePanel.cs</Link>
     </Compile>
+    <Compile Include="..\Microsoft.Research.SpeechWriter.UI.Wpf\ColorHelper.cs">
+      <Link>ColorHelper.cs</Link>
+    </Compile>
     <Compile Include="..\Microsoft.Research.SpeechWriter.UI.Wpf\SuperPanel.cs">
       <Link>SuperPanel.cs</Link>
     </Compile>
-    <Compile Include="ColorHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringFormatter.cs" />
     <Compile Include="TileButton.xaml.cs">
