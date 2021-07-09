@@ -28,7 +28,7 @@ namespace EditBoxPrototype
             ItemsContainer.Items.Clear();
             foreach (var child in sequence)
             {
-                ItemsContainer.Items.Add(child);
+                ItemsContainer.Items.Add(new TileVisualizationElement(child.Type, child.Content, TileColor.Text, TileColor.HeadBackground));
             }
         }
 
@@ -44,14 +44,14 @@ namespace EditBoxPrototype
 
             Debug.WriteLine($"Selection is {start} for {length}");
 
-            var list = new List<TileData>();
+            var list = new List<TileVisualizationElement>();
 
             var charPosition = 0;
             var tilePosition = 0;
             while (tilePosition < sequence.Count &&
                 charPosition + sequence[tilePosition].Content.Length <= start)
             {
-                list.Add(sequence[tilePosition]);
+                list.Add(new TileVisualizationElement(sequence[tilePosition].Type, sequence[tilePosition].Content, TileColor.Text, TileColor.HeadBackground));
 
                 charPosition += sequence[tilePosition].Content.Length;
                 tilePosition++;
@@ -75,28 +75,28 @@ namespace EditBoxPrototype
                         var prefix = TileData.Create(tile.Content.Substring(0, start - charPosition),
                             isPrefix: true,
                             isSuffix: tile.IsSuffix);
-                        list.Add(prefix);
+                        list.Add(new TileVisualizationElement(prefix.Type, prefix.Content, TileColor.Text, TileColor.HeadBackground));
 
                         var caret = TileData.Create("^");
-                        list.Add(caret);
+                        list.Add(new TileVisualizationElement(caret.Type, caret.Content, TileColor.Text, TileColor.SuggestionPartBackground));
 
                         var suffix = TileData.Create(tile.Content.Substring(start - charPosition),
                             isPrefix: tile.IsPrefix,
                             isSuffix: true);
-                        list.Add(suffix);
+                        list.Add(new TileVisualizationElement(suffix.Type, suffix.Content, TileColor.Text, TileColor.HeadBackground));
                     }
                     else
                     {
                         var caret = TileData.Create("^",
                             isPrefix: start == charPosition,
                             isSuffix: start < charPosition);
-                        list.Add(caret);
+                        list.Add(new TileVisualizationElement(caret.Type, caret.Content, TileColor.Text, TileColor.SuggestionPartBackground));
                     }
                 }
                 else
                 {
                     var caret = TileData.Create("^", isSuffix: true);
-                    list.Add(caret);
+                    list.Add(new TileVisualizationElement(caret.Type, caret.Content, TileColor.Text, TileColor.SuggestionPartBackground));
                 }
             }
             else
@@ -106,7 +106,7 @@ namespace EditBoxPrototype
 
             while (tilePosition < sequence.Count)
             {
-                list.Add(sequence[tilePosition]);
+                list.Add(new TileVisualizationElement(sequence[tilePosition].Type, sequence[tilePosition].Content, TileColor.Text, TileColor.HeadBackground));
                 tilePosition++;
             }
 

@@ -12,7 +12,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
     /// </summary>
     public partial class TextControl : UserControl
     {
-        public static readonly DependencyProperty VisualizationElementProperty = DependencyProperty.Register(nameof(TileVisualizationElement), typeof(TileVisualizationElement), typeof(TextControl),
+        public static readonly DependencyProperty VisualizationElementProperty = DependencyProperty.Register(nameof(VisualizationElement), typeof(TileVisualizationElement), typeof(TextControl),
             new PropertyMetadata(null, OnVisualizationElementChanged));
 
         private static readonly FontFamily _normal = new FontFamily("Segoe UI");

@@ -10,7 +10,7 @@ namespace Microsoft.Research.SpeechWriter.UI.Wpf
     /// </summary>
     public partial class TileControl : UserControl
     {
-        public static readonly DependencyProperty VisualizationElementProperty = DependencyProperty.Register(nameof(TileVisualizationElement), typeof(TileVisualizationElement), typeof(TileControl),
+        public static readonly DependencyProperty VisualizationElementProperty = DependencyProperty.Register(nameof(VisualizationElement), typeof(TileVisualizationElement), typeof(TileControl),
             new PropertyMetadata(null, OnVisualizationElementChanged));
 
         public static readonly DependencyProperty BorderProperty = DependencyProperty.Register(nameof(Border), typeof(Thickness), typeof(TileControl),

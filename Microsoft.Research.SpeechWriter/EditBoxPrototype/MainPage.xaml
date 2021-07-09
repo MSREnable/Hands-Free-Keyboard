@@ -18,8 +18,8 @@
             <Setter Property="Margin" Value="5"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
-        <DataTemplate x:Key="TileData" x:DataType="data:TileData">
-            <coreui:TileControl Background="LightGreen" Caption="{Binding FormattedContent}" IsPrefix="{Binding Tile.IsPrefix}" IsSuffix="{Binding Tile.IsSuffix}"/>
+        <DataTemplate x:Key="TileVisualization" x:DataType="data:TileVisualization">
+            <coreui:TileControl VisualizationElement="{Binding}"/>
         </DataTemplate>
     </Page.Resources>
 
@@ -48,7 +48,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button>
-                            <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" IsPrefix="{Binding IsPrefix}" IsSuffix="{Binding IsSuffix}"/>
+                            <coreui:TileControl VisualizationElement="{Binding}"/>
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -71,7 +71,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button>
-                            <coreui:TileControl Background="LightGreen" Caption="{Binding Content}" IsPrefix="{Binding IsPrefix}" IsSuffix="{Binding IsSuffix}"/>
+                            <coreui:TileControl VisualizationElement="{Binding}"/>
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
