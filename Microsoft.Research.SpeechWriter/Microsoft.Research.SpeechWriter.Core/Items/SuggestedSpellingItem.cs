@@ -32,9 +32,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
             new TileVisualization(this, new TileVisualizationElement(Prefix, TileColor.GrayText),
             new TileVisualizationElement(TileType.Normal, Symbol, TileColor.Text, TileColor.SuggestionPartBackground));
 
-        internal override void Execute(SpellingVocabularySource source)
+        internal override void Execute()
         {
-            source.SetSpellingPrefix(Prefix + Symbol);
+            Source.SetSpellingPrefix(Prefix + Symbol);
         }
 
         internal override void TraceContent(XmlWriter writer)

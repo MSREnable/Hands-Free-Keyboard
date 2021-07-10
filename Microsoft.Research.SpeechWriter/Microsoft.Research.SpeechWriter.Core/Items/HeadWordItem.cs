@@ -19,9 +19,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public override TileVisualization Visualization => new TileVisualization(this, Tile.Type, FormattedContent, TileColor.HeadBackground);
 
-        internal override void Execute(WordVocabularySource source)
+        internal override void Execute()
         {
-            source.TransferSuccessorsToRunOn(this);
+            Source.TransferSuccessorsToRunOn(this);
         }
 
         internal override void TraceContent(XmlWriter writer)

@@ -30,9 +30,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public override TileVisualization Visualization => new TileVisualization(this, ":");
 
-        internal override void Execute(VocabularySource source)
+        internal override void Execute()
         {
-            _model.SetSuggestionsView(source, _lowerBound, _upperLimit, false);
+            _model.SetSuggestionsView(Source, _lowerBound, _upperLimit, false);
         }
 
         internal override void TraceContent(XmlWriter writer)

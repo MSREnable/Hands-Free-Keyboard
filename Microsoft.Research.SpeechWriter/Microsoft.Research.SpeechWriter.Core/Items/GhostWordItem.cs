@@ -14,9 +14,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         {
         }
 
-        internal override void Execute(WordVocabularySource source)
+        internal override void Execute()
         {
-            source.TakeGhostWord(this);
+            Source.TakeGhostWord(this);
         }
 
         internal override void TraceContent(XmlWriter writer)

@@ -6,7 +6,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 {
     public class CommandTest
     {
-        private class TestCommand : Command<WordVocabularySource>
+        private class TestCommand : Command
         {
             internal bool _called;
 
@@ -25,10 +25,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             /// </summary>
             public override TileVisualization Visualization => new TileVisualization(this, "TODO");
 
-            internal override void Execute(WordVocabularySource source)
+            internal override void Execute()
             {
-                Assert.IsNull(source);
-
                 _called = true;
             }
         }

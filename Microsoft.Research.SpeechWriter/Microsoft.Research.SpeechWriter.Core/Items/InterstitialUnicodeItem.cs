@@ -22,9 +22,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public override TileVisualization Visualization => new TileVisualization(this, "\xE775");
 
-        internal override void Execute(UnicodeVocabularySource source)
+        internal override void Execute()
         {
-            source.SetSuggestionsView();
+            Source.SetSuggestionsView();
         }
     }
 }

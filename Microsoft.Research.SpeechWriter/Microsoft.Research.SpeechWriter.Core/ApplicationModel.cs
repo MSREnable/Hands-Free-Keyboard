@@ -333,8 +333,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             await Environment.SaveUtteranceAsync(utteranceString);
         }
 
-        internal void Trace<TSource>(Command<TSource> item)
-            where TSource : VocabularySource
+        internal void Trace(Command item)
         {
             var timestamp = Environment.GetTimestamp();
 

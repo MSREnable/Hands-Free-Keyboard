@@ -6,7 +6,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
     /// <summary>
     /// Non-item for gaps.
     /// </summary>
-    public class InterstitialNonItem : Command<WordVocabularySource>, ICommand
+    public class InterstitialNonItem : Command, ICommand
     {
         internal InterstitialNonItem(ApplicationModel model)
             : base(null, model)
@@ -15,7 +15,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
 
         bool ICommand.CanExecute(object parameter) => false;
 
-        internal override void Execute(WordVocabularySource source)
+        internal override void Execute()
         {
         }
 

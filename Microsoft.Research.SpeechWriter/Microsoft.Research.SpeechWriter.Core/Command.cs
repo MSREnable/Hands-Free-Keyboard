@@ -9,21 +9,10 @@ namespace Microsoft.Research.SpeechWriter.Core
     /// <summary>
     /// Base class for command items.
     /// </summary>
-    public abstract class Command<TSource> : ITile
-        where TSource : VocabularySource
+    public abstract class Command : ITile
     {
         private readonly ITile _predecessor;
         private readonly ApplicationModel _model;
-        private readonly TSource _source;
-
-        internal Command(ITile predecessor, TSource source)
-        {
-            Debug.Assert(source != null);
-
-            _predecessor = predecessor;
-            _model = source.Model;
-            _source = source;
-        }
 
         internal Command(ITile predecessor, ApplicationModel model)
         {
@@ -62,11 +51,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         public virtual string FormattedContent => Content;
 
         /// <summary>
-        /// The source.
-        /// </summary>
-        protected TSource Source => _source;
-
-        /// <summary>
         /// Visualization description.
         /// </summary>
         public abstract TileVisualization Visualization { get; }
@@ -95,19 +79,41 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             _model.Trace(this);
 
-            Execute(_source);
+            Execute();
         }
 
         internal virtual void TraceContent(XmlWriter writer)
         {
         }
 
-        internal abstract void Execute(TSource source);
+        internal abstract void Execute();
 
         /// <summary>
         /// Standard override.
         /// </summary>
         /// <returns></returns>
         public sealed override string ToString() => $"{GetType().Name} - {Content}";
+    }
+
+    /// <summary>
+    /// Base class for command items.
+    /// </summary>
+    public abstract class Command<TSource> : Command
+        where TSource : VocabularySource
+    {
+        private readonly TSource _source;
+
+        internal Command(ITile predecessor, TSource source)
+            : base(predecessor, source.Model)
+        {
+            Debug.Assert(source != null);
+
+            _source = source;
+        }
+
+        /// <summary>
+        /// The source.
+        /// </summary>
+        protected TSource Source => _source;
     }
 }

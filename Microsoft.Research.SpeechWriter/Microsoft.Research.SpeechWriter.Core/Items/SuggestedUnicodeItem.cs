@@ -39,9 +39,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
             new TileVisualizationElement(TileType.Normal, Symbol, TileColor.Text, TileColor.SuggestionPartBackground),
             new TileVisualizationElement($"&#{Code};"));
 
-        internal override void Execute(SpellingVocabularySource source)
+        internal override void Execute()
         {
-            source.AddSymbol(Symbol);
+            Source.AddSymbol(Symbol);
         }
 
         internal override void TraceContent(XmlWriter writer)

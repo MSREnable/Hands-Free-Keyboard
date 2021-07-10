@@ -18,9 +18,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public override TileVisualization Visualization => new TileVisualization(this, "\xBB");
 
-        internal override void Execute(WordVocabularySource source)
+        internal override void Execute()
         {
-            source.Commit(this);
+            Source.Commit(this);
         }
 
         ISuggestionItem ISuggestionItem.GetNextItem(int token)

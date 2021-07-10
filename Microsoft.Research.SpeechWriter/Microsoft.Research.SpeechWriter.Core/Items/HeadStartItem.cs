@@ -38,9 +38,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public override TileVisualization Visualization => new TileVisualization(this, "\xAB");
 
-        internal override void Execute(WordVocabularySource source)
+        internal override void Execute()
         {
-            source.TransferSuccessorsToRunOn(this);
+            Source.TransferSuccessorsToRunOn(this);
         }
     }
 }

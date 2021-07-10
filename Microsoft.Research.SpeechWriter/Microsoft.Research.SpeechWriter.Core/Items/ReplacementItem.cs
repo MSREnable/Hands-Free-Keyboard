@@ -72,9 +72,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
             new TileVisualizationElement("\x2192"),
             new TileVisualizationElement(Tile.Type, Tile.Content, TileColor.Text, TileColor.HeadBackground));
 
-        internal override void Execute(WordVocabularySource source)
+        internal override void Execute()
         {
-            source.ReplaceLastItem(_replacement);
+            Source.ReplaceLastItem(_replacement);
         }
 
         internal override void TraceContent(XmlWriter writer)

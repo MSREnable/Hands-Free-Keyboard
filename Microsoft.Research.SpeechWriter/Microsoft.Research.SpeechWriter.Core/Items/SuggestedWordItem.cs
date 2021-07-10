@@ -50,9 +50,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
             }
         }
 
-        internal override void Execute(WordVocabularySource source)
+        internal override void Execute()
         {
-            source.AddSuggestedSequence(Words);
+            Source.AddSuggestedSequence(Words);
         }
 
         internal override void TraceContent(XmlWriter writer)

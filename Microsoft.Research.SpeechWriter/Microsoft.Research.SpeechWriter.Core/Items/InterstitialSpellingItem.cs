@@ -20,9 +20,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// </summary>
         public override TileVisualization Visualization => new TileVisualization(this, "*");
 
-        internal override void Execute(SpellingVocabularySource source)
+        internal override void Execute()
         {
-            source.StartSpelling(_index);
+            Source.StartSpelling(_index);
         }
 
         /// <summary>
