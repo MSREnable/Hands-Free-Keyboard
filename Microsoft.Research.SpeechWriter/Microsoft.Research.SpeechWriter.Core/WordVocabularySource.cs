@@ -35,8 +35,17 @@ namespace Microsoft.Research.SpeechWriter.Core
                     throw new NotImplementedException();
 
                 case TileCommand.Typing:
-                    var source = new CaseWordVocabularySource(Model, this, (HeadWordItem)LastTile);
-                    source.SetSuggestionsView();
+                    {
+                        var source = new CaseWordVocabularySource(Model, this, (HeadWordItem)LastTile);
+                        source.SetSuggestionsView();
+                    }
+                    break;
+
+                case TileCommand.Code:
+                    {
+                        var source = new CodeVocabularySource(Model);
+                        source.SetSuggestionsView();
+                    }
                     break;
             }
         }
@@ -130,6 +139,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 case TileCommand.Typing:
                     value = LastTile is HeadWordItem;
+                    break;
+
+                case TileCommand.Code:
+                    value = true;
                     break;
 
                 default:

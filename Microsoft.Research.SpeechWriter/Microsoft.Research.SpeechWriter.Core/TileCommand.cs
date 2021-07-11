@@ -8,6 +8,11 @@
         /// <summary>
         /// Alter the case or spacing of the current word.
         /// </summary>
-        Typing
+        Typing,
+
+        /// <summary>
+        /// Numeric code insertion.
+        /// </summary>
+        Code
     }
 }
