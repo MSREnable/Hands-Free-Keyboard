@@ -19,7 +19,7 @@ namespace Microsoft.Research.SpeechWriter.UI
 
         protected override void AddContent(IList<IEnumerable<ITile>> list, int startIndex, int count)
         {
-            if (startIndex == _controls.Count)
+            if (startIndex == _groupedControls.Count)
             {
                 for (var i = 0; i < count; i++)
                 {
