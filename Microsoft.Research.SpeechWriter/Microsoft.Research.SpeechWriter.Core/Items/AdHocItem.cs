@@ -1,20 +1,19 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Data;
 using System;
-using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.Core.Items
 {
     internal class AdHocItem : Command
     {
         internal AdHocItem(ApplicationModel model, string content, TileVisualization visualization)
-            :base(null, model)
+            : base(null, model)
         {
             Content = content;
             Visualization = visualization;
         }
 
-        internal AdHocItem(ApplicationModel model, TileType type, string content)
-            : this(model, content, new TileVisualization((ICommand)null, type, content, TileColor.Text, TileColor.SuggestionBackground))
+        internal AdHocItem(ApplicationModel model, Action action, TileType type, string content)
+            : this(model, content, new TileVisualization(new ActionCommand(action), type, content, TileColor.Text, TileColor.SuggestionBackground))
         {
 
         }

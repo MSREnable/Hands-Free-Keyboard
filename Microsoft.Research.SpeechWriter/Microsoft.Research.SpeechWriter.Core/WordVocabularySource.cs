@@ -43,7 +43,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 case TileCommand.Code:
                     {
-                        var source = new CodeVocabularySource(Model);
+                        var source = new CodeVocabularySource(this);
                         source.SetSuggestionsView();
                     }
                     break;

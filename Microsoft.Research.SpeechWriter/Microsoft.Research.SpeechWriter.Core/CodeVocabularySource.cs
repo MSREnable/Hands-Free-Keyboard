@@ -5,16 +5,25 @@ using System.Collections.Generic;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
-    class CodeVocabularySource : VocabularySource
+    internal class CodeVocabularySource : VocabularySource
     {
-        private string code = string.Empty;
+        private readonly WordVocabularySource _source;
+        private string _code = string.Empty;
 
-        internal CodeVocabularySource(ApplicationModel model)
-            : base(model)
+
+        internal CodeVocabularySource(WordVocabularySource source)
+            : base(source.Model)
         {
+            _source = source;
         }
 
-        internal override int Count => 5;
+        internal override int Count => _code.Length == 0 ? 5 : 6;
+
+        private void SetCode(string code)
+        {
+            _code = code;
+            this.SetSuggestionsView();
+        }
 
         private IEnumerable<ITile> CreateCodes(params string[] labels)
         {
@@ -22,7 +31,9 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             for (var index = 0; index < labels.Length; index++)
             {
-                enumerable[index] = new AdHocItem(Model, TileType.Normal, labels[index]);
+                var code = _code + labels[index];
+                var visualization = new TileVisualization(new ActionCommand(() => SetCode(code)), TileType.Normal, labels[index], TileColor.Text, TileColor.SuggestionPartBackground);
+                enumerable[index] = new AdHocItem(Model, labels[index], visualization);
             }
 
             return enumerable;
@@ -35,8 +46,16 @@ namespace Microsoft.Research.SpeechWriter.Core
             switch (index)
             {
                 case 0:
-                    var prefix = code.Length != 0 ? code.Substring(0, code.Length - 1) : "Enter code";
-                    var item = new AdHocItem(Model, TileType.Command, prefix);
+                    ITile item;
+                    if (_code.Length == 0)
+                    {
+                        item = new AdHocItem(Model, () => { }, TileType.Command, "Enter code");
+                    }
+                    else
+                    {
+                        var prefix = _code.Substring(0, _code.Length - 1);
+                        item = new AdHocItem(Model, () => SetCode(prefix), TileType.Command, prefix);
+                    }
                     enumerable = new ITile[] { item };
                     break;
                 case 1:
@@ -52,7 +71,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                     enumerable = CreateCodes("-", "0", ".");
                     break;
                 default:
-                    enumerable = new ITile[] { new AdHocItem(Model, TileType.Normal, code) };
+                    enumerable = new ITile[] { new SuggestedWordItem(Model.LastTile, _source, _code) };
                     break;
             }
 
