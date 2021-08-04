@@ -38,10 +38,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         {
             var model = CreateModel();
 
-            Assert.AreEqual(0, model.SuggestionLists.Count);
+            Assert.AreEqual(1, model.SuggestionLists.Count);
 
-            Assert.AreEqual(1, model.SuggestionInterstitials.Count);
-            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[0]);
+            Assert.AreEqual(2, model.SuggestionInterstitials.Count);
+            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[1]);
         }
 
         [Test]
@@ -49,16 +49,17 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         {
             var model = CreateModel("X");
 
-            Assert.AreEqual(1, model.SuggestionLists.Count);
-            Assert.AreEqual(1, model.SuggestionLists[0].Count());
-            var tile = model.SuggestionLists[0].First();
+            Assert.AreEqual(2, model.SuggestionLists.Count);
+            Assert.AreEqual(1, model.SuggestionLists[1].Count());
+            var tile = model.SuggestionLists[1].First();
             Assert.IsInstanceOf<SuggestedWordItem>(tile);
             var suggestedWordTile = (SuggestedWordItem)tile;
             Assert.AreEqual("X", suggestedWordTile.FormattedContent);
 
-            Assert.AreEqual(2, model.SuggestionInterstitials.Count);
-            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[0]);
+            Assert.AreEqual(3, model.SuggestionInterstitials.Count);
+            Assert.IsInstanceOf<InterstitialNonItem>(model.SuggestionInterstitials[0]);
             Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[1]);
+            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[2]);
         }
 
         [Test]
@@ -66,16 +67,17 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         {
             var model = CreateModel("X", "x");
 
-            Assert.AreEqual(1, model.SuggestionLists.Count);
-            Assert.AreEqual(1, model.SuggestionLists[0].Count());
-            var tile = model.SuggestionLists[0].First();
+            Assert.AreEqual(2, model.SuggestionLists.Count);
+            Assert.AreEqual(1, model.SuggestionLists[1].Count());
+            var tile = model.SuggestionLists[1].First();
             Assert.IsInstanceOf<SuggestedWordItem>(tile);
             var suggestedWordTile = (SuggestedWordItem)tile;
             Assert.AreEqual("X", suggestedWordTile.FormattedContent);
 
-            Assert.AreEqual(2, model.SuggestionInterstitials.Count);
-            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[0]);
+            Assert.AreEqual(3, model.SuggestionInterstitials.Count);
+            Assert.IsInstanceOf<InterstitialNonItem>(model.SuggestionInterstitials[0]);
             Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[1]);
+            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[2]);
         }
     }
 }

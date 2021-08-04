@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -31,6 +32,8 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <param name="index">The index within the source.</param>
         /// <returns>The suggestions list.</returns>
         internal abstract IEnumerable<ITile> CreateSuggestionList(int index);
+
+        internal virtual ITile GetIndexItemForTrace(int index) => CreateSuggestionList(index).FirstOrDefault();
 
         /// <summary>
         /// Get an item that comes before the specified item and the immediately preceeding item.

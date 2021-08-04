@@ -35,10 +35,26 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
             _model.SetSuggestionsView(Source, _lowerBound, _upperLimit, false);
         }
 
+        private void TraceChild(XmlWriter writer, int index)
+        {
+            var item = (Command)Source.GetIndexItemForTrace(index);
+            if (item != null)
+            {
+                var type = item.GetType();
+                var name = type.Name;
+                writer.WriteStartElement(name);
+                item.TraceContent(writer);
+                writer.WriteEndElement();
+            }
+        }
+
         internal override void TraceContent(XmlWriter writer)
         {
             writer.WriteAttributeString(nameof(_lowerBound), _lowerBound.ToString());
             writer.WriteAttributeString(nameof(_upperLimit), _upperLimit.ToString());
+
+            TraceChild(writer, _lowerBound);
+            TraceChild(writer, _upperLimit - 1);
         }
 
         /// <summary>

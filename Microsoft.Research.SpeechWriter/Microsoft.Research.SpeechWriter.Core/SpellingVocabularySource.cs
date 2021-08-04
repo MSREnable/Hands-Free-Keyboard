@@ -249,6 +249,28 @@ namespace Microsoft.Research.SpeechWriter.Core
             return item;
         }
 
+        internal override ITile GetIndexItemForTrace(int index)
+        {
+            var token = GetIndexToken(index);
+
+            ISuggestionItem item;
+
+            switch (token)
+            {
+                case -1:
+                    item = new SuggestedSpellingBackspaceItem(Model.LastTile, this, Prefix);
+                    break;
+                case -2:
+                    item = string.IsNullOrWhiteSpace(Prefix) ? null : _wordVocabularySource.CreateSuggestedSpellingWordItem(Prefix);
+                    break;
+                default:
+                    item = token == 0 ? null : new SuggestedSpellingItem(Model.LastTile, this, Prefix, char.ConvertFromUtf32(token));
+                    break;
+            }
+
+            return item;
+        }
+
         internal ISuggestionItem GetNextItem(ITile predecessor, string prefix, int token)
         {
             ISuggestionItem item;

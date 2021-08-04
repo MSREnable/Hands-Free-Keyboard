@@ -48,6 +48,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// <summary>
         /// The formatted content of the tile.
         /// </summary>
-        public override string FormattedContent => IsCased && !IsCasedSuccessor ? Culture.TextInfo.ToTitleCase(UnformattedContent) : UnformattedContent;
+        public override string FormattedContent => GetCaseTreatedString(UnformattedContent);
+
+        internal string GetCaseTreatedString(string content) => IsCased && !IsCasedSuccessor ? Culture.TextInfo.ToTitleCase(content) : content;
     }
 }

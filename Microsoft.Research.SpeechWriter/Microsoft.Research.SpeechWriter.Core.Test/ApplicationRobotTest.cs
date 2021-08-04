@@ -171,7 +171,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                 }
 
                 var item = action.GetItem(model);
-                //if (item is InterstitialNonItem)
+                if (item is InterstitialNonItem)
                 {
                     Assert.IsNotInstanceOf<InterstitialNonItem>(item, "Should never click on a non-item");
                 }
@@ -285,13 +285,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("this is the dawning of the age of aquarius", 33, 1, 117, 90);
+            MultiTest("this is the dawning of the age of aquarius", 34, 1, 117, 92);
         }
 
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("the quick brown fox jumps over a lazy dog", 39, 1, 186, 93);
+            MultiTest("the quick brown fox jumps over a lazy dog", 40, 1, 186, 96);
         }
 
         [Test]
@@ -304,13 +304,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("izzy wizzy lets get busy", 31, 1, 77, 105);
+            MultiTest("izzy wizzy lets get busy", 30, 1, 77, 104);
         }
 
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 94, 1, 65, 512);
+            MultiTest("공유하 고 즐기십시오", 94, 1, 65, 498);
         }
 
         [Test]
@@ -322,13 +322,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 140, 1, 94, 578);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 140, 1, 94, 619);
         }
 
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 33, 1, 103, 140);
+            MultiTest("That'll be $10, please!", 34, 1, 104, 136);
         }
 
         [Test]
@@ -479,7 +479,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public async Task ShareAndEnjoyPersistance()
         {
-            await CheckRecallAsync("share and enjoy, share and enjoy, journey though life with a plastic boy, or girl by your side", 61, 5);
+            await CheckRecallAsync("share and enjoy, share and enjoy, journey though life with a plastic boy, or girl by your side", 63, 5);
         }
 
         [Test]
@@ -507,46 +507,46 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             {
                 "<InterstitialSpellingItem TS=\"2000-01-01T00:00:01.0000000+00:00\" />",
                 "<InterstitialUnicodeItem TS=\"2000-01-01T00:00:03.0000000+00:00\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:05.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:07.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:09.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:05.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\"><SuggestedUnicodeItem Prefix=\"\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"\" Code=\"3320\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:07.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\"><SuggestedUnicodeItem Prefix=\"\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"\" Code=\"202\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:09.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\"><SuggestedUnicodeItem Prefix=\"\" Code=\"95\" /><SuggestedUnicodeItem Prefix=\"\" Code=\"114\" /></InterstitialGapItem>",
                 "<SuggestedUnicodeItem TS=\"2000-01-01T00:00:11.0000000+00:00\" Prefix=\"\" Code=\"104\" />",
                 "<InterstitialUnicodeItem TS=\"2000-01-01T00:00:13.0000000+00:00\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:15.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:17.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:19.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:21.0000000+00:00\" _lowerBound=\"65\" _upperLimit=\"73\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:15.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\"><SuggestedUnicodeItem Prefix=\"h\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"h\" Code=\"3320\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:17.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\"><SuggestedUnicodeItem Prefix=\"h\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"h\" Code=\"202\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:19.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\"><SuggestedUnicodeItem Prefix=\"h\" Code=\"95\" /><SuggestedUnicodeItem Prefix=\"h\" Code=\"114\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:21.0000000+00:00\" _lowerBound=\"65\" _upperLimit=\"73\"><SuggestedUnicodeItem Prefix=\"h\" Code=\"98\" /><SuggestedUnicodeItem Prefix=\"h\" Code=\"105\" /></InterstitialGapItem>",
                 "<SuggestedUnicodeItem TS=\"2000-01-01T00:00:23.0000000+00:00\" Prefix=\"h\" Code=\"101\" />",
                 "<InterstitialUnicodeItem TS=\"2000-01-01T00:00:25.0000000+00:00\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:27.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:29.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:31.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:27.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\"><SuggestedUnicodeItem Prefix=\"he\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"he\" Code=\"3320\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:29.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\"><SuggestedUnicodeItem Prefix=\"he\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"he\" Code=\"202\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:31.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\"><SuggestedUnicodeItem Prefix=\"he\" Code=\"95\" /><SuggestedUnicodeItem Prefix=\"he\" Code=\"114\" /></InterstitialGapItem>",
                 "<SuggestedUnicodeItem TS=\"2000-01-01T00:00:33.0000000+00:00\" Prefix=\"he\" Code=\"108\" />",
                 "<SuggestedSpellingItem TS=\"2000-01-01T00:00:35.0000000+00:00\" Prefix=\"hel\" Symbol=\"l\" />",
                 "<InterstitialUnicodeItem TS=\"2000-01-01T00:00:37.0000000+00:00\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:39.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:41.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:43.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:39.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\"><SuggestedUnicodeItem Prefix=\"hell\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"hell\" Code=\"3320\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:41.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\"><SuggestedUnicodeItem Prefix=\"hell\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"hell\" Code=\"202\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:43.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\"><SuggestedUnicodeItem Prefix=\"hell\" Code=\"95\" /><SuggestedUnicodeItem Prefix=\"hell\" Code=\"114\" /></InterstitialGapItem>",
                 "<SuggestedUnicodeItem TS=\"2000-01-01T00:00:45.0000000+00:00\" Prefix=\"hell\" Code=\"111\" />",
                 "<SuggestedSpellingWordItem TS=\"2000-01-01T00:00:47.0000000+00:00\" Content=\"hello\" />",
                 "<InterstitialSpellingItem TS=\"2000-01-01T00:00:49.0000000+00:00\" />",
                 "<InterstitialUnicodeItem TS=\"2000-01-01T00:00:51.0000000+00:00\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:53.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:55.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:00:57.0000000+00:00\" _lowerBound=\"83\" _upperLimit=\"114\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:53.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\"><SuggestedUnicodeItem Prefix=\"\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"\" Code=\"3320\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:55.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\"><SuggestedUnicodeItem Prefix=\"\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"\" Code=\"202\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:00:57.0000000+00:00\" _lowerBound=\"83\" _upperLimit=\"114\"><SuggestedUnicodeItem Prefix=\"\" Code=\"116\" /><SuggestedUnicodeItem Prefix=\"\" Code=\"146\" /></InterstitialGapItem>",
                 "<SuggestedUnicodeItem TS=\"2000-01-01T00:00:59.0000000+00:00\" Prefix=\"\" Code=\"119\" />",
                 "<SuggestedSpellingItem TS=\"2000-01-01T00:01:01.0000000+00:00\" Prefix=\"w\" Symbol=\"o\" />",
                 "<InterstitialUnicodeItem TS=\"2000-01-01T00:01:03.0000000+00:00\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:01:05.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:01:07.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:01:09.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:01:11.0000000+00:00\" _lowerBound=\"77\" _upperLimit=\"85\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:05.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\"><SuggestedUnicodeItem Prefix=\"wo\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"wo\" Code=\"3320\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:07.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\"><SuggestedUnicodeItem Prefix=\"wo\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"wo\" Code=\"202\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:09.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\"><SuggestedUnicodeItem Prefix=\"wo\" Code=\"95\" /><SuggestedUnicodeItem Prefix=\"wo\" Code=\"114\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:11.0000000+00:00\" _lowerBound=\"77\" _upperLimit=\"85\"><SuggestedUnicodeItem Prefix=\"wo\" Code=\"110\" /><SuggestedUnicodeItem Prefix=\"wo\" Code=\"117\" /></InterstitialGapItem>",
                 "<SuggestedUnicodeItem TS=\"2000-01-01T00:01:13.0000000+00:00\" Prefix=\"wo\" Code=\"114\" />",
                 "<SuggestedSpellingItem TS=\"2000-01-01T00:01:15.0000000+00:00\" Prefix=\"wor\" Symbol=\"l\" />",
                 "<InterstitialUnicodeItem TS=\"2000-01-01T00:01:17.0000000+00:00\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:01:19.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:01:21.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\" />",
-                "<InterstitialGapItem TS=\"2000-01-01T00:01:23.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\" />",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:19.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"3288\"><SuggestedUnicodeItem Prefix=\"worl\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"worl\" Code=\"3320\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:21.0000000+00:00\" _lowerBound=\"0\" _upperLimit=\"170\"><SuggestedUnicodeItem Prefix=\"worl\" Code=\"33\" /><SuggestedUnicodeItem Prefix=\"worl\" Code=\"202\" /></InterstitialGapItem>",
+                "<InterstitialGapItem TS=\"2000-01-01T00:01:23.0000000+00:00\" _lowerBound=\"62\" _upperLimit=\"82\"><SuggestedUnicodeItem Prefix=\"worl\" Code=\"95\" /><SuggestedUnicodeItem Prefix=\"worl\" Code=\"114\" /></InterstitialGapItem>",
                 "<SuggestedUnicodeItem TS=\"2000-01-01T00:01:25.0000000+00:00\" Prefix=\"worl\" Code=\"100\" />",
                 "<SuggestedSpellingWordItem TS=\"2000-01-01T00:01:27.0000000+00:00\" Content=\"world\" />",
                 "<TailStopItem TS=\"2000-01-01T00:01:29.0000000+00:00\" />",

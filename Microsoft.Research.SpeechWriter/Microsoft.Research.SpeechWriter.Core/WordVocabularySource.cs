@@ -557,12 +557,12 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             sortedWords.Sort((kv1, kv2) => Environment.Compare(kv1.Key, kv2.Key));
 
-            var commandIndex = 0;
-            foreach (var enumName in Enum.GetNames(typeof(TileCommand)))
+            var commandNames = Enum.GetNames(typeof(TileCommand));
+            for (var i = 0; i < commandNames.Length; i++)
             {
-                var command = '\0' + enumName;
+                var command = '\0' + commandNames[i];
                 var token = _tokens.GetToken(command);
-                sortedWords.Insert(commandIndex, new KeyValuePair<string, int>(command, token));
+                sortedWords.Insert(i, new KeyValuePair<string, int>(command, token));
             }
 
             foreach (var pair in sortedWords)

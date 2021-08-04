@@ -92,7 +92,9 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             var item = tile as T;
             return item != null &&
                 (StringEqualsExact(item.Tile.Content, value.Content, culture) ||
-                StringEqualsExact(tile.FormattedContent, value.Content, culture)) &&
+                StringEqualsExact(tile.FormattedContent, value.Content, culture) ||
+                StringEqualsExact(item.Tile.Content, item.GetCaseTreatedString(value.Content), culture) ||
+                StringEqualsExact(tile.FormattedContent, item.GetCaseTreatedString(value.Content), culture)) &&
                 item.Tile.IsPrefix == value.IsPrefix &&
                 item.Tile.IsSuffix == value.IsSuffix;
         }
@@ -364,8 +366,15 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
 
             if (IsItem<CommandItem>(firstOfFirst, out var commandItem))
             {
-                Debug.Assert(commandItem.Command == TileCommand.Typing);
-                action = ApplicationRobotAction.CreateSuggestion(0, 0);
+                switch (commandItem.Command)
+                {
+                    case TileCommand.Typing:
+                        action = ApplicationRobotAction.CreateSuggestion(0, 0);
+                        break;
+                    default:
+                        action = ApplicationRobotAction.CreateInterstitial(0);
+                        break;
+                }
             }
             else if (!(firstOfFirst is ReplacementItem))
             {
