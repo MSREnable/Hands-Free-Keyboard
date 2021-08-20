@@ -13,6 +13,11 @@
         /// <summary>
         /// Numeric code insertion.
         /// </summary>
-        Code
+        Code,
+
+        /// <summary>
+        /// Alter behaviour of application
+        /// </summary>
+        Settings
     }
 }

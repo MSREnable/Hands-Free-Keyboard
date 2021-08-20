@@ -41,6 +41,13 @@ namespace Microsoft.Research.SpeechWriter.Core
                     }
                     break;
 
+                case TileCommand.Settings:
+                    {
+                        var source = new SettingsVocabularySource(Model);
+                        source.SetSuggestionsView();
+                    }
+                    break;
+
                 case TileCommand.Code:
                     {
                         var source = new CodeVocabularySource(this);
@@ -139,6 +146,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 case TileCommand.Typing:
                     value = LastTile is HeadWordItem;
+                    break;
+
+                case TileCommand.Settings:
+                    value = true;
                     break;
 
                 case TileCommand.Code:
