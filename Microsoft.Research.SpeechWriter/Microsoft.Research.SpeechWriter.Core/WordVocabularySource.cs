@@ -207,7 +207,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             PopulateVocabularyList();
-            Model.SetSuggestionsView(this, 0, Count, false);
+            SetSuggestionsView(0, Count, false);
         }
 
         /// <summary>

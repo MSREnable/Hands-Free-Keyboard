@@ -446,7 +446,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 Array.Resize(ref context, contextCount - 1);
                 SetContext(context);
 
-                ResetSuggestionsView();
+                SetSuggestionsView();
             }
         }
 

@@ -32,7 +32,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
 
         internal override void Execute()
         {
-            _model.SetSuggestionsView(Source, _lowerBound, _upperLimit, false);
+            Source.SetSuggestionsView(_lowerBound, _upperLimit, false);
         }
 
         private void TraceChild(XmlWriter writer, int index)

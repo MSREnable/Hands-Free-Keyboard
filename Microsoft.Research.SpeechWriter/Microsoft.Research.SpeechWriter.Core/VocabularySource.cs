@@ -44,19 +44,19 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <returns></returns>
         internal virtual ITile CreatePriorInterstitial(int index) => null;
 
-        internal void ResetSuggestionsView()
+        internal void SetSuggestionsView(int lowerBound, int upperLimit, bool isComplete)
         {
-            Model.SetSuggestionsView(Model.Source, 0, Model.Source.Count, false);
+            Model.SetSuggestionsView(this, lowerBound, upperLimit, isComplete);
         }
 
         internal void SetSuggestionsView()
         {
-            Model.SetSuggestionsView(this, 0, Count, false);
+            SetSuggestionsView(0, Count, false);
         }
 
         internal void SetSuggestionsViewComplete()
         {
-            Model.SetSuggestionsView(this, 0, Count, true);
+            SetSuggestionsView(0, Count, true);
         }
     }
 }

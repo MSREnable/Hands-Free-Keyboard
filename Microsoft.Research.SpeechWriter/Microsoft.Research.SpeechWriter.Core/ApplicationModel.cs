@@ -57,7 +57,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             SuggestionInterstitials = new ReadOnlyObservableCollection<ITile>(_suggestionInterstitials);
 
             Source = _wordSource;
-            _wordSource.ResetSuggestionsView();
+            _wordSource.SetSuggestionsView();
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 if (_maxNextSuggestinosCount != value)
                 {
                     _maxNextSuggestinosCount = value;
-                    SetSuggestionsView(Source, _lowerBound, _upperLimit, false);
+                    Source.SetSuggestionsView(_lowerBound, _upperLimit, false);
                 }
             }
         }
