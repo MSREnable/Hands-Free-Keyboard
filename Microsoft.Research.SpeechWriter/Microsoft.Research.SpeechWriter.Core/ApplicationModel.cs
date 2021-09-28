@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Microsoft.Research.SpeechWriter.Core
@@ -175,6 +174,27 @@ namespace Microsoft.Research.SpeechWriter.Core
             ApplicationModelUpdate?.Invoke(this, e);
         }
 
+        internal void UpdateSuggestions(VocabularySource source, int lowerBound, int upperLimit, bool isComplete, List<IEnumerable<ITile>> suggestions, List<ITile> suggestionInterstitials)
+        {
+            Source = source;
+            _lowerBound = lowerBound;
+            _upperLimit = upperLimit;
+
+            _nextSuggestions.Clear();
+            foreach(var suggestion in suggestions)
+            {
+                _nextSuggestions.Add(suggestion);
+            }
+
+            _suggestionInterstitials.Clear();
+            foreach(var interstitial in suggestionInterstitials)
+            {
+                _suggestionInterstitials.Add(interstitial);
+            }
+
+            RaiseApplicationModelUpdateEvent(isComplete);
+        }
+
         /// <summary>
         /// Load utterances.
         /// </summary>
@@ -182,15 +202,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         public async Task LoadUtterancesAsync()
         {
             await _wordSource.LoadUtterancesAsync();
-        }
-
-        internal void SetSuggestionsView(VocabularySource source, int lowerBound, int upperLimit, bool isComplete)
-        {
-            Source = source;
-            _lowerBound = lowerBound;
-            _upperLimit = upperLimit;
-
-            ResetSuggestionsView(isComplete);
         }
 
         private bool AreAdjacentIndices(int lowerIndex, int upperIndex)
@@ -202,114 +213,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             return adjustedLowerIndex == upperIndex;
-        }
-
-        private void ResetSuggestionsView(bool isComplete)
-        {
-            var maxItemCount = Math.Min(Source.Count, MaxNextSuggestionsCount - 1);
-            var rankedIndices = Source.GetTopIndices(_lowerBound, _upperLimit, maxItemCount);
-
-            var sortedIndices = new SortedSet<int>(rankedIndices);
-
-            Debug.Assert(rankedIndices.Count() == sortedIndices.Count);
-
-            _suggestionInterstitials.Clear();
-            _nextSuggestions.Clear();
-
-            var previousIndex = -1;
-            foreach (var index in sortedIndices)
-            {
-                if (AreAdjacentIndices(previousIndex + 1, index))
-                {
-                    // Item contiguous with previous one, so allow it to dictate its interstitial.
-                    EmitPriorInterstitial(index);
-                }
-                else
-                {
-                    if (previousIndex != -1)
-                    {
-                        // Not the first item, so items that are displayed adjacent to one another, but are not actually contiguous.
-                        EmitInterstitial(previousIndex + 1, index);
-                    }
-                    else if (_lowerBound < index)
-                    {
-                        // First item, but within the bounds of the items being displayed, so need interstitial to start of bounds.
-                        EmitInterstitial(_lowerBound, index);
-                    }
-                    else
-                    {
-                        Debug.Assert(index <= _lowerBound);
-
-                        // First item of bounded area, so emit interstitial from start to this item.
-                        var interstitialItem = new InterstitialGapItem(LastTile, this, Source, 0, Math.Max(_lowerBound, maxItemCount));
-                        _suggestionInterstitials.Add(interstitialItem);
-                    }
-                }
-
-                var suggestionList = Source.CreateSuggestionList(index);
-                _nextSuggestions.Add(suggestionList);
-
-                previousIndex = index;
-            }
-
-            if (AreAdjacentIndices(previousIndex + 1, Source.Count))
-            {
-                // Last item in source, so allow it to dictate the final interstitial.
-                EmitPriorInterstitial(Source.Count);
-            }
-            else if (previousIndex + 1 < _upperLimit)
-            {
-                // Last item of bounded items, but not necessary last in source.
-                EmitInterstitial(previousIndex + 1, _upperLimit);
-            }
-            else
-            {
-                Debug.Assert(_upperLimit < Source.Count);
-
-                // Last item was last of bounded items, but not of source, so emit interstitial to end.
-                EmitInterstitial(Math.Min(previousIndex + 1, Source.Count - maxItemCount), Source.Count);
-            }
-
-            RaiseApplicationModelUpdateEvent(isComplete);
-
-            void EmitPriorInterstitial(int index)
-            {
-                var interstitialItem = Source.CreatePriorInterstitial(index);
-                var actualItem = interstitialItem ?? new InterstitialNonItem(this);
-                _suggestionInterstitials.Add(actualItem);
-            }
-
-            void EmitInterstitial(int min, int lim)
-            {
-                var effectiveMin = min;
-                var effectiveLim = lim;
-
-                if (min != 0 && Source.CreatePriorInterstitial(min) != null)
-                {
-                    // If we're top is going to replace custom interstitial, extend top by one item.
-                    effectiveMin--;
-                }
-
-                if (lim != Source.Count && Source.CreatePriorInterstitial(lim) != null)
-                {
-                    // If we're at the bottom and going to replace custom interstitial, extend bottom by one item.
-                    effectiveLim++;
-                }
-
-                var underrun = Math.Max(0, maxItemCount - (effectiveLim - effectiveMin));
-                var adjustedMin = Math.Max(0, effectiveMin - underrun / 2);
-                var adjustedLim = Math.Max(adjustedMin + maxItemCount, effectiveLim);
-
-                var overrun = adjustedLim - Source.Count;
-                if (0 < overrun)
-                {
-                    adjustedMin -= overrun;
-                    adjustedLim -= overrun;
-                }
-
-                var interstitial = new InterstitialGapItem(LastTile, this, Source, adjustedMin, adjustedLim);
-                _suggestionInterstitials.Add(interstitial);
-            }
         }
 
         internal void SaveUtterance(TileSequence sequence)
