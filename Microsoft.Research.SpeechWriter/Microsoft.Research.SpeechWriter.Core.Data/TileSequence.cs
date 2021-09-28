@@ -72,20 +72,20 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
             return encoded;
         }
 
-        /// <summary>
-        /// Convert a raw string to the simple encoded format.
-        /// </summary>
-        /// <param name="encoded">The raw string.</param>
-        /// <returns>A simple encoded string.</returns>
-        public static string DefaultSimpleEncodedToRaw(string encoded) => encoded.ReadXmlFragment<string>(reader =>
-        {
-            Debug.Assert(reader.NodeType == XmlNodeType.None);
-            reader.ValidatedRead();
-            Debug.Assert(reader.NodeType == XmlNodeType.Text);
-            var raw = reader.Value;
+        ///// <summary>
+        ///// Convert a raw string to the simple encoded format.
+        ///// </summary>
+        ///// <param name="encoded">The raw string.</param>
+        ///// <returns>A simple encoded string.</returns>
+        //public static string DefaultSimpleEncodedToRaw(string encoded) => encoded.ReadXmlFragment<string>(reader =>
+        //{
+        //    Debug.Assert(reader.NodeType == XmlNodeType.None);
+        //    reader.ValidatedRead();
+        //    Debug.Assert(reader.NodeType == XmlNodeType.Text);
+        //    var raw = reader.Value;
 
-            return raw;
-        });
+        //    return raw;
+        //});
 
         /// <summary>
         /// Convert to raw string.
@@ -346,8 +346,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
         public override bool Equals(object obj)
         {
-            var sequence = obj as TileSequence;
-            var value = sequence != null && Equals(sequence);
+            var value = obj is TileSequence sequence && Equals(sequence);
             return value;
         }
 

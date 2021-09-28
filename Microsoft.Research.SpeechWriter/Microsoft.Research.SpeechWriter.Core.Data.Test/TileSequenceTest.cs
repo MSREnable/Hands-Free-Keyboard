@@ -201,6 +201,11 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
 
                     Assert.AreEqual(i == j, equals);
                     Assert.IsTrue(!equals || lhsHash == rhsHash);
+
+                    var equalsUntyped = lhs.Equals((object)rhs);
+                    var unequalsUntyped = lhs.Equals(42);
+                    Assert.AreEqual(equals, equalsUntyped);
+                    Assert.IsFalse(unequalsUntyped);
                 }
             }
 
