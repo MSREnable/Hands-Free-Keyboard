@@ -181,13 +181,13 @@ namespace Microsoft.Research.SpeechWriter.Core
             _upperLimit = upperLimit;
 
             _nextSuggestions.Clear();
-            foreach(var suggestion in suggestions)
+            foreach (var suggestion in suggestions)
             {
                 _nextSuggestions.Add(suggestion);
             }
 
             _suggestionInterstitials.Clear();
-            foreach(var interstitial in suggestionInterstitials)
+            foreach (var interstitial in suggestionInterstitials)
             {
                 _suggestionInterstitials.Add(interstitial);
             }
