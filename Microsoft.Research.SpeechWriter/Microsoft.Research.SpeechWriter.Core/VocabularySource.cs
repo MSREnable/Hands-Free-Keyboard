@@ -82,8 +82,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             Debug.Assert(rankedIndices.Count() == sortedIndices.Count);
 
-            var _nextSuggestions = new List<IEnumerable<ITile>>();
-            var _suggestionInterstitials = new List<ITile>();
+            var suggestions = new List<IEnumerable<ITile>>();
+            var suggestionInterstitials = new List<ITile>();
 
             var previousIndex = -1;
             foreach (var index in sortedIndices)
@@ -111,12 +111,12 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                         // First item of bounded area, so emit interstitial from start to this item.
                         var interstitialItem = new InterstitialGapItem(Model.LastTile, Model, this, 0, Math.Max(_lowerBound, maxItemCount));
-                        _suggestionInterstitials.Add(interstitialItem);
+                        suggestionInterstitials.Add(interstitialItem);
                     }
                 }
 
                 var suggestionList = CreateSuggestionList(index);
-                _nextSuggestions.Add(suggestionList);
+                suggestions.Add(suggestionList);
 
                 previousIndex = index;
             }
@@ -139,13 +139,13 @@ namespace Microsoft.Research.SpeechWriter.Core
                 EmitInterstitial(Math.Min(previousIndex + 1, Count - maxItemCount), Count);
             }
 
-            Model.UpdateSuggestions(this, _lowerBound, _upperLimit, isComplete, _nextSuggestions, _suggestionInterstitials);
+            Model.UpdateSuggestions(this, _lowerBound, _upperLimit, isComplete, suggestions, suggestionInterstitials);
 
             void EmitPriorInterstitial(int index)
             {
                 var interstitialItem = CreatePriorInterstitial(index);
                 var actualItem = interstitialItem ?? new InterstitialNonItem(Model);
-                _suggestionInterstitials.Add(actualItem);
+                suggestionInterstitials.Add(actualItem);
             }
 
             void EmitInterstitial(int min, int lim)
@@ -177,7 +177,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
 
                 var interstitial = new InterstitialGapItem(Model.LastTile, Model, this, adjustedMin, adjustedLim);
-                _suggestionInterstitials.Add(interstitial);
+                suggestionInterstitials.Add(interstitial);
             }
         }
     }
