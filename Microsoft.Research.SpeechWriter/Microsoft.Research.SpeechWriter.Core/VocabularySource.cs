@@ -73,21 +73,33 @@ namespace Microsoft.Research.SpeechWriter.Core
             return adjustedLowerIndex == upperIndex;
         }
 
+        private SortedList<int, IEnumerable<ITile>> CreateSuggestionLists(int lowerBound, int upperBound, int maxItemCount)
+        {
+            var value = new SortedList<int, IEnumerable<ITile>>();
+
+            var topIndices = GetTopIndices(lowerBound, upperBound, maxItemCount);
+            foreach (var index in topIndices)
+            {
+                var tiles = CreateSuggestionList(index);
+                value.Add(index, tiles);
+            }
+
+            return value;
+        }
+
         private void UpdateSuggestionsView(int _lowerBound, int _upperLimit, bool isComplete)
         {
             var maxItemCount = Math.Min(Count, Model.MaxNextSuggestionsCount - 1);
-            var rankedIndices = GetTopIndices(_lowerBound, _upperLimit, maxItemCount);
-
-            var sortedIndices = new SortedSet<int>(rankedIndices);
-
-            Debug.Assert(rankedIndices.Count() == sortedIndices.Count);
+            var suggestionLists = CreateSuggestionLists(_lowerBound, _upperLimit, maxItemCount);
 
             var suggestions = new List<IEnumerable<ITile>>();
             var suggestionInterstitials = new List<ITile>();
 
             var previousIndex = -1;
-            foreach (var index in sortedIndices)
+            foreach (var pair in suggestionLists)
             {
+                var index = pair.Key;
+
                 if (AreAdjacentIndices(previousIndex + 1, index))
                 {
                     // Item contiguous with previous one, so allow it to dictate its interstitial.
@@ -115,8 +127,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                     }
                 }
 
-                var suggestionList = CreateSuggestionList(index);
-                suggestions.Add(suggestionList);
+                suggestions.Add(pair.Value);
 
                 previousIndex = index;
             }
