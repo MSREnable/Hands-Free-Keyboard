@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Unoffical.System.Speech" Version="1.0.0" />
+    <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.18.0" />
   </ItemGroup>
 
   <ItemGroup>

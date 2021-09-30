@@ -1,10 +1,10 @@
-﻿using Microsoft.Research.SpeechWriter.Core;
+﻿using Microsoft.CognitiveServices.Speech;
+using Microsoft.Research.SpeechWriter.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Media.SpeechSynthesis;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 
@@ -12,52 +12,53 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 {
     internal class NarratorVocalization : INarratorVocalizer
     {
-        private readonly MediaElement _mediaElement;
+        private readonly static string subscriptionKey = Environment.GetEnvironmentVariable("SpeechWriterAzureSubscriptionKey");
+        private readonly static string region = Environment.GetEnvironmentVariable("SpeechWriterAzureRegion");
+        private readonly static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKey, region);
+        private readonly SpeechSynthesizer synthesizer = new SpeechSynthesizer(config);
 
-        private readonly SpeechSynthesizer _synthesizer = new SpeechSynthesizer();
+        private readonly SemaphoreSlim _synthesizerReady = new SemaphoreSlim(1);
 
-        private readonly SemaphoreSlim _mediaReady = new SemaphoreSlim(1);
-
-        private NarratorVocalization(MediaElement mediaElement)
+        // Speech synthesis to the default speaker.
+        public async Task SynthesisToSpeakerAsync(string text)
         {
-            _mediaElement = mediaElement;
-            _mediaElement.MediaEnded += (s, e) => _mediaReady.Release();
+            using (var result = await synthesizer.SpeakTextAsync(text))
+            {
+                if (result.Reason == ResultReason.SynthesizingAudioCompleted)
+                {
+                    Debug.WriteLine($"Speech synthesized to speaker for text [{text}]");
+                }
+                else if (result.Reason == ResultReason.Canceled)
+                {
+                    var cancellation = SpeechSynthesisCancellationDetails.FromResult(result);
+                    Debug.WriteLine($"CANCELED: Reason={cancellation.Reason}");
 
+                    if (cancellation.Reason == CancellationReason.Error)
+                    {
+                        Debug.WriteLine($"CANCELED: ErrorCode={cancellation.ErrorCode}");
+                        Debug.WriteLine($"CANCELED: ErrorDetails=[{cancellation.ErrorDetails}]");
+                        Debug.WriteLine($"CANCELED: Did you update the subscription info?");
+                    }
+                }
+            }
+
+            _synthesizerReady.Release();
         }
 
         private void Initialize(string language)
         {
-            var voiceChoice = new List<VoiceInformation>();
-            foreach (var voice in SpeechSynthesizer.AllVoices)
-            {
-                if (voice.Language.StartsWith(language))
-                {
-                    voiceChoice.Add(voice);
-                }
-            }
-
-            if (voiceChoice.Count != 0)
-            {
-                _synthesizer.Voice = voiceChoice[0];
-            }
         }
 
         internal static NarratorVocalization Create(MediaElement mediaElement, string language)
         {
-            var vocalization = new NarratorVocalization(mediaElement);
-            vocalization.Initialize(language);
+            var vocalization = new NarratorVocalization();
             return vocalization;
         }
 
         async Task INarratorVocalizer.SpeakSsmlAsync(string ssml)
         {
-            Debug.WriteLine("Waiting for media");
-            await _mediaReady.WaitAsync();
-            Debug.WriteLine("Media ready");
-
-            var stream = await _synthesizer.SynthesizeTextToStreamAsync(ssml);
-            _mediaElement.SetSource(stream, stream.ContentType);
-            _mediaElement.Play();
+            await _synthesizerReady.WaitAsync();
+            _ = SynthesisToSpeakerAsync(ssml);
         }
 
         void INarratorVocalizer.DisplayWordPerMinuteEstimate(List<string> spokenWords, TimeSpan speechTime)
