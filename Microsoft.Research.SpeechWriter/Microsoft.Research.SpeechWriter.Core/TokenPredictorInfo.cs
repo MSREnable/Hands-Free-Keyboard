@@ -8,6 +8,13 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private TokenPredictorDatabase _children;
 
+        internal TokenPredictorInfo(int token)
+        {
+            Token = token;
+        }
+
+        internal int Token { get; }
+
         internal int Count => _count;
 
         internal void IncrementCount(int increment)
@@ -36,15 +43,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             return _children;
         }
 
-        internal TokenPredictorInfo GetChildInfo(int token)
-        {
-            var children = GetChildren();
-
-            var info = children.GetValue(token);
-
-            return info;
-        }
-
         internal TokenPredictorDatabase TryGetChildren()
         {
             return _children;
@@ -64,6 +62,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             return database;
+        }
+
+        public override string ToString()
+        {
+            return $"[{Token}] = {Count}";
         }
     }
 }

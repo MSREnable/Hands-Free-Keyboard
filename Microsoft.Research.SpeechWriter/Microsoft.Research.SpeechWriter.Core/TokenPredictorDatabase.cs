@@ -10,12 +10,24 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         public IEnumerable<int> Keys => _database.Keys;
 
+        private List<TokenPredictorInfo> _sortedDatabase;
+
+        private bool _isSortedDatabaseValid;
+
         internal TokenPredictorInfo GetValue(int token)
         {
             if (!_database.TryGetValue(token, out var info))
             {
-                info = new TokenPredictorInfo();
+                info = new TokenPredictorInfo(token);
                 _database.Add(token, info);
+
+                if (_sortedDatabase != null)
+                {
+                    _sortedDatabase.Add(info);
+
+                    _isSortedDatabaseValid = false;
+                }
+                Debug.Assert(!_isSortedDatabaseValid);
             }
 
             return info;
@@ -27,9 +39,16 @@ namespace Microsoft.Research.SpeechWriter.Core
             return value;
         }
 
+        private void ClearSortedDatabase()
+        {
+            _sortedDatabase = null;
+            _isSortedDatabaseValid = false;
+        }
+
         internal void Clear()
         {
             _database.Clear();
+            ClearSortedDatabase();
         }
 
         public Dictionary<int, TokenPredictorInfo>.Enumerator GetEnumerator()
@@ -40,26 +59,52 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal void Remove(int token)
         {
             _database.Remove(token);
+
+            ClearSortedDatabase();
+        }
+
+        private void ValidateSortedDatabase()
+        {
+            if (!_isSortedDatabaseValid)
+            {
+                if (_sortedDatabase == null)
+                {
+                    _sortedDatabase = new List<TokenPredictorInfo>();
+
+                    _sortedDatabase.AddRange(_database.Values);
+                }
+
+                Debug.Assert(_database.Count == _sortedDatabase.Count);
+
+                _sortedDatabase.Sort(SortedDictionaryComparison);
+
+                _isSortedDatabaseValid = true;
+            }
+        }
+
+        private int SortedDictionaryComparison(TokenPredictorInfo x,
+            TokenPredictorInfo y)
+        {
+            var value = y.Count.CompareTo(x.Count);
+            if (value == 0)
+            {
+                value = y.Token.CompareTo(x.Token);
+            }
+            return value;
         }
 
         internal IReadOnlyList<int> GetTopRanked()
         {
-            var maxCount = 0;
+            ValidateSortedDatabase();
+
             var tokens = new List<int>();
-
-            foreach (var pair in _database)
+            if (_sortedDatabase.Count != 0)
             {
-                var count = pair.Value.Count;
-
-                if (maxCount <= count)
+                var count = _sortedDatabase[0].Count;
+                tokens.Add(_sortedDatabase[0].Token);
+                for (var i = 1; i < _sortedDatabase.Count && _sortedDatabase[i].Count == count; i++)
                 {
-                    if (maxCount < count)
-                    {
-                        maxCount = count;
-                        tokens.Clear();
-                    }
-
-                    tokens.Add(pair.Key);
+                    tokens.Add(_sortedDatabase[i].Token);
                 }
             }
 
@@ -70,23 +115,29 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             IReadOnlyList<int> result;
 
-            var maxCount = 0;
+            ValidateSortedDatabase();
+
             var tokens = new List<int>();
-
-            foreach (var pair in _database)
+            using (var enumerator = _sortedDatabase.GetEnumerator())
             {
-                var count = pair.Value.Count;
-                var token = pair.Key;
-
-                if (mask.Contains(token) && maxCount <= count)
+                var read = enumerator.MoveNext();
+                while (read && !mask.Contains(enumerator.Current.Token))
                 {
-                    if (maxCount < count)
-                    {
-                        maxCount = count;
-                        tokens.Clear();
-                    }
+                    read = enumerator.MoveNext();
+                }
 
-                    tokens.Add(token);
+                if (read)
+                {
+                    var count = enumerator.Current.Count;
+                    tokens.Add(enumerator.Current.Token);
+
+                    while (enumerator.MoveNext() && enumerator.Current.Count == count)
+                    {
+                        if (mask.Contains(enumerator.Current.Token))
+                        {
+                            tokens.Add(enumerator.Current.Token);
+                        }
+                    }
                 }
             }
 
@@ -94,14 +145,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             if (tokens.Count != 0)
             {
-                if (tokens.Count < mask.Count)
-                {
-                    result = tokens;
-                }
-                else
-                {
-                    result = tokens;
-                }
+                result = tokens;
             }
             else
             {
@@ -138,6 +182,22 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             return result;
+        }
+
+        internal void IncrementCount(TokenPredictorInfo child, int increment)
+        {
+            Debug.Assert(ReferenceEquals(child, _database[child.Token]));
+            child.IncrementCount(increment);
+            _isSortedDatabaseValid = false;
+        }
+
+        internal int DecrementCount(TokenPredictorInfo child, int increment)
+        {
+            Debug.Assert(ReferenceEquals(child, _database[child.Token]));
+            var value = child.DecrementCount(increment);
+            _isSortedDatabaseValid = false;
+
+            return value;
         }
     }
 }

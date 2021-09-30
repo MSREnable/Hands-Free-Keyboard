@@ -47,14 +47,14 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var database = _database;
                 var info = database.GetValue(sequence[start]);
 
-                info.IncrementCount(increment);
+                database.IncrementCount(info, increment);
 
                 for (var index = start + 1; index < limit; index++)
                 {
                     database = info.GetChildren();
                     info = database.GetValue(sequence[index]);
 
-                    info.IncrementCount(increment);
+                    database.IncrementCount(info, increment);
                 }
             }
         }
@@ -71,13 +71,15 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             for (var startPos = Math.Max(0, sequenceCount - _width); startPos < sequenceCount; startPos++)
             {
-                var info = _database.GetValue(sequence[startPos]);
+                var database = _database;
+                var info = database.GetValue(sequence[startPos]);
 
                 for (var index = startPos + 1; index < sequenceCount; index++)
                 {
-                    info = info.GetChildInfo(sequence[index]);
+                    database = info.GetChildren();
+                    info = database.GetValue(sequence[index]);
                 }
-                info.IncrementCount(increment);
+                database.IncrementCount(info, increment);
             }
         }
 
@@ -91,7 +93,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             foreach (var pair in additive)
             {
                 var info = accumulator.GetValue(pair.Key);
-                info.IncrementCount(pair.Value.Count);
+                accumulator.IncrementCount(info, pair.Value.Count);
 
                 var additiveChlidren = pair.Value.TryGetChildren();
                 if (additiveChlidren != null)
@@ -113,7 +115,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             foreach (var pair in subtractive)
             {
                 var info = accumulator.GetValue(pair.Key);
-                if (0 < info.DecrementCount(pair.Value.Count))
+                if (0 < accumulator.DecrementCount(info, pair.Value.Count))
                 {
                     var subtractiveChlidren = pair.Value.TryGetChildren();
                     if (subtractiveChlidren != null)
