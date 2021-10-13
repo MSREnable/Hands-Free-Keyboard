@@ -20,10 +20,11 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal sealed override int Count => _limit - _minimum;
 
-        internal sealed override IEnumerable<ITile> CreateSuggestionList(int index)
+        internal sealed override IReadOnlyList<ITile> CreateSuggestionList(int index)
         {
             var item = CreateItem(_minimum + index);
-            yield return item;
+            var list = new[] { item };
+            return list;
         }
 
         internal abstract ITile CreateItem(int value);

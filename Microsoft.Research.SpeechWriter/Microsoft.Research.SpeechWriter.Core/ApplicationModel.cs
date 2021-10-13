@@ -18,7 +18,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         private int _lowerBound;
         private int _upperLimit;
 
-        private readonly ObservableCollection<IEnumerable<ITile>> _nextSuggestions = new ObservableCollection<IEnumerable<ITile>>();
+        private readonly ObservableCollection<IReadOnlyList<ITile>> _nextSuggestions = new ObservableCollection<IReadOnlyList<ITile>>();
         private readonly ObservableCollection<ITile> _suggestionInterstitials = new ObservableCollection<ITile>();
 
         private int _previousWordsLengthNotified;
@@ -52,7 +52,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             _wordSource = new WordVocabularySource(this);
 
-            SuggestionLists = new ReadOnlyObservableCollection<IEnumerable<ITile>>(_nextSuggestions);
+            SuggestionLists = new ReadOnlyObservableCollection<IReadOnlyList<ITile>>(_nextSuggestions);
             SuggestionInterstitials = new ReadOnlyObservableCollection<ITile>(_suggestionInterstitials);
 
             Source = _wordSource;
@@ -99,7 +99,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <summary>
         /// Next word suggestion list. (Several individual words, one of which may be used next.)
         /// </summary>
-        public ReadOnlyObservableCollection<IEnumerable<ITile>> SuggestionLists { get; }
+        public ReadOnlyObservableCollection<IReadOnlyList<ITile>> SuggestionLists { get; }
 
         /// <summary>
         /// Items between suggestion lists.
@@ -174,7 +174,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             ApplicationModelUpdate?.Invoke(this, e);
         }
 
-        internal void UpdateSuggestions(VocabularySource source, int lowerBound, int upperLimit, bool isComplete, List<IEnumerable<ITile>> suggestions, List<ITile> suggestionInterstitials)
+        internal void UpdateSuggestions(VocabularySource source, int lowerBound, int upperLimit, bool isComplete, List<IReadOnlyList<ITile>> suggestions, List<ITile> suggestionInterstitials)
         {
             Source = source;
             _lowerBound = lowerBound;

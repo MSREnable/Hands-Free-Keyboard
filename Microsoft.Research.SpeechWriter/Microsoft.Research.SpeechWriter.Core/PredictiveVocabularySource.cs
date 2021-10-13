@@ -96,11 +96,13 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <param name="index">The index within the source.</param>
         /// 
         /// <returns>The vocabulary item corresponding to the index.</returns>
-        internal override IEnumerable<ITile> CreateSuggestionList(int index)
+        internal override IReadOnlyList<ITile> CreateSuggestionList(int index)
         {
+            var value = new List<ITile>();
+
             ISuggestionItem item = GetIndexItem(index);
 
-            yield return item;
+            value.Add(item);
 
             var token = GetIndexToken(index);
             if (token != 0)
@@ -114,7 +116,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                     if (extraToken != -1)
                     {
                         item = item.GetNextItem(extraToken);
-                        yield return item;
+                        value.Add(item);
 
                         extraContext.Add(extraToken);
                         more = extraToken != 0;
@@ -125,6 +127,8 @@ namespace Microsoft.Research.SpeechWriter.Core
                     }
                 }
             }
+
+            return value;
         }
 
         /// <summary>

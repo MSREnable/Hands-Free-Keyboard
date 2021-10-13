@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Microsoft.Research.SpeechWriter.UI
 {
-    internal class SuggestionsLayoutHelper<TControl, TSize, TRect> : LayoutHelper<TControl, TSize, TRect, IEnumerable<ITile>>
+    internal class SuggestionsLayoutHelper<TControl, TSize, TRect> : LayoutHelper<TControl, TSize, TRect, IReadOnlyList<ITile>>
         where TControl : class
         where TSize : struct
         where TRect : struct
@@ -12,12 +12,12 @@ namespace Microsoft.Research.SpeechWriter.UI
         private List<List<TControl>> _groupedControls;
 
         internal SuggestionsLayoutHelper(SuperPanelHelper<TControl, TSize, TRect> panel,
-            ReadOnlyObservableCollection<IEnumerable<ITile>> list)
+            ReadOnlyObservableCollection<IReadOnlyList<ITile>> list)
             : base(panel, list)
         {
         }
 
-        protected override void AddContent(IList<IEnumerable<ITile>> list, int startIndex, int count)
+        protected override void AddContent(IList<IReadOnlyList<ITile>> list, int startIndex, int count)
         {
             if (startIndex == _groupedControls.Count)
             {
@@ -40,7 +40,7 @@ namespace Microsoft.Research.SpeechWriter.UI
             }
         }
 
-        protected override List<TControl> CreateControls(IEnumerable<IEnumerable<ITile>> list)
+        protected override List<TControl> CreateControls(IEnumerable<IReadOnlyList<ITile>> list)
         {
             var controls = new List<TControl>();
 

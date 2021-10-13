@@ -34,7 +34,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         /// <param name="index">The index within the source.</param>
         /// <returns>The suggestions list.</returns>
-        internal abstract IEnumerable<ITile> CreateSuggestionList(int index);
+        internal abstract IReadOnlyList<ITile> CreateSuggestionList(int index);
 
         internal virtual ITile GetIndexItemForTrace(int index) => CreateSuggestionList(index).FirstOrDefault();
 
@@ -73,15 +73,16 @@ namespace Microsoft.Research.SpeechWriter.Core
             return adjustedLowerIndex == upperIndex;
         }
 
-        private SortedList<int, IEnumerable<ITile>> CreateSuggestionLists(int lowerBound, int upperBound, int maxItemCount)
+        private SortedList<int, IReadOnlyList<ITile>> CreateSuggestionLists(int lowerBound, int upperBound, int maxItemCount)
         {
-            var value = new SortedList<int, IEnumerable<ITile>>();
+            var value = new SortedList<int, IReadOnlyList<ITile>>();
 
             var topIndices = GetTopIndices(lowerBound, upperBound, maxItemCount);
             foreach (var index in topIndices)
             {
                 var tiles = CreateSuggestionList(index);
-                value.Add(index, tiles);
+                var list = new List<ITile>(tiles);
+                value.Add(index, list);
             }
 
             return value;
@@ -92,7 +93,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var maxItemCount = Math.Min(Count, Model.MaxNextSuggestionsCount - 1);
             var suggestionLists = CreateSuggestionLists(_lowerBound, _upperLimit, maxItemCount);
 
-            var suggestions = new List<IEnumerable<ITile>>();
+            var suggestions = new List<IReadOnlyList<ITile>>();
             var suggestionInterstitials = new List<ITile>();
 
             var previousIndex = -1;

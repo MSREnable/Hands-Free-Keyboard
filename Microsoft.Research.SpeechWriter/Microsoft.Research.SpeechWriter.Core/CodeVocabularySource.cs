@@ -25,7 +25,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             this.SetSuggestionsView();
         }
 
-        private IEnumerable<ITile> CreateCodes(params string[] labels)
+        private IReadOnlyList<ITile> CreateCodes(params string[] labels)
         {
             var enumerable = new ITile[labels.Length];
 
@@ -39,9 +39,9 @@ namespace Microsoft.Research.SpeechWriter.Core
             return enumerable;
         }
 
-        internal override IEnumerable<ITile> CreateSuggestionList(int index)
+        internal override IReadOnlyList<ITile> CreateSuggestionList(int index)
         {
-            IEnumerable<ITile> enumerable;
+            IReadOnlyList<ITile> enumerable;
 
             switch (index)
             {

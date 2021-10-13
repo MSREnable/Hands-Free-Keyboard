@@ -649,9 +649,9 @@ namespace Microsoft.Research.SpeechWriter.Core
             return item;
         }
 
-        internal override IEnumerable<ITile> CreateSuggestionList(int index)
+        internal override IReadOnlyList<ITile> CreateSuggestionList(int index)
         {
-            IEnumerable<ITile> value;
+            IReadOnlyList<ITile> value;
 
             var token = GetIndexToken(index);
             var word = _tokens.GetString(token);

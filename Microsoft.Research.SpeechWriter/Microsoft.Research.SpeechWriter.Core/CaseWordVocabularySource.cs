@@ -72,7 +72,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal override int Count => _substitutes.Length;
 
-        internal override IEnumerable<ITile> CreateSuggestionList(int index)
+        internal override IReadOnlyList<ITile> CreateSuggestionList(int index)
         {
             var tile = new ReplacementItem(_target, _source, _substitutes[index]);
             var tiles = new[] { tile };
