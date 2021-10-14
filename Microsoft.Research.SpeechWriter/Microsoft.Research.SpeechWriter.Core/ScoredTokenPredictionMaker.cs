@@ -145,5 +145,18 @@ namespace Microsoft.Research.SpeechWriter.Core
                 yield return score;
             }
         }
+
+        internal static IEnumerable<int[]> GetTopScores(PredictiveVocabularySource<T> source,
+            TokenPredictorDatabase database,
+            ITokenTileFilter filter,
+            int[] context,
+            int contextWidth,
+            int minIndex,
+            int limIndex)
+        {
+            var maker = new ScoredTokenPredictionMaker<T>(source, database, filter, context, contextWidth, minIndex, limIndex);
+            var scores = maker.GetTopScores();
+            return scores;
+        }
     }
 }

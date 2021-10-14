@@ -73,7 +73,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             return adjustedLowerIndex == upperIndex;
         }
 
-        private SortedList<int, IReadOnlyList<ITile>> CreateSuggestionLists(int lowerBound, int upperBound, int maxItemCount)
+        protected virtual SortedList<int, IReadOnlyList<ITile>> CreateSuggestionLists(int lowerBound, int upperBound, int maxItemCount)
         {
             var value = new SortedList<int, IReadOnlyList<ITile>>();
 

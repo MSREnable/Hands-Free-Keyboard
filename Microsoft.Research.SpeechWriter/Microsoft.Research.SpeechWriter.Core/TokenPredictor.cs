@@ -250,13 +250,16 @@ namespace Microsoft.Research.SpeechWriter.Core
             Debug.Unindent();
         }
 
+        internal IEnumerable<int[]> GetTopScores<T>(PredictiveVocabularySource<T> source, ITokenTileFilter filter, int[] context, int minIndex, int limIndex, int count)
+            where T : ISuggestionItem
+        {
+            var scores = ScoredTokenPredictionMaker<T>.GetTopScores(source, _database, filter, context, _width, minIndex, limIndex);
+            return scores;
+        }
+
         internal IEnumerable<int> GetTopIndices<T>(PredictiveVocabularySource<T> source, ITokenTileFilter filter, int[] context, int minIndex, int limIndex, int count)
             where T : ISuggestionItem
         {
-            var maker = new ScoredTokenPredictionMaker<T>(source, _database, filter, context, _width, minIndex, limIndex);
-            var scores = maker.GetTopScores();
-            DisplayTopScores(source, scores);
-
             var toFindCount = count;
             var foundTokens = new HashSet<int>();
 

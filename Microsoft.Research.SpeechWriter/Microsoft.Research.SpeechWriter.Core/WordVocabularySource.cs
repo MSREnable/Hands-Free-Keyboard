@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Microsoft.Research.SpeechWriter.Core
@@ -683,6 +684,160 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             return index;
+        }
+
+        private void DisplayTopScores<T>(PredictiveVocabularySource<T> source, IEnumerable<int[]> scores)
+            where T : ISuggestionItem
+        {
+            Debug.WriteLine("Scores:");
+            Debug.Indent();
+
+            int[] previousScore = null;
+            using (var enumerator = scores.GetEnumerator())
+            {
+                var done = false;
+                var lineCount = 0;
+
+                while (!done && enumerator.MoveNext())
+                {
+                    var score = enumerator.Current;
+                    if (score.Length != 1)
+                    {
+                        var s = string.Join("-", score);
+                        var index = source.GetTokenIndex(score[0]);
+                        var item = source.GetIndexItemForTrace(index);
+                        Debug.WriteLineIf(lineCount < 8, $"{s} ({item.Content})");
+                        lineCount++;
+                    }
+                    else
+                    {
+                        done = true;
+                    }
+
+                    if (previousScore != null)
+                    {
+                        Debug.Assert(score.Length <= previousScore.Length);
+                        if (score.Length == previousScore.Length)
+                        {
+                            var limit = score.Length;
+                            while (score[limit - 1] == previousScore[limit - 1])
+                            {
+                                limit--;
+                            }
+                            Debug.Assert(score[limit - 1] < previousScore[limit - 1]);
+                        }
+                    }
+
+                    Array.Resize(ref previousScore, score.Length);
+                    Array.Copy(score, previousScore, score.Length);
+                }
+
+                if (done)
+                {
+                    Debug.WriteLine("...and then all the tokens in descending ordinal order");
+                }
+            }
+
+            Debug.Unindent();
+        }
+
+        private void DisplayCorePredictions(List<List<WordPrediction>> coreCompoundPredictions)
+        {
+            Debug.WriteLine("Core prediction:");
+            Debug.Indent();
+
+            foreach (var compoundPrediction in coreCompoundPredictions)
+            {
+                var builder = new StringBuilder();
+
+                foreach (var prediction in compoundPrediction)
+                {
+                    if (builder.Length != 0)
+                    {
+                        builder.Append("   ");
+                    }
+                    builder.Append(prediction);
+                }
+                Debug.WriteLine(builder);
+            }
+
+            Debug.Unindent();
+        }
+
+        private WordPrediction GetNextCorePrediction(IEnumerator<int[]> enumerator)
+        {
+            WordPrediction prediction;
+
+            if (enumerator.MoveNext())
+            {
+                var score = enumerator.Current;
+                var token = score[0];
+                var index = GetTokenIndex(token);
+                var text = _tokens[token];
+
+                prediction = new WordPrediction(score, index, text);
+            }
+            else
+            {
+                prediction = null;
+            }
+
+            return prediction;
+        }
+
+        protected override SortedList<int, IReadOnlyList<ITile>> CreateSuggestionLists(int lowerBound, int upperBound, int maxItemCount)
+        {
+            var scores = TemporaryPredictor.GetTopScores(this, TokenFilter, Context, lowerBound, upperBound, maxItemCount);
+            DisplayTopScores(this, scores);
+
+            var corePredicitions = new List<WordPrediction>(maxItemCount);
+            var coreCompoundPredictions = new List<List<WordPrediction>>(maxItemCount);
+
+            using (var enumerator = scores.GetEnumerator())
+            {
+                var prediction = GetNextCorePrediction(enumerator);
+                for (; corePredicitions.Count < maxItemCount && prediction != null;
+                    prediction = GetNextCorePrediction(enumerator))
+                {
+                    var position = 0;
+                    while (position < corePredicitions.Count && corePredicitions[position].Index < prediction.Index)
+                    {
+                        position++;
+                    }
+
+                    /*
+                    if (position < corePredicitions.Count && corePredicitions[position].Text.StartsWith(text))
+                    {
+                        coreCompoundPredictions[position].Insert(0, corePredicitions[position]);
+                        corePredicitions[position] = prediction;
+                    }
+                    else if (0 < position && text.StartsWith(corePredicitions[position - 1].Text))
+                    {
+                        var coreCompoundPrediction = coreCompoundPredictions[position - 1];
+                        var compoundPosition = 1;
+                        while (compoundPosition < coreCompoundPrediction.Count &&
+                            text.StartsWith(coreCompoundPrediction[compoundPosition].Text))
+                        {
+                            compoundPosition++;
+                        }
+                        coreCompoundPrediction.Insert(compoundPosition, prediction);
+                    }
+                    else
+                    {
+                    */
+                    corePredicitions.Insert(position, prediction);
+
+                    var compoundCorePrediction = new List<WordPrediction>(1) { prediction };
+                    coreCompoundPredictions.Insert(position, compoundCorePrediction);
+                    /*
+                    }
+                    */
+                }
+            }
+
+            DisplayCorePredictions(coreCompoundPredictions);
+
+            return base.CreateSuggestionLists(lowerBound, upperBound, maxItemCount);
         }
 
         internal ISuggestionItem GetNextItem(SuggestedWordItem previousItem, int token)
