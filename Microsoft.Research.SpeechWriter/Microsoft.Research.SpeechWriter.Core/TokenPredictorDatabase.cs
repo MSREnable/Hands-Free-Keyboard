@@ -56,6 +56,16 @@ namespace Microsoft.Research.SpeechWriter.Core
             return _database.GetEnumerator();
         }
 
+        internal IEnumerable<TokenPredictorInfo> SortedEnumerable
+        {
+            get
+            {
+                ValidateSortedDatabase();
+
+                return _sortedDatabase;
+            }
+        }
+
         internal void Remove(int token)
         {
             _database.Remove(token);
