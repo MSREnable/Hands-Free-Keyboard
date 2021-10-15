@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -785,59 +786,217 @@ namespace Microsoft.Research.SpeechWriter.Core
             return prediction;
         }
 
+        private WordPrediction GetTopPrediction(int[] context)
+        {
+            WordPrediction value;
+
+            var topScores = TemporaryPredictor.GetTopScores(this, TokenFilter, context, 0, Count);
+            using (var enumerator = topScores.GetEnumerator())
+            {
+                value = GetNextCorePrediction(enumerator);
+            }
+
+            if (value.Score.Length == 1)
+            {
+                // TODO: We should not have constructed this object.
+                value = null;
+            }
+            else
+            {
+                Debug.WriteLine($"Health predicition {value}");
+            }
+
+            return value;
+        }
+
+        private void DisplayInitialCorePredictions(List<List<WordPrediction>> coreCompoundPredicitions, List<WordPrediction> followOnPredictions, WordPrediction wordPrediction)
+        {
+            Debug.WriteLine("Initial core position:");
+            Debug.Indent();
+
+            for (var i = 0; i < coreCompoundPredicitions.Count; i++)
+            {
+                var builder = new StringBuilder();
+
+                foreach (var group in coreCompoundPredicitions[i])
+                {
+                    if (builder.Length != 0)
+                    {
+                        builder.Append(" / ");
+                    }
+
+                    var groupText = string.Join(" ", group);
+
+                    builder.Append(groupText);
+                }
+                Debug.WriteLine($"{builder} {followOnPredictions[i]}");
+            }
+            Debug.WriteLine($"--- {wordPrediction}");
+
+            Debug.Unindent();
+        }
+
+        private static int CompareScores(int[] lhs, int[] rhs)
+        {
+            var comparison = lhs.Length.CompareTo(rhs.Length);
+
+            for (var i = lhs.Length - 1; comparison == 0 && 0 <= i; i--)
+            {
+                comparison = lhs[i].CompareTo(rhs[i]);
+            }
+
+            return comparison;
+        }
+
         protected override SortedList<int, IReadOnlyList<ITile>> CreateSuggestionLists(int lowerBound, int upperBound, int maxItemCount)
         {
-            var scores = TemporaryPredictor.GetTopScores(this, TokenFilter, Context, lowerBound, upperBound, maxItemCount);
+            var scores = TemporaryPredictor.GetTopScores(this, TokenFilter, Context, lowerBound, upperBound);
             DisplayTopScores(this, scores);
 
             var corePredicitions = new List<WordPrediction>(maxItemCount);
             var coreCompoundPredictions = new List<List<WordPrediction>>(maxItemCount);
 
+            var followOnPredictions = new List<WordPrediction>(maxItemCount);
+
             using (var enumerator = scores.GetEnumerator())
             {
-                var prediction = GetNextCorePrediction(enumerator);
-                for (; corePredicitions.Count < maxItemCount && prediction != null;
-                    prediction = GetNextCorePrediction(enumerator))
+                // Seed predictions with most likely items.
+                var nextCorePrediction = GetNextCorePrediction(enumerator);
+                for (var iteration = 0; iteration < maxItemCount && nextCorePrediction != null; iteration++)
                 {
-                    var position = 0;
-                    while (position < corePredicitions.Count && corePredicitions[position].Index < prediction.Index)
-                    {
-                        position++;
-                    }
-
-                    /*
-                    if (position < corePredicitions.Count && corePredicitions[position].Text.StartsWith(text))
-                    {
-                        coreCompoundPredictions[position].Insert(0, corePredicitions[position]);
-                        corePredicitions[position] = prediction;
-                    }
-                    else if (0 < position && text.StartsWith(corePredicitions[position - 1].Text))
-                    {
-                        var coreCompoundPrediction = coreCompoundPredictions[position - 1];
-                        var compoundPosition = 1;
-                        while (compoundPosition < coreCompoundPrediction.Count &&
-                            text.StartsWith(coreCompoundPrediction[compoundPosition].Text))
-                        {
-                            compoundPosition++;
-                        }
-                        coreCompoundPrediction.Insert(compoundPosition, prediction);
-                    }
-                    else
-                    {
-                    */
-                    corePredicitions.Insert(position, prediction);
-
-                    var compoundCorePrediction = new List<WordPrediction>(1) { prediction };
-                    coreCompoundPredictions.Insert(position, compoundCorePrediction);
-                    /*
-                    }
-                    */
+                    AddNextPrediction(nextCorePrediction);
+                    nextCorePrediction = GetNextCorePrediction(enumerator);
                 }
+
+                // Apply strategies to improve the core predictions.
+                for (var improved = true; improved;)
+                {
+                    improved = false;
+
+                    Debug.Assert(coreCompoundPredictions.Count == corePredicitions.Count);
+                    Debug.Assert(followOnPredictions.Count == corePredicitions.Count);
+
+                    if (1 < corePredicitions.Count && nextCorePrediction != null)
+                    {
+                        var pairable = -1;
+                        var lostPrediction = (WordPrediction)null;
+
+                        var next = corePredicitions[0];
+                        var definiteImprovementFound = false;
+                        for (var i = 1; !definiteImprovementFound && i < corePredicitions.Count; i++)
+                        {
+                            var prev = next;
+                            next = corePredicitions[i];
+
+                            if (next.Text.StartsWith(prev.Text))
+                            {
+                                var prevCount = coreCompoundPredictions[i - 1].Count;
+                                var prevTailPrediction = coreCompoundPredictions[i - 1][prevCount - 1];
+                                var prevTailText = prevTailPrediction.Text;
+
+                                var nextCount = coreCompoundPredictions[i].Count;
+                                var nextTailPrediction = coreCompoundPredictions[i][nextCount - 1];
+                                var nextTailText = nextTailPrediction.Text;
+
+                                var canMerge = nextTailText.StartsWith(prevTailText) ||
+                                    prevTailText.StartsWith(nextTailText);
+
+                                if (canMerge)
+                                {
+                                    var potentialLostPrediction = followOnPredictions[i - 1];
+                                    if (pairable == -1 || potentialLostPrediction == null)
+                                    {
+                                        pairable = i - 1;
+                                        lostPrediction = potentialLostPrediction;
+                                        definiteImprovementFound = potentialLostPrediction == null;
+                                    }
+                                    else if (CompareScores(potentialLostPrediction.Score, lostPrediction.Score) < 0)
+                                    {
+                                        pairable = i - 1;
+                                        lostPrediction = potentialLostPrediction;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (pairable != -1)
+                        {
+                            if (lostPrediction == null || CompareScores(lostPrediction.Score, nextCorePrediction.Score) < 0)
+                            {
+                                Debug.Assert(corePredicitions[pairable] == coreCompoundPredictions[pairable][0]);
+
+                                Debug.Assert(coreCompoundPredictions.Count == corePredicitions.Count);
+                                Debug.Assert(followOnPredictions.Count == corePredicitions.Count);
+
+                                var targetPredictions = coreCompoundPredictions[pairable];
+                                var sourcePredictions = coreCompoundPredictions[pairable + 1];
+
+                                Debug.Assert(targetPredictions[0].Text.Length < sourcePredictions[0].Text.Length);
+                                Debug.Assert(sourcePredictions[0].Text.StartsWith(targetPredictions[0].Text));
+
+                                var targetPosition = 1;
+                                foreach (var sourcePrediction in sourcePredictions)
+                                {
+                                    while (targetPosition < targetPredictions.Count &&
+                                        sourcePrediction.Text.Length < targetPredictions[targetPosition].Text.Length)
+                                    {
+                                        targetPosition++;
+                                    }
+
+                                    targetPredictions.Insert(targetPosition, sourcePrediction);
+                                    targetPosition++;
+                                }
+
+                                coreCompoundPredictions.RemoveAt(pairable + 1);
+                                corePredicitions.RemoveAt(pairable + 1);
+                                followOnPredictions.RemoveAt(pairable);
+
+                                Debug.Assert(coreCompoundPredictions.Count == corePredicitions.Count);
+                                Debug.Assert(followOnPredictions.Count == corePredicitions.Count);
+
+                                AddNextPrediction(nextCorePrediction);
+                                nextCorePrediction = GetNextCorePrediction(enumerator);
+
+                                Debug.Assert(coreCompoundPredictions.Count == corePredicitions.Count);
+                                Debug.Assert(followOnPredictions.Count == corePredicitions.Count);
+
+                                improved = true;
+                            }
+                        }
+                    }
+
+                    Debug.Assert(coreCompoundPredictions.Count == corePredicitions.Count);
+                    Debug.Assert(followOnPredictions.Count == corePredicitions.Count);
+
+                    // DisplayInitialCorePredictions(coreCompoundPredictions, followOnPredictions, nextCorePrediction);
+                }
+
+                DisplayInitialCorePredictions(coreCompoundPredictions, followOnPredictions, nextCorePrediction);
             }
 
-            DisplayCorePredictions(coreCompoundPredictions);
+            // DisplayCorePredictions(coreCompoundPredictions);
 
             return base.CreateSuggestionLists(lowerBound, upperBound, maxItemCount);
+
+            void AddNextPrediction(WordPrediction prediction)
+            {
+                var position = 0;
+                while (position < corePredicitions.Count && corePredicitions[position].Index < prediction.Index)
+                {
+                    position++;
+                }
+
+                corePredicitions.Insert(position, prediction);
+
+                var compoundCorePrediction = new List<WordPrediction>(1) { prediction };
+                coreCompoundPredictions.Insert(position, compoundCorePrediction);
+
+                var followOnContext = new int[Context.Length + 1];
+                Array.Copy(Context, followOnContext, Context.Length);
+                followOnContext[Context.Length] = prediction.Token;
+                var followOnPrediction = GetTopPrediction(followOnContext);
+                followOnPredictions.Insert(position, followOnPrediction);
+            }
         }
 
         internal ISuggestionItem GetNextItem(SuggestedWordItem previousItem, int token)

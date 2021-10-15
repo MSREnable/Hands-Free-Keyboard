@@ -250,7 +250,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             Debug.Unindent();
         }
 
-        internal IEnumerable<int[]> GetTopScores<T>(PredictiveVocabularySource<T> source, ITokenTileFilter filter, int[] context, int minIndex, int limIndex, int count)
+        internal IEnumerable<int[]> GetTopScores<T>(PredictiveVocabularySource<T> source, ITokenTileFilter filter, int[] context, int minIndex, int limIndex)
             where T : ISuggestionItem
         {
             var scores = ScoredTokenPredictionMaker<T>.GetTopScores(source, _database, filter, context, _width, minIndex, limIndex);
