@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -295,7 +294,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _headItems.Insert(_selectedIndex + 1, item);
             SetSelectedIndex(_selectedIndex + 1);
 
-            AddSequence(Context, PersistedSequenceWeight);
+            AddSequenceTail(Context, PersistedSequenceWeight);
 
             SetRunOnSuggestions();
             SetSuggestionsView();
@@ -332,7 +331,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _headItems.Insert(_selectedIndex + 1, item);
                 SetSelectedIndex(_selectedIndex + 1);
 
-                AddSequence(Context, PersistedSequenceWeight);
+                AddSequenceTail(Context, PersistedSequenceWeight);
             }
 
             if (newWords)
@@ -396,7 +395,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 _headItems[_selectedIndex + 1] = selected;
                 SetSelectedIndex(_selectedIndex + 1);
 
-                AddSequence(Context, PersistedSequenceWeight);
+                AddSequenceTail(Context, PersistedSequenceWeight);
 
                 done = ReferenceEquals(item, runOn);
             }
@@ -507,7 +506,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 subContext.RemoveRange(_selectedIndex + 1, subContext.Count - _selectedIndex - 1);
                 for (var i = _selectedIndex; index < i; i--)
                 {
-                    AddSequence(subContext, LiveSequenceWeight);
+                    AddSequenceTail(subContext, LiveSequenceWeight);
                     subContext.RemoveAt(i);
                 }
             }
@@ -790,13 +789,13 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             WordPrediction value;
 
-            var topScores = TemporaryPredictor.GetTopScores(this, TokenFilter, context, 0, Count);
+            var topScores = PersistantPredictor.GetTopScores(this, TokenFilter, context, 0, Count);
             using (var enumerator = topScores.GetEnumerator())
             {
                 value = GetNextCorePrediction(enumerator);
             }
 
-            if (value.Score.Length == 1)
+            if (value.Score.Length < 3)
             {
                 // TODO: We should not have constructed this object.
                 value = null;
@@ -850,7 +849,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         protected override SortedList<int, IReadOnlyList<ITile>> CreateSuggestionLists(int lowerBound, int upperBound, int maxItemCount)
         {
-            var scores = TemporaryPredictor.GetTopScores(this, TokenFilter, Context, lowerBound, upperBound);
+            var scores = DeltaPredictor.GetTopScores(this, TokenFilter, Context, lowerBound, upperBound);
             DisplayTopScores(this, scores);
 
             var corePredicitions = new List<WordPrediction>(maxItemCount);
@@ -1056,12 +1055,12 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void ClearIncrement()
         {
-            TemporaryPredictor.Clear(); ;
+            DeltaPredictor.Clear(); ;
         }
 
         internal void RollbackAndAddSequence(IReadOnlyList<int> sequence, int increment)
         {
-            PersistantPredictor.Subtract(TemporaryPredictor);
+            PersistantPredictor.Subtract(DeltaPredictor);
             PersistantPredictor.AddSequence(sequence, increment);
         }
 

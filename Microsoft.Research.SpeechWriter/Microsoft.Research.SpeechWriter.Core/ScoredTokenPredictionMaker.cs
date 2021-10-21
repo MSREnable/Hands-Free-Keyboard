@@ -69,46 +69,69 @@ namespace Microsoft.Research.SpeechWriter.Core
             return value;
         }
 
-        private IEnumerable<int[]> GetChildScores(int contextStart)
+        private TokenPredictorDatabase GetContextDatabase(int contextStart)
         {
-            var pathLength = _context.Length - contextStart;
-            var score = new int[1 + 1 + pathLength];
-
+            var contextLength = _context.Length;
             var database = _database;
-            for (var index = 0; database != null && index < pathLength; index++)
+
+            for (var index = contextStart; database != null && index < contextLength; index++)
             {
-                if (database.TryGetValue(_context[contextStart + index], out var info))
+                if (database.TryGetValue(_context[index], out var info))
                 {
-                    score[1 + index] = info.Count;
                     database = info.TryGetChildren();
+                }
+                else
+                {
+                    database = null;
                 }
             }
 
-            if (database != null)
+            return database;
+        }
+
+        internal IEnumerable<int[]> GetTopScores()
+        {
+            var contextLength = _context.Length;
+            var databases = new TokenPredictorDatabase[contextLength + 1];
+            databases[0] = _database;
+            for (var index = 1; index <= contextLength && databases[index - 1] != null; index++)
             {
-                var previousCount = int.MaxValue;
-                var previousToken = int.MaxValue;
+                databases[index] = GetContextDatabase(contextLength - index);
+            }
 
-                foreach (var info in database.SortedEnumerable)
+            for (var index = contextLength; 0 <= index; index--)
+            {
+                if (databases[index] != null)
                 {
-                    if (IsNewToken(info.Token))
+                    var score = new int[1 + 1 + index];
+                    foreach (var info in databases[index].SortedEnumerable)
                     {
-                        score[0] = info.Token;
-                        score[1 + pathLength] = info.Count;
+                        var token = info.Token;
 
-                        Debug.Assert(info.Count <= previousCount);
-                        Debug.Assert(info.Count < previousCount || info.Token < previousToken);
-                        previousCount = info.Count;
-                        previousToken = info.Token;
+                        if (IsNewToken(token))
+                        {
+                            score[0] = token;
+                            score[1 + index] = info.Count;
 
-                        yield return score;
+                            for (var inbetweenIndex = 0; inbetweenIndex < index; inbetweenIndex++)
+                            {
+                                if (databases[inbetweenIndex].TryGetValue(token, out var inbetweenInfo))
+                                {
+                                    score[1 + inbetweenIndex] = inbetweenInfo.Count;
+                                }
+                                else
+                                {
+                                    Debug.Fail("Cannot not find an inbetween");
+                                    score[1 + inbetweenIndex] = 0;
+                                }
+                            }
+
+                            yield return score;
+                        }
                     }
                 }
             }
-        }
 
-        private IEnumerable<int[]> GetTokenScores()
-        {
             var singleToken = new int[1];
             var tokens = _source.GetTokens();
 
@@ -124,25 +147,6 @@ namespace Microsoft.Research.SpeechWriter.Core
                         yield return singleToken;
                     }
                 }
-            }
-        }
-
-        internal IEnumerable<int[]> GetTopScores()
-        {
-            var contextLength = _context.Length;
-            for (var scanIndex = 0; scanIndex <= contextLength; scanIndex++)
-            {
-                var childScores = GetChildScores(scanIndex);
-                foreach (var score in childScores)
-                {
-                    yield return score;
-                }
-            }
-
-            var tokenScores = GetTokenScores();
-            foreach (var score in tokenScores)
-            {
-                yield return score;
             }
         }
 

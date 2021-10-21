@@ -10,24 +10,24 @@ namespace Microsoft.Research.SpeechWriter.Core
     {
         private readonly TokenPredictor _persistantPredictor;
 
-        private readonly TokenPredictor _temporaryPredictor;
+        private readonly TokenPredictor _deltaPredictor;
 
         internal PredictiveVocabularySource(ApplicationModel model, int predictorWidth)
             : base(model)
         {
             _persistantPredictor = new TokenPredictor(predictorWidth);
-            _temporaryPredictor = new TokenPredictor(predictorWidth);
+            _deltaPredictor = new TokenPredictor(predictorWidth);
         }
 
         /// <summary>
-        /// 
+        /// Current active predictor database.
         /// </summary>
         protected TokenPredictor PersistantPredictor => _persistantPredictor;
 
         /// <summary>
-        /// 
+        /// Predictor database containing only recently added and perhaps speculitve additions.
         /// </summary>
-        protected TokenPredictor TemporaryPredictor => _temporaryPredictor;
+        protected TokenPredictor DeltaPredictor => _deltaPredictor;
 
         internal int[] Context { get; private set; }
 
@@ -136,10 +136,10 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         /// <param name="sequence"></param>
         /// <param name="increment"></param>
-        internal void AddSequence(IReadOnlyList<int> sequence, int increment)
+        internal void AddSequenceTail(IReadOnlyList<int> sequence, int increment)
         {
             PersistantPredictor.AddSequenceTail(sequence, increment);
-            TemporaryPredictor.AddSequenceTail(sequence, increment);
+            DeltaPredictor.AddSequenceTail(sequence, increment);
         }
     }
 }
