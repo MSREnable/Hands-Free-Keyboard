@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
-    class ScoredTokenPredictionMaker<T>
+    class ScoredTokenPredictionMaker<T> : IComparer<int[]>
         where T : ISuggestionItem
     {
         private readonly PredictiveVocabularySource<T> _source;
@@ -89,46 +89,79 @@ namespace Microsoft.Research.SpeechWriter.Core
             return database;
         }
 
-        internal IEnumerable<int[]> GetTopScores()
+        internal TokenPredictorDatabase[] GetContextDatabases()
         {
             var contextLength = _context.Length;
-            var databases = new TokenPredictorDatabase[contextLength + 1];
-            databases[0] = _database;
-            for (var index = 1; index <= contextLength && databases[index - 1] != null; index++)
+            var databases = new List<TokenPredictorDatabase>(contextLength + 1) { _database };
+
+            var done = false;
+            for (var index = 1; index <= contextLength && !done; index++)
             {
-                databases[index] = GetContextDatabase(contextLength - index);
+                var database = GetContextDatabase(contextLength - index);
+                if (database != null)
+                {
+                    databases.Add(database);
+                }
+                else
+                {
+                    done = true;
+                }
             }
 
-            for (var index = contextLength; 0 <= index; index--)
+            return databases.ToArray();
+        }
+
+        internal IEnumerable<int[]> GetTopScores()
+        {
+            var databases = GetContextDatabases();
+
+            for (var index = databases.Length - 1; 0 <= index; index--)
             {
-                if (databases[index] != null)
+                var score = new int[1 + 1 + index];
+                var groupSet = new SortedSet<int[]>(this);
+                var group = int.MaxValue;
+                foreach (var info in databases[index].SortedEnumerable)
                 {
-                    var score = new int[1 + 1 + index];
-                    foreach (var info in databases[index].SortedEnumerable)
+                    var token = info.Token;
+
+                    if (IsNewToken(token))
                     {
-                        var token = info.Token;
+                        score[0] = token;
+                        score[1 + index] = info.Count;
 
-                        if (IsNewToken(token))
+                        for (var inbetweenIndex = 0; inbetweenIndex < index; inbetweenIndex++)
                         {
-                            score[0] = token;
-                            score[1 + index] = info.Count;
-
-                            for (var inbetweenIndex = 0; inbetweenIndex < index; inbetweenIndex++)
+                            if (databases[inbetweenIndex].TryGetValue(token, out var inbetweenInfo))
                             {
-                                if (databases[inbetweenIndex].TryGetValue(token, out var inbetweenInfo))
-                                {
-                                    score[1 + inbetweenIndex] = inbetweenInfo.Count;
-                                }
-                                else
-                                {
-                                    Debug.Fail("Cannot not find an inbetween");
-                                    score[1 + inbetweenIndex] = 0;
-                                }
+                                score[1 + inbetweenIndex] = inbetweenInfo.Count;
                             }
-
-                            yield return score;
+                            else
+                            {
+                                Debug.Fail("Cannot not find an inbetween");
+                                score[1 + inbetweenIndex] = 0;
+                            }
                         }
+
+                        if (group != info.Count)
+                        {
+                            foreach (var s in groupSet)
+                            {
+                                yield return s;
+                            }
+                            groupSet.Clear();
+
+                            Debug.Assert(info.Count < group);
+                            group = info.Count;
+                        }
+
+                        groupSet.Add(score);
+                        score = new int[1 + 1 + index];
                     }
+                }
+
+                foreach (var s in groupSet)
+                {
+                    yield return s;
                 }
             }
 
@@ -161,6 +194,18 @@ namespace Microsoft.Research.SpeechWriter.Core
             var maker = new ScoredTokenPredictionMaker<T>(source, database, filter, context, contextWidth, minIndex, limIndex);
             var scores = maker.GetTopScores();
             return scores;
+        }
+
+        int IComparer<int[]>.Compare(int[] x, int[] y)
+        {
+            Debug.Assert(x.Length == y.Length);
+            var position = x.Length - 1;
+            while (x[position] == y[position])
+            {
+                position--;
+            }
+            var value = x[position] < y[position] ? +1 : -1;
+            return value;
         }
     }
 }
