@@ -118,6 +118,17 @@ namespace Microsoft.Research.SpeechWriter.Core
             return token;
         }
 
+        /// <summary>
+        /// Get token from string.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns>The token.</returns>
+        public bool TryGetToken(string str, out int token)
+        {
+            var value = _stringToToken.TryGetValue(str, out token);
+            return value;
+        }
+
         internal bool IsNewWord(string str)
         {
             var result = !_stringToToken.ContainsKey(str);

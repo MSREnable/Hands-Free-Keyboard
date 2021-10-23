@@ -849,7 +849,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         protected override SortedList<int, IReadOnlyList<ITile>> CreateSuggestionLists(int lowerBound, int upperBound, int maxItemCount)
         {
-            var scores = DeltaPredictor.GetTopScores(this, TokenFilter, Context, lowerBound, upperBound);
+            var scores = PersistantPredictor.GetTopScores(this, TokenFilter, Context, lowerBound, upperBound);
             DisplayTopScores(this, scores);
 
             var corePredicitions = new List<WordPrediction>(maxItemCount);
@@ -971,6 +971,39 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
 
                 DisplayInitialCorePredictions(coreCompoundPredictions, followOnPredictions, nextCorePrediction);
+            }
+
+            foreach (var compoundPrediction in coreCompoundPredictions)
+            {
+                var length = 0;
+
+                for (var position = 0; position < compoundPrediction.Count; position++)
+                {
+                    var prediction = compoundPrediction[position];
+                    while (length < prediction.Text.Length)
+                    {
+                        if (char.IsSurrogate(prediction.Text[length]))
+                        {
+                            length += 2;
+                        }
+                        else
+                        {
+                            length++;
+                        }
+
+                        if (length < prediction.Text.Length)
+                        {
+                            var candidate = prediction.Text.Substring(0, length);
+                            if (_tokens.TryGetToken(candidate, out var candidateToken))
+                            {
+                                if (TokenFilter.IsTokenVisible(candidateToken))
+                                {
+                                    Debug.WriteLine($"TODO: Should add {candidate}");
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             // DisplayCorePredictions(coreCompoundPredictions);
