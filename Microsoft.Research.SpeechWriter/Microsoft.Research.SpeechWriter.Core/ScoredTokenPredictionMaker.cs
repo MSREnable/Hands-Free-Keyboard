@@ -113,9 +113,12 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal IEnumerable<int[]> GetTopScores()
         {
+            // Get the databases that represent increasing depths into the context.
             var databases = GetContextDatabases();
 
-            for (var index = databases.Length - 1; 0 <= index; index--)
+            // Produce scores with three or more elements - those that may not entirely be ordered
+            // by their final ordinal.
+            for (var index = databases.Length - 1; 1 <= index; index--)
             {
                 var score = new int[1 + 1 + index];
                 var groupSet = new SortedSet<int[]>(this);
@@ -165,6 +168,24 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
             }
 
+            // Produce scores with two ordinls - those guaranteed to be produced in order.
+            {
+                var score = new int[1 + 1];
+                foreach (var info in databases[0].SortedEnumerable)
+                {
+                    var token = info.Token;
+
+                    if (IsNewToken(token))
+                    {
+                        score[0] = token;
+                        score[1] = info.Count;
+
+                        yield return score;
+                    }
+                }
+            }
+
+            // As a first fallback produce single ordinal results.
             var singleToken = new int[1];
             var tokens = _source.GetTokens();
 
@@ -181,6 +202,8 @@ namespace Microsoft.Research.SpeechWriter.Core
                     }
                 }
             }
+
+            // TODO: We should now perhaps disregard index position constraints and just yield anything.
         }
 
         internal static IEnumerable<int[]> GetTopScores(PredictiveVocabularySource<T> source,
