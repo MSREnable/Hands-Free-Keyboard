@@ -1008,7 +1008,45 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             // DisplayCorePredictions(coreCompoundPredictions);
 
-            return base.CreateSuggestionLists(lowerBound, upperBound, maxItemCount);
+            var predictionsList = new SortedList<int, IReadOnlyList<ITile>>();
+
+            for (var position = 0; position < coreCompoundPredictions.Count; position++)
+            {
+                var predictions = new List<ITile>();
+                var coreCompoundPrediction = coreCompoundPredictions[position];
+                var headPrediction = coreCompoundPrediction[0];
+
+                var headWord = _tokens.GetString(headPrediction.Token);
+                ITile item = CreateSuggestedWordItem(headWord);
+                predictions.Add(item);
+
+                for (var corePosition = 1; corePosition < coreCompoundPrediction.Count; corePosition++)
+                {
+                    var tailPrediction = coreCompoundPrediction[corePosition];
+                    var tailWord = _tokens.GetString(tailPrediction.Token);
+                    Debug.Assert(tailWord.StartsWith(headWord));
+                    item = new ExtendedSuggestedWordItem(LastTile, this, tailWord, tailWord.Substring(headWord.Length));
+
+                    predictions.Add(item);
+
+                    headWord = tailWord;
+                }
+
+                var followOn = followOnPredictions[position];
+                if (followOn != null)
+                {
+                    var newItem = new SuggestedWordItem(item, this, followOn.Text);
+                    predictions.Add(newItem);
+                    // item = newItem;
+                }
+
+
+                predictionsList.Add(headPrediction.Index, predictions);
+            }
+
+            return predictionsList;
+
+            //return base.CreateSuggestionLists(lowerBound, upperBound, maxItemCount);
 
             void AddNextPrediction(WordPrediction prediction)
             {
