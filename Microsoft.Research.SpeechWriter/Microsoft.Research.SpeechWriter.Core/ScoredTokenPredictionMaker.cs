@@ -111,6 +111,36 @@ namespace Microsoft.Research.SpeechWriter.Core
             return databases.ToArray();
         }
 
+        internal TokenPredictorDatabase[] GetNextContextDatabases(TokenPredictorDatabase[] previous, int token)
+        {
+            var previousLength = previous.Length;
+            var databases = new List<TokenPredictorDatabase>(previousLength + 1) { _database };
+
+            var done = false;
+            for (var index = 0; index < previousLength && !done; index++)
+            {
+                if (previous[index - 1].TryGetValue(token, out var info))
+                {
+                    var database = info.TryGetChildren();
+
+                    if (database != null)
+                    {
+                        databases.Add(database);
+                    }
+                    else
+                    {
+                        done = true;
+                    }
+                }
+                else
+                {
+                    done = true;
+                }
+            }
+
+            return databases.ToArray();
+        }
+
         internal IEnumerable<int[]> GetTopScores()
         {
             // Get the databases that represent increasing depths into the context.
