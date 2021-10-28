@@ -89,6 +89,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                     {
                         Assert.AreSame(commonPredecessor, suggestion.Predecessor);
                     }
+                    else if (suggestion is ExtendedSuggestedWordItem)
+                    {
+                        Assert.AreSame(commonPredecessor, suggestion.Predecessor);
+                    }
                     else
                     {
                         Assert.AreSame(predecessor, suggestion.Predecessor);

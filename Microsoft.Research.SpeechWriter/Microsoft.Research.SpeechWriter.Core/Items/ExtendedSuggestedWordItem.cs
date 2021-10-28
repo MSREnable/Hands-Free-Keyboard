@@ -7,22 +7,19 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
     /// <summary>
     /// A word in the suggestion list.
     /// </summary>
-    public class ExtendedSuggestedWordItem : WordItem, ISuggestionItem
+    public class ExtendedSuggestedWordItem : SuggestedWordItem, ISuggestionItem
     {
-        private readonly SuggestedWordItem _previous;
         private readonly string _partWord;
 
         internal ExtendedSuggestedWordItem(WordVocabularySource source, SuggestedWordItem previous, string wholeWord, string partWord)
-            : base(previous, source, wholeWord)
+            : base(source, previous, wholeWord)
         {
-            _previous = previous;
             _partWord = partWord;
         }
 
         internal ExtendedSuggestedWordItem(ITile predecessor, WordVocabularySource source, string wholeWord, string partWord)
             : base(predecessor, source, wholeWord)
         {
-            _previous = null;
             _partWord = partWord;
         }
 
@@ -30,28 +27,6 @@ namespace Microsoft.Research.SpeechWriter.Core.Items
         /// Visualization description.
         /// </summary>
         public override TileVisualization Visualization => new TileVisualization(this, TileType.Suffix, _partWord, TileColor.SuggestionBackground);
-
-        internal string[] Words
-        {
-            get
-            {
-                string[] value;
-
-                if (_previous != null)
-                {
-                    value = _previous.Words;
-                    var index = value.Length;
-                    Array.Resize(ref value, index + 1);
-                    value[index] = Content;
-                }
-                else
-                {
-                    value = new[] { Content };
-                }
-
-                return value;
-            }
-        }
 
         internal override void Execute()
         {
