@@ -145,6 +145,61 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
             return action;
         }
 
+        private static ApplicationRobotAction CreateExtendedSuggestedWordAction(ApplicationModel model,
+            bool complete,
+            TileSequence words,
+            int wordsMatchLim,
+            int index,
+            int subIndex,
+            CultureInfo culture)
+        {
+            ApplicationRobotAction action;
+
+            var list = model.SuggestionLists[index];
+
+            using (var enumerator = list.GetEnumerator())
+            {
+                for (var i = 0; i < subIndex; i++)
+                {
+                    var moved = enumerator.MoveNext();
+                    Debug.Assert(moved);
+                }
+
+                // See what words match exactly.
+                var subLim = 0;
+                while (enumerator.MoveNext() &&
+                    wordsMatchLim + subLim < words.Count &&
+                    !(enumerator.Current is ExtendedSuggestedWordItem) &&
+                    IsItemMatchExact<SuggestedWordItem>(enumerator.Current, words[wordsMatchLim + subLim], culture))
+                {
+                    subLim++;
+                }
+
+                if (complete &&
+                    wordsMatchLim + subLim == words.Count &&
+                    enumerator.Current is TailStopItem)
+                {
+                    // We can complete the action.
+                    action = ApplicationRobotAction.CreateSuggestionAndComplete(index, subIndex + subLim);
+                }
+                else
+                {
+                    if (wordsMatchLim + subLim < words.Count &&
+                        !(enumerator.Current is ExtendedSuggestedWordItem) &&
+                        IsItemMatch<SuggestedWordItem>(enumerator.Current, words[wordsMatchLim + subLim], culture))
+                    {
+                        subLim++;
+                    }
+
+                    // We can advance a word or more.
+                    action = ApplicationRobotAction.CreateSuggestion(index, subIndex + subLim);
+                    AssertGoodAction(model, action);
+                }
+            }
+
+            return action;
+        }
+
         private static void AssertGoodAction(ApplicationModel model, ApplicationRobotAction action)
         {
             Debug.Assert(action.Target != ApplicationRobotActionTarget.Suggestion || action.SubIndex != 0 ||
@@ -234,6 +289,23 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                     {
                         // Need to step back.
                         action = ApplicationRobotAction.CreateInterstitial(index);
+                    }
+                    else
+                    {
+                        var subIndex = 1;
+                        while (subIndex < list.Count &&
+                            list[subIndex] is ExtendedSuggestedWordItem extensionWord &&
+                            StringCompare(extensionWord.Content, targetWord.Content, culture) < 0)
+                        {
+                            subIndex++;
+                        }
+
+                        if (subIndex < list.Count &&
+                            list[subIndex] is ExtendedSuggestedWordItem extensionWordFound &&
+                            StringCompare(extensionWordFound.Content, targetWord.Content, culture) == 0)
+                        {
+                            action = CreateExtendedSuggestedWordAction(model, complete, words, wordsMatchLim, index, subIndex, culture);
+                        }
                     }
                 }
                 else if (firstItem is SuggestedSpellingItem)

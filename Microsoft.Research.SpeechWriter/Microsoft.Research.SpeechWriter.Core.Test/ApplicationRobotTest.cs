@@ -289,50 +289,50 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("this is the dawning of the age of aquarius", 34, 1, 117, 92);
+            MultiTest("this is the dawning of the age of aquarius", 32, 1, 117, 83);
         }
 
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("the quick brown fox jumps over a lazy dog", 40, 1, 186, 96);
+            MultiTest("the quick brown fox jumps over a lazy dog", 37, 1, 186, 97);
         }
 
         [Test]
         public void HelloWorldTest()
         {
             // TODO: Find out why entering HELLO WORLD predicts HELLO WORLD HELLO WORLD as the next sentence.
-            MultiTest("hello world", 10, 1, 45, 10);
+            MultiTest("hello world", 11, 1, 45, 11);
         }
 
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("izzy wizzy lets get busy", 30, 1, 77, 104);
+            MultiTest("izzy wizzy lets get busy", 29, 1, 77, 104);
         }
 
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 94, 1, 65, 498);
+            MultiTest("공유하 고 즐기십시오", 93, 1, 65, 521);
         }
 
         [Test]
         public void ShareAndEnjoyCantoneseTest()
         {
-            MultiTest("分享 同 享受", 53, 1, 33, 176);
+            MultiTest("分享 同 享受", 53, 1, 33, 175);
         }
 
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 140, 1, 94, 619);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 140, 1, 94, 620);
         }
 
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 34, 1, 104, 136);
+            MultiTest("That'll be $10, please!", 34, 1, 104, 182);
         }
 
         [Test]
@@ -483,7 +483,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public async Task ShareAndEnjoyPersistance()
         {
-            await CheckRecallAsync("share and enjoy, share and enjoy, journey though life with a plastic boy, or girl by your side", 63, 5);
+            await CheckRecallAsync("share and enjoy, share and enjoy, journey though life with a plastic boy, or girl by your side", 61, 3);
         }
 
         [Test]

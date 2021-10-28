@@ -14,11 +14,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         private readonly int _minIndex;
         private readonly int _limIndex;
 
-        /// <summary>
-        /// Tokens already found and returned.
-        /// </summary>
-        private readonly HashSet<int> _foundTokens = new HashSet<int>();
-
         internal ScoredTokenPredictionMaker(PredictiveVocabularySource<T> source, TokenPredictorDatabase database, ITokenTileFilter filter, int[] context, int contextWidth, int minIndex, int limIndex)
         {
             _source = source;
@@ -34,39 +29,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             _context = context;
             _minIndex = minIndex;
             _limIndex = limIndex;
-        }
-
-        private bool IsNewToken(int token)
-        {
-            bool value;
-
-            if (!_foundTokens.Contains(token))
-            {
-                var index = _source.GetTokenIndex(token);
-                if (_minIndex <= index && index < _limIndex)
-                {
-                    _foundTokens.Add(token);
-
-                    if (_filter.IsTokenVisible(token))
-                    {
-                        value = true;
-                    }
-                    else
-                    {
-                        value = false;
-                    }
-                }
-                else
-                {
-                    value = false;
-                }
-            }
-            else
-            {
-                value = false;
-            }
-
-            return value;
         }
 
         private TokenPredictorDatabase GetContextDatabase(int contextStart)
@@ -141,8 +103,42 @@ namespace Microsoft.Research.SpeechWriter.Core
             return databases.ToArray();
         }
 
-        internal IEnumerable<int[]> GetTopScores()
+        internal IEnumerable<int[]> GetTopScores(bool unfiltered)
         {
+            /// <summary>
+            /// Tokens already found and returned.
+            /// </summary>
+            HashSet<int> _foundTokens = new HashSet<int>();
+
+            bool IsNewToken(int token)
+            {
+                var value = unfiltered;
+
+                if (!value && !_foundTokens.Contains(token))
+                {
+                    var index = _source.GetTokenIndex(token);
+                    if (_minIndex <= index && index < _limIndex)
+                    {
+                        _foundTokens.Add(token);
+
+                        if (_filter.IsTokenVisible(token))
+                        {
+                            value = true;
+                        }
+                        else
+                        {
+                            value = false;
+                        }
+                    }
+                    else
+                    {
+                        value = false;
+                    }
+                }
+
+                return value;
+            }
+
             // Get the databases that represent increasing depths into the context.
             var databases = GetContextDatabases();
 
@@ -245,7 +241,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             int limIndex)
         {
             var maker = new ScoredTokenPredictionMaker<T>(source, database, filter, context, contextWidth, minIndex, limIndex);
-            var scores = maker.GetTopScores();
+            var scores = maker.GetTopScores(filter == null);
             return scores;
         }
 

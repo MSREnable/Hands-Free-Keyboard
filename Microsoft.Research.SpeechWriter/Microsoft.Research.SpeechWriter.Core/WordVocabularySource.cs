@@ -785,24 +785,24 @@ namespace Microsoft.Research.SpeechWriter.Core
             return prediction;
         }
 
-        class NullTokenFilter : ITokenTileFilter
-        {
-            private NullTokenFilter()
-            {
-            }
+        //class NullTokenFilter : ITokenTileFilter
+        //{
+        //    private NullTokenFilter()
+        //    {
+        //    }
 
-            internal static ITokenTileFilter Instance { get; } = new NullTokenFilter();
+        //    internal static ITokenTileFilter Instance { get; } = new NullTokenFilter();
 
-            bool ITileFilter.IsIndexVisible(int index) => true;
+        //    bool ITileFilter.IsIndexVisible(int index) => true;
 
-            bool ITokenTileFilter.IsTokenVisible(int token) => true;
-        }
+        //    bool ITokenTileFilter.IsTokenVisible(int token) => true;
+        //}
 
         private WordPrediction GetTopPrediction(int[] context)
         {
             WordPrediction value;
 
-            var topScores = PersistantPredictor.GetTopScores(this, NullTokenFilter.Instance, context, 0, Count);
+            var topScores = PersistantPredictor.GetTopScores(this, null, context, 0, Count);
             using (var enumerator = topScores.GetEnumerator())
             {
                 value = GetNextCorePrediction(enumerator);
@@ -1091,21 +1091,28 @@ namespace Microsoft.Research.SpeechWriter.Core
                     var followOn = followOnPredictions[position];
                     if (followOn != null)
                     {
-                        var newItem = new SuggestedWordItem(this, item, followOn.Text);
-                        predictions.Add(newItem);
+                        var firstCreatedItem = GetNextItem(item, followOn.Token);
+                        var newItem = firstCreatedItem as SuggestedWordItem; ;
+                        predictions.Add(firstCreatedItem);
 
                         var followOnContext = new List<int>(Context);
                         followOnContext.Add(followOn.Token);
-                        var done = false;
+                        var done = newItem == null;
                         while (!done && predictions.Count < maxItemCount)
                         {
                             var followOnPrediction = GetTopPrediction(followOnContext.ToArray());
                             if (followOnPrediction != null)
                             {
                                 item = newItem;
-                                newItem = new SuggestedWordItem(this, item, followOnPrediction.Text);
+                                var createdItem = GetNextItem(item, followOnPrediction.Token);
+                                newItem = createdItem as SuggestedWordItem; ;
                                 followOnContext.Add(followOnPrediction.Token);
-                                predictions.Add(newItem);
+                                predictions.Add(createdItem);
+
+                                if (newItem == null)
+                                {
+                                    done = true;
+                                }
                             }
                             else
                             {
