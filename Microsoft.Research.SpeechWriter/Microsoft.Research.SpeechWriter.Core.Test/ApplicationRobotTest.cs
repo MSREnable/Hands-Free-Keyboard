@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -109,8 +110,46 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             }
         }
 
-        private static int CountClicks(ApplicationModel model, TileSequence words, double errorRate)
+        private static void SaveTrace(ApplicationModel model, [CallerMemberName] string traceName = null)
         {
+            Assert.IsInstanceOf<TracingWriterEnvironment>(model.Environment);
+
+            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var traceTarget = Path.Combine(desktop, "RobotTestTrace");
+            Directory.CreateDirectory(traceTarget);
+
+            var existingFiles = Directory.GetFiles(traceTarget, traceName + ".*.log");
+            var maxIndex = 0;
+            foreach (var existingFile in existingFiles)
+            {
+                Assert.IsTrue(existingFile.EndsWith(".log"));
+                var strippedFile = existingFile.Substring(0, existingFile.Length - 4);
+                var dot = strippedFile.LastIndexOf('.');
+                Assert.AreNotEqual(-1, dot);
+                var indexString = strippedFile.Substring(dot + 1);
+                var index = int.Parse(indexString);
+                if (maxIndex < index)
+                {
+                    maxIndex = index;
+                }
+            }
+
+            var targetFile = Path.Combine(traceTarget, traceName + '.' + (maxIndex + 1).ToString() + ".log");
+            using (var writer = File.CreateText(targetFile))
+            {
+                var environment = (TracingWriterEnvironment)model.Environment;
+
+                foreach (var line in environment._trace)
+                {
+                    writer.WriteLine(line);
+                }
+            }
+        }
+
+        private static int CountClicks(ApplicationModel model, TileSequence words, double errorRate, string traceName)
+        {
+            Assert.IsInstanceOf<TracingWriterEnvironment>(model.Environment);
+
             var random = new Random(0);
 
             var count = 0;
@@ -233,12 +272,14 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             Assert.IsTrue(completionAction.IsComplete);
             completionAction.ExecuteItem(model);
 
+            SaveTrace(model, traceName);
+
             return count;
         }
 
-        private static int CountClicks(ApplicationModel model, TileSequence sequence)
+        private static int CountClicks(ApplicationModel model, TileSequence sequence, string traceName)
         {
-            var clicks = CountClicks(model, sequence, 0.0);
+            var clicks = CountClicks(model, sequence, 0.0, traceName);
             return clicks;
         }
 
@@ -259,31 +300,31 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             }
         }
 
-        private static void MultiTest(TileSequence words, int expectedFirstClicks, int expectedSecondClicks, int expectedEmptyClicks, int expectedClicksWithRandomErrors)
+        private static void MultiTest(TileSequence words, int expectedFirstClicks, int expectedSecondClicks, int expectedEmptyClicks, int expectedClicksWithRandomErrors, [CallerMemberName] string caller = null)
         {
             var model = new ApplicationModel(new TracingWriterEnvironment()) { MaxNextSuggestionsCount = 9 };
 
-            var actualFirstClicks = CountClicks(model, words);
+            var actualFirstClicks = CountClicks(model, words, caller + ".first");
             Assert.AreEqual(expectedFirstClicks, actualFirstClicks);
 
-            var actualSecondClicks = CountClicks(model, words);
+            var actualSecondClicks = CountClicks(model, words, caller + ".second");
             Assert.AreEqual(expectedSecondClicks, actualSecondClicks);
 
             var emptyEnvironment = new EmptyEnvironment();
             var emptyModel = new ApplicationModel(emptyEnvironment);
 
-            var actualEmptyClicks = CountClicks(emptyModel, words);
+            var actualEmptyClicks = CountClicks(emptyModel, words, caller + ".empty");
             Assert.AreEqual(expectedEmptyClicks, actualEmptyClicks);
 
             var errorModel = new ApplicationModel(new TracingWriterEnvironment()) { MaxNextSuggestionsCount = 9 };
-            var actualClicksWithRandomErrors = CountClicks(errorModel, words, 0.2);
+            var actualClicksWithRandomErrors = CountClicks(errorModel, words, 0.2, caller + ".erred");
             Assert.AreEqual(expectedClicksWithRandomErrors, actualClicksWithRandomErrors);
         }
 
-        private static void MultiTest(string sentence, int expectedFirstClicks, int expectedSecondClicks, int expectedEmptyClicks, int expectedClicksWithRandomErrors)
+        private static void MultiTest(string sentence, int expectedFirstClicks, int expectedSecondClicks, int expectedEmptyClicks, int expectedClicksWithRandomErrors, [CallerMemberName] string caller = null)
         {
             var words = TileSequence.FromRaw(sentence);
-            MultiTest(words, expectedFirstClicks, expectedSecondClicks, expectedEmptyClicks, expectedClicksWithRandomErrors);
+            MultiTest(words, expectedFirstClicks, expectedSecondClicks, expectedEmptyClicks, expectedClicksWithRandomErrors, caller);
         }
 
         [Test]
@@ -375,6 +416,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             var lastAction = ApplicationRobot.GetNextCompletionAction(model, sequence);
             Assert.AreEqual(ApplicationRobotActionTarget.Tail, lastAction.Target);
             Assert.AreEqual(0, lastAction.Index);
+
+            SaveTrace(model);
         }
 
         [Test]
@@ -414,7 +457,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void HelloWordNotIsTest()
         {
-            var model = new ApplicationModel();
+            var model = new ApplicationModel(new TracingWriterEnvironment());
             Establish(model, "hello world");
 
             Assert.IsInstanceOf<HeadWordItem>(model.HeadItems[1]);
@@ -434,6 +477,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             Assert.AreEqual("WORLD", model.HeadItems[2].Content);
             Assert.IsInstanceOf<GhostStopItem>(model.HeadItems[3]);
             */
+
+            SaveTrace(model);
         }
 
         private class PersistantEnvironment : TracingWriterEnvironment, IWriterEnvironment
@@ -462,19 +507,19 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             }
         }
 
-        private static async Task CheckRecallAsync(string text, int expectedFirst, int expectedSecond)
+        private static async Task CheckRecallAsync(string text, int expectedFirst, int expectedSecond, [CallerMemberName] string caller = null)
         {
             var sequence = TileSequence.FromRaw(text);
 
             var environment = new PersistantEnvironment();
             var modelFirst = new ApplicationModel(environment);
 
-            var actualFirst = CountClicks(modelFirst, sequence);
+            var actualFirst = CountClicks(modelFirst, sequence, caller + ".first");
 
             var modelSecond = new ApplicationModel(environment);
             await modelSecond.LoadUtterancesAsync();
 
-            var actualSecond = CountClicks(modelSecond, sequence);
+            var actualSecond = CountClicks(modelSecond, sequence, caller + ".second");
 
             Assert.AreEqual(expectedFirst, actualFirst);
             Assert.AreEqual(expectedSecond, actualSecond);
@@ -504,6 +549,8 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                 done = action.IsComplete;
             }
             while (!done);
+
+            SaveTrace(model);
 
             Assert.AreEqual(count + 1, environment._trace.Count);
 
