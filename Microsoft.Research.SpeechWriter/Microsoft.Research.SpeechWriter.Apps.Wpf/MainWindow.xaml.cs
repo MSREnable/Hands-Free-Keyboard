@@ -54,7 +54,11 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
             _ = Narrator.AttachNarrator(_model, vocalizer);
 
             TheHost.Model = _model;
-            TheHost.SizeChanged += (s, e) => TheHost.Model.MaxNextSuggestionsCount = (int)(e.NewSize.Height / 110);
+            TheHost.SizeChanged += (s, e) =>
+            {
+                TheHost.Model.DisplayRows = (int)(e.NewSize.Height / 110);
+                TheHost.Model.DisplayColumns = (int)(e.NewSize.Width / 110);
+            };
 
             Loaded += OnLoaded;
 

@@ -302,7 +302,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 
         private static void MultiTest(TileSequence words, int expectedFirstClicks, int expectedSecondClicks, int expectedEmptyClicks, int expectedClicksWithRandomErrors, [CallerMemberName] string caller = null)
         {
-            var model = new ApplicationModel(new TracingWriterEnvironment()) { MaxNextSuggestionsCount = 9 };
+            var model = new ApplicationModel(new TracingWriterEnvironment()) { DisplayRows = 9 };
 
             var actualFirstClicks = CountClicks(model, words, caller + ".first");
             Assert.AreEqual(expectedFirstClicks, actualFirstClicks);
@@ -316,7 +316,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             var actualEmptyClicks = CountClicks(emptyModel, words, caller + ".empty");
             Assert.AreEqual(expectedEmptyClicks, actualEmptyClicks);
 
-            var errorModel = new ApplicationModel(new TracingWriterEnvironment()) { MaxNextSuggestionsCount = 9 };
+            var errorModel = new ApplicationModel(new TracingWriterEnvironment()) { DisplayRows = 9 };
             var actualClicksWithRandomErrors = CountClicks(errorModel, words, 0.2, caller + ".erred");
             Assert.AreEqual(expectedClicksWithRandomErrors, actualClicksWithRandomErrors);
         }

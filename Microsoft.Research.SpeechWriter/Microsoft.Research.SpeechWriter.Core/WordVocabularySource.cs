@@ -860,20 +860,22 @@ namespace Microsoft.Research.SpeechWriter.Core
             return comparison;
         }
 
-        protected override SortedList<int, IReadOnlyList<ITile>> CreateSuggestionLists(int lowerBound, int upperBound, int maxItemCount)
+        protected override SortedList<int, IReadOnlyList<ITile>> CreateSuggestionLists(int lowerBound, int upperBound, int maxListCount)
         {
+            var maxListItemCount = Math.Max(1, Model.DisplayColumns / 2);
+
             var scores = PersistantPredictor.GetTopScores(this, TokenFilter, Context, lowerBound, upperBound);
 
-            var corePredicitions = new List<WordPrediction>(maxItemCount);
-            var coreCompoundPredictions = new List<List<WordPrediction>>(maxItemCount);
+            var corePredicitions = new List<WordPrediction>(maxListCount);
+            var coreCompoundPredictions = new List<List<WordPrediction>>(maxListCount);
 
-            var followOnPredictions = new List<WordPrediction>(maxItemCount);
+            var followOnPredictions = new List<WordPrediction>(maxListCount);
 
             using (var enumerator = scores.GetEnumerator())
             {
                 // Seed predictions with most likely items.
                 var nextCorePrediction = GetNextCorePrediction(enumerator);
-                for (var iteration = 0; iteration < maxItemCount && nextCorePrediction != null; iteration++)
+                for (var iteration = 0; iteration < maxListCount && nextCorePrediction != null; iteration++)
                 {
                     AddNextPrediction(nextCorePrediction);
                     nextCorePrediction = GetNextCorePrediction(enumerator);
@@ -1098,7 +1100,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                         var followOnContext = new List<int>(Context);
                         followOnContext.Add(followOn.Token);
                         var done = newItem == null;
-                        while (!done && predictions.Count < maxItemCount)
+                        while (!done && predictions.Count < maxListItemCount)
                         {
                             var followOnPrediction = GetTopPrediction(followOnContext.ToArray());
                             if (followOnPrediction != null)

@@ -90,7 +90,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private void UpdateSuggestionsView(int _lowerBound, int _upperLimit, bool isComplete)
         {
-            var maxItemCount = Math.Min(Count, Model.MaxNextSuggestionsCount - 1);
+            var maxItemCount = Math.Min(Count, Model.DisplayRows - 1);
             var suggestionLists = CreateSuggestionLists(_lowerBound, _upperLimit, maxItemCount);
 
             var suggestions = new List<IReadOnlyList<ITile>>();

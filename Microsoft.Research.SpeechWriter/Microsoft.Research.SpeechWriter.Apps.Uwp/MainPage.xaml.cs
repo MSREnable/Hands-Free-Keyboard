@@ -70,7 +70,11 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             var environment = passedEnvironment ?? new UwpWriterEnvironment();
             _model = new ApplicationModel(environment);
             TheHost.Model = _model;
-            TheHost.SizeChanged += (s, ee) => TheHost.Model.MaxNextSuggestionsCount = (int)(ee.NewSize.Height / 110);
+            TheHost.SizeChanged += (s, ee) =>
+            {
+                TheHost.Model.DisplayRows = (int)(ee.NewSize.Height / 110);
+                TheHost.Model.DisplayColumns = (int)(ee.NewSize.Width / 110);
+            };
             _demo = ApplicationDemo.Create(this);
             var vocalizer = NarratorVocalization.Create(TheMediaElement, "en");
             _ = Narrator.AttachNarrator(_model, vocalizer);
@@ -269,7 +273,7 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
         private void SetMaxNextSuggestionsCount()
         {
             var count = Math.Max(1, (int)(ActualHeight) / 110);
-            _model.MaxNextSuggestionsCount = count;
+            _model.DisplayRows = count;
         }
 
         void IApplicationHost.Restart(bool loadHistory) => Frame.Navigate(GetType(), loadHistory ? string.Empty : null);

@@ -73,21 +73,35 @@ namespace Microsoft.Research.SpeechWriter.Core
         public IWriterEnvironment Environment { get; }
 
         /// <summary>
-        /// The maximum number of next word suggestions to make.
+        /// The maximum number of next word suggestions to make plus one.
         /// </summary>
-        public int MaxNextSuggestionsCount
+        public int DisplayRows
         {
-            get { return _maxNextSuggestinosCount; }
+            get => _displayRows;
             set
             {
-                if (_maxNextSuggestinosCount != value)
+                if (_displayRows != value)
                 {
-                    _maxNextSuggestinosCount = value;
+                    _displayRows = value;
                     Source.SetSuggestionsView(_lowerBound, _upperLimit, false);
                 }
             }
         }
-        private int _maxNextSuggestinosCount = 9;
+        private int _displayRows = 9;
+
+        public int DisplayColumns
+        {
+            get => _displayColumns;
+            set
+            {
+                if (_displayColumns != value)
+                {
+                    _displayColumns = value;
+                    Source.SetSuggestionsView(_lowerBound, _upperLimit, false);
+                }
+            }
+        }
+        private int _displayColumns = 16;
 
         internal VocabularySource Source { get; private set; }
 
