@@ -195,17 +195,15 @@ namespace Microsoft.Research.SpeechWriter.Core
             internal int Count { get; private set; }
         };
 
-        internal ScoredTokenPredictionMaker<T> CreatePredictionMaker<T>(PredictiveVocabularySource<T> source, ITokenTileFilter filter, int[] context)
-            where T : ISuggestionItem
+        internal ScoredTokenPredictionMaker CreatePredictionMaker(PredictiveVocabularySource source, ITokenTileFilter filter, int[] context)
         {
-            var maker = new ScoredTokenPredictionMaker<T>(source, _database, filter, context);
+            var maker = new ScoredTokenPredictionMaker(source, _database, filter, context);
             return maker;
         }
 
-        internal IEnumerable<int[]> GetTopScores<T>(PredictiveVocabularySource<T> source, ITokenTileFilter filter, int[] context, int minIndex, int limIndex)
-            where T : ISuggestionItem
+        internal IEnumerable<int[]> GetTopScores(PredictiveVocabularySource source, ITokenTileFilter filter, int[] context, int minIndex, int limIndex)
         {
-            var maker = new ScoredTokenPredictionMaker<T>(source, _database, filter, context);
+            var maker = new ScoredTokenPredictionMaker(source, _database, filter, context);
             var scores = maker.GetTopScores(minIndex, limIndex, filter == null);
             return scores;
         }

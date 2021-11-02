@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
-    class ScoredTokenPredictionMaker<T> : IComparer<int[]>
+    class ScoredTokenPredictionMaker : IComparer<int[]>
     {
         private readonly PredictiveVocabularySource _source;
         private readonly ITokenTileFilter _filter;

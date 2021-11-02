@@ -61,7 +61,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             source.Predictor.AddSequence(new[] { 0, 4, 2, 3 }, 2);
 
             var predictor = source.Predictor;
-            var scores = predictor.GetTopScores<SuggestedWordItem>(source, source, new int[] { 0, 1, 2 }, 0, int.MaxValue);
+            var scores = predictor.GetTopScores(source, source, new int[] { 0, 1, 2 }, 0, int.MaxValue);
 
             using (var enumerator = scores.GetEnumerator())
             {
