@@ -936,7 +936,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 DisplayInitialCorePredictions(coreCompoundPredictions, followOnPredictions, nextCorePrediction);
             }
 
-            var maker = PersistantPredictor.CreatePredictionMaker(this, null, Context, lowerBound, upperBound);
+            var maker = PersistantPredictor.CreatePredictionMaker(this, null, Context);
 
             foreach (var compoundPrediction in coreCompoundPredictions)
             {

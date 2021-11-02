@@ -8,28 +8,21 @@ namespace Microsoft.Research.SpeechWriter.Core
         where T : ISuggestionItem
     {
         private readonly PredictiveVocabularySource<T> _source;
-        private readonly TokenPredictorDatabase _database;
         private readonly ITokenTileFilter _filter;
         private readonly TokenPredictorDatabase[] _contextDatabases;
-        private readonly int _minIndex;
-        private readonly int _limIndex;
 
-        internal ScoredTokenPredictionMaker(PredictiveVocabularySource<T> source, TokenPredictorDatabase database, ITokenTileFilter filter, int[] context, int minIndex, int limIndex)
+        internal ScoredTokenPredictionMaker(PredictiveVocabularySource<T> source, TokenPredictorDatabase database, ITokenTileFilter filter, int[] context)
         {
             _source = source;
-            _database = database;
             _filter = filter;
 
-            _contextDatabases = GetContextDatabases(context);
-
-            _minIndex = minIndex;
-            _limIndex = limIndex;
+            _contextDatabases = GetContextDatabases(database, context);
         }
 
-        private TokenPredictorDatabase GetContextDatabase(int[] context, int contextStart)
+        private static TokenPredictorDatabase GetContextDatabase(TokenPredictorDatabase rootDatabase, int[] context, int contextStart)
         {
             var contextLength = context.Length;
-            var database = _database;
+            var database = rootDatabase;
 
             for (var index = contextStart; database != null && index < contextLength; index++)
             {
@@ -46,15 +39,15 @@ namespace Microsoft.Research.SpeechWriter.Core
             return database;
         }
 
-        private TokenPredictorDatabase[] GetContextDatabases(int[] context)
+        private static TokenPredictorDatabase[] GetContextDatabases(TokenPredictorDatabase rootDatabase, int[] context)
         {
             var contextLength = context.Length;
-            var databases = new List<TokenPredictorDatabase>(contextLength + 1) { _database };
+            var databases = new List<TokenPredictorDatabase>(contextLength + 1) { rootDatabase };
 
             var done = false;
             for (var index = 1; index <= contextLength && !done; index++)
             {
-                var database = GetContextDatabase(context, contextLength - index);
+                var database = GetContextDatabase(rootDatabase, context, contextLength - index);
                 if (database != null)
                 {
                     databases.Add(database);
@@ -68,10 +61,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             return databases.ToArray();
         }
 
-        internal TokenPredictorDatabase[] GetNextContextDatabases(TokenPredictorDatabase[] previous, int token)
+        internal static TokenPredictorDatabase[] GetNextContextDatabases(TokenPredictorDatabase[] previous, int token)
         {
             var previousLength = previous.Length;
-            var databases = new List<TokenPredictorDatabase>(previousLength + 1) { _database };
+            var databases = new List<TokenPredictorDatabase>(previousLength + 1) { previous[0] };
 
             var done = false;
             for (var index = 0; index < previousLength && !done; index++)
@@ -123,7 +116,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             return score;
         }
 
-        internal IEnumerable<int[]> GetTopScores(bool unfiltered)
+        private IEnumerable<int[]> GetTopScores(int _minIndex, int _limIndex, bool unfiltered)
         {
             /// <summary>
             /// Tokens already found and returned.
@@ -253,12 +246,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             TokenPredictorDatabase database,
             ITokenTileFilter filter,
             int[] context,
-            int contextWidth,
             int minIndex,
             int limIndex)
         {
-            var maker = new ScoredTokenPredictionMaker<T>(source, database, filter, context, minIndex, limIndex);
-            var scores = maker.GetTopScores(filter == null);
+            var maker = new ScoredTokenPredictionMaker<T>(source, database, filter, context);
+            var scores = maker.GetTopScores(minIndex, limIndex, filter == null);
             return scores;
         }
 
