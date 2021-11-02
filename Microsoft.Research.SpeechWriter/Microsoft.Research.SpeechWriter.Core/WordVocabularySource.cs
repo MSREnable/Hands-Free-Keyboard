@@ -711,7 +711,8 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             WordPrediction value;
 
-            var topScores = PersistantPredictor.GetTopScores(this, null, context, 0, Count);
+            var maker = PersistantPredictor.CreatePredictionMaker(this, null, context);
+            var topScores = maker.GetTopScores(0, Count, true);
             using (var enumerator = topScores.GetEnumerator())
             {
                 value = GetNextCorePrediction(enumerator);
@@ -773,7 +774,8 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var maxListItemCount = Math.Max(1, Model.DisplayColumns / 2);
 
-            var scores = PersistantPredictor.GetTopScores(this, TokenFilter, Context, lowerBound, upperBound);
+            var maker = PersistantPredictor.CreatePredictionMaker(this, TokenFilter, Context);
+            var scores = maker.GetTopScores(lowerBound, upperBound, TokenFilter == null);
 
             var corePredicitions = new List<WordPrediction>(maxListCount);
             var coreCompoundPredictions = new List<List<WordPrediction>>(maxListCount);
@@ -936,7 +938,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 DisplayInitialCorePredictions(coreCompoundPredictions, followOnPredictions, nextCorePrediction);
             }
 
-            var maker = PersistantPredictor.CreatePredictionMaker(this, null, Context);
+            //var maker = PersistantPredictor.CreatePredictionMaker(this, null, Context);
 
             foreach (var compoundPrediction in coreCompoundPredictions)
             {

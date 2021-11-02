@@ -201,13 +201,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             return maker;
         }
 
-        internal IEnumerable<int[]> GetTopScores(PredictiveVocabularySource source, ITokenTileFilter filter, int[] context, int minIndex, int limIndex)
-        {
-            var maker = new ScoredTokenPredictionMaker(source, _database, filter, context);
-            var scores = maker.GetTopScores(minIndex, limIndex, filter == null);
-            return scores;
-        }
-
         internal IEnumerable<int> GetTopIndices<T>(PredictiveVocabularySource<T> source, ITokenTileFilter filter, int[] context, int minIndex, int limIndex, int count)
             where T : ISuggestionItem
         {
