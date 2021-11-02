@@ -195,59 +195,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             internal int Count { get; private set; }
         };
 
-        private void DisplayTopScores<T>(PredictiveVocabularySource<T> source, IEnumerable<int[]> scores)
+        internal ScoredTokenPredictionMaker<T> CreatePredictionMaker<T>(PredictiveVocabularySource<T> source, ITokenTileFilter filter, int[]context,int minIndex, int limIndex)
             where T : ISuggestionItem
         {
-            Debug.WriteLine("Scores:");
-            Debug.Indent();
-
-            int[] previousScore = null;
-            using (var enumerator = scores.GetEnumerator())
-            {
-                var done = false;
-                var lineCount = 0;
-
-                while (!done && enumerator.MoveNext())
-                {
-                    var score = enumerator.Current;
-                    if (score.Length != 1)
-                    {
-                        var s = string.Join("-", score);
-                        var index = source.GetTokenIndex(score[0]);
-                        var item = source.GetIndexItemForTrace(index);
-                        Debug.WriteLineIf(lineCount < 8, $"{s} ({item.Content})");
-                        lineCount++;
-                    }
-                    else
-                    {
-                        done = true;
-                    }
-
-                    if (previousScore != null)
-                    {
-                        Debug.Assert(score.Length <= previousScore.Length);
-                        if (score.Length == previousScore.Length)
-                        {
-                            var limit = score.Length;
-                            while (score[limit - 1] == previousScore[limit - 1])
-                            {
-                                limit--;
-                            }
-                            Debug.Assert(score[limit - 1] < previousScore[limit - 1]);
-                        }
-                    }
-
-                    Array.Resize(ref previousScore, score.Length);
-                    Array.Copy(score, previousScore, score.Length);
-                }
-
-                if (done)
-                {
-                    Debug.WriteLine("...and then all the tokens in descending ordinal order");
-                }
-            }
-
-            Debug.Unindent();
+            var maker = new ScoredTokenPredictionMaker<T>(source, _database, filter, context, minIndex, limIndex);
+            return maker;
         }
 
         internal IEnumerable<int[]> GetTopScores<T>(PredictiveVocabularySource<T> source, ITokenTileFilter filter, int[] context, int minIndex, int limIndex)

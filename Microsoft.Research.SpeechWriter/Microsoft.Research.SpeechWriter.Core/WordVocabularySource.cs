@@ -686,84 +686,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             return index;
         }
 
-        private void DisplayTopScores<T>(PredictiveVocabularySource<T> source, IEnumerable<int[]> scores)
-            where T : ISuggestionItem
-        {
-            Debug.WriteLine("Scores:");
-            Debug.Indent();
-
-            int[] previousScore = null;
-            using (var enumerator = scores.GetEnumerator())
-            {
-                var done = false;
-                var lineCount = 0;
-
-                while (!done && enumerator.MoveNext())
-                {
-                    var score = enumerator.Current;
-                    if (score.Length != 1)
-                    {
-                        var s = string.Join("-", score);
-                        var index = source.GetTokenIndex(score[0]);
-                        var item = source.GetIndexItemForTrace(index);
-                        Debug.WriteLineIf(lineCount < 8, $"{s} ({item.Content})");
-                        lineCount++;
-                    }
-                    else
-                    {
-                        done = true;
-                    }
-
-                    if (previousScore != null)
-                    {
-                        Debug.Assert(score.Length <= previousScore.Length);
-                        if (score.Length == previousScore.Length)
-                        {
-                            var limit = score.Length;
-                            while (score[limit - 1] == previousScore[limit - 1])
-                            {
-                                limit--;
-                            }
-                            Debug.Assert(score[limit - 1] < previousScore[limit - 1]);
-                        }
-                    }
-
-                    Array.Resize(ref previousScore, score.Length);
-                    Array.Copy(score, previousScore, score.Length);
-                }
-
-                if (done)
-                {
-                    Debug.WriteLine("...and then all the tokens in descending ordinal order");
-                }
-            }
-
-            Debug.Unindent();
-        }
-
-        private void DisplayCorePredictions(List<List<WordPrediction>> coreCompoundPredictions)
-        {
-            Debug.WriteLine("Core prediction:");
-            Debug.Indent();
-
-            foreach (var compoundPrediction in coreCompoundPredictions)
-            {
-                var builder = new StringBuilder();
-
-                foreach (var prediction in compoundPrediction)
-                {
-                    if (builder.Length != 0)
-                    {
-                        builder.Append("   ");
-                    }
-                    builder.Append(prediction);
-                }
-                Debug.WriteLine(builder);
-            }
-
-            Debug.Unindent();
-        }
-
         private WordPrediction GetNextCorePrediction(IEnumerator<int[]> enumerator)
         {
             WordPrediction prediction;
@@ -784,19 +706,6 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             return prediction;
         }
-
-        //class NullTokenFilter : ITokenTileFilter
-        //{
-        //    private NullTokenFilter()
-        //    {
-        //    }
-
-        //    internal static ITokenTileFilter Instance { get; } = new NullTokenFilter();
-
-        //    bool ITileFilter.IsIndexVisible(int index) => true;
-
-        //    bool ITokenTileFilter.IsTokenVisible(int token) => true;
-        //}
 
         private WordPrediction GetTopPrediction(int[] context)
         {
@@ -870,6 +779,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             var coreCompoundPredictions = new List<List<WordPrediction>>(maxListCount);
 
             var followOnPredictions = new List<WordPrediction>(maxListCount);
+
+            var predictedTokens = new HashSet<int>();
 
             using (var enumerator = scores.GetEnumerator())
             {
@@ -1025,6 +936,8 @@ namespace Microsoft.Research.SpeechWriter.Core
                 DisplayInitialCorePredictions(coreCompoundPredictions, followOnPredictions, nextCorePrediction);
             }
 
+            var maker = PersistantPredictor.CreatePredictionMaker(this, null, Context, lowerBound, upperBound);
+
             foreach (var compoundPrediction in coreCompoundPredictions)
             {
                 var length = 0;
@@ -1048,9 +961,20 @@ namespace Microsoft.Research.SpeechWriter.Core
                             var candidate = prediction.Text.Substring(0, length);
                             if (_tokens.TryGetToken(candidate, out var candidateToken))
                             {
-                                if (TokenFilter.IsTokenVisible(candidateToken))
+                                if (!predictedTokens.Contains(candidateToken))
                                 {
-                                    Debug.WriteLine($"TODO: Should add {candidate}");
+                                    var candidateIndex = GetTokenIndex(candidateToken);
+                                    if (lowerBound <= candidateIndex && candidateIndex < upperBound &&
+                                        TokenFilter.IsTokenVisible(candidateToken))
+                                    {
+                                        var candidateScore = maker.GetScore(candidateToken);
+
+                                        Debug.WriteLine($"TODO: Should add {candidate} ({candidateScore})");
+                                    }
+                                }
+                                else
+                                {
+                                    Debug.WriteLine($"Already included found {candidate}");
                                 }
                             }
                         }
@@ -1135,6 +1059,9 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             void AddNextPrediction(WordPrediction prediction)
             {
+                var added = predictedTokens.Add(prediction.Token);
+                Debug.Assert(added);
+
                 var position = 0;
                 while (position < corePredicitions.Count && corePredicitions[position].Index < prediction.Index)
                 {
