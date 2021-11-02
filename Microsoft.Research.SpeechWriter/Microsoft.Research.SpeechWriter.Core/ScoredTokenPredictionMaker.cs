@@ -107,8 +107,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var done = false;
             while (!done && depth < _contextDatabases.Length)
             {
-                var depthInfo = _contextDatabases[depth].GetValue(token);
-                if (depthInfo.Count != 0)
+                if (_contextDatabases[depth].TryGetValue(token, out var depthInfo) && depthInfo.Count != 0)
                 {
                     score[depth + 1] = depthInfo.Count;
                     depth++;
