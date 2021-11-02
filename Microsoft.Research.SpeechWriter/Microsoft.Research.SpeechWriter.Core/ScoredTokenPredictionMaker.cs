@@ -5,13 +5,12 @@ using System.Diagnostics;
 namespace Microsoft.Research.SpeechWriter.Core
 {
     class ScoredTokenPredictionMaker<T> : IComparer<int[]>
-        where T : ISuggestionItem
     {
-        private readonly PredictiveVocabularySource<T> _source;
+        private readonly PredictiveVocabularySource _source;
         private readonly ITokenTileFilter _filter;
         private readonly TokenPredictorDatabase[] _contextDatabases;
 
-        internal ScoredTokenPredictionMaker(PredictiveVocabularySource<T> source, TokenPredictorDatabase database, ITokenTileFilter filter, int[] context)
+        internal ScoredTokenPredictionMaker(PredictiveVocabularySource source, TokenPredictorDatabase database, ITokenTileFilter filter, int[] context)
         {
             _source = source;
             _filter = filter;
@@ -116,7 +115,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             return score;
         }
 
-        private IEnumerable<int[]> GetTopScores(int _minIndex, int _limIndex, bool unfiltered)
+        internal IEnumerable<int[]> GetTopScores(int _minIndex, int _limIndex, bool unfiltered)
         {
             /// <summary>
             /// Tokens already found and returned.
@@ -240,18 +239,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             // TODO: We should now perhaps disregard index position constraints and just yield anything.
-        }
-
-        internal static IEnumerable<int[]> GetTopScores(PredictiveVocabularySource<T> source,
-            TokenPredictorDatabase database,
-            ITokenTileFilter filter,
-            int[] context,
-            int minIndex,
-            int limIndex)
-        {
-            var maker = new ScoredTokenPredictionMaker<T>(source, database, filter, context);
-            var scores = maker.GetTopScores(minIndex, limIndex, filter == null);
-            return scores;
         }
 
         int IComparer<int[]>.Compare(int[] x, int[] y)

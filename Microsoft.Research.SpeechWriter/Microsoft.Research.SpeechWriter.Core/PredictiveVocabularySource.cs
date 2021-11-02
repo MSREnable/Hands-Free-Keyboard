@@ -2,11 +2,39 @@
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
+    public abstract class PredictiveVocabularySource : VocabularySource
+    {
+        internal PredictiveVocabularySource(ApplicationModel model)
+            : base(model)
+        {
+        }
+
+        /// <summary>
+        /// Get the non-zero token for at a given index within the source.
+        /// </summary>
+        /// <param name="index">Index of item, such that 0 &gt;= index &gt; Count.</param>
+        /// <returns>The token at the give index</returns>
+        internal abstract int GetIndexToken(int index);
+
+        /// <summary>
+        /// Get the position index of the given token with the source.
+        /// </summary>
+        /// <param name="token">The non-zero token.</param>
+        /// <returns>The corresponding index position.</returns>
+        internal abstract int GetTokenIndex(int token);
+
+        /// <summary>
+        /// Get token values in an order that will roughly correspond to their likelyhood without any context.
+        /// </summary>
+        /// <returns>An enumeration of integer tokens.</returns>
+        internal abstract IEnumerable<int> GetTokens();
+    }
+
     /// <summary>
     /// A source containing an ordered list of vocabulary items.
     /// </summary>
-    public abstract class PredictiveVocabularySource<TItem> : VocabularySource
-        where TItem : ISuggestionItem
+    public abstract class PredictiveVocabularySource<TItem> : PredictiveVocabularySource
+            where TItem : ISuggestionItem
     {
         private readonly TokenPredictor _persistantPredictor;
 
@@ -53,20 +81,6 @@ namespace Microsoft.Research.SpeechWriter.Core
         }
 
         /// <summary>
-        /// Get the non-zero token for at a given index within the source.
-        /// </summary>
-        /// <param name="index">Index of item, such that 0 &gt;= index &gt; Count.</param>
-        /// <returns>The token at the give index</returns>
-        internal abstract int GetIndexToken(int index);
-
-        /// <summary>
-        /// Get the position index of the given token with the source.
-        /// </summary>
-        /// <param name="token">The non-zero token.</param>
-        /// <returns>The corresponding index position.</returns>
-        internal abstract int GetTokenIndex(int token);
-
-        /// <summary>
         /// Gets the top ranked token in the given context.
         /// </summary>
         /// <param name="context">The tokens before item to be suggested.</param>
@@ -81,12 +95,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             var result = PersistantPredictor.GetTopIndices(this, TokenFilter, Context, minIndex, limIndex, count);
             return result;
         }
-
-        /// <summary>
-        /// Get token values in an order that will roughly correspond to their likelyhood without any context.
-        /// </summary>
-        /// <returns>An enumeration of integer tokens.</returns>
-        internal abstract IEnumerable<int> GetTokens();
 
         internal abstract TItem GetIndexItem(int index);
 
