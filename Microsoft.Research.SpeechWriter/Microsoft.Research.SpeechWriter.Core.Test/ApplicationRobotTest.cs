@@ -305,20 +305,20 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             var model = new ApplicationModel(new TracingWriterEnvironment()) { DisplayRows = 9 };
 
             var actualFirstClicks = CountClicks(model, words, caller + ".first");
-            Assert.AreEqual(expectedFirstClicks, actualFirstClicks);
+            Assert.AreEqual(expectedFirstClicks, actualFirstClicks, "first pass");
 
             var actualSecondClicks = CountClicks(model, words, caller + ".second");
-            Assert.AreEqual(expectedSecondClicks, actualSecondClicks);
+            Assert.AreEqual(expectedSecondClicks, actualSecondClicks, "second pass");
 
             var emptyEnvironment = new EmptyEnvironment();
             var emptyModel = new ApplicationModel(emptyEnvironment);
 
             var actualEmptyClicks = CountClicks(emptyModel, words, caller + ".empty");
-            Assert.AreEqual(expectedEmptyClicks, actualEmptyClicks);
+            Assert.AreEqual(expectedEmptyClicks, actualEmptyClicks, "from empty");
 
             var errorModel = new ApplicationModel(new TracingWriterEnvironment()) { DisplayRows = 9 };
             var actualClicksWithRandomErrors = CountClicks(errorModel, words, 0.2, caller + ".erred");
-            Assert.AreEqual(expectedClicksWithRandomErrors, actualClicksWithRandomErrors);
+            Assert.AreEqual(expectedClicksWithRandomErrors, actualClicksWithRandomErrors, "with errors");
         }
 
         private static void MultiTest(string sentence, int expectedFirstClicks, int expectedSecondClicks, int expectedEmptyClicks, int expectedClicksWithRandomErrors, [CallerMemberName] string caller = null)
