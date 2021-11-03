@@ -707,11 +707,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             return prediction;
         }
 
-        private WordPrediction GetTopPrediction(int[] context)
+        private WordPrediction GetTopPrediction(ScoredTokenPredictionMaker maker)
         {
             WordPrediction value;
 
-            var maker = PersistantPredictor.CreatePredictionMaker(this, null, context);
             var topScores = maker.GetTopScores(0, Count, true);
             using (var enumerator = topScores.GetEnumerator())
             {
@@ -1020,21 +1019,20 @@ namespace Microsoft.Research.SpeechWriter.Core
                     if (followOn != null)
                     {
                         var firstCreatedItem = GetNextItem(item, followOn.Token);
-                        var newItem = firstCreatedItem as SuggestedWordItem; ;
+                        var newItem = firstCreatedItem as SuggestedWordItem;
                         predictions.Add(firstCreatedItem);
 
-                        var followOnContext = new List<int>(Context);
-                        followOnContext.Add(followOn.Token);
+                        var followOnMaker = maker.CreateNextPredictionMaker(followOn.Token, null);
                         var done = newItem == null;
                         while (!done && predictions.Count < maxListItemCount)
                         {
-                            var followOnPrediction = GetTopPrediction(followOnContext.ToArray());
+                            var followOnPrediction = GetTopPrediction(followOnMaker);
                             if (followOnPrediction != null)
                             {
                                 item = newItem;
                                 var createdItem = GetNextItem(item, followOnPrediction.Token);
-                                newItem = createdItem as SuggestedWordItem; ;
-                                followOnContext.Add(followOnPrediction.Token);
+                                newItem = createdItem as SuggestedWordItem;
+                                followOnMaker = followOnMaker.CreateNextPredictionMaker(followOnPrediction.Token, null);
                                 predictions.Add(createdItem);
 
                                 if (newItem == null)
@@ -1057,8 +1055,6 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             return predictionsList;
 
-            //return base.CreateSuggestionLists(lowerBound, upperBound, maxItemCount);
-
             void AddNextPrediction(WordPrediction prediction)
             {
                 var added = predictedTokens.Add(prediction.Token);
@@ -1077,10 +1073,9 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 if (prediction.Text[0] != '\0')
                 {
-                    var followOnContext = new int[Context.Length + 1];
-                    Array.Copy(Context, followOnContext, Context.Length);
-                    followOnContext[Context.Length] = prediction.Token;
-                    var followOnPrediction = GetTopPrediction(followOnContext);
+                    var followOnMaker = maker.CreateNextPredictionMaker(prediction.Token, null);
+
+                    var followOnPrediction = GetTopPrediction(followOnMaker);
                     followOnPredictions.Insert(position, followOnPrediction);
                 }
                 else

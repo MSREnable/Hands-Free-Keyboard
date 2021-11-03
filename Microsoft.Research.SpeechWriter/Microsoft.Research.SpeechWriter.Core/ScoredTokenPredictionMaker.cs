@@ -10,12 +10,16 @@ namespace Microsoft.Research.SpeechWriter.Core
         private readonly ITokenTileFilter _filter;
         private readonly TokenPredictorDatabase[] _contextDatabases;
 
-        internal ScoredTokenPredictionMaker(PredictiveVocabularySource source, TokenPredictorDatabase database, ITokenTileFilter filter, int[] context)
+        private ScoredTokenPredictionMaker(PredictiveVocabularySource source, ITokenTileFilter filter, TokenPredictorDatabase[] contextDatabases)
         {
             _source = source;
+            _contextDatabases = contextDatabases;
             _filter = filter;
+        }
 
-            _contextDatabases = GetContextDatabases(database, context);
+        internal ScoredTokenPredictionMaker(PredictiveVocabularySource source, TokenPredictorDatabase database, ITokenTileFilter filter, int[] context)
+            : this(source, filter, GetContextDatabases(database, context))
+        {
         }
 
         private static TokenPredictorDatabase GetContextDatabase(TokenPredictorDatabase rootDatabase, int[] context, int contextStart)
@@ -68,7 +72,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var done = false;
             for (var index = 0; index < previousLength && !done; index++)
             {
-                if (previous[index - 1].TryGetValue(token, out var info))
+                if (previous[index].TryGetValue(token, out var info))
                 {
                     var database = info.TryGetChildren();
 
@@ -88,6 +92,13 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             return databases.ToArray();
+        }
+
+        internal ScoredTokenPredictionMaker CreateNextPredictionMaker(int token, ITokenTileFilter filter)
+        {
+            var databases = GetNextContextDatabases(_contextDatabases, token);
+            var maker = new ScoredTokenPredictionMaker(_source, filter, databases);
+            return maker;
         }
 
         internal int[] GetScore(int token)
