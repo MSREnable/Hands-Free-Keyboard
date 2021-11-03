@@ -336,7 +336,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("the quick brown fox jumps over a lazy dog", 37, 1, 186, 97);
+            MultiTest("the quick brown fox jumps over a lazy dog", 37, 1, 186, 83);
         }
 
         [Test]
@@ -349,7 +349,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("izzy wizzy lets get busy", 29, 1, 77, 104);
+            MultiTest("izzy wizzy lets get busy", 28, 1, 77, 49);
         }
 
         [Test]
@@ -367,13 +367,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 140, 1, 94, 620);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 140, 1, 94, 572);
         }
 
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 34, 1, 104, 182);
+            MultiTest("That'll be $10, please!", 32, 1, 104, 181);
         }
 
         [Test]
@@ -528,7 +528,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public async Task ShareAndEnjoyPersistance()
         {
-            await CheckRecallAsync("share and enjoy, share and enjoy, journey though life with a plastic boy, or girl by your side", 61, 3);
+            await CheckRecallAsync("share and enjoy, share and enjoy, journey though life with a plastic boy, or girl by your side", 59, 4);
         }
 
         [Test]

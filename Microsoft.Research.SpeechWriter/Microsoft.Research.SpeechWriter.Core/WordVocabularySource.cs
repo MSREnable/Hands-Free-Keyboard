@@ -939,8 +939,10 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             //var maker = PersistantPredictor.CreatePredictionMaker(this, null, Context);
 
-            foreach (var compoundPrediction in coreCompoundPredictions)
+            for (var compoundPredictionIndex = 0; compoundPredictionIndex < coreCompoundPredictions.Count; compoundPredictionIndex++)
             {
+                var compoundPrediction = coreCompoundPredictions[compoundPredictionIndex];
+
                 var length = 0;
 
                 for (var position = 0; position < compoundPrediction.Count; position++)
@@ -969,6 +971,19 @@ namespace Microsoft.Research.SpeechWriter.Core
                                         TokenFilter.IsTokenVisible(candidateToken))
                                     {
                                         var candidateScore = maker.GetScore(candidateToken);
+                                        var candidateText = _tokens[candidateToken];
+
+                                        var candidatePrediction = new WordPrediction(candidateScore, candidateIndex, candidateText);
+
+                                        var insertPosition = 0;
+                                        while (insertPosition < compoundPrediction.Count &&
+                                            compoundPrediction[insertPosition].Index < candidatePrediction.Index)
+                                        {
+                                            insertPosition++;
+                                        }
+                                        compoundPrediction.Insert(insertPosition, candidatePrediction);
+
+                                        predictedTokens.Add(candidateToken);
 
                                         Debug.WriteLine($"TODO: Should add {candidate} ({candidateScore})");
                                     }
@@ -980,6 +995,19 @@ namespace Microsoft.Research.SpeechWriter.Core
                             }
                         }
                     }
+                }
+
+                var bubblePosition = compoundPredictionIndex;
+                while (0 < bubblePosition &&
+                    coreCompoundPredictions[compoundPredictionIndex][0].Index < coreCompoundPredictions[bubblePosition - 1][0].Index)
+                {
+                    bubblePosition--;
+                }
+
+                if (bubblePosition != compoundPredictionIndex)
+                {
+                    coreCompoundPredictions.RemoveAt(compoundPredictionIndex);
+                    coreCompoundPredictions.Insert(bubblePosition, compoundPrediction);
                 }
             }
 
