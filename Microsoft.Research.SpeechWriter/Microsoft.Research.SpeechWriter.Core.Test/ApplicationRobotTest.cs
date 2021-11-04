@@ -330,13 +330,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("this is the dawning of the age of aquarius", 32, 1, 117, 83);
+            MultiTest("this is the dawning of the age of aquarius", 32, 1, 117, 63);
         }
 
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("the quick brown fox jumps over a lazy dog", 37, 1, 186, 83);
+            MultiTest("the quick brown fox jumps over a lazy dog", 37, 1, 186, 82);
         }
 
         [Test]
@@ -349,31 +349,31 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void IzzyWizzyLetsGetBusyTest()
         {
-            MultiTest("izzy wizzy lets get busy", 28, 1, 77, 49);
+            MultiTest("izzy wizzy lets get busy", 27, 1, 77, 46);
         }
 
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 93, 1, 65, 521);
+            MultiTest("공유하 고 즐기십시오", 93, 1, 65, 555);
         }
 
         [Test]
         public void ShareAndEnjoyCantoneseTest()
         {
-            MultiTest("分享 同 享受", 53, 1, 33, 175);
+            MultiTest("分享 同 享受", 53, 1, 33, 357);
         }
 
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 140, 1, 94, 572);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 140, 1, 94, 562);
         }
 
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 32, 1, 104, 181);
+            MultiTest("That'll be $10, please!", 32, 1, 104, 183);
         }
 
         [Test]

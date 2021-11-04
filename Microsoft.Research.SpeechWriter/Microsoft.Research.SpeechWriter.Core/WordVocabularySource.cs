@@ -1011,6 +1011,101 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
             }
 
+            for (var compoundPredictionIndex = 0; compoundPredictionIndex < coreCompoundPredictions.Count; compoundPredictionIndex++)
+            {
+                var compoundPrediction = coreCompoundPredictions[compoundPredictionIndex];
+                var longestPrediction = compoundPrediction[compoundPrediction.Count - 1];
+                var longestPredictionText = longestPrediction.Text;
+                var includedPrefixIndex = longestPrediction.Index;
+                var beyondPrefixIndex = includedPrefixIndex;
+                var limitFound = false;
+                for (var step = 1; !limitFound; step += 1)
+                {
+                    includedPrefixIndex = beyondPrefixIndex;
+                    beyondPrefixIndex = includedPrefixIndex + step;
+                    if (upperBound <= beyondPrefixIndex)
+                    {
+                        beyondPrefixIndex = upperBound;
+                        limitFound = true;
+                    }
+                    else
+                    {
+                        var candidateLimitToken = GetIndexToken(beyondPrefixIndex);
+                        var candidateLimitText = _tokens[candidateLimitToken];
+                        if (!candidateLimitText.StartsWith(longestPredictionText, StringComparison.OrdinalIgnoreCase))
+                        {
+                            limitFound = true;
+                        }
+                    }
+                }
+
+                var foundLimit = false;
+                do
+                {
+                    if (includedPrefixIndex + 1 == beyondPrefixIndex)
+                    {
+                        foundLimit = true;
+                    }
+                    else
+                    {
+                        var midIndex = (includedPrefixIndex + beyondPrefixIndex) / 2;
+                        var midToken = GetIndexToken(midIndex);
+                        var midText = _tokens[midToken];
+                        if (midText.StartsWith(longestPredictionText, StringComparison.OrdinalIgnoreCase))
+                        {
+                            includedPrefixIndex = midIndex;
+                        }
+                        else
+                        {
+                            beyondPrefixIndex = midIndex;
+                        }
+                    }
+                }
+                while (!foundLimit);
+
+                if (longestPrediction.Index + 1 < beyondPrefixIndex)
+                {
+                    Debug.WriteLine($"Consider extending {longestPredictionText}:");
+                    var followOn = followOnPredictions[compoundPredictionIndex];
+                    var additionalScores = maker.GetTopScores(longestPrediction.Index + 1, beyondPrefixIndex, false);
+                    using (var enumerator = additionalScores.GetEnumerator())
+                    {
+                        var extendedPredictionText = longestPredictionText;
+
+                        var improved = true;
+                        for (var candidatePrediction = GetNextCorePrediction(enumerator);
+                            improved && candidatePrediction != null;
+                            candidatePrediction = GetNextCorePrediction(enumerator))
+                        {
+                            if (candidatePrediction.Text.StartsWith(longestPredictionText))
+                            {
+                                if (followOn != null && CompareScores(candidatePrediction.Score, followOn.Score) < 0)
+                                {
+                                    Debug.WriteLine($"\t-{candidatePrediction} less likely than {followOn}");
+                                    improved = false;
+                                }
+                                else if (extendedPredictionText.StartsWith(candidatePrediction.Text))
+                                {
+                                    Debug.WriteLine($"\t+{candidatePrediction.Text}");
+                                    InsertPrediction(compoundPrediction, candidatePrediction);
+                                }
+                                else if (candidatePrediction.Text.StartsWith(extendedPredictionText))
+                                {
+                                    Debug.WriteLine($"\t*{candidatePrediction.Text}");
+                                    InsertPrediction(compoundPrediction, candidatePrediction);
+                                    extendedPredictionText = candidatePrediction.Text;
+
+                                    var followOnMaker = maker.CreateNextPredictionMaker(candidatePrediction.Token, null);
+                                    var followOnPrediction = GetTopPrediction(followOnMaker);
+                                    followOnPredictions[compoundPredictionIndex] = followOnPrediction;
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             var predictionsList = new SortedList<int, IReadOnlyList<ITile>>();
 
             for (var position = 0; position < coreCompoundPredictions.Count; position++)
@@ -1110,6 +1205,19 @@ namespace Microsoft.Research.SpeechWriter.Core
                 {
                     followOnPredictions.Insert(position, null);
                 }
+            }
+
+            void InsertPrediction(List<WordPrediction> predictions, WordPrediction prediction)
+            {
+                predictedTokens.Add(prediction.Token);
+
+                var position = predictions.Count;
+                while (0 < position && prediction.Index < predictions[position - 1].Index)
+                {
+                    position--;
+                }
+
+                predictions.Insert(position, prediction);
             }
         }
 
