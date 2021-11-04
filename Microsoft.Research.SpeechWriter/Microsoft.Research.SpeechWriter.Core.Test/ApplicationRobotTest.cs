@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
 {
+    [Parallelizable(ParallelScope.All)]
     public class ApplicationRobotTest
     {
         private class TracingWriterEnvironment : DefaultWriterEnvironment, IWriterEnvironment
