@@ -54,7 +54,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             get => _findCorePredictionPrefixes;
             set => SetProperty(ref _findCorePredictionPrefixes, value);
         }
-        private bool _findCorePredictionPrefixes;
+        private bool _findCorePredictionPrefixes = true;
 
         /// <summary>
         /// Find valid suffixes to words in the core prediction.
@@ -64,7 +64,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             get => _findCorePredictionSuffixes;
             set => SetProperty(ref _findCorePredictionSuffixes, value);
         }
-        private bool _findCorePredictionSuffixes;
+        private bool _findCorePredictionSuffixes = true;
 
         /// <summary>
         /// Show interstitials allowing unknown words to be spelled.
