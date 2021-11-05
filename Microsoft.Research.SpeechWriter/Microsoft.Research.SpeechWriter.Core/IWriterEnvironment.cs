@@ -56,5 +56,12 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// </summary>
         /// <returns>The collection of utterances.</returns>
         Task<TextReader> RecallUtterancesAsync();
+
+        /// <summary>
+        /// Show settings to the user.
+        /// </summary>
+        /// <param name="settings">The settings object to be updated.</param>
+        /// <returns>True if settings updates.</returns>
+        Task<bool> ShowSettingsAsync(WriterSettings settings);
     }
 }

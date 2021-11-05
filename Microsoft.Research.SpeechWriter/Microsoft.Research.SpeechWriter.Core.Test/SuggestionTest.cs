@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
 {
+    [Parallelizable(ParallelScope.All)]
     public class SuggestionTest
     {
         private class SeededEnvironment : DefaultWriterEnvironment, IWriterEnvironment

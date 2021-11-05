@@ -318,5 +318,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             _wordSource.SpellingSource.SetContext(new int[] { 0, 'H', 'e', 'l', 'l', 'o' });
             _nextSuggestions.Add(new ITile[] { new SuggestedUnicodeItem(HeadItems[1], _wordSource.SpellingSource, 33) });
         }
+
+        public async Task<bool> ShowSettingsAync()
+        {
+            var updated = await Environment.ShowSettingsAsync(Environment.Settings);
+            return updated;
+        }
     }
 }

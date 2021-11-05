@@ -169,5 +169,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             var value = Task.FromResult(TextReader.Null);
             return value;
         }
+
+        Task<bool> IWriterEnvironment.ShowSettingsAsync(WriterSettings settings) => Task.FromResult(false);
     }
 }

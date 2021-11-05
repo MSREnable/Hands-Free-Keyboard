@@ -2,6 +2,7 @@
 
 namespace Microsoft.Research.SpeechWriter.Core.Data.Test
 {
+    [Parallelizable(ParallelScope.All)]
     public class TileSequenceTest
     {
         private static void SequenceSanityCheck(TileSequence sequence)

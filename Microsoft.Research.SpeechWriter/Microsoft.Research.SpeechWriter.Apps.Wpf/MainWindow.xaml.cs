@@ -298,5 +298,10 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
         {
             throw new NotImplementedException();
         }
+
+        private async void ShowSettings(object sender, MouseButtonEventArgs e)
+        {
+            await _model.ShowSettingsAync();
+        }
     }
 }

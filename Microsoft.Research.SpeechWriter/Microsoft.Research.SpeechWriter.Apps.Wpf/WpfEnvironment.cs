@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 {
@@ -43,6 +44,12 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
         async Task IWriterEnvironment.SaveUtteranceAsync(string utterance)
         {
             await File.AppendAllLinesAsync(UtterancesPath, new[] { utterance });
+        }
+
+        Task<bool> IWriterEnvironment.ShowSettingsAsync(WriterSettings settings)
+        {
+            MessageBox.Show("Settings go here");
+            return Task.FromResult(false);
         }
     }
 }

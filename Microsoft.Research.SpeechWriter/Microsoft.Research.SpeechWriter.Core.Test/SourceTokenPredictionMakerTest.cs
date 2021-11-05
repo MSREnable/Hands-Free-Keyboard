@@ -6,6 +6,7 @@ using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
 {
+    [Parallelizable(ParallelScope.All)]
     public class SourceTokenPredictionMakerTest
     {
         private const int PredictorWidth = 4;

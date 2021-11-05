@@ -3,6 +3,7 @@ using System;
 
 namespace Microsoft.Research.SpeechWriter.Core.Data.Test
 {
+    [Parallelizable(ParallelScope.All)]
     public class UtteranceDataTest
     {
         [Test]

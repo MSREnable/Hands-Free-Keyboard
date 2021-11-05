@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Microsoft.Research.SpeechWriter.Core
@@ -85,13 +86,56 @@ namespace Microsoft.Research.SpeechWriter.Core
         }
         private bool _showUnicodeInterstitials = true;
 
+        public void Set(WriterSettingName name, bool value)
+        {
+            switch (name)
+            {
+                default:
+                case WriterSettingName.SpeakWordByWord:
+                    Debug.Assert(name == WriterSettingName.SpeakWordByWord);
+                    SpeakWordByWord = value;
+                    break;
+
+                case WriterSettingName.SpeakWholeUtterances: SpeakWholeUtterances = value; break;
+                case WriterSettingName.FindFollowOnPredictions: FindFollowOnPredictions = value; break;
+                case WriterSettingName.CombineCorePredictions: CombineCorePredictions = value; break;
+                case WriterSettingName.FindCorePredictionPrefixes: FindCorePredictionPrefixes = value; break;
+                case WriterSettingName.FindCorePredictionSuffixes: FindCorePredictionSuffixes = value; break;
+                case WriterSettingName.ShowSpellingInterstitials: ShowSpellingInterstitials = value; break;
+                case WriterSettingName.ShowUnicodeInterstitials: ShowUnicodeInterstitials = value; break;
+            }
+        }
+
+        public bool Get(WriterSettingName name)
+        {
+            bool value;
+
+            switch (name)
+            {
+                default:
+                case WriterSettingName.SpeakWordByWord:
+                    Debug.Assert(name == WriterSettingName.SpeakWordByWord);
+                    value = SpeakWordByWord;
+                    break;
+
+                case WriterSettingName.SpeakWholeUtterances: value = SpeakWholeUtterances; break;
+                case WriterSettingName.FindFollowOnPredictions: value = FindFollowOnPredictions; break;
+                case WriterSettingName.CombineCorePredictions: value = CombineCorePredictions; break;
+                case WriterSettingName.FindCorePredictionPrefixes: value = FindCorePredictionPrefixes; break;
+                case WriterSettingName.FindCorePredictionSuffixes: value = FindCorePredictionSuffixes; break;
+                case WriterSettingName.ShowSpellingInterstitials: value = ShowSpellingInterstitials; break;
+                case WriterSettingName.ShowUnicodeInterstitials: value = ShowUnicodeInterstitials; break;
+            }
+
+            return value;
+        }
+
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
             add => _propertyChanged += value;
             remove => _propertyChanged -= value;
         }
         private PropertyChangedEventHandler _propertyChanged;
-
 
         private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {

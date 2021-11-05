@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
 {
+    [Parallelizable(ParallelScope.All)]
     internal class ForcedCoverage
     {
         [Test]

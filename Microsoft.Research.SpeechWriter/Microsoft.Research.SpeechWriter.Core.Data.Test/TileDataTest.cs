@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Microsoft.Research.SpeechWriter.Core.Data.Test
 {
+    [Parallelizable(ParallelScope.All)]
     public class TileDataTest
     {
         [Test]

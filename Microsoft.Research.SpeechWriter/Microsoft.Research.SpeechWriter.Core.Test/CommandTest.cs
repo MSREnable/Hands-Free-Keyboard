@@ -4,6 +4,7 @@ using System;
 
 namespace Microsoft.Research.SpeechWriter.Core.Test
 {
+    [Parallelizable(ParallelScope.All)]
     public class CommandTest
     {
         private class TestCommand : Command
