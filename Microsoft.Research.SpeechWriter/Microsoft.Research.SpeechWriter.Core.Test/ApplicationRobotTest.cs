@@ -356,7 +356,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 93, 1, 65, 555);
+            MultiTest("공유하 고 즐기십시오", 93, 1, 65, 521);
         }
 
         [Test]
@@ -374,7 +374,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 32, 1, 104, 183);
+            MultiTest("That'll be $10, please!", 32, 1, 104, 140);
         }
 
         [Test]

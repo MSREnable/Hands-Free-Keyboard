@@ -10,7 +10,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         private readonly WordVocabularySource _source;
         private readonly StringTokens _tokens;
         private readonly ScoredTokenPredictionMaker _maker;
-        private readonly ITokenTileFilter _filter;
+        private readonly Func<int, bool> _isTokenVisible;
         private readonly int _lowerBound;
         private readonly int _upperBound;
         private readonly int _maxListCount;
@@ -24,20 +24,20 @@ namespace Microsoft.Research.SpeechWriter.Core
         private SuggestedWordListsCreator(WordVocabularySource source,
             StringTokens tokens,
             ScoredTokenPredictionMaker maker,
-            ITokenTileFilter filter,
+            Func<int, bool> isTokenVisible,
             int lowerBound,
             int upperBound,
             int maxListCount,
             int maxListItemCount)
         {
-            this._source = source;
+            _source = source;
             _tokens = tokens;
-            this._maker = maker;
-            this._filter = filter;
-            this._lowerBound = lowerBound;
-            this._upperBound = upperBound;
-            this._maxListCount = maxListCount;
-            this._maxListItemCount = maxListItemCount;
+            _maker = maker;
+            _isTokenVisible = isTokenVisible;
+            _lowerBound = lowerBound;
+            _upperBound = upperBound;
+            _maxListCount = maxListCount;
+            _maxListItemCount = maxListItemCount;
 
             var settings = source.Model.Environment.Settings;
             _findFollowOnPredictions = settings.FindFollowOnPredictions;
@@ -98,7 +98,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             int maxListCount,
             int maxListItemCount)
         {
-            var creator = new SuggestedWordListsCreator(source, tokens, maker, filter, lowerBound, upperBound, maxListCount, maxListItemCount);
+            var creator = new SuggestedWordListsCreator(source, tokens, maker, filter.IsTokenVisible, lowerBound, upperBound, maxListCount, maxListItemCount);
             var list = creator.Run();
             return list;
         }
@@ -117,7 +117,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private SortedList<int, IReadOnlyList<ITile>> Run()
         {
-            var scores = _maker.GetTopScores(_lowerBound, _upperBound, _filter == null, true);
+            var scores = _maker.GetTopScores(_lowerBound, _upperBound, _isTokenVisible == null, true);
 
             var corePredicitions = new List<WordPrediction>(_maxListCount);
             var coreCompoundPredictions = new List<List<WordPrediction>>(_maxListCount);
@@ -309,7 +309,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                                     {
                                         var candidateIndex = _source.GetTokenIndex(candidateToken);
                                         if (_lowerBound <= candidateIndex && candidateIndex < _upperBound &&
-                                            _filter.IsTokenVisible(candidateToken))
+                                            _isTokenVisible(candidateToken))
                                         {
                                             var candidateScore = _maker.GetScore(candidateToken);
                                             var candidateText = _tokens[candidateToken];

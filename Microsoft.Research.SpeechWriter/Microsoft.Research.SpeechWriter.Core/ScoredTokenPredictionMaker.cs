@@ -126,7 +126,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             return score;
         }
 
-        internal IEnumerable<int[]> GetTopScores(int minIndex, int limIndex, bool unfiltered, bool includeSpeculative)
+        internal IEnumerable<int[]> GetTopScores(Func<int, bool> tokenFilter, bool includeSpeculative)
         {
             /// <summary>
             /// Tokens already found and returned.
@@ -135,28 +135,15 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             bool IsNewToken(int token)
             {
-                var value = unfiltered;
+                var value = tokenFilter(token);
 
-                if (!value && !_foundTokens.Contains(token))
+                if (value && !_foundTokens.Contains(token))
                 {
-                    var index = _source.GetTokenIndex(token);
-                    if (minIndex <= index && index < limIndex)
-                    {
-                        _foundTokens.Add(token);
-
-                        if (_tokenFilter(token))
-                        {
-                            value = true;
-                        }
-                        else
-                        {
-                            value = false;
-                        }
-                    }
-                    else
-                    {
-                        value = false;
-                    }
+                    _foundTokens.Add(token);
+                }
+                else
+                {
+                    value = false;
                 }
 
                 return value;
@@ -255,6 +242,38 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
+        internal IEnumerable<int[]> GetTopScores(int minIndex, int limIndex, bool unfiltered, bool includeSpeculative)
+        {
+            Func<int, bool> tokenFilter;
+            if (unfiltered)
+            {
+                tokenFilter = LimitsOnlyFilter;
+            }
+            else
+            {
+                tokenFilter = ExtendedFilter;
+            }
+
+            var scores = GetTopScores(tokenFilter, includeSpeculative);
+            return scores;
+
+            bool LimitsOnlyFilter(int token)
+            {
+                var index = _source.GetTokenIndex(token);
+                var value = minIndex <= index && index < limIndex;
+                return value;
+            }
+
+            bool ExtendedFilter(int token)
+            {
+                var value = LimitsOnlyFilter(token);
+                if (value)
+                {
+                    value = _tokenFilter(token);
+                }
+                return value;
+            }
+        }
         int IComparer<int[]>.Compare(int[] x, int[] y)
         {
             Debug.Assert(x.Length == y.Length);
