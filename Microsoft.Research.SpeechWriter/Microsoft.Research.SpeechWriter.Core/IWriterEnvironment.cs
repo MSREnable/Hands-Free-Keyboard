@@ -16,6 +16,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         string Language { get; }
 
         /// <summary>
+        /// Get the user settings.
+        /// </summary>
+        WriterSettings Settings { get; }
+
+        /// <summary>
         /// Dictionary of words, listed from most likely to least likely.
         /// </summary>
         /// <returns>List of words.</returns>

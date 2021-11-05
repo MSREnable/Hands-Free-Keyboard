@@ -41,6 +41,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         string IWriterEnvironment.Language => "en-US";
 
+        WriterSettings IWriterEnvironment.Settings { get; } = new WriterSettings();
+
         /// <summary>
         /// Create reader for seed dictionary.
         /// </summary>
