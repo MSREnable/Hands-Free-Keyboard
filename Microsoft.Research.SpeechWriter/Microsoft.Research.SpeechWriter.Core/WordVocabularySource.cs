@@ -717,7 +717,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var maxListItemCount = Math.Max(1, Model.DisplayColumns / 2);
 
-            var maker = PersistantPredictor.CreatePredictionMaker(this, TokenFilter, Context);
+            var maker = PersistantPredictor.CreatePredictionMaker(this, TokenFilter.IsTokenVisible, Context);
 
             var list = SuggestedWordListsCreator.CreateSuggestionLists(this, _tokens, maker, TokenFilter, lowerBound, upperBound, maxListCount, maxListItemCount);
 

@@ -195,9 +195,9 @@ namespace Microsoft.Research.SpeechWriter.Core
             internal int Count { get; private set; }
         };
 
-        internal ScoredTokenPredictionMaker CreatePredictionMaker(PredictiveVocabularySource source, ITokenTileFilter filter, int[] context)
+        internal ScoredTokenPredictionMaker CreatePredictionMaker(PredictiveVocabularySource source, Func<int, bool> tokenFilter, int[] context)
         {
-            var maker = new ScoredTokenPredictionMaker(source, _database, filter, context);
+            var maker = new ScoredTokenPredictionMaker(source, _database, tokenFilter, context);
             return maker;
         }
 

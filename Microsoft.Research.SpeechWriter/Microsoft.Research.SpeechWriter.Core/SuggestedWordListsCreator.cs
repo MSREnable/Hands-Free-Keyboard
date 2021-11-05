@@ -8,14 +8,14 @@ namespace Microsoft.Research.SpeechWriter.Core
 {
     class SuggestedWordListsCreator
     {
-        private readonly WordVocabularySource source;
+        private readonly WordVocabularySource _source;
         private readonly StringTokens _tokens;
-        private readonly ScoredTokenPredictionMaker maker;
-        private readonly ITokenTileFilter filter;
-        private readonly int lowerBound;
-        private readonly int upperBound;
-        private readonly int maxListCount;
-        private readonly int maxListItemCount;
+        private readonly ScoredTokenPredictionMaker _maker;
+        private readonly ITokenTileFilter _filter;
+        private readonly int _lowerBound;
+        private readonly int _upperBound;
+        private readonly int _maxListCount;
+        private readonly int _maxListItemCount;
 
         private SuggestedWordListsCreator(WordVocabularySource source,
             StringTokens tokens,
@@ -26,14 +26,14 @@ namespace Microsoft.Research.SpeechWriter.Core
             int maxListCount,
             int maxListItemCount)
         {
-            this.source = source;
+            this._source = source;
             _tokens = tokens;
-            this.maker = maker;
-            this.filter = filter;
-            this.lowerBound = lowerBound;
-            this.upperBound = upperBound;
-            this.maxListCount = maxListCount;
-            this.maxListItemCount = maxListItemCount;
+            this._maker = maker;
+            this._filter = filter;
+            this._lowerBound = lowerBound;
+            this._upperBound = upperBound;
+            this._maxListCount = maxListCount;
+            this._maxListItemCount = maxListItemCount;
         }
 
         private WordPrediction GetNextCorePrediction(IEnumerator<int[]> enumerator)
@@ -44,7 +44,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 var score = enumerator.Current;
                 var token = score[0];
-                var index = source.GetTokenIndex(token);
+                var index = _source.GetTokenIndex(token);
                 var text = _tokens[token];
 
                 prediction = new WordPrediction(score, index, text);
@@ -61,21 +61,13 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             WordPrediction value;
 
-            var topScores = maker.GetTopScores(0, source.Count, true);
+            var topScores = maker.GetTopScores(0, _source.Count, true, false);
             using (var enumerator = topScores.GetEnumerator())
             {
                 value = GetNextCorePrediction(enumerator);
             }
 
-            if (value.Score.Length < 3)
-            {
-                // TODO: We should not have constructed this object.
-                value = null;
-            }
-            else
-            {
-                Debug.WriteLine($"Health predicition {value}");
-            }
+            Debug.Assert(value == null || 3 <= value.Score.Length, "Only true following predictions expected");
 
             return value;
         }
@@ -108,12 +100,12 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private SortedList<int, IReadOnlyList<ITile>> Run()
         {
-            var scores = maker.GetTopScores(lowerBound, upperBound, filter == null);
+            var scores = _maker.GetTopScores(_lowerBound, _upperBound, _filter == null, true);
 
-            var corePredicitions = new List<WordPrediction>(maxListCount);
-            var coreCompoundPredictions = new List<List<WordPrediction>>(maxListCount);
+            var corePredicitions = new List<WordPrediction>(_maxListCount);
+            var coreCompoundPredictions = new List<List<WordPrediction>>(_maxListCount);
 
-            var followOnPredictions = new List<WordPrediction>(maxListCount);
+            var followOnPredictions = new List<WordPrediction>(_maxListCount);
 
             var predictedTokens = new HashSet<int>();
 
@@ -121,7 +113,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 // Seed predictions with most likely items.
                 var nextCorePrediction = GetNextCorePrediction(enumerator);
-                for (var iteration = 0; iteration < maxListCount && nextCorePrediction != null; iteration++)
+                for (var iteration = 0; iteration < _maxListCount && nextCorePrediction != null; iteration++)
                 {
                     AddNextPrediction(nextCorePrediction);
                     nextCorePrediction = GetNextCorePrediction(enumerator);
@@ -298,11 +290,11 @@ namespace Microsoft.Research.SpeechWriter.Core
                             {
                                 if (!predictedTokens.Contains(candidateToken))
                                 {
-                                    var candidateIndex = source.GetTokenIndex(candidateToken);
-                                    if (lowerBound <= candidateIndex && candidateIndex < upperBound &&
-                                        filter.IsTokenVisible(candidateToken))
+                                    var candidateIndex = _source.GetTokenIndex(candidateToken);
+                                    if (_lowerBound <= candidateIndex && candidateIndex < _upperBound &&
+                                        _filter.IsTokenVisible(candidateToken))
                                     {
-                                        var candidateScore = maker.GetScore(candidateToken);
+                                        var candidateScore = _maker.GetScore(candidateToken);
                                         var candidateText = _tokens[candidateToken];
 
                                         var candidatePrediction = new WordPrediction(candidateScore, candidateIndex, candidateText);
@@ -355,14 +347,14 @@ namespace Microsoft.Research.SpeechWriter.Core
                 {
                     includedPrefixIndex = beyondPrefixIndex;
                     beyondPrefixIndex = includedPrefixIndex + step;
-                    if (upperBound <= beyondPrefixIndex)
+                    if (_upperBound <= beyondPrefixIndex)
                     {
-                        beyondPrefixIndex = upperBound;
+                        beyondPrefixIndex = _upperBound;
                         limitFound = true;
                     }
                     else
                     {
-                        var candidateLimitToken = source.GetIndexToken(beyondPrefixIndex);
+                        var candidateLimitToken = _source.GetIndexToken(beyondPrefixIndex);
                         var candidateLimitText = _tokens[candidateLimitToken];
                         if (!candidateLimitText.StartsWith(longestPredictionText, StringComparison.OrdinalIgnoreCase))
                         {
@@ -381,7 +373,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                     else
                     {
                         var midIndex = (includedPrefixIndex + beyondPrefixIndex) / 2;
-                        var midToken = source.GetIndexToken(midIndex);
+                        var midToken = _source.GetIndexToken(midIndex);
                         var midText = _tokens[midToken];
                         if (midText.StartsWith(longestPredictionText, StringComparison.OrdinalIgnoreCase))
                         {
@@ -399,7 +391,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 {
                     Debug.WriteLine($"Consider extending {longestPredictionText}:");
                     var followOn = followOnPredictions[compoundPredictionIndex];
-                    var additionalScores = maker.GetTopScores(longestPrediction.Index + 1, beyondPrefixIndex, false);
+                    var additionalScores = _maker.GetTopScores(longestPrediction.Index + 1, beyondPrefixIndex, false, true);
                     using (var enumerator = additionalScores.GetEnumerator())
                     {
                         var extendedPredictionText = longestPredictionText;
@@ -427,7 +419,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                                     InsertPrediction(compoundPrediction, candidatePrediction);
                                     extendedPredictionText = candidatePrediction.Text;
 
-                                    var followOnMaker = maker.CreateNextPredictionMaker(candidatePrediction.Token, null);
+                                    var followOnMaker = _maker.CreateNextPredictionMaker(candidatePrediction.Token, null);
                                     var followOnPrediction = GetTopPrediction(followOnMaker);
                                     followOnPredictions[compoundPredictionIndex] = followOnPrediction;
 
@@ -450,12 +442,12 @@ namespace Microsoft.Research.SpeechWriter.Core
                 if (headWord[0] == '\0')
                 {
                     var command = (TileCommand)Enum.Parse(typeof(TileCommand), headWord.Substring(1));
-                    var tile = new CommandItem(source.Model.LastTile, source, command);
+                    var tile = new CommandItem(_source.Model.LastTile, _source, command);
                     predictions.Add(tile);
                 }
                 else
                 {
-                    var item = source.CreateSuggestedWordItem(headWord);
+                    var item = _source.CreateSuggestedWordItem(headWord);
                     predictions.Add(item);
 
                     for (var corePosition = 1; corePosition < coreCompoundPrediction.Count; corePosition++)
@@ -463,7 +455,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                         var tailPrediction = coreCompoundPrediction[corePosition];
                         var tailWord = _tokens.GetString(tailPrediction.Token);
                         Debug.Assert(tailWord.StartsWith(headWord));
-                        item = new ExtendedSuggestedWordItem(source.Model.LastTile, source, tailWord, tailWord.Substring(headWord.Length));
+                        item = new ExtendedSuggestedWordItem(_source.Model.LastTile, _source, tailWord, tailWord.Substring(headWord.Length));
 
                         predictions.Add(item);
 
@@ -473,19 +465,19 @@ namespace Microsoft.Research.SpeechWriter.Core
                     var followOn = followOnPredictions[position];
                     if (followOn != null)
                     {
-                        var firstCreatedItem = source.GetNextItem(item, followOn.Token);
+                        var firstCreatedItem = _source.GetNextItem(item, followOn.Token);
                         var newItem = firstCreatedItem as SuggestedWordItem;
                         predictions.Add(firstCreatedItem);
 
-                        var followOnMaker = maker.CreateNextPredictionMaker(followOn.Token, null);
+                        var followOnMaker = _maker.CreateNextPredictionMaker(followOn.Token, null);
                         var done = newItem == null;
-                        while (!done && predictions.Count < maxListItemCount)
+                        while (!done && predictions.Count < _maxListItemCount)
                         {
                             var followOnPrediction = GetTopPrediction(followOnMaker);
                             if (followOnPrediction != null)
                             {
                                 item = newItem;
-                                var createdItem = source.GetNextItem(item, followOnPrediction.Token);
+                                var createdItem = _source.GetNextItem(item, followOnPrediction.Token);
                                 newItem = createdItem as SuggestedWordItem;
                                 followOnMaker = followOnMaker.CreateNextPredictionMaker(followOnPrediction.Token, null);
                                 predictions.Add(createdItem);
@@ -528,7 +520,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 if (prediction.Text[0] != '\0')
                 {
-                    var followOnMaker = maker.CreateNextPredictionMaker(prediction.Token, null);
+                    var followOnMaker = _maker.CreateNextPredictionMaker(prediction.Token, null);
 
                     var followOnPrediction = GetTopPrediction(followOnMaker);
                     followOnPredictions.Insert(position, followOnPrediction);

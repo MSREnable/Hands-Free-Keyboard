@@ -7,18 +7,18 @@ namespace Microsoft.Research.SpeechWriter.Core
     class ScoredTokenPredictionMaker : IComparer<int[]>
     {
         private readonly PredictiveVocabularySource _source;
-        private readonly ITokenTileFilter _filter;
+        private readonly Func<int, bool> _tokenFilter;
         private readonly TokenPredictorDatabase[] _contextDatabases;
 
-        private ScoredTokenPredictionMaker(PredictiveVocabularySource source, ITokenTileFilter filter, TokenPredictorDatabase[] contextDatabases)
+        private ScoredTokenPredictionMaker(PredictiveVocabularySource source, Func<int, bool> tokenFilter, TokenPredictorDatabase[] contextDatabases)
         {
             _source = source;
             _contextDatabases = contextDatabases;
-            _filter = filter;
+            _tokenFilter = tokenFilter;
         }
 
-        internal ScoredTokenPredictionMaker(PredictiveVocabularySource source, TokenPredictorDatabase database, ITokenTileFilter filter, int[] context)
-            : this(source, filter, GetContextDatabases(database, context))
+        internal ScoredTokenPredictionMaker(PredictiveVocabularySource source, TokenPredictorDatabase database, Func<int, bool> tokenFilter, int[] context)
+            : this(source, tokenFilter, GetContextDatabases(database, context))
         {
         }
 
@@ -94,10 +94,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             return databases.ToArray();
         }
 
-        internal ScoredTokenPredictionMaker CreateNextPredictionMaker(int token, ITokenTileFilter filter)
+        internal ScoredTokenPredictionMaker CreateNextPredictionMaker(int token, Func<int, bool> tokenFilter)
         {
             var databases = GetNextContextDatabases(_contextDatabases, token);
-            var maker = new ScoredTokenPredictionMaker(_source, filter, databases);
+            var maker = new ScoredTokenPredictionMaker(_source, tokenFilter, databases);
             return maker;
         }
 
@@ -126,7 +126,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             return score;
         }
 
-        internal IEnumerable<int[]> GetTopScores(int _minIndex, int _limIndex, bool unfiltered)
+        internal IEnumerable<int[]> GetTopScores(int minIndex, int limIndex, bool unfiltered, bool includeSpeculative)
         {
             /// <summary>
             /// Tokens already found and returned.
@@ -140,11 +140,11 @@ namespace Microsoft.Research.SpeechWriter.Core
                 if (!value && !_foundTokens.Contains(token))
                 {
                     var index = _source.GetTokenIndex(token);
-                    if (_minIndex <= index && index < _limIndex)
+                    if (minIndex <= index && index < limIndex)
                     {
                         _foundTokens.Add(token);
 
-                        if (_filter.IsTokenVisible(token))
+                        if (_tokenFilter(token))
                         {
                             value = true;
                         }
@@ -214,42 +214,45 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
             }
 
-            // Produce scores with two ordinls - those guaranteed to be produced in order.
+            if (includeSpeculative)
             {
-                var score = new int[1 + 1];
-                foreach (var info in _contextDatabases[0].SortedEnumerable)
+                // Produce scores with two ordinls - those guaranteed to be produced in order.
                 {
-                    var token = info.Token;
-
-                    if (IsNewToken(token))
+                    var score = new int[1 + 1];
+                    foreach (var info in _contextDatabases[0].SortedEnumerable)
                     {
-                        score[0] = token;
-                        score[1] = info.Count;
+                        var token = info.Token;
 
-                        yield return score;
+                        if (IsNewToken(token))
+                        {
+                            score[0] = token;
+                            score[1] = info.Count;
+
+                            yield return score;
+                        }
                     }
                 }
-            }
 
-            // As a first fallback produce single ordinal results.
-            var singleToken = new int[1];
-            var tokens = _source.GetTokens();
+                // As a first fallback produce single ordinal results.
+                var singleToken = new int[1];
+                var tokens = _source.GetTokens();
 
-            using (var enumerator = tokens.GetEnumerator())
-            {
-                while (enumerator.MoveNext())
+                using (var enumerator = tokens.GetEnumerator())
                 {
-                    var token = enumerator.Current;
-
-                    if (IsNewToken(token))
+                    while (enumerator.MoveNext())
                     {
-                        singleToken[0] = token;
-                        yield return singleToken;
+                        var token = enumerator.Current;
+
+                        if (IsNewToken(token))
+                        {
+                            singleToken[0] = token;
+                            yield return singleToken;
+                        }
                     }
                 }
-            }
 
-            // TODO: We should now perhaps disregard index position constraints and just yield anything.
+                // TODO: We should now perhaps disregard index position constraints and just yield anything.
+            }
         }
 
         int IComparer<int[]>.Compare(int[] x, int[] y)
