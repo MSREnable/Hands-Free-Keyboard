@@ -136,7 +136,10 @@ namespace Microsoft.Research.SpeechWriter.Core
                 {
                     Debug.WriteLine($"Saying \"{text}\"");
 
-                    await _vocalizer.SpeakSsmlAsync(text);
+                    if (_model.Environment.Settings.SpeakWordByWord)
+                    {
+                        await _vocalizer.SpeakSsmlAsync(text);
+                    }
                 }
             }
         }

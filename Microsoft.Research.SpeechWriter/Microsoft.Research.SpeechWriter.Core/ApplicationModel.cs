@@ -83,7 +83,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 if (_displayRows != value)
                 {
                     _displayRows = value;
-                    Source.SetSuggestionsView(_lowerBound, _upperLimit, false);
+                    RefreshSuggestionsView();
                 }
             }
         }
@@ -97,7 +97,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 if (_displayColumns != value)
                 {
                     _displayColumns = value;
-                    Source.SetSuggestionsView(_lowerBound, _upperLimit, false);
+                    RefreshSuggestionsView();
                 }
             }
         }
@@ -319,9 +319,18 @@ namespace Microsoft.Research.SpeechWriter.Core
             _nextSuggestions.Add(new ITile[] { new SuggestedUnicodeItem(HeadItems[1], _wordSource.SpellingSource, 33) });
         }
 
+        private void RefreshSuggestionsView()
+        {
+            Source.SetSuggestionsView(_lowerBound, _upperLimit, false);
+        }
+
         public async Task<bool> ShowSettingsAync()
         {
             var updated = await Environment.ShowSettingsAsync(Environment.Settings);
+            if (updated)
+            {
+                RefreshSuggestionsView();
+            }
             return updated;
         }
     }

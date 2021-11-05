@@ -48,8 +48,9 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
 
         Task<bool> IWriterEnvironment.ShowSettingsAsync(WriterSettings settings)
         {
-            MessageBox.Show("Settings go here");
-            return Task.FromResult(false);
+            var dialog = new SettingsDialog(settings);
+            dialog.ShowDialog();
+            return Task.FromResult(true);
         }
     }
 }
