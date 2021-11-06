@@ -749,7 +749,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 var token = GetIndexToken(index);
                 var word = _tokens.GetString(token);
-                if (word[0] != '\0')
+                if (word[0] != '\0' && Model.Environment.Settings.ShowSpellingInterstitials)
                 {
                     value = new InterstitialSpellingItem(LastTile, _spellingSource, index);
                 }
@@ -758,9 +758,13 @@ namespace Microsoft.Research.SpeechWriter.Core
                     value = null;
                 }
             }
-            else
+            else if (Model.Environment.Settings.ShowSpellingInterstitials)
             {
                 value = new InterstitialSpellingItem(LastTile, _spellingSource, index);
+            }
+            else
+            {
+                value = null;
             }
 
             return value;

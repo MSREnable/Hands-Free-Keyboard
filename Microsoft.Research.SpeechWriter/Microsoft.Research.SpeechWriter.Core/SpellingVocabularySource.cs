@@ -324,7 +324,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             ITile interstitial;
 
-            if (index < HeaderSize)
+            if (index < HeaderSize || !Model.Environment.Settings.ShowUnicodeInterstitials)
             {
                 interstitial = null;
             }
