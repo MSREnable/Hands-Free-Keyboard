@@ -319,7 +319,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _nextSuggestions.Add(new ITile[] { new SuggestedUnicodeItem(HeadItems[1], _wordSource.SpellingSource, 33) });
         }
 
-        private void RefreshSuggestionsView()
+        public void RefreshSuggestionsView()
         {
             Source.SetSuggestionsView(_lowerBound, _upperLimit, false);
         }

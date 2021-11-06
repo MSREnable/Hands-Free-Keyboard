@@ -2,6 +2,7 @@
 using Microsoft.Research.SpeechWriter.Core.Automation;
 using Microsoft.Research.SpeechWriter.UI;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,9 +64,13 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
             Loaded += OnLoaded;
 
             _demo = ApplicationDemo.Create(this);
+
+            ((INotifyPropertyChanged)_model.Environment.Settings).PropertyChanged += (s, e) => _model.RefreshSuggestionsView();
         }
 
         public ApplicationModel Model => _model;
+
+        public WriterSettings Settings => _model.Environment.Settings;
 
         public double MoveToCenterX
         {
