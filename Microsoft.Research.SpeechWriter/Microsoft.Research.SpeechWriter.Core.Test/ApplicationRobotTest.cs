@@ -374,7 +374,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 32, 1, 104, 140);
+            MultiTest("That'll be $10, please!", 32, 1, 104, 137);
         }
 
         [Test]

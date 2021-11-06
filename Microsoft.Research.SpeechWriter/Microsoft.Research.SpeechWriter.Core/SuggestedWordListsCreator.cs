@@ -411,10 +411,28 @@ namespace Microsoft.Research.SpeechWriter.Core
                     {
                         Debug.WriteLine($"Consider extending {longestPredictionText}:");
                         var followOn = followOnPredictions[compoundPredictionIndex];
-                        var additionalScores = _maker.GetTopScores(longestPrediction.Index + 1, beyondPrefixIndex, false, true);
+
+                        var minSuffixIndex = longestPrediction.Index + 1;
+                        var limSuffixIndex = beyondPrefixIndex;
+                        var extendedPredictionText = longestPredictionText;
+
+                        bool SuffixFilter(int token)
+                        {
+                            var index = _source.GetTokenIndex(token);
+                            var value = minSuffixIndex <= index && index < limSuffixIndex;
+
+                            if (value)
+                            {
+                                var text = _tokens[token];
+                                value = extendedPredictionText.StartsWith(text) || text.StartsWith(extendedPredictionText);
+                            }
+
+                            return value;
+                        }
+
+                        var additionalScores = _maker.GetTopScores(SuffixFilter, true);
                         using (var enumerator = additionalScores.GetEnumerator())
                         {
-                            var extendedPredictionText = longestPredictionText;
 
                             var improved = true;
                             for (var candidatePrediction = GetNextCorePrediction(enumerator);
