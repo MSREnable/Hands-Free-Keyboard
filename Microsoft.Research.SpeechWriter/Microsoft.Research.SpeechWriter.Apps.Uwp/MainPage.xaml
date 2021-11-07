@@ -99,7 +99,21 @@
 
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="Transparent">
+        <Grid.ContextFlyout>
+            <MenuFlyout>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.SpeakWordByWord, Mode=TwoWay}" Text="Speak words as they are selected"/>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.SpeakWholeUtterances, Mode=TwoWay}" Text="Speak utterances as they are completed"/>
+                <MenuFlyoutSeparator/>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.FindFollowOnPredictions, Mode=TwoWay}" Text="Find follow-on words"/>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.CombineCorePredictions, Mode=TwoWay}" Text="Combine adjacent top-ranked predictions"/>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.FindCorePredictionPrefixes, Mode=TwoWay}" Text="Consider possible prediction prefixes"/>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.FindCorePredictionSuffixes, Mode=TwoWay}" Text="Consider possible prediction suffixes"/>
+                <MenuFlyoutSeparator/>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.ShowSpellingInterstitials, Mode=TwoWay}" Text="Show spelling buttons between adjacent known words"/>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.ShowUnicodeInterstitials, Mode=TwoWay}" Text="Show Unicode buttons between non-adjacent symbols"/>
+            </MenuFlyout>
+        </Grid.ContextFlyout>
         <ui:SuperPanel x:Name="TheHost" VerticalAlignment="Center"/>
 
         <CommandBar Margin="-10000,-10000,0,0">

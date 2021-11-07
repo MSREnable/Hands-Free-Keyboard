@@ -3,6 +3,7 @@ using Microsoft.Research.SpeechWriter.Core.Automation;
 using Microsoft.Research.SpeechWriter.UI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,6 +60,8 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
         //internal IApplicationPanel<FrameworkElement, Size, Rect> AppPanel => TheHost;
 
+        internal WriterSettings Settings => _model.Environment.Settings;
+
         internal Canvas SwitchCanvas => SwitchPanel;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -69,6 +72,8 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
             var environment = passedEnvironment ?? new UwpWriterEnvironment();
             _model = new ApplicationModel(environment);
+            ((INotifyPropertyChanged)_model.Environment.Settings).PropertyChanged += 
+                (s, ee) => _model.RefreshSuggestionsView();
             TheHost.Model = _model;
             TheHost.SizeChanged += (s, ee) =>
             {
