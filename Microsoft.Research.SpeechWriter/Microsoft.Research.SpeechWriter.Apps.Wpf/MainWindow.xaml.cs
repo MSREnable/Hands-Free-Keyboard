@@ -55,11 +55,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
             _ = Narrator.AttachNarrator(_model, vocalizer);
 
             TheHost.Model = _model;
-            TheHost.SizeChanged += (s, e) =>
-            {
-                TheHost.Model.DisplayRows = (int)(e.NewSize.Height / 110);
-                TheHost.Model.DisplayColumns = (int)(e.NewSize.Width / 110);
-            };
 
             Loaded += OnLoaded;
 
@@ -307,6 +302,24 @@ namespace Microsoft.Research.SpeechWriter.Apps.Wpf
         private async void ShowSettings(object sender, MouseButtonEventArgs e)
         {
             await Model.ShowSettingsAync();
+        }
+
+        private void OnSmallButtons(object sender, RoutedEventArgs e)
+        {
+            TheScaleTransform.ScaleX = 0.5;
+            TheScaleTransform.ScaleY = 0.5;
+        }
+
+        private void OnMediumButtons(object sender, RoutedEventArgs e)
+        {
+            TheScaleTransform.ScaleX = 1.0;
+            TheScaleTransform.ScaleY = 1.0;
+        }
+
+        private void OnLargeButtons(object sender, RoutedEventArgs e)
+        {
+            TheScaleTransform.ScaleX = 2.0;
+            TheScaleTransform.ScaleY = 2.0;
         }
     }
 }

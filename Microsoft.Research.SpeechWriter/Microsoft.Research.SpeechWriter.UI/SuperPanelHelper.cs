@@ -62,6 +62,9 @@ namespace Microsoft.Research.SpeechWriter.UI
             var finalHeight = rows * verticalPitch;
             var sideWidth = (availableWidth - horizontalPitch) / 2.0;
 
+            _model.DisplayRows = (int)rows;
+            _model.DisplayColumns = (int)Math.Floor(availableWidth / horizontalPitch);
+
             _interstitialPanelHelper._panel.Measure(_panel.CreateSize(horizontalPitch, finalHeight));
             _headPanelHelper._panel.Measure(_panel.CreateSize(sideWidth, finalHeight - verticalPitch));
             _tailPanelHelper._panel.Measure(_panel.CreateSize(sideWidth, verticalPitch));

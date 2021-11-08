@@ -109,9 +109,19 @@
                 <Separator/>
                 <MenuItem IsCheckable="True" IsChecked="{Binding Settings.ShowSpellingInterstitials}" Header="Show spelling buttons between adjacent known words"/>
                 <MenuItem IsCheckable="True" IsChecked="{Binding Settings.ShowUnicodeInterstitials}" Header="Show Unicode buttons between non-adjacent symbols"/>
+                <Separator/>
+                <MenuItem Header="Scale">
+                    <MenuItem Header="Small" Click="OnSmallButtons"/>
+                    <MenuItem Header="Medium" Click="OnMediumButtons"/>
+                    <MenuItem Header="Large" Click="OnLargeButtons"/>
+                </MenuItem>
             </ContextMenu>
         </Grid.ContextMenu>
-        <ui:SuperPanel x:Name="TheHost" VerticalAlignment="Center"/>
+        <ui:SuperPanel x:Name="TheHost" VerticalAlignment="Center">
+            <ui:SuperPanel.LayoutTransform>
+                <ScaleTransform x:Name="TheScaleTransform"/>
+            </ui:SuperPanel.LayoutTransform>
+        </ui:SuperPanel>
         <Canvas x:Name="TargetPanel">
             <Rectangle x:Name="TargetOutline" Stroke="LimeGreen" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" Visibility="Collapsed"/>
         </Canvas>

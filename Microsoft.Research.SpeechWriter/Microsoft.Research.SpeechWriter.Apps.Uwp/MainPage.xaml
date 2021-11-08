@@ -112,9 +112,22 @@
                 <MenuFlyoutSeparator/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.ShowSpellingInterstitials, Mode=TwoWay}" Text="Show spelling buttons between adjacent known words"/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.ShowUnicodeInterstitials, Mode=TwoWay}" Text="Show Unicode buttons between non-adjacent symbols"/>
+                <MenuFlyoutSeparator/>
+                <MenuFlyoutSubItem Text="Scale">
+                    <MenuFlyoutItem Text="Small" Click="OnSmallButtons"/>
+                    <MenuFlyoutItem Text="Medium" Click="OnMediumButtons"/>
+                    <MenuFlyoutItem Text="Large" Click="OnLargeButtons"/>
+                </MenuFlyoutSubItem>
             </MenuFlyout>
         </Grid.ContextFlyout>
-        <ui:SuperPanel x:Name="TheHost" VerticalAlignment="Center"/>
+
+        <controls:LayoutTransformControl>
+            <controls:LayoutTransformControl.Transform>
+                <ScaleTransform x:Name="TheScaleTransform"/>
+            </controls:LayoutTransformControl.Transform>
+            <ui:SuperPanel x:Name="TheHost" VerticalAlignment="Center">
+            </ui:SuperPanel>
+        </controls:LayoutTransformControl>
 
         <CommandBar Margin="-10000,-10000,0,0">
             <CommandBar.KeyboardAccelerators>

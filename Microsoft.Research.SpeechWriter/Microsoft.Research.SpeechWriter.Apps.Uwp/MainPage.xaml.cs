@@ -75,11 +75,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             ((INotifyPropertyChanged)_model.Environment.Settings).PropertyChanged += 
                 (s, ee) => _model.RefreshSuggestionsView();
             TheHost.Model = _model;
-            TheHost.SizeChanged += (s, ee) =>
-            {
-                TheHost.Model.DisplayRows = (int)(ee.NewSize.Height / 110);
-                TheHost.Model.DisplayColumns = (int)(ee.NewSize.Width / 110);
-            };
             _demo = ApplicationDemo.Create(this);
             var vocalizer = NarratorVocalization.Create(TheMediaElement, "en");
             _ = Narrator.AttachNarrator(_model, vocalizer);
@@ -96,7 +91,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
                     IsEnabled = true;
                 }
             }
-            SetMaxNextSuggestionsCount();
             Model = _model;
         }
 
@@ -275,12 +269,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             set => SetValue(ModelProperty, value);
         }
 
-        private void SetMaxNextSuggestionsCount()
-        {
-            var count = Math.Max(1, (int)(ActualHeight) / 110);
-            _model.DisplayRows = count;
-        }
-
         void IApplicationHost.Restart(bool loadHistory) => Frame.Navigate(GetType(), loadHistory ? string.Empty : null);
 
         async Task<string> IApplicationHost.GetClipboardStringAsync()
@@ -394,6 +382,24 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             {
                 e.Handled = true;
             }
+        }
+
+        private void OnSmallButtons(object sender, RoutedEventArgs e)
+        {
+            TheScaleTransform.ScaleX = 0.5;
+            TheScaleTransform.ScaleY = 0.5;
+        }
+
+        private void OnMediumButtons(object sender, RoutedEventArgs e)
+        {
+            TheScaleTransform.ScaleX = 1.0;
+            TheScaleTransform.ScaleY = 1.0;
+        }
+
+        private void OnLargeButtons(object sender, RoutedEventArgs e)
+        {
+            TheScaleTransform.ScaleX = 2.0;
+            TheScaleTransform.ScaleY = 2.0;
         }
     }
 }
