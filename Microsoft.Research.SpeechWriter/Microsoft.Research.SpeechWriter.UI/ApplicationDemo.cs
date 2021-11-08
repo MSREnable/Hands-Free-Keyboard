@@ -4,11 +4,34 @@ using Microsoft.Research.SpeechWriter.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Microsoft.Research.SpeechWriter.UI
 {
     public class ApplicationDemo
     {
+        class ActionCommand : ICommand
+        {
+            private readonly Action _action;
+
+            internal ActionCommand(Action action) => _action = action;
+
+            event EventHandler ICommand.CanExecuteChanged
+            {
+                add
+                {
+                }
+
+                remove
+                {
+                }
+            }
+
+            bool ICommand.CanExecute(object parameter) => true;
+
+            void ICommand.Execute(object parameter) => _action();
+        }
+
         private readonly IApplicationHost _host;
 
         private bool _demoMode;
@@ -21,6 +44,18 @@ namespace Microsoft.Research.SpeechWriter.UI
         {
             _host = host;
         }
+
+        public ICommand Restart => new ActionCommand(OnRestart);
+        public ICommand ClickKirk => new ActionCommand(OnClickKirk);
+        public ICommand ClickPicard => new ActionCommand(OnClickPicard);
+        public ICommand Paste => new ActionCommand(OnPaste);
+        public ICommand ClickTutor => new ActionCommand(OnClickTutor);
+        public ICommand ClickQuick => new ActionCommand(OnClickQuick);
+        public ICommand ClickReset => new ActionCommand(OnClickReset);
+        public ICommand TimingChange => new ActionCommand(OnTimingChange);
+        public ICommand ShowLogging => new ActionCommand(OnShowLogging);
+        public ICommand ShowTestCard => new ActionCommand(OnShowTestCard);
+        public ICommand ImportClipboard => new ActionCommand(OnImportClipboard);
 
         public static ApplicationDemo Create(IApplicationHost host)
         {
@@ -263,7 +298,7 @@ namespace Microsoft.Research.SpeechWriter.UI
             _host.Model.ShowTestCard();
         }
 
-        private async void ImportClipboard()
+        private async void OnImportClipboard()
         {
             var data = await GetClipboardContentAsync();
             foreach (var sequence in data)
@@ -300,7 +335,7 @@ namespace Microsoft.Research.SpeechWriter.UI
 
                 case "P": OnShowTestCard(); break;
 
-                case "I": ImportClipboard(); break;
+                case "I": OnImportClipboard(); break;
 
                 default:
                     done = false;

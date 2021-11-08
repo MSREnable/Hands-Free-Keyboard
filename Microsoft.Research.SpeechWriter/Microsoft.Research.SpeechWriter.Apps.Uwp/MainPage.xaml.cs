@@ -58,8 +58,6 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             };
         }
 
-        //internal IApplicationPanel<FrameworkElement, Size, Rect> AppPanel => TheHost;
-
         internal WriterSettings Settings => _model.Environment.Settings;
 
         internal Canvas SwitchCanvas => SwitchPanel;
@@ -72,14 +70,23 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
 
             var environment = passedEnvironment ?? new UwpWriterEnvironment();
             _model = new ApplicationModel(environment);
-            ((INotifyPropertyChanged)_model.Environment.Settings).PropertyChanged += 
+            ((INotifyPropertyChanged)_model.Environment.Settings).PropertyChanged +=
                 (s, ee) => _model.RefreshSuggestionsView();
             TheHost.Model = _model;
             _demo = ApplicationDemo.Create(this);
             var vocalizer = NarratorVocalization.Create(TheMediaElement, "en");
             _ = Narrator.AttachNarrator(_model, vocalizer);
 
-            if (e.Parameter != null && passedEnvironment == null)
+            if (e.Parameter == null)
+            {
+                _model.Environment.Settings.SpeakWordByWord = false;
+                _model.Environment.Settings.SpeakWordByWord = false;
+                _model.Environment.Settings.FindFollowOnPredictions = false;
+                _model.Environment.Settings.CombineCorePredictions = false;
+                _model.Environment.Settings.FindCorePredictionPrefixes = false;
+                _model.Environment.Settings.FindCorePredictionSuffixes = false;
+            }
+            else if (passedEnvironment == null)
             {
                 IsEnabled = false;
                 try

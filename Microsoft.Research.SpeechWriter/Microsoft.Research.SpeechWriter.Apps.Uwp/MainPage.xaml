@@ -105,10 +105,10 @@
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.SpeakWordByWord, Mode=TwoWay}" Text="Speak words as they are selected"/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.SpeakWholeUtterances, Mode=TwoWay}" Text="Speak utterances as they are completed"/>
                 <MenuFlyoutSeparator/>
-                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.FindFollowOnPredictions, Mode=TwoWay}" Text="Find follow-on words"/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.CombineCorePredictions, Mode=TwoWay}" Text="Combine adjacent top-ranked predictions"/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.FindCorePredictionPrefixes, Mode=TwoWay}" Text="Consider possible prediction prefixes"/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.FindCorePredictionSuffixes, Mode=TwoWay}" Text="Consider possible prediction suffixes"/>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.FindFollowOnPredictions, Mode=TwoWay}" Text="Find follow-on words"/>
                 <MenuFlyoutSeparator/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.ShowSpellingInterstitials, Mode=TwoWay}" Text="Show spelling buttons between adjacent known words"/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.ShowUnicodeInterstitials, Mode=TwoWay}" Text="Show Unicode buttons between non-adjacent symbols"/>
@@ -117,6 +117,22 @@
                     <MenuFlyoutItem Text="Small" Click="OnSmallButtons"/>
                     <MenuFlyoutItem Text="Medium" Click="OnMediumButtons"/>
                     <MenuFlyoutItem Text="Large" Click="OnLargeButtons"/>
+                </MenuFlyoutSubItem>
+                <MenuFlyoutSubItem Text="Demo">
+                    <MenuFlyoutItem Text="Restart the application blank" Command="{x:Bind _demo.ClickReset}"/>
+                    <MenuFlyoutItem Text="Restart application normally" Command="{x:Bind _demo.Restart}"/>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="Speak prologue, Star Trek" Command="{x:Bind _demo.ClickKirk}"/>
+                    <MenuFlyoutItem Text="Speak prologue, Star Trek: The Next Generation" Command="{x:Bind _demo.ClickPicard}"/>
+                    <MenuFlyoutItem Text="Speak the text on the clipboard" Command="{x:Bind _demo.Paste}"/>
+                    <MenuFlyoutItem Text="Change button pressing speed" Command="{x:Bind _demo.TimingChange}"/>
+                    <MenuFlyoutItem Text="Finish speaking quickly" Command="{x:Bind _demo.ClickQuick}"/>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="Tutor how to say the text on the clipboard" Command="{x:Bind _demo.ClickTutor}"/>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="Copy path of Utterances file to clipboard" Command="{x:Bind _demo.ShowLogging}"/>
+                    <MenuFlyoutItem Text="Import contents of the clipboard into Utterances file" Command="{x:Bind _demo.ImportClipboard}"/>
+                    <MenuFlyoutItem Text="Show test card" Command="{x:Bind _demo.ShowTestCard}"/>
                 </MenuFlyoutSubItem>
             </MenuFlyout>
         </Grid.ContextFlyout>
