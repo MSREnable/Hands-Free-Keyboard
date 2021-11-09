@@ -113,11 +113,10 @@
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.ShowSpellingInterstitials, Mode=TwoWay}" Text="Show spelling buttons between adjacent known words"/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.ShowUnicodeInterstitials, Mode=TwoWay}" Text="Show Unicode buttons between non-adjacent symbols"/>
                 <MenuFlyoutSeparator/>
-                <MenuFlyoutSubItem Text="Scale">
-                    <MenuFlyoutItem Text="Small" Click="OnSmallButtons"/>
-                    <MenuFlyoutItem Text="Medium" Click="OnMediumButtons"/>
-                    <MenuFlyoutItem Text="Large" Click="OnLargeButtons"/>
-                </MenuFlyoutSubItem>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.SmallButtons, Mode=TwoWay}" Text="Small"/>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.MediumButtons, Mode=TwoWay}" Text="Medium"/>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.LargeButtons, Mode=TwoWay}" Text="Large"/>
+                <MenuFlyoutSeparator/>
                 <MenuFlyoutSubItem Text="Demo">
                     <MenuFlyoutItem Text="Restart the application blank" Command="{x:Bind _demo.ClickReset}"/>
                     <MenuFlyoutItem Text="Restart application normally" Command="{x:Bind _demo.Restart}"/>
@@ -139,7 +138,7 @@
 
         <controls:LayoutTransformControl>
             <controls:LayoutTransformControl.Transform>
-                <ScaleTransform x:Name="TheScaleTransform"/>
+                <ScaleTransform ScaleX="{x:Bind Settings.ButtonScale, Mode=OneWay}" ScaleY="{x:Bind Settings.ButtonScale, Mode=OneWay}"/>
             </controls:LayoutTransformControl.Transform>
             <ui:SuperPanel x:Name="TheHost" VerticalAlignment="Center">
             </ui:SuperPanel>

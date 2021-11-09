@@ -18,6 +18,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                 }
             }
         }
+
         [Test]
         public void GetSetTest()
         {
@@ -34,9 +35,26 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                 {
                     var expected = name == trueName;
                     var actual = settings.Get(name);
-                    Assert.AreEqual(expected, actual);
+                    if (IsButton(trueName) == IsButton(name) || !IsButton(name))
+                    {
+                        Assert.AreEqual(expected, actual);
+                    }
+                    else
+                    {
+                        Assert.IsTrue(IsButton(name));
+
+                        var count = (settings.Get(WriterSettingName.SmallButtons) ? 1 : 0) +
+                            (settings.Get(WriterSettingName.MediumButtons) ? 1 : 0) +
+                            (settings.Get(WriterSettingName.LargeButtons) ? 1 : 0);
+                        Assert.AreEqual(1, count);
+                    }
                 }
             }
+
+            bool IsButton(WriterSettingName name) =>
+                name == WriterSettingName.SmallButtons ||
+                name == WriterSettingName.MediumButtons ||
+                name == WriterSettingName.LargeButtons;
         }
 
         [Test]
@@ -49,9 +67,17 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
             foreach (var property in properties)
             {
                 var propertyName = property.Name;
-                var parsedName = Enum.Parse<WriterSettingName>(propertyName);
-                Assert.IsTrue(nameSet.Contains(parsedName), "Name is in settings", propertyName);
-                nameSet.Remove(parsedName);
+                if (property.PropertyType == typeof(bool))
+                {
+                    var parsedName = Enum.Parse<WriterSettingName>(propertyName);
+                    Assert.IsTrue(nameSet.Contains(parsedName), "Name is in settings", propertyName);
+                    nameSet.Remove(parsedName);
+                }
+                else
+                {
+                    Assert.AreEqual(typeof(double), property.PropertyType);
+                    Assert.AreEqual(nameof(WriterSettings.ButtonScale), property.Name);
+                }
             }
 
             Assert.IsTrue(nameSet.Count == 0, "All names accounted for", nameSet);

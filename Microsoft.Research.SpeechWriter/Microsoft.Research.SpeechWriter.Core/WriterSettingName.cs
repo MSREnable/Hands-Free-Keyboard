@@ -9,6 +9,9 @@
         FindCorePredictionPrefixes,
         FindCorePredictionSuffixes,
         ShowSpellingInterstitials,
-        ShowUnicodeInterstitials
+        ShowUnicodeInterstitials,
+        SmallButtons,
+        MediumButtons,
+        LargeButtons
     }
 }

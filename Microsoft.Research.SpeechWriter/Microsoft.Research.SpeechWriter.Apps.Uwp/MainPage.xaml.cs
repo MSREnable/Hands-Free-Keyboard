@@ -390,23 +390,5 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
                 e.Handled = true;
             }
         }
-
-        private void OnSmallButtons(object sender, RoutedEventArgs e)
-        {
-            TheScaleTransform.ScaleX = 0.5;
-            TheScaleTransform.ScaleY = 0.5;
-        }
-
-        private void OnMediumButtons(object sender, RoutedEventArgs e)
-        {
-            TheScaleTransform.ScaleX = 1.0;
-            TheScaleTransform.ScaleY = 1.0;
-        }
-
-        private void OnLargeButtons(object sender, RoutedEventArgs e)
-        {
-            TheScaleTransform.ScaleX = 2.0;
-            TheScaleTransform.ScaleY = 2.0;
-        }
     }
 }

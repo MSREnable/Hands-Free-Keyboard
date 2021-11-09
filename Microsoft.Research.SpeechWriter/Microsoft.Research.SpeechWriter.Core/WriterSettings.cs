@@ -86,6 +86,57 @@ namespace Microsoft.Research.SpeechWriter.Core
         }
         private bool _showUnicodeInterstitials = true;
 
+        public double ButtonScale
+        {
+            get => _buttonScale;
+            set
+            {
+                if (SetProperty(ref _buttonScale, value))
+                {
+                    RaisePropertyChanged(nameof(SmallButtons));
+                    RaisePropertyChanged(nameof(MediumButtons));
+                    RaisePropertyChanged(nameof(LargeButtons));
+                }
+            }
+        }
+        private double _buttonScale = 1.0;
+
+        public bool SmallButtons
+        {
+            get => ButtonScale == 0.5;
+            set
+            {
+                if (value)
+                {
+                    ButtonScale = 0.5;
+                }
+            }
+        }
+
+        public bool MediumButtons
+        {
+            get => ButtonScale == 1.0;
+            set
+            {
+                if (value)
+                {
+                    ButtonScale = 1.0;
+                }
+            }
+        }
+
+        public bool LargeButtons
+        {
+            get => ButtonScale == 2.0;
+            set
+            {
+                if (value)
+                {
+                    ButtonScale = 2.0;
+                }
+            }
+        }
+
         public void Set(WriterSettingName name, bool value)
         {
             switch (name)
@@ -103,6 +154,9 @@ namespace Microsoft.Research.SpeechWriter.Core
                 case WriterSettingName.FindCorePredictionSuffixes: FindCorePredictionSuffixes = value; break;
                 case WriterSettingName.ShowSpellingInterstitials: ShowSpellingInterstitials = value; break;
                 case WriterSettingName.ShowUnicodeInterstitials: ShowUnicodeInterstitials = value; break;
+                case WriterSettingName.SmallButtons: SmallButtons = value; break;
+                case WriterSettingName.MediumButtons: MediumButtons = value; break;
+                case WriterSettingName.LargeButtons: LargeButtons = value; break;
             }
         }
 
@@ -125,6 +179,9 @@ namespace Microsoft.Research.SpeechWriter.Core
                 case WriterSettingName.FindCorePredictionSuffixes: value = FindCorePredictionSuffixes; break;
                 case WriterSettingName.ShowSpellingInterstitials: value = ShowSpellingInterstitials; break;
                 case WriterSettingName.ShowUnicodeInterstitials: value = ShowUnicodeInterstitials; break;
+                case WriterSettingName.SmallButtons: value = SmallButtons; break;
+                case WriterSettingName.MediumButtons: value = MediumButtons; break;
+                case WriterSettingName.LargeButtons: value = LargeButtons; break;
             }
 
             return value;
@@ -137,14 +194,23 @@ namespace Microsoft.Research.SpeechWriter.Core
         }
         private PropertyChangedEventHandler _propertyChanged;
 
-        private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        private void RaisePropertyChanged(string propertyName)
         {
-            if (!Equals(field, value))
+            _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            var changed = !Equals(field, value);
+
+            if (changed)
             {
                 field = value;
 
-                _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                RaisePropertyChanged(propertyName);
             }
+
+            return changed;
         }
     }
 }
