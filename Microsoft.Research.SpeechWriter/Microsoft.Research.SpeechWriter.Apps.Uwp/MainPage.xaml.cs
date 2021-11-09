@@ -91,6 +91,24 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
                 IsEnabled = false;
                 try
                 {
+                    var values = ApplicationData.Current.LocalSettings.Values;
+                    foreach (WriterSettingName name in Enum.GetValues(typeof(WriterSettingName)))
+                    {
+                        var ob = values[name.ToString()];
+                        if (ob != null)
+                        {
+                            var value = (bool)ob;
+                            _model.Environment.Settings.Set(name, value);
+                        }
+                    }
+                    ((INotifyPropertyChanged)_model.Environment.Settings).PropertyChanged += (s, ee) =>
+                    {
+                        if (ee.PropertyName != null && Enum.TryParse<WriterSettingName>(ee.PropertyName, out var name))
+                        {
+                            var value = _model.Environment.Settings.Get(name);
+                            values[name.ToString()] = value;
+                        }
+                    };
                     await _model.LoadUtterancesAsync();
                 }
                 finally
