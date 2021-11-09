@@ -680,6 +680,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             else
             {
+                // TODO: This line will fail if the code breaks before the initial prediction is made (perhaps).
                 index = _tokenToIndex[token];
             }
 
