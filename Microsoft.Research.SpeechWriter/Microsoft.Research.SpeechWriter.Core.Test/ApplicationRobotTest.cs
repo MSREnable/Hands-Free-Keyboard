@@ -331,7 +331,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("this is the dawning of the age of aquarius", 32, 1, 117, 63);
+            MultiTest("this is the dawning of the age of aquarius", 31, 1, 117, 63);
         }
 
         [Test]

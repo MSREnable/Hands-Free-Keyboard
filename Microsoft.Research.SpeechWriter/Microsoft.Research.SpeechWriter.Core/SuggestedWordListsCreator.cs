@@ -419,7 +419,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                         bool SuffixFilter(int token)
                         {
                             var index = _source.GetTokenIndex(token);
-                            var value = minSuffixIndex <= index && index < limSuffixIndex;
+                            var value = minSuffixIndex <= index && index < limSuffixIndex && !predictedTokens.Contains(token);
 
                             if (value)
                             {
@@ -433,7 +433,6 @@ namespace Microsoft.Research.SpeechWriter.Core
                         var additionalScores = _maker.GetTopScores(SuffixFilter, true);
                         using (var enumerator = additionalScores.GetEnumerator())
                         {
-
                             var improved = true;
                             for (var candidatePrediction = GetNextCorePrediction(enumerator);
                                 improved && candidatePrediction != null;
