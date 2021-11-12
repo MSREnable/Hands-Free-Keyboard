@@ -493,11 +493,18 @@ namespace Microsoft.Research.SpeechWriter.Core
                         var tailPrediction = coreCompoundPrediction[corePosition];
                         var tailWord = _tokens.GetString(tailPrediction.Token);
                         Debug.Assert(tailWord.StartsWith(headWord));
-                        item = new ExtendedSuggestedWordItem(_source.Model.LastTile, _source, tailWord, tailWord.Substring(headWord.Length));
+                        if (!headWord.StartsWith(tailWord))
+                        {
+                            item = new ExtendedSuggestedWordItem(_source.Model.LastTile, _source, tailWord, tailWord.Substring(headWord.Length));
 
-                        predictions.Add(item);
+                            predictions.Add(item);
 
-                        headWord = tailWord;
+                            headWord = tailWord;
+                        }
+                        else
+                        {
+                            Debug.WriteLine($"Unexpected situation of non-equal words being each others prefix: {headWord} + {tailWord}");
+                        }
                     }
 
                     var followOn = followOnPredictions[position];
