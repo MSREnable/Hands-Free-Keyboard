@@ -12,6 +12,13 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
         {
             _language = language;
             _seedWords = seedWords;
+
+            ((IWriterEnvironment)this).Settings.SpeakWordByWord = false;
+            ((IWriterEnvironment)this).Settings.SpeakWordByWord = false;
+            ((IWriterEnvironment)this).Settings.FindFollowOnPredictions = false;
+            ((IWriterEnvironment)this).Settings.CombineCorePredictions = false;
+            ((IWriterEnvironment)this).Settings.FindCorePredictionPrefixes = false;
+            ((IWriterEnvironment)this).Settings.FindCorePredictionSuffixes = false;
         }
 
         string IWriterEnvironment.Language => _language;

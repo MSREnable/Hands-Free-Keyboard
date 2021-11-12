@@ -321,42 +321,42 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             Frame.Navigate(typeof(MainPage), environment);
         }
 
-        private void OnFrench(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private void OnFrench(object sender, RoutedEventArgs args)
         {
             SetLanguageAsync("fr_50k.txt");
         }
 
-        private void OnSpanish(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private void OnSpanish(object sender, RoutedEventArgs args)
         {
             SetLanguageAsync("es_50k.txt");
         }
 
-        private void OnGerman(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private void OnGerman(object sender, RoutedEventArgs args)
         {
             SetLanguageAsync("de_50k.txt");
         }
 
-        private void OnThai(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private void OnThai(object sender, RoutedEventArgs args)
         {
             SetLanguageAsync("th_50k.txt");
         }
 
-        private void OnPortuguese(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private void OnPortuguese(object sender, RoutedEventArgs args)
         {
             SetLanguageAsync("pt_br_50k.txt");
         }
 
-        private void OnItalian(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private void OnItalian(object sender, RoutedEventArgs args)
         {
             SetLanguageAsync("it_50k.txt");
         }
 
-        private void OnArabic(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private void OnArabic(object sender, RoutedEventArgs args)
         {
             SetLanguageAsync("ar_50k.txt");
         }
 
-        private void OnChinese(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private void OnChinese(object sender, RoutedEventArgs args)
         {
             SetLanguageAsync("zh_cn_50k.txt");
         }
