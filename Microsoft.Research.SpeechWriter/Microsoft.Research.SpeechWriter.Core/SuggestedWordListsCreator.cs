@@ -548,22 +548,19 @@ namespace Microsoft.Research.SpeechWriter.Core
                 position++;
             }
 
-            var nascent = new NascentWordPredictionList
-            {
-                _core = prediction,
-                _compound = new List<WordPrediction>(1) { prediction }
-            };
-
-            if (prediction.Text[0] != '\0')
+            WordPrediction followOn;
+            if (_findFollowOnPredictions && prediction.Text[0] != '\0')
             {
                 var followOnMaker = _maker.CreateNextPredictionMaker(prediction.Token, null);
-                var followOnPrediction = GetTopPrediction(followOnMaker);
-                nascent._followOn = followOnPrediction;
+                followOn = GetTopPrediction(followOnMaker);
             }
             else
             {
-                nascent._followOn = null;
+                followOn = null;
             }
+
+            var nascent = new NascentWordPredictionList(prediction, followOn);
+
             _nascents.Insert(position, nascent);
         }
 
