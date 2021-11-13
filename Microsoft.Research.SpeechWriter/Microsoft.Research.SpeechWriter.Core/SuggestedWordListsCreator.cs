@@ -23,9 +23,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private readonly HashSet<int> _predictedTokens = new HashSet<int>();
 
-        private readonly List<WordPrediction> _corePredicitions;
-        private readonly List<List<WordPrediction>> _coreCompoundPredictions;
-        private readonly List<WordPrediction> _followOnPredictions;
+        private readonly List<NascentWordPredictionList> _nascents;
 
         private SuggestedWordListsCreator(WordVocabularySource source,
             StringTokens tokens,
@@ -51,9 +49,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _findCorePredictionPrefixes = settings.FindCorePredictionPrefixes;
             _findCorePredictionSuffixes = settings.FindCorePredictionSuffixes;
 
-            _corePredicitions = new List<WordPrediction>(_maxListCount);
-            _coreCompoundPredictions = new List<List<WordPrediction>>(_maxListCount);
-            _followOnPredictions = new List<WordPrediction>(_maxListCount);
+            _nascents = new List<NascentWordPredictionList>(_maxListCount);
         }
 
         private WordPrediction GetNextCorePrediction(IEnumerator<int[]> enumerator)
@@ -144,29 +140,26 @@ namespace Microsoft.Research.SpeechWriter.Core
                 {
                     improved = false;
 
-                    Debug.Assert(_coreCompoundPredictions.Count == _corePredicitions.Count);
-                    Debug.Assert(_followOnPredictions.Count == _corePredicitions.Count);
-
-                    if (1 < _corePredicitions.Count && nextCorePrediction != null)
+                    if (1 < _nascents.Count && nextCorePrediction != null)
                     {
                         var pairable = -1;
                         var lostPrediction = (WordPrediction)null;
 
-                        var next = _corePredicitions[0];
+                        var next = _nascents[0]._core;
                         var definiteImprovementFound = false;
-                        for (var i = 1; !definiteImprovementFound && i < _corePredicitions.Count; i++)
+                        for (var i = 1; !definiteImprovementFound && i < _nascents.Count; i++)
                         {
                             var prev = next;
-                            next = _corePredicitions[i];
+                            next = _nascents[i]._core;
 
                             if (next.Text.StartsWith(prev.Text))
                             {
-                                var prevCount = _coreCompoundPredictions[i - 1].Count;
-                                var prevTailPrediction = _coreCompoundPredictions[i - 1][prevCount - 1];
+                                var prevCount = _nascents[i - 1]._compound.Count;
+                                var prevTailPrediction = _nascents[i - 1]._compound[prevCount - 1];
                                 var prevTailText = prevTailPrediction.Text;
 
-                                var nextCount = _coreCompoundPredictions[i].Count;
-                                var nextTailPrediction = _coreCompoundPredictions[i][nextCount - 1];
+                                var nextCount = _nascents[i]._compound.Count;
+                                var nextTailPrediction = _nascents[i]._compound[nextCount - 1];
                                 var nextTailText = nextTailPrediction.Text;
 
                                 bool canMerge;
@@ -175,12 +168,12 @@ namespace Microsoft.Research.SpeechWriter.Core
                                 if (nextTailText.StartsWith(prevTailText))
                                 {
                                     canMerge = true;
-                                    potentialLostPrediction = _followOnPredictions[i - 1];
+                                    potentialLostPrediction = _nascents[i - 1]._followOn;
                                 }
                                 else if (prevTailText.StartsWith(nextTailText))
                                 {
                                     canMerge = true;
-                                    potentialLostPrediction = _followOnPredictions[i];
+                                    potentialLostPrediction = _nascents[i]._followOn;
                                 }
                                 else
                                 {
@@ -213,13 +206,10 @@ namespace Microsoft.Research.SpeechWriter.Core
                         {
                             if (lostPrediction == null || CompareScores(lostPrediction.Score, nextCorePrediction.Score) < 0)
                             {
-                                Debug.Assert(_corePredicitions[pairable] == _coreCompoundPredictions[pairable][0]);
+                                Debug.Assert(_nascents[pairable]._core == _nascents[pairable]._compound[0]);
 
-                                Debug.Assert(_coreCompoundPredictions.Count == _corePredicitions.Count);
-                                Debug.Assert(_followOnPredictions.Count == _corePredicitions.Count);
-
-                                var targetPredictions = _coreCompoundPredictions[pairable];
-                                var sourcePredictions = _coreCompoundPredictions[pairable + 1];
+                                var targetPredictions = _nascents[pairable]._compound;
+                                var sourcePredictions = _nascents[pairable + 1]._compound;
 
                                 Debug.Assert(targetPredictions[0].Text.Length < sourcePredictions[0].Text.Length);
                                 Debug.Assert(sourcePredictions[0].Text.StartsWith(targetPredictions[0].Text));
@@ -250,43 +240,34 @@ namespace Microsoft.Research.SpeechWriter.Core
                                         sourcePosition++;
                                     }
 
-                                    Debug.Assert(ReferenceEquals(lostPrediction, _followOnPredictions[pairable]));
-                                    _followOnPredictions.RemoveAt(pairable);
+                                    Debug.Assert(ReferenceEquals(lostPrediction, _nascents[pairable]._followOn));
+                                    _nascents[pairable]._followOn = _nascents[pairable + 1]._followOn;
                                 }
                                 else
                                 {
-                                    Debug.Assert(ReferenceEquals(lostPrediction, _followOnPredictions[pairable + 1]));
-                                    _followOnPredictions.RemoveAt(pairable + 1);
+                                    Debug.Assert(ReferenceEquals(lostPrediction, _nascents[pairable + 1]._followOn));
+                                    _nascents.RemoveAt(pairable + 1);
                                 }
 
-                                _coreCompoundPredictions.RemoveAt(pairable + 1);
-                                _corePredicitions.RemoveAt(pairable + 1);
+                                _nascents.RemoveAt(pairable + 1);
 
-                                Debug.Assert(_coreCompoundPredictions.Count == _corePredicitions.Count);
-                                Debug.Assert(_followOnPredictions.Count == _corePredicitions.Count);
 
                                 AddNextPrediction(nextCorePrediction);
                                 nextCorePrediction = GetNextCorePrediction(enumerator);
-
-                                Debug.Assert(_coreCompoundPredictions.Count == _corePredicitions.Count);
-                                Debug.Assert(_followOnPredictions.Count == _corePredicitions.Count);
 
                                 improved = true;
                             }
                         }
                     }
-
-                    Debug.Assert(_coreCompoundPredictions.Count == _corePredicitions.Count);
-                    Debug.Assert(_followOnPredictions.Count == _corePredicitions.Count);
                 }
             }
         }
 
         private void CreatePrefixPredictions()
         {
-            for (var compoundPredictionIndex = 0; compoundPredictionIndex < _coreCompoundPredictions.Count; compoundPredictionIndex++)
+            for (var compoundPredictionIndex = 0; compoundPredictionIndex < _nascents.Count; compoundPredictionIndex++)
             {
-                var compoundPrediction = _coreCompoundPredictions[compoundPredictionIndex];
+                var compoundPrediction = _nascents[compoundPredictionIndex]._compound;
 
                 var length = 0;
 
@@ -344,24 +325,26 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 var bubblePosition = compoundPredictionIndex;
                 while (0 < bubblePosition &&
-                    _coreCompoundPredictions[compoundPredictionIndex][0].Index < _coreCompoundPredictions[bubblePosition - 1][0].Index)
+                    _nascents[compoundPredictionIndex]._compound[0].Index < _nascents[bubblePosition - 1]._compound[0].Index)
                 {
                     bubblePosition--;
                 }
 
                 if (bubblePosition != compoundPredictionIndex)
                 {
-                    _coreCompoundPredictions.RemoveAt(compoundPredictionIndex);
-                    _coreCompoundPredictions.Insert(bubblePosition, compoundPrediction);
+                    var nascent = _nascents[compoundPredictionIndex];
+                    _nascents.RemoveAt(compoundPredictionIndex);
+
+                    _nascents.Insert(bubblePosition, nascent);
                 }
             }
         }
 
         private void CreateSuffixPredictions()
         {
-            for (var compoundPredictionIndex = _coreCompoundPredictions.Count - 1; 0 <= compoundPredictionIndex; compoundPredictionIndex--)
+            for (var compoundPredictionIndex = _nascents.Count - 1; 0 <= compoundPredictionIndex; compoundPredictionIndex--)
             {
-                var compoundPrediction = _coreCompoundPredictions[compoundPredictionIndex];
+                var compoundPrediction = _nascents[compoundPredictionIndex]._compound;
                 var longestPrediction = compoundPrediction[compoundPrediction.Count - 1];
                 var longestPredictionText = longestPrediction.Text;
                 var includedPrefixIndex = longestPrediction.Index;
@@ -414,7 +397,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 if (longestPrediction.Index + 1 < beyondPrefixIndex)
                 {
                     Debug.WriteLine($"Consider extending {longestPredictionText}:");
-                    var followOn = _followOnPredictions[compoundPredictionIndex];
+                    var followOn = _nascents[compoundPredictionIndex]._followOn;
 
                     var minSuffixIndex = longestPrediction.Index + 1;
                     var limSuffixIndex = beyondPrefixIndex;
@@ -462,7 +445,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                                     var followOnMaker = _maker.CreateNextPredictionMaker(candidatePrediction.Token, null);
                                     var followOnPrediction = GetTopPrediction(followOnMaker);
-                                    _followOnPredictions[compoundPredictionIndex] = followOnPrediction;
+                                    _nascents[compoundPredictionIndex]._followOn = followOnPrediction;
 
                                 }
                             }
@@ -471,15 +454,15 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
             }
         }
-        
+
         private SortedList<int, IReadOnlyList<ITile>> CreateFinalPredictionsList()
         {
             var predictionsList = new SortedList<int, IReadOnlyList<ITile>>();
 
-            for (var position = 0; position < _coreCompoundPredictions.Count; position++)
+            for (var position = 0; position < _nascents.Count; position++)
             {
                 var predictions = new List<ITile>();
-                var coreCompoundPrediction = _coreCompoundPredictions[position];
+                var coreCompoundPrediction = _nascents[position]._compound;
                 var headPrediction = coreCompoundPrediction[0];
 
                 var headWord = _tokens.GetString(headPrediction.Token);
@@ -513,7 +496,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                         }
                     }
 
-                    var followOn = _followOnPredictions[position];
+                    var followOn = _nascents[position]._followOn;
                     if (followOn != null)
                     {
                         var firstCreatedItem = _source.GetNextItem(item, followOn.Token);
@@ -560,27 +543,28 @@ namespace Microsoft.Research.SpeechWriter.Core
             Debug.Assert(added);
 
             var position = 0;
-            while (position < _corePredicitions.Count && _corePredicitions[position].Index < prediction.Index)
+            while (position < _nascents.Count && _nascents[position]._core.Index < prediction.Index)
             {
                 position++;
             }
 
-            _corePredicitions.Insert(position, prediction);
-
-            var compoundCorePrediction = new List<WordPrediction>(1) { prediction };
-            _coreCompoundPredictions.Insert(position, compoundCorePrediction);
+            var nascent = new NascentWordPredictionList
+            {
+                _core = prediction,
+                _compound = new List<WordPrediction>(1) { prediction }
+            };
 
             if (prediction.Text[0] != '\0')
             {
                 var followOnMaker = _maker.CreateNextPredictionMaker(prediction.Token, null);
-
                 var followOnPrediction = GetTopPrediction(followOnMaker);
-                _followOnPredictions.Insert(position, followOnPrediction);
+                nascent._followOn = followOnPrediction;
             }
             else
             {
-                _followOnPredictions.Insert(position, null);
+                nascent._followOn = null;
             }
+            _nascents.Insert(position, nascent);
         }
 
         private void InsertPrediction(List<WordPrediction> predictions, WordPrediction prediction)
