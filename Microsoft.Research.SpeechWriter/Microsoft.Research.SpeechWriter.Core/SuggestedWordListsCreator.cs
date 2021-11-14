@@ -145,118 +145,41 @@ namespace Microsoft.Research.SpeechWriter.Core
                         var pairable = -1;
                         var lostPrediction = (WordPrediction)null;
 
-                        var next = _nascents[0]._core;
+                        var next = _nascents[0];
                         var definiteImprovementFound = false;
                         for (var i = 1; !definiteImprovementFound && i < _nascents.Count; i++)
                         {
                             var prev = next;
-                            next = _nascents[i]._core;
+                            next = _nascents[i];
 
-                            if (next.Text.StartsWith(prev.Text))
+                            if (prev.CanMergeWithNext(next))
                             {
-                                var prevCount = _nascents[i - 1]._compound.Count;
-                                var prevTailPrediction = _nascents[i - 1]._compound[prevCount - 1];
-                                var prevTailText = prevTailPrediction.Text;
+                                var potentialLostPrediction = prev._followOn;
 
-                                var nextCount = _nascents[i]._compound.Count;
-                                var nextTailPrediction = _nascents[i]._compound[nextCount - 1];
-                                var nextTailText = nextTailPrediction.Text;
-
-                                bool canMerge;
-
-                                WordPrediction potentialLostPrediction;
-                                if (nextTailText.StartsWith(prevTailText))
+                                if (pairable == -1 || potentialLostPrediction == null)
                                 {
-                                    canMerge = true;
-                                    potentialLostPrediction = _nascents[i - 1]._followOn;
+                                    pairable = i - 1;
+                                    lostPrediction = potentialLostPrediction;
+                                    definiteImprovementFound = potentialLostPrediction == null;
                                 }
-                                else if (prevTailText.StartsWith(nextTailText))
+                                else if (CompareScores(potentialLostPrediction.Score, lostPrediction.Score) < 0)
                                 {
-                                    canMerge = true;
-                                    potentialLostPrediction = _nascents[i]._followOn;
+                                    pairable = i - 1;
+                                    lostPrediction = potentialLostPrediction;
                                 }
-                                else
-                                {
-                                    canMerge = false;
-                                    potentialLostPrediction = null;
-                                }
-
-                                if (canMerge)
-                                {
-                                    if (pairable == -1 || potentialLostPrediction == null)
-                                    {
-                                        pairable = i - 1;
-                                        lostPrediction = potentialLostPrediction;
-                                        definiteImprovementFound = potentialLostPrediction == null;
-                                    }
-                                    else if (CompareScores(potentialLostPrediction.Score, lostPrediction.Score) < 0)
-                                    {
-                                        pairable = i - 1;
-                                        lostPrediction = potentialLostPrediction;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                Debug.Assert(!prev.Text.StartsWith(next.Text));
                             }
                         }
 
-                        if (pairable != -1)
+                        if (pairable != -1 &&
+                            (lostPrediction == null || CompareScores(lostPrediction.Score, nextCorePrediction.Score) < 0))
                         {
-                            if (lostPrediction == null || CompareScores(lostPrediction.Score, nextCorePrediction.Score) < 0)
-                            {
-                                Debug.Assert(_nascents[pairable]._core == _nascents[pairable]._compound[0]);
+                            _nascents[pairable].MergeWithNext(_nascents[pairable + 1]);
+                            _nascents.RemoveAt(pairable + 1);
 
-                                var targetPredictions = _nascents[pairable]._compound;
-                                var sourcePredictions = _nascents[pairable + 1]._compound;
+                            AddNextPrediction(nextCorePrediction);
+                            nextCorePrediction = GetNextCorePrediction(enumerator);
 
-                                Debug.Assert(targetPredictions[0].Text.Length < sourcePredictions[0].Text.Length);
-                                Debug.Assert(sourcePredictions[0].Text.StartsWith(targetPredictions[0].Text));
-
-                                var sourcePosition = 0;
-                                var targetPosition = 0;
-                                while (sourcePosition < sourcePredictions.Count && targetPosition < targetPredictions.Count)
-                                {
-                                    if (sourcePredictions[sourcePosition].Index < targetPredictions[targetPosition].Index)
-                                    {
-                                        Debug.Assert(targetPredictions[targetPosition].Text.StartsWith(sourcePredictions[sourcePosition].Text));
-                                        targetPredictions.Insert(targetPosition, sourcePredictions[sourcePosition]);
-                                        sourcePosition++;
-                                    }
-                                    else
-                                    {
-                                        Debug.Assert(targetPredictions[targetPosition].Index < sourcePredictions[sourcePosition].Index);
-                                        Debug.Assert(sourcePredictions[sourcePosition].Text.StartsWith(targetPredictions[targetPosition].Text));
-                                    }
-                                    targetPosition++;
-                                }
-
-                                if (sourcePosition < sourcePredictions.Count)
-                                {
-                                    while (sourcePosition < sourcePredictions.Count)
-                                    {
-                                        targetPredictions.Add(sourcePredictions[sourcePosition]);
-                                        sourcePosition++;
-                                    }
-
-                                    Debug.Assert(ReferenceEquals(lostPrediction, _nascents[pairable]._followOn));
-                                    _nascents[pairable]._followOn = _nascents[pairable + 1]._followOn;
-                                }
-                                else
-                                {
-                                    Debug.Assert(ReferenceEquals(lostPrediction, _nascents[pairable + 1]._followOn));
-                                    _nascents.RemoveAt(pairable + 1);
-                                }
-
-                                _nascents.RemoveAt(pairable + 1);
-
-
-                                AddNextPrediction(nextCorePrediction);
-                                nextCorePrediction = GetNextCorePrediction(enumerator);
-
-                                improved = true;
-                            }
+                            improved = true;
                         }
                     }
                 }
@@ -543,7 +466,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             Debug.Assert(added);
 
             var position = 0;
-            while (position < _nascents.Count && _nascents[position]._core.Index < prediction.Index)
+            while (position < _nascents.Count && _nascents[position]._first.Index < prediction.Index)
             {
                 position++;
             }
