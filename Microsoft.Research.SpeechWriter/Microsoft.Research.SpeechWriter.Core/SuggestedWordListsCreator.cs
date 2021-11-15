@@ -190,7 +190,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             for (var compoundPredictionIndex = 0; compoundPredictionIndex < _nascents.Count; compoundPredictionIndex++)
             {
-                var compoundPrediction = _nascents[compoundPredictionIndex]._compound;
+                var compoundPrediction = _nascents[compoundPredictionIndex]._list;
 
                 var length = 0;
 
@@ -248,7 +248,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 var bubblePosition = compoundPredictionIndex;
                 while (0 < bubblePosition &&
-                    _nascents[compoundPredictionIndex]._compound[0].Index < _nascents[bubblePosition - 1]._compound[0].Index)
+                    _nascents[compoundPredictionIndex]._list[0].Index < _nascents[bubblePosition - 1]._list[0].Index)
                 {
                     bubblePosition--;
                 }
@@ -267,7 +267,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             for (var compoundPredictionIndex = _nascents.Count - 1; 0 <= compoundPredictionIndex; compoundPredictionIndex--)
             {
-                var compoundPrediction = _nascents[compoundPredictionIndex]._compound;
+                var compoundPrediction = _nascents[compoundPredictionIndex]._list;
                 var longestPrediction = compoundPrediction[compoundPrediction.Count - 1];
                 var longestPredictionText = longestPrediction.Text;
                 var includedPrefixIndex = longestPrediction.Index;
@@ -385,7 +385,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             for (var position = 0; position < _nascents.Count; position++)
             {
                 var predictions = new List<ITile>();
-                var coreCompoundPrediction = _nascents[position]._compound;
+                var coreCompoundPrediction = _nascents[position]._list;
                 var headPrediction = coreCompoundPrediction[0];
 
                 var headWord = _tokens.GetString(headPrediction.Token);

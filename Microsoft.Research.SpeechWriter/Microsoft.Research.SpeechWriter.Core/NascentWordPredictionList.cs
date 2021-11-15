@@ -6,13 +6,17 @@ namespace Microsoft.Research.SpeechWriter.Core
     class NascentWordPredictionList
     {
         internal WordPrediction _first;
-        internal readonly List<WordPrediction> _compound;
+        internal readonly List<WordPrediction> _list;
+        internal WordPrediction _last;
+
         internal WordPrediction _followOn;
 
         internal NascentWordPredictionList(WordPrediction prediction, WordPrediction followOn)
         {
             _first = prediction;
-            _compound = new List<WordPrediction>(1) { prediction };
+            _list = new List<WordPrediction>(1) { prediction };
+            _last = prediction;
+
             _followOn = followOn;
         }
 
@@ -22,12 +26,12 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             if (next._first.Text.StartsWith(_first.Text))
             {
-                var prevCount = _compound.Count;
-                var prevTailPrediction = _compound[prevCount - 1];
+                var prevCount = _list.Count;
+                var prevTailPrediction = _list[prevCount - 1];
                 var prevTailText = prevTailPrediction.Text;
 
-                var nextCount = next._compound.Count;
-                var nextTailPrediction = next._compound[nextCount - 1];
+                var nextCount = next._list.Count;
+                var nextTailPrediction = next._list[nextCount - 1];
                 var nextTailText = nextTailPrediction.Text;
 
                 WordPrediction potentialLostPrediction;
@@ -53,8 +57,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal void MergeWithNext(NascentWordPredictionList next)
         {
-            var targetPredictions = _compound;
-            var sourcePredictions = next._compound;
+            var targetPredictions = _list;
+            var sourcePredictions = next._list;
 
             Debug.Assert(targetPredictions[0].Text.Length < sourcePredictions[0].Text.Length);
             Debug.Assert(sourcePredictions[0].Text.StartsWith(targetPredictions[0].Text));
@@ -93,7 +97,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 Debug.Assert(ReferenceEquals(_followOn, next._followOn));
             }
 
-            Debug.Assert(ReferenceEquals(_first, _compound[0]));
+            Debug.Assert(ReferenceEquals(_first, _list[0]));
         }
     }
 }
