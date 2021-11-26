@@ -99,11 +99,13 @@ namespace Microsoft.Research.SpeechWriter.Core
             StringTokens tokens,
             ScoredTokenPredictionMaker maker,
             ITokenTileFilter filter,
+            bool isFirstWord,
             int lowerBound,
             int upperBound,
             int maxListCount,
             int maxListItemCount)
         {
+            _ = isFirstWord;
             var creator = new SuggestedWordListsCreator(source, tokens, maker, filter.IsTokenVisible, lowerBound, upperBound, maxListCount, maxListItemCount);
             var list = creator.Run();
             return list;

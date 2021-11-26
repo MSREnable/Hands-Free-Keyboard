@@ -130,6 +130,43 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
+        /// <summary>
+        /// Try to capitalize a string as if it were the first word of a sentence.
+        /// </summary>
+        /// <param name="word">The text to be capitalized.</param>
+        /// <returns>The word in the form it would appear if it were the first word
+        /// of a sentence. If it is not a word, but punctuation, etc., return null.</returns>
+        /// <remarks>In a typical implementation a quotation mark will return null, 
+        /// 'an' in lowercase will return 'An' with the first letter capitalized,
+        /// a property noun like 'I' will return the word unchanged (not null),
+        /// a number (like 42) will return the number unchanged.</remarks>
+        string IWriterEnvironment.TryCapitalizeFirstWord(string word)
+        {
+            string value;
+
+            var wordLength = word.Length;
+            var index = 0;
+
+            // Look for an alphanumeric.
+            while (index < wordLength && !char.IsLetterOrDigit(word[index]))
+            {
+                index++;
+            }
+
+            if (index < wordLength)
+            {
+                value = word.Substring(0, index) + char.ToUpper(word[index]) + word.Substring(index + 1);
+            }
+            else
+            {
+                value = null;
+            }
+
+            return value;
+
+        }
+
+
 
         /// <summary>
         /// Get the current time.

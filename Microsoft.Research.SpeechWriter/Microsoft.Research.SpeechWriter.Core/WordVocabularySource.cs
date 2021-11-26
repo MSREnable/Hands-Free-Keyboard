@@ -718,9 +718,27 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var maxListItemCount = Math.Max(1, Model.DisplayColumns / 2);
 
+            Debug.Assert(Context[0] == 0);
+            var isFirstWord = true;
+            var contextPosition = Context.Length - 1;
+            while (isFirstWord && contextPosition != 0)
+            {
+                var token = Context[contextPosition];
+                var word = _tokens[token];
+                var splitPosition = word.IndexOf('\0');
+                if (splitPosition != -1)
+                {
+                    word = word.Substring(0, splitPosition);
+                }
+                var capitalized = Environment.TryCapitalizeFirstWord(word);
+                isFirstWord = capitalized == null;
+
+                contextPosition--;
+            }
+
             var maker = PersistantPredictor.CreatePredictionMaker(this, TokenFilter.IsTokenVisible, Context);
 
-            var list = SuggestedWordListsCreator.CreateSuggestionLists(this, _tokens, maker, TokenFilter, lowerBound, upperBound, maxListCount, maxListItemCount);
+            var list = SuggestedWordListsCreator.CreateSuggestionLists(this, _tokens, maker, TokenFilter, isFirstWord, lowerBound, upperBound, maxListCount, maxListItemCount);
 
             return list;
         }
