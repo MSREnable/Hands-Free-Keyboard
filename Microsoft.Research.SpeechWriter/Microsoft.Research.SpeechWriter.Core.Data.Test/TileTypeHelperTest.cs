@@ -13,6 +13,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
             Assert.AreEqual(TileType.Prefix, TileTypeHelper.FromElementName("B"));
             Assert.AreEqual(TileType.Suffix, TileTypeHelper.FromElementName("A"));
             Assert.AreEqual(TileType.Infix, TileTypeHelper.FromElementName("J"));
+            Assert.AreEqual(TileType.Extension, TileTypeHelper.FromElementName("X"));
             Assert.AreEqual(TileType.Command, TileTypeHelper.FromElementName("C"));
             Assert.Throws(typeof(InvalidDataException), () => TileTypeHelper.FromElementName("!"));
         }
@@ -24,6 +25,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data.Test
             Assert.AreEqual("B", TileTypeHelper.ToElementName(TileType.Prefix));
             Assert.AreEqual("A", TileTypeHelper.ToElementName(TileType.Suffix));
             Assert.AreEqual("J", TileTypeHelper.ToElementName(TileType.Infix));
+            Assert.AreEqual("X", TileTypeHelper.ToElementName(TileType.Extension));
             Assert.AreEqual("C", TileTypeHelper.ToElementName(TileType.Command));
         }
     }

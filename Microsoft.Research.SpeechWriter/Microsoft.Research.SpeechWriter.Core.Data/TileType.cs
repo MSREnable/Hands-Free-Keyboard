@@ -26,6 +26,11 @@
         Infix,
 
         /// <summary>
+        /// A suggestion suffix tile that will attach itself to the previous word if selected.
+        /// </summary>
+        Extension,
+
+        /// <summary>
         /// A special command tile.
         /// </summary>
         Command

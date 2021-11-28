@@ -34,10 +34,10 @@ namespace Microsoft.Research.SpeechWriter.UI.Uwp
         private void OnVisualizationElementChanged(TileVisualizationElement element)
         {
             var border = Border;
-            var isSuffix = element.Type == TileType.Suffix || element.Type == TileType.Infix;
+            var isSuffix = element.Type == TileType.Suffix || element.Type == TileType.Infix || element.Type == TileType.Extension;
             var isPrefix = element.Type == TileType.Prefix || element.Type == TileType.Infix;
             TheBorder.BorderThickness = new Thickness(left: isSuffix ? 0 : border.Left,
-                right: isPrefix ? 0 : border.Right, top: border.Top, bottom: border.Bottom); ;
+                right: isPrefix ? 0 : border.Right, top: border.Top, bottom: border.Bottom);
             TheBorder.Background = element.Background.ToBrush();
             TheTextBlock.Text = element.Text;
         }

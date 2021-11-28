@@ -9,6 +9,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
         private const string PrefixElement = "B";
         private const string SuffixElement = "A";
         private const string InfixElement = "J";
+        private const string ExtensionElement = "X";
         private const string CommandElement = "C";
 
         public static bool IsPrefix(this TileType type)
@@ -73,6 +74,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
                     value = InfixElement;
                     break;
 
+                case TileType.Extension:
+                    value = ExtensionElement;
+                    break;
+
                 case TileType.Command:
                 default:
                     Debug.Assert(type == TileType.Command);
@@ -103,6 +108,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
                 case InfixElement:
                     value = TileType.Infix;
+                    break;
+
+                case ExtensionElement:
+                    value = TileType.Extension;
                     break;
 
                 case CommandElement:
