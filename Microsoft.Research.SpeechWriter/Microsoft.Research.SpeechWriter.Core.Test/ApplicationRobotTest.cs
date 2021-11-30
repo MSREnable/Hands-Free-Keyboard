@@ -331,13 +331,13 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ThisIsTheDawningOfTheAgeOfAquariusTest()
         {
-            MultiTest("this is the dawning of the age of aquarius", 31, 1, 117, 63);
+            MultiTest("this is the dawning of the age of aquarius", 31, 1, 117, 83);
         }
 
         [Test]
         public void TheQuickBrownFoxJumpsOverALazyDogTest()
         {
-            MultiTest("the quick brown fox jumps over a lazy dog", 37, 1, 186, 82);
+            MultiTest("the quick brown fox jumps over a lazy dog", 37, 1, 186, 83);
         }
 
         [Test]
@@ -374,7 +374,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void PunctuationTest()
         {
-            MultiTest("That'll be $10, please!", 32, 1, 104, 137);
+            MultiTest("That'll be $10, please!", 32, 1, 104, 140);
         }
 
         [Test]

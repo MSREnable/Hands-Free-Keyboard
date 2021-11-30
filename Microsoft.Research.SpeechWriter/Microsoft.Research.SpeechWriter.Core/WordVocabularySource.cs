@@ -736,9 +736,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 contextPosition--;
             }
 
-            var maker = PersistantPredictor.CreatePredictionMaker(this, TokenFilter.IsTokenVisible, Context);
-
-            var list = SuggestedWordListsCreator.CreateSuggestionLists(this, _tokens, maker, TokenFilter, isFirstWord, lowerBound, upperBound, maxListCount, maxListItemCount);
+            var list = SuggestedWordListsCreator.CreateSuggestionLists(this, _tokens, PersistantPredictor, Context, TokenFilter, isFirstWord, lowerBound, upperBound, maxListCount, maxListItemCount);
 
             return list;
         }

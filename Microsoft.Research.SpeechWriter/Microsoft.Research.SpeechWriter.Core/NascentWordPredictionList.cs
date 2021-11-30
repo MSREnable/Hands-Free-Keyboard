@@ -9,14 +9,16 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal readonly List<WordPrediction> _list;
         internal WordPrediction _last;
 
+        internal ScoredTokenPredictionMaker _followOnMaker;
         internal WordPrediction _followOn;
 
-        internal NascentWordPredictionList(WordPrediction prediction, WordPrediction followOn)
+        internal NascentWordPredictionList(WordPrediction prediction, ScoredTokenPredictionMaker followOnMaker, WordPrediction followOn)
         {
             _first = prediction;
             _list = new List<WordPrediction>(1) { prediction };
             _last = prediction;
 
+            _followOnMaker = followOnMaker;
             _followOn = followOn;
         }
 
@@ -78,6 +80,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                     sourcePosition++;
                 }
 
+                _followOnMaker = next._followOnMaker;
                 _followOn = next._followOn;
             }
             else

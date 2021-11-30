@@ -132,9 +132,30 @@ namespace Microsoft.Research.SpeechWriter.Core
             return value;
         }
 
+        [Conditional("DEBUGX")]
+        static void BreakOnProblemCase(StringTokens tokens, int[] context, params string[] words)
+        {
+            if (words.Length <= context.Length)
+            {
+                var contextLim = context.Length;
+                var wordsLim = words.Length;
+                while (0 < wordsLim && tokens.TryGetToken(words[wordsLim - 1], out var token) && context[contextLim - 1] == token)
+                {
+                    wordsLim--;
+                    contextLim--;
+                }
+
+                if (wordsLim == 0)
+                {
+                    Debugger.Break();
+                }
+            }
+        }
+
         internal static SortedList<int, IReadOnlyList<ITile>> CreateSuggestionLists(WordVocabularySource source,
             StringTokens tokens,
-            ScoredTokenPredictionMaker maker,
+            TokenPredictor tokenPredictor,
+            int[] context,
             ITokenTileFilter filter,
             bool isFirstWord,
             int lowerBound,
@@ -142,6 +163,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             int maxListCount,
             int maxListItemCount)
         {
+            BreakOnProblemCase(tokens, context, "these", "are", "the", "voyages");
+
+            var maker = tokenPredictor.CreatePredictionMaker(source, filter.IsTokenVisible, context);
+
             var creator = new SuggestedWordListsCreator(source, tokens, maker, filter.IsTokenVisible, isFirstWord, lowerBound, upperBound, maxListCount, maxListItemCount);
             var list = creator.Run();
             return list;
@@ -426,6 +451,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                                     var followOnMaker = _maker.CreateNextPredictionMaker(candidatePrediction.Token, null);
                                     var followOnPrediction = GetTopPrediction(followOnMaker, longestPrediction.IsFollowOnFirstWord);
+                                    _nascents[compoundPredictionIndex]._followOnMaker = followOnMaker;
                                     _nascents[compoundPredictionIndex]._followOn = followOnPrediction;
 
                                 }
@@ -484,7 +510,8 @@ namespace Microsoft.Research.SpeechWriter.Core
                         var newItem = firstCreatedItem as SuggestedWordItem;
                         predictions.Add(firstCreatedItem);
 
-                        var followOnMaker = _maker.CreateNextPredictionMaker(followOn.Token, null);
+                        var firstFollowOnMaker = _nascents[position]._followOnMaker;
+                        var followOnMaker = firstFollowOnMaker.CreateNextPredictionMaker(followOn.Token, null);
                         var isFollowOnFirstWord = followOn.IsFollowOnFirstWord;
                         var done = newItem == null;
                         while (!done && predictions.Count < _maxListItemCount)
@@ -531,18 +558,20 @@ namespace Microsoft.Research.SpeechWriter.Core
                 position++;
             }
 
+            ScoredTokenPredictionMaker followOnMaker;
             WordPrediction followOn;
             if (_findFollowOnPredictions && prediction.Text[0] != '\0')
             {
-                var followOnMaker = _maker.CreateNextPredictionMaker(prediction.Token, null);
+                followOnMaker = _maker.CreateNextPredictionMaker(prediction.Token, null);
                 followOn = GetTopPrediction(followOnMaker, prediction.IsFollowOnFirstWord);
             }
             else
             {
+                followOnMaker = null;
                 followOn = null;
             }
 
-            var nascent = new NascentWordPredictionList(prediction, followOn);
+            var nascent = new NascentWordPredictionList(prediction, followOnMaker, followOn);
 
             _nascents.Insert(position, nascent);
         }
