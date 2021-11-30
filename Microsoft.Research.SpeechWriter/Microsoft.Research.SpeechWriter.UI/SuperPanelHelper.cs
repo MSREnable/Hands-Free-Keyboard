@@ -19,6 +19,9 @@ namespace Microsoft.Research.SpeechWriter.UI
         private InterstitialTileLayoutHelper<TControl, TSize, TRect> _interstitialPanelHelper;
         private SuggestionsLayoutHelper<TControl, TSize, TRect> _suggestionsPanelHelper;
 
+        private int _rows;
+        private int _columns;
+
         public SuperPanelHelper(ISuperPanel<TControl, TSize, TRect> panel)
         {
             _panel = panel;
@@ -62,8 +65,8 @@ namespace Microsoft.Research.SpeechWriter.UI
             var finalHeight = rows * verticalPitch;
             var sideWidth = (availableWidth - horizontalPitch) / 2.0;
 
-            _model.DisplayRows = (int)rows;
-            _model.DisplayColumns = (int)Math.Floor(availableWidth / horizontalPitch);
+            _rows = (int)rows;
+            _columns = (int)Math.Floor(availableWidth / horizontalPitch);
 
             _interstitialPanelHelper._panel.Measure(_panel.CreateSize(horizontalPitch, finalHeight));
             _headPanelHelper._panel.Measure(_panel.CreateSize(sideWidth, finalHeight - verticalPitch));
@@ -88,6 +91,9 @@ namespace Microsoft.Research.SpeechWriter.UI
             _tailPanelHelper._panel.Arrange(_panel.CreateRect(0, finalHeight - verticalPitch, sideWidth, verticalPitch));
             _interstitialPanelHelper._panel.Arrange(_panel.CreateRect(sideWidth, 0, horizontalPitch, finalHeight));
             _suggestionsPanelHelper._panel.Arrange(_panel.CreateRect(sideWidth + horizontalPitch, verticalPitch / 2.0, sideWidth, finalHeight - verticalPitch));
+
+            _model.DisplayRows = _rows;
+            _model.DisplayColumns = _columns;
 
             return finalSize;
         }
