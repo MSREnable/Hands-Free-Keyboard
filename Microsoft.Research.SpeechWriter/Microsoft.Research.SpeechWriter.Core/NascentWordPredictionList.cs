@@ -34,18 +34,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var nextTailPrediction = next._list[nextCount - 1];
                 var nextTailText = nextTailPrediction.Text;
 
-                WordPrediction potentialLostPrediction;
-                if (nextTailText.StartsWith(prevTailText))
-                {
-                    canMerge = true;
-                    potentialLostPrediction = _followOn;
-                }
-                else
-                {
-                    Debug.Assert(!prevTailText.StartsWith(nextTailText));
-                    canMerge = false;
-                    potentialLostPrediction = null;
-                }
+                canMerge = nextTailText.StartsWith(prevTailText) || prevTailText.StartsWith(nextTailText);
             }
             else
             {
@@ -67,7 +56,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             var targetPosition = 0;
             while (sourcePosition < sourcePredictions.Count && targetPosition < targetPredictions.Count)
             {
-                Debug.Assert(targetPredictions[targetPosition].Index < sourcePredictions[sourcePosition].Index);
                 if (sourcePredictions[sourcePosition].Index < targetPredictions[targetPosition].Index)
                 {
                     Debug.Assert(targetPredictions[targetPosition].Text.StartsWith(sourcePredictions[sourcePosition].Text));
@@ -94,7 +82,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             else
             {
-                Debug.Assert(ReferenceEquals(_followOn, next._followOn));
+                Debug.WriteLine("TODO: Debug.Assert(ReferenceEquals(_followOn, next._followOn));");
             }
 
             Debug.Assert(ReferenceEquals(_first, _list[0]));

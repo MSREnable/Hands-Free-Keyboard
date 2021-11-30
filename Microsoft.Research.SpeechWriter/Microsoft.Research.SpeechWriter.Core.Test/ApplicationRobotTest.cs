@@ -344,7 +344,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         public void HelloWorldTest()
         {
             // TODO: Find out why entering HELLO WORLD predicts HELLO WORLD HELLO WORLD as the next sentence.
-            MultiTest("hello world", 11, 1, 45, 11);
+            MultiTest("hello world", 10, 1, 45, 10);
         }
 
         [Test]
@@ -356,19 +356,19 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         [Test]
         public void ShareAndEnjoyKoreanTest()
         {
-            MultiTest("공유하 고 즐기십시오", 93, 1, 65, 521);
+            MultiTest("공유하 고 즐기십시오", 93, 1, 65, 555);
         }
 
         [Test]
         public void ShareAndEnjoyCantoneseTest()
         {
-            MultiTest("分享 同 享受", 53, 1, 33, 357);
+            MultiTest("分享 同 享受", 53, 1, 33, 175);
         }
 
         [Test]
         public void ShareAndEnjoyThaiTest()
         {
-            MultiTest("แบ่งปัน และ เพลิดเพลิน", 140, 1, 94, 562);
+            MultiTest("แบ่งปัน และ เพลิดเพลิน", 140, 1, 94, 572);
         }
 
         [Test]

@@ -11,6 +11,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         private readonly StringTokens _tokens;
         private readonly ScoredTokenPredictionMaker _maker;
         private readonly Func<int, bool> _isTokenVisible;
+        private readonly bool _startOnFirstWord;
         private readonly int _lowerBound;
         private readonly int _upperBound;
         private readonly int _maxListCount;
@@ -25,10 +26,13 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private readonly List<NascentWordPredictionList> _nascents;
 
+        private readonly Func<string, string> _capitalizer;
+
         private SuggestedWordListsCreator(WordVocabularySource source,
             StringTokens tokens,
             ScoredTokenPredictionMaker maker,
             Func<int, bool> isTokenVisible,
+            bool startOnFirstWord,
             int lowerBound,
             int upperBound,
             int maxListCount,
@@ -38,6 +42,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _tokens = tokens;
             _maker = maker;
             _isTokenVisible = isTokenVisible;
+            _startOnFirstWord = startOnFirstWord;
             _lowerBound = lowerBound;
             _upperBound = upperBound;
             _maxListCount = maxListCount;
@@ -50,20 +55,52 @@ namespace Microsoft.Research.SpeechWriter.Core
             _findCorePredictionSuffixes = settings.FindCorePredictionSuffixes;
 
             _nascents = new List<NascentWordPredictionList>(_maxListCount);
+
+            _capitalizer = source.Model.Environment.TryCapitalizeFirstWord;
         }
 
-        private WordPrediction GetNextCorePrediction(IEnumerator<int[]> enumerator)
+        private WordPrediction CreatePrediction(int[] score, bool isFirstWord)
+        {
+            WordPrediction prediction;
+
+            var token = score[0];
+            var index = _source.GetTokenIndex(token);
+            var rawText = _tokens[token];
+            string casedText;
+
+            var isFollowOnFirstWord = false;
+            if (isFirstWord)
+            {
+                casedText = _capitalizer(rawText);
+                if (casedText == null)
+                {
+                    casedText = rawText;
+                }
+                else
+                {
+                    isFollowOnFirstWord = true;
+                }
+            }
+            else
+            {
+                casedText = rawText;
+            }
+
+            Debug.Assert(string.Compare(rawText, casedText, StringComparison.OrdinalIgnoreCase) == 0);
+
+            prediction = new WordPrediction(score, index, rawText, casedText, isFollowOnFirstWord);
+            return prediction;
+        }
+
+        private WordPrediction GetNextCorePrediction(IEnumerator<int[]> enumerator, bool isFirstWord)
         {
             WordPrediction prediction;
 
             if (enumerator.MoveNext())
             {
                 var score = enumerator.Current;
-                var token = score[0];
-                var index = _source.GetTokenIndex(token);
-                var text = _tokens[token];
 
-                prediction = new WordPrediction(score, index, text);
+                prediction = CreatePrediction(score, isFirstWord);
             }
             else
             {
@@ -73,7 +110,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             return prediction;
         }
 
-        private WordPrediction GetTopPrediction(ScoredTokenPredictionMaker maker)
+        private WordPrediction GetTopPrediction(ScoredTokenPredictionMaker maker, bool isFirstWord)
         {
             WordPrediction value;
 
@@ -82,7 +119,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var topScores = maker.GetTopScores(0, _source.Count, true, false);
                 using (var enumerator = topScores.GetEnumerator())
                 {
-                    value = GetNextCorePrediction(enumerator);
+                    value = GetNextCorePrediction(enumerator, isFirstWord);
                 }
             }
             else
@@ -105,8 +142,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             int maxListCount,
             int maxListItemCount)
         {
-            _ = isFirstWord;
-            var creator = new SuggestedWordListsCreator(source, tokens, maker, filter.IsTokenVisible, lowerBound, upperBound, maxListCount, maxListItemCount);
+            var creator = new SuggestedWordListsCreator(source, tokens, maker, filter.IsTokenVisible, isFirstWord, lowerBound, upperBound, maxListCount, maxListItemCount);
             var list = creator.Run();
             return list;
         }
@@ -123,6 +159,23 @@ namespace Microsoft.Research.SpeechWriter.Core
             return comparison;
         }
 
+        private Func<string, string> GetEncaser(bool isFirstWord)
+        {
+            Func<string, string> encaser;
+
+            if (isFirstWord)
+            {
+                Func<string, string> capitalizer = _source.Model.Environment.TryCapitalizeFirstWord;
+                encaser = s => capitalizer(s) ?? s;
+            }
+            else
+            {
+                encaser = s => s;
+            }
+
+            return encaser;
+        }
+
         private void CreateCorePredictions()
         {
             var scores = _maker.GetTopScores(_lowerBound, _upperBound, _isTokenVisible == null, true);
@@ -130,11 +183,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             using (var enumerator = scores.GetEnumerator())
             {
                 // Seed predictions with most likely items.
-                var nextCorePrediction = GetNextCorePrediction(enumerator);
+                var nextCorePrediction = GetNextCorePrediction(enumerator, _startOnFirstWord);
                 for (var iteration = 0; iteration < _maxListCount && nextCorePrediction != null; iteration++)
                 {
                     AddNextPrediction(nextCorePrediction);
-                    nextCorePrediction = GetNextCorePrediction(enumerator);
+                    nextCorePrediction = GetNextCorePrediction(enumerator, _startOnFirstWord);
                 }
 
                 // Apply strategies to improve the core predictions.
@@ -179,7 +232,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                             _nascents.RemoveAt(pairable + 1);
 
                             AddNextPrediction(nextCorePrediction);
-                            nextCorePrediction = GetNextCorePrediction(enumerator);
+                            nextCorePrediction = GetNextCorePrediction(enumerator, _startOnFirstWord);
 
                             improved = true;
                         }
@@ -224,7 +277,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                                         var candidateScore = _maker.GetScore(candidateToken);
                                         var candidateText = _tokens[candidateToken];
 
-                                        var candidatePrediction = new WordPrediction(candidateScore, candidateIndex, candidateText);
+                                        var candidatePrediction = CreatePrediction(candidateScore, _startOnFirstWord);
 
                                         var insertPosition = 0;
                                         while (insertPosition < compoundPrediction.Count &&
@@ -275,6 +328,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var includedPrefixIndex = longestPrediction.Index;
                 var beyondPrefixIndex = includedPrefixIndex;
                 var limitFound = false;
+
                 for (var step = 1; !limitFound; step += 1)
                 {
                     includedPrefixIndex = beyondPrefixIndex;
@@ -321,6 +375,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                 if (longestPrediction.Index + 1 < beyondPrefixIndex)
                 {
+                    var capitalizer = GetEncaser(longestPrediction.IsFollowOnFirstWord);
+
                     Debug.WriteLine($"Consider extending {longestPredictionText}:");
                     var followOn = _nascents[compoundPredictionIndex]._followOn;
 
@@ -335,7 +391,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                         if (value)
                         {
-                            var text = _tokens[token];
+                            var text = capitalizer(_tokens[token]);
                             value = extendedPredictionText.StartsWith(text) || text.StartsWith(extendedPredictionText);
                         }
 
@@ -346,9 +402,9 @@ namespace Microsoft.Research.SpeechWriter.Core
                     using (var enumerator = additionalScores.GetEnumerator())
                     {
                         var improved = true;
-                        for (var candidatePrediction = GetNextCorePrediction(enumerator);
+                        for (var candidatePrediction = GetNextCorePrediction(enumerator, _startOnFirstWord);
                             improved && candidatePrediction != null;
-                            candidatePrediction = GetNextCorePrediction(enumerator))
+                            candidatePrediction = GetNextCorePrediction(enumerator, _startOnFirstWord))
                         {
                             if (candidatePrediction.Text.StartsWith(longestPredictionText))
                             {
@@ -369,7 +425,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                                     extendedPredictionText = candidatePrediction.Text;
 
                                     var followOnMaker = _maker.CreateNextPredictionMaker(candidatePrediction.Token, null);
-                                    var followOnPrediction = GetTopPrediction(followOnMaker);
+                                    var followOnPrediction = GetTopPrediction(followOnMaker, longestPrediction.IsFollowOnFirstWord);
                                     _nascents[compoundPredictionIndex]._followOn = followOnPrediction;
 
                                 }
@@ -390,7 +446,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var coreCompoundPrediction = _nascents[position]._list;
                 var headPrediction = coreCompoundPrediction[0];
 
-                var headWord = _tokens.GetString(headPrediction.Token);
+                var headWord = headPrediction.RawText;
                 if (headWord[0] == '\0')
                 {
                     var command = (TileCommand)Enum.Parse(typeof(TileCommand), headWord.Substring(1));
@@ -405,8 +461,8 @@ namespace Microsoft.Research.SpeechWriter.Core
                     for (var corePosition = 1; corePosition < coreCompoundPrediction.Count; corePosition++)
                     {
                         var tailPrediction = coreCompoundPrediction[corePosition];
-                        var tailWord = _tokens.GetString(tailPrediction.Token);
-                        Debug.Assert(tailWord.StartsWith(headWord));
+                        var tailWord = tailPrediction.RawText;
+                        Debug.Assert(tailWord.StartsWith(headWord, StringComparison.OrdinalIgnoreCase));
                         if (!headWord.StartsWith(tailWord))
                         {
                             item = new ExtendedSuggestedWordItem(_source.Model.LastTile, _source, tailWord, tailWord.Substring(headWord.Length));
@@ -429,10 +485,11 @@ namespace Microsoft.Research.SpeechWriter.Core
                         predictions.Add(firstCreatedItem);
 
                         var followOnMaker = _maker.CreateNextPredictionMaker(followOn.Token, null);
+                        var isFollowOnFirstWord = followOn.IsFollowOnFirstWord;
                         var done = newItem == null;
                         while (!done && predictions.Count < _maxListItemCount)
                         {
-                            var followOnPrediction = GetTopPrediction(followOnMaker);
+                            var followOnPrediction = GetTopPrediction(followOnMaker, isFollowOnFirstWord);
                             if (followOnPrediction != null)
                             {
                                 item = newItem;
@@ -440,6 +497,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                                 newItem = createdItem as SuggestedWordItem;
                                 followOnMaker = followOnMaker.CreateNextPredictionMaker(followOnPrediction.Token, null);
                                 predictions.Add(createdItem);
+                                isFollowOnFirstWord = followOnPrediction.IsFollowOnFirstWord;
 
                                 if (newItem == null)
                                 {
@@ -477,7 +535,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             if (_findFollowOnPredictions && prediction.Text[0] != '\0')
             {
                 var followOnMaker = _maker.CreateNextPredictionMaker(prediction.Token, null);
-                followOn = GetTopPrediction(followOnMaker);
+                followOn = GetTopPrediction(followOnMaker, prediction.IsFollowOnFirstWord);
             }
             else
             {
