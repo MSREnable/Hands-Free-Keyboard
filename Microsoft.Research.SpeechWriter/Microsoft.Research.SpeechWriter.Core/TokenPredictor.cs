@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -388,6 +389,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             return saved;
+        }
+
+        internal void WriteDatabaseXml(XmlWriter writer, Func<int, string> stringize)
+        {
+            _database.WriteXml(writer, stringize);
         }
     }
 }

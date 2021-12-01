@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -317,6 +318,11 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             _wordSource.SpellingSource.SetContext(new int[] { 0, 'H', 'e', 'l', 'l', 'o' });
             _nextSuggestions.Add(new ITile[] { new SuggestedUnicodeItem(HeadItems[1], _wordSource.SpellingSource, 33) });
+        }
+
+        public void WriteDatabaseXml(XmlWriter writer)
+        {
+            _wordSource.WriteDatabaseXml(writer);
         }
 
         public void RefreshSuggestionsView()

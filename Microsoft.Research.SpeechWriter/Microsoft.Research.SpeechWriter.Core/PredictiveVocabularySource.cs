@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -148,6 +150,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             PersistantPredictor.AddSequenceTail(sequence, increment);
             DeltaPredictor.AddSequenceTail(sequence, increment);
+        }
+
+        protected void WriteDatabaseXml(XmlWriter writer, Func<int, string> stringize)
+        {
+            _persistantPredictor.WriteDatabaseXml(writer, stringize);
         }
     }
 }

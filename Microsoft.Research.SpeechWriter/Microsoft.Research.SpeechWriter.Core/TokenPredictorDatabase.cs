@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -208,6 +210,26 @@ namespace Microsoft.Research.SpeechWriter.Core
             _isSortedDatabaseValid = false;
 
             return value;
+        }
+
+        internal void WriteXml(XmlWriter writer, Func<int, string> stringize)
+        {
+            foreach (var info in SortedEnumerable)
+            {
+                writer.WriteStartElement("Entry");
+                var s = stringize(info.Token);
+                s = s.Replace("\0", "\\0");
+                writer.WriteAttributeString("Word", s);
+                writer.WriteAttributeString("Count", info.Count.ToString());
+
+                var children = info.TryGetChildren();
+                if (children != null)
+                {
+                    children.WriteXml(writer, stringize);
+                }
+
+                writer.WriteEndElement();
+            }
         }
     }
 }

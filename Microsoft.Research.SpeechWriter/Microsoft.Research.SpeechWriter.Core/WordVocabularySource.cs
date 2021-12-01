@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
@@ -404,6 +405,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             ContinueRunOnSuggestions();
 
             ParanoidAssertValid();
+        }
+
+        internal void WriteDatabaseXml(XmlWriter writer)
+        {
+            WriteDatabaseXml(writer, t => _tokens[t]);
         }
 
         internal void TakeGhostWord(ITile runOn)

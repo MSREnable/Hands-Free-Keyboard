@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.SpeechSynthesis;
 using Windows.Storage;
@@ -407,6 +409,23 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             {
                 e.Handled = true;
             }
+        }
+
+        private void OnCopyDatabaseXml(object sender, RoutedEventArgs e)
+        {
+            var stringWriter = new StringWriter();
+            var settings = new XmlWriterSettings { Indent = true, OmitXmlDeclaration = true };
+            using (var xmlWriter = XmlWriter.Create(stringWriter, settings))
+            {
+                xmlWriter.WriteStartElement("Entries");
+                _model.WriteDatabaseXml(xmlWriter);
+                xmlWriter.WriteEndElement();
+            }
+            var xml = stringWriter.ToString();
+
+            var package = new DataPackage();
+            package.SetText(xml);
+            Clipboard.SetContent(package);
         }
     }
 }
