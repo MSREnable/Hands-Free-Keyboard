@@ -194,10 +194,28 @@ namespace Microsoft.Research.SpeechWriter.Core
                     Debug.Assert(utterance.Count != 0);
 
                     var sequence = new List<int>(new[] { 0 });
+                    var isFirstWordToCome = true;
+                    var environment = Model.Environment;
                     foreach (var tile in utterance)
                     {
                         var tokenString = tile.ToTokenString();
                         Debug.Assert(!string.IsNullOrWhiteSpace(tokenString));
+                        if (isFirstWordToCome)
+                        {
+                            if (environment.TryCapitalizeFirstWord(tokenString) != null)
+                            {
+                                isFirstWordToCome = false;
+
+                                var lowerString = tokenString.ToLowerInvariant();
+                                var capitalizedString = environment.TryCapitalizeFirstWord(lowerString);
+                                if (capitalizedString == tokenString &&
+                                    lowerString != capitalizedString &&
+                                        _tokens.TryGetToken(lowerString, out var _))
+                                {
+                                    tokenString = lowerString;
+                                }
+                            }
+                        }
                         var token = _tokens.GetToken(tokenString);
                         Debug.Assert(token != 0);
                         sequence.Add(token);
