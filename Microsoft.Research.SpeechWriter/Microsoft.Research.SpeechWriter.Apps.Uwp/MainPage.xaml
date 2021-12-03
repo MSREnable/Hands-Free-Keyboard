@@ -144,6 +144,7 @@
                     <MenuFlyoutItem Text="Import contents of the clipboard into Utterances file" Command="{x:Bind _demo.ImportClipboard}"/>
                     <MenuFlyoutItem Text="Show test card" Command="{x:Bind _demo.ShowTestCard}"/>
                     <MenuFlyoutItem Text="Copy database XML" Click="OnCopyDatabaseXml"/>
+                    <MenuFlyoutItem Text="Exercise database binary serialization" Click="OnExerciseSerialization"/>
                 </MenuFlyoutSubItem>
             </MenuFlyout>
         </Grid.ContextFlyout>

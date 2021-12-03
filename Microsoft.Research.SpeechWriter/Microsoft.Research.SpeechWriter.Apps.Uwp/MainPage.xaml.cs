@@ -427,5 +427,10 @@ namespace Microsoft.Research.SpeechWriter.Apps.Uwp
             package.SetText(xml);
             Clipboard.SetContent(package);
         }
+
+        private void OnExerciseSerialization(object sender, RoutedEventArgs e)
+        {
+            _model.ExerciseSerialization();
+        }
     }
 }

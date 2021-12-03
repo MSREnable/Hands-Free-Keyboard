@@ -339,5 +339,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             return updated;
         }
+
+        public void ExerciseSerialization()
+        {
+            _wordSource.ExerciseSerialization();
+        }
     }
 }

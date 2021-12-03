@@ -58,6 +58,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             return _database.GetEnumerator();
         }
 
+        internal int Count => _database.Count;
+
         internal IEnumerable<TokenPredictorInfo> SortedEnumerable
         {
             get

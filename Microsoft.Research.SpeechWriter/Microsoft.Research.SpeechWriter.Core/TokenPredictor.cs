@@ -21,6 +21,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal IEnumerable<int> Tokens => _database.Keys;
 
+        internal TokenPredictorDatabase Database => _database;
+
         internal void Clear()
         {
             _database.Clear();

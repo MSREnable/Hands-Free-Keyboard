@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 
 namespace Microsoft.Research.SpeechWriter.Core.Database
 {

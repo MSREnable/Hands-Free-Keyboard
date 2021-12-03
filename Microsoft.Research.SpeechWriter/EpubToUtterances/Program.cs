@@ -14,7 +14,7 @@ namespace EpubToUtterances
             {
                 var sentences = EpubStreamHelper.StreamToSentences(stream);
 
-                foreach(var sentence in sentences)
+                foreach (var sentence in sentences)
                 {
                     var sequence = TileSequence.FromRaw(sentence);
                     var utterance = new UtteranceData(sequence, true);

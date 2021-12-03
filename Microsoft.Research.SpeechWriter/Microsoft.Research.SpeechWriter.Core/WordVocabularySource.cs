@@ -1,4 +1,5 @@
 ﻿using Microsoft.Research.SpeechWriter.Core.Data;
+using Microsoft.Research.SpeechWriter.Core.Database;
 using Microsoft.Research.SpeechWriter.Core.Items;
 using System;
 using System.Collections.Generic;
@@ -423,6 +424,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             ContinueRunOnSuggestions();
 
             ParanoidAssertValid();
+        }
+
+        internal void ExerciseSerialization()
+        {
+            BinaryDatabaseHelper.SaveDatabase(PersistantPredictor.Database, _tokens);
         }
 
         internal void WriteDatabaseXml(XmlWriter writer)
