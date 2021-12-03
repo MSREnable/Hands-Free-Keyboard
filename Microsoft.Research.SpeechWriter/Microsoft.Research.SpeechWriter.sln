@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWriter.Core", "Microsoft.Research.SpeechWriter.Core\Microsoft.Research.SpeechWriter.Core.csproj", "{B20B47F7-52D1-48EF-8ACB-BD44BB78F023}"
 EndProject
@@ -27,7 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Research.SpeechWr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditBoxPrototype", "EditBoxPrototype\EditBoxPrototype.csproj", "{DA38C3FB-DFCA-4DC7-836F-C6C9B06DC5B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiPanel", "MultiPanel\MultiPanel.csproj", "{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiPanel", "MultiPanel\MultiPanel.csproj", "{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpubReader", "EpubReader\EpubReader.csproj", "{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpubToUtterances", "EpubToUtterances\EpubToUtterances.csproj", "{5C8CACA5-D7CB-4397-8284-88AC721D16DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -299,6 +303,46 @@ Global
 		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|x64.Build.0 = Release|Any CPU
 		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|x86.ActiveCfg = Release|Any CPU
 		{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}.Release|x86.Build.0 = Release|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Debug|ARM.Build.0 = Debug|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Debug|x64.Build.0 = Debug|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Debug|x86.Build.0 = Debug|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Release|ARM.ActiveCfg = Release|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Release|ARM.Build.0 = Release|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Release|ARM64.Build.0 = Release|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Release|x64.ActiveCfg = Release|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Release|x64.Build.0 = Release|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Release|x86.ActiveCfg = Release|Any CPU
+		{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}.Release|x86.Build.0 = Release|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Debug|ARM.Build.0 = Debug|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Debug|x64.Build.0 = Debug|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Debug|x86.Build.0 = Debug|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|ARM.ActiveCfg = Release|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|ARM.Build.0 = Release|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|ARM64.Build.0 = Release|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|x64.ActiveCfg = Release|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|x64.Build.0 = Release|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
