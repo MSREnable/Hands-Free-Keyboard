@@ -19,7 +19,7 @@ namespace EpubToUtterances
                     var sequence = TileSequence.FromRaw(sentence);
                     var utterance = new UtteranceData(sequence, true);
                     var line = utterance.ToLine();
-                    Console.Write(line);
+                    Console.WriteLine(line);
                 }
             }
         }

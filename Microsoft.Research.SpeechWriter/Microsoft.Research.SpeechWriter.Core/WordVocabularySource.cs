@@ -184,10 +184,13 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             using (var reader = await Environment.RecallUtterancesAsync())
             {
+                var lineNo = 0;
                 for (var line = await reader.ReadLineAsync();
                     line != null;
                     line = await reader.ReadLineAsync())
                 {
+                    lineNo++;
+
                     var utteranceData = UtteranceData.FromLine(line);
                     var utterance = utteranceData.Sequence;
 

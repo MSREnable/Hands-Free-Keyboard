@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 
@@ -45,8 +46,16 @@ namespace Microsoft.Research.SpeechWriter.Core.Data
 
         internal static void ValidatedRead(this XmlReader reader)
         {
-            var read = reader.Read();
-            ValidateData(read);
+            try
+            {
+                var read = reader.Read();
+                ValidateData(read);
+            }
+            catch
+            {
+                Debugger.Break();
+                throw;
+            }
         }
 
         internal static void ReadEndOfFragment(this XmlReader reader)
