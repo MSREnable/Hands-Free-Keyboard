@@ -9,6 +9,10 @@
             _values = values;
         }
 
-        internal int[] Values => _values;
+        internal int Token => _values[0];
+
+        internal int Length => _values.Length;
+
+        internal int this[int index] => _values[index];
     }
 }

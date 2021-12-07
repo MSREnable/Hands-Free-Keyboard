@@ -79,10 +79,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
                     Assert.IsTrue(enumerator.MoveNext());
                     var actuals = enumerator.Current;
 
-                    Assert.AreEqual(expecteds.Length, actuals.Values.Length);
+                    Assert.AreEqual(expecteds.Length, actuals.Length);
                     for (var i = 0; i < expecteds.Length; i++)
                     {
-                        Assert.AreEqual(expecteds[i], actuals.Values[i]);
+                        Assert.AreEqual(expecteds[i], actuals[i]);
                     }
                 }
             }

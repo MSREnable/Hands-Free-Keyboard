@@ -281,13 +281,13 @@ namespace Microsoft.Research.SpeechWriter.Core
         }
         int IComparer<Score>.Compare(Score x, Score y)
         {
-            Debug.Assert(x.Values.Length == y.Values.Length);
-            var position = x.Values.Length - 1;
-            while (x.Values[position] == y.Values[position])
+            Debug.Assert(x.Length == y.Length);
+            var position = x.Length - 1;
+            while (x[position] == y[position])
             {
                 position--;
             }
-            var value = x.Values[position] < y.Values[position] ? +1 : -1;
+            var value = x[position] < y[position] ? +1 : -1;
             return value;
         }
     }

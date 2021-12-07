@@ -6,8 +6,11 @@ namespace Microsoft.Research.SpeechWriter.Core
     {
         internal WordPrediction(Score score, int index, string rawText, string text, bool isFollowOnFirstWord)
         {
-            var copy = new int[score.Values.Length];
-            Array.Copy(score.Values, copy, score.Values.Length);
+            var copy = new int[score.Length];
+            for (var i = 0; i < score.Length; i++)
+            {
+                copy[i] = score[i];
+            }
             Score = new Score(copy);
             Index = index;
             RawText = rawText;
@@ -21,7 +24,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         internal string Text { get; }
         internal bool IsFollowOnFirstWord { get; }
 
-        internal int Token => Score.Values[0];
+        internal int Token => Score.Token;
 
         public override string ToString()
         {
