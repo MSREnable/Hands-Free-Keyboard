@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
-    class ScoredTokenPredictionMaker : IComparer<Score>
+    class ScoredTokenPredictionMaker
     {
         private readonly PredictiveVocabularySource _source;
         private readonly Func<int, bool> _tokenFilter;
@@ -155,7 +155,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             for (var index = _contextDatabases.Length - 1; 1 <= index; index--)
             {
                 var values = new int[1 + 1 + index];
-                var groupSet = new SortedSet<Score>(this);
+                var groupSet = new SortedSet<Score>(ScoreReverseComparer.Instance);
                 var group = int.MaxValue;
                 foreach (var info in _contextDatabases[index].SortedEnumerable)
                 {
@@ -278,17 +278,6 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
                 return value;
             }
-        }
-        int IComparer<Score>.Compare(Score x, Score y)
-        {
-            Debug.Assert(x.Length == y.Length);
-            var position = x.Length - 1;
-            while (x[position] == y[position])
-            {
-                position--;
-            }
-            var value = x[position] < y[position] ? +1 : -1;
-            return value;
         }
     }
 }

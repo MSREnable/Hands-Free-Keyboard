@@ -63,7 +63,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             WordPrediction prediction;
 
-            var token = score[0];
+            var token = score.Token;
             var index = _source.GetTokenIndex(token);
             var rawText = _tokens[token];
             string casedText;
@@ -174,12 +174,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private static int CompareScores(Score lhs, Score rhs)
         {
-            var comparison = lhs.Length.CompareTo(rhs.Length);
-
-            for (var i = lhs.Length - 1; comparison == 0 && 0 <= i; i--)
-            {
-                comparison = lhs[i].CompareTo(rhs[i]);
-            }
+            var comparison = lhs.CompareTo(rhs);
 
             return comparison;
         }
