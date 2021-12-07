@@ -13,9 +13,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal int Token => _values[0];
 
-        internal int Length => _values.Length;
-
-        internal int this[int index] => _values[index];
+        internal bool IsInContextScore => 3 <= _values.Length;
 
         public static bool operator ==(Score lhs, Score rhs) => lhs.CompareTo(rhs) == 0;
         public static bool operator !=(Score lhs, Score rhs) => lhs.CompareTo(rhs) != 0;

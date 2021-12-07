@@ -127,7 +127,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 value = null;
             }
 
-            Debug.Assert(value == null || 3 <= value.Score.Length, "Only true following predictions expected");
+            Debug.Assert(value == null || value.Score.IsInContextScore, "Only true following predictions expected");
 
             return value;
         }

@@ -6,12 +6,7 @@ namespace Microsoft.Research.SpeechWriter.Core
     {
         internal WordPrediction(Score score, int index, string rawText, string text, bool isFollowOnFirstWord)
         {
-            var copy = new int[score.Length];
-            for (var i = 0; i < score.Length; i++)
-            {
-                copy[i] = score[i];
-            }
-            Score = new Score(copy);
+            Score = score;
             Index = index;
             RawText = rawText;
             Text = text;

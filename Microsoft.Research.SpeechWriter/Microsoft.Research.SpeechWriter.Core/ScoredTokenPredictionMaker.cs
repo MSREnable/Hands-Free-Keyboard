@@ -207,16 +207,13 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 // Produce scores with two ordinls - those guaranteed to be produced in order.
                 {
-                    var values = new int[1 + 1];
                     foreach (var info in _contextDatabases[0].SortedEnumerable)
                     {
                         var token = info.Token;
 
                         if (IsNewToken(token))
                         {
-                            values[0] = token;
-                            values[1] = info.Count;
-                            var score = new Score(values);
+                            var score = new Score(token, info.Count);
 
                             yield return score;
                         }
@@ -224,7 +221,6 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
 
                 // As a first fallback produce single ordinal results.
-                var singleToken = new int[1];
                 var tokens = _source.GetTokens();
 
                 using (var enumerator = tokens.GetEnumerator())
@@ -235,8 +231,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                         if (IsNewToken(token))
                         {
-                            singleToken[0] = token;
-                            var score = new Score(singleToken);
+                            var score = new Score(token);
 
                             yield return score;
                         }
