@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
-    class ScoredTokenPredictionMaker : IComparer<int[]>
+    class ScoredTokenPredictionMaker : IComparer<Score>
     {
         private readonly PredictiveVocabularySource _source;
         private readonly Func<int, bool> _tokenFilter;
@@ -101,10 +101,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             return maker;
         }
 
-        internal int[] GetScore(int token)
+        internal Score GetScore(int token)
         {
-            var score = new int[_contextDatabases.Length + 1];
-            score[0] = token;
+            var values = new int[_contextDatabases.Length + 1];
+            values[0] = token;
 
             var depth = 0;
             var done = false;
@@ -112,7 +112,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 if (_contextDatabases[depth].TryGetValue(token, out var depthInfo) && depthInfo.Count != 0)
                 {
-                    score[depth + 1] = depthInfo.Count;
+                    values[depth + 1] = depthInfo.Count;
                     depth++;
                 }
                 else
@@ -121,12 +121,13 @@ namespace Microsoft.Research.SpeechWriter.Core
                 }
             }
 
-            Array.Resize(ref score, depth + 1);
+            Array.Resize(ref values, depth + 1);
+            var score = new Score(values);
 
             return score;
         }
 
-        internal IEnumerable<int[]> GetTopScores(Func<int, bool> tokenFilter, bool includeSpeculative)
+        internal IEnumerable<Score> GetTopScores(Func<int, bool> tokenFilter, bool includeSpeculative)
         {
             /// <summary>
             /// Tokens already found and returned.
@@ -153,8 +154,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             // by their final ordinal.
             for (var index = _contextDatabases.Length - 1; 1 <= index; index--)
             {
-                var score = new int[1 + 1 + index];
-                var groupSet = new SortedSet<int[]>(this);
+                var values = new int[1 + 1 + index];
+                var groupSet = new SortedSet<Score>(this);
                 var group = int.MaxValue;
                 foreach (var info in _contextDatabases[index].SortedEnumerable)
                 {
@@ -162,19 +163,19 @@ namespace Microsoft.Research.SpeechWriter.Core
 
                     if (IsNewToken(token))
                     {
-                        score[0] = token;
-                        score[1 + index] = info.Count;
+                        values[0] = token;
+                        values[1 + index] = info.Count;
 
                         for (var inbetweenIndex = 0; inbetweenIndex < index; inbetweenIndex++)
                         {
                             if (_contextDatabases[inbetweenIndex].TryGetValue(token, out var inbetweenInfo))
                             {
-                                score[1 + inbetweenIndex] = inbetweenInfo.Count;
+                                values[1 + inbetweenIndex] = inbetweenInfo.Count;
                             }
                             else
                             {
                                 Debug.Fail("Cannot not find an inbetween");
-                                score[1 + inbetweenIndex] = 0;
+                                values[1 + inbetweenIndex] = 0;
                             }
                         }
 
@@ -190,8 +191,9 @@ namespace Microsoft.Research.SpeechWriter.Core
                             group = info.Count;
                         }
 
+                        var score = new Score(values);
                         groupSet.Add(score);
-                        score = new int[1 + 1 + index];
+                        values = new int[1 + 1 + index];
                     }
                 }
 
@@ -205,15 +207,16 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 // Produce scores with two ordinls - those guaranteed to be produced in order.
                 {
-                    var score = new int[1 + 1];
+                    var values = new int[1 + 1];
                     foreach (var info in _contextDatabases[0].SortedEnumerable)
                     {
                         var token = info.Token;
 
                         if (IsNewToken(token))
                         {
-                            score[0] = token;
-                            score[1] = info.Count;
+                            values[0] = token;
+                            values[1] = info.Count;
+                            var score = new Score(values);
 
                             yield return score;
                         }
@@ -233,7 +236,9 @@ namespace Microsoft.Research.SpeechWriter.Core
                         if (IsNewToken(token))
                         {
                             singleToken[0] = token;
-                            yield return singleToken;
+                            var score = new Score(singleToken);
+
+                            yield return score;
                         }
                     }
                 }
@@ -242,7 +247,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
-        internal IEnumerable<int[]> GetTopScores(int minIndex, int limIndex, bool unfiltered, bool includeSpeculative)
+        internal IEnumerable<Score> GetTopScores(int minIndex, int limIndex, bool unfiltered, bool includeSpeculative)
         {
             Func<int, bool> tokenFilter;
             if (unfiltered)
@@ -274,15 +279,15 @@ namespace Microsoft.Research.SpeechWriter.Core
                 return value;
             }
         }
-        int IComparer<int[]>.Compare(int[] x, int[] y)
+        int IComparer<Score>.Compare(Score x, Score y)
         {
-            Debug.Assert(x.Length == y.Length);
-            var position = x.Length - 1;
-            while (x[position] == y[position])
+            Debug.Assert(x.Values.Length == y.Values.Length);
+            var position = x.Values.Length - 1;
+            while (x.Values[position] == y.Values[position])
             {
                 position--;
             }
-            var value = x[position] < y[position] ? +1 : -1;
+            var value = x.Values[position] < y.Values[position] ? +1 : -1;
             return value;
         }
     }
