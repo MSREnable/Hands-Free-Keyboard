@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Microsoft.Research.SpeechWriter.Core
+﻿namespace Microsoft.Research.SpeechWriter.Core
 {
     class WordPrediction
     {
