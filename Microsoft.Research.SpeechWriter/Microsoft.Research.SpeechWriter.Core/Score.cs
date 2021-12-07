@@ -17,6 +17,13 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         internal int this[int index] => _values[index];
 
+        public static bool operator ==(Score lhs, Score rhs) => lhs.CompareTo(rhs) == 0;
+        public static bool operator !=(Score lhs, Score rhs) => lhs.CompareTo(rhs) != 0;
+        public static bool operator <(Score lhs, Score rhs) => lhs.CompareTo(rhs) < 0;
+        public static bool operator <=(Score lhs, Score rhs) => lhs.CompareTo(rhs) <= 0;
+        public static bool operator >=(Score lhs, Score rhs) => lhs.CompareTo(rhs) >= 0;
+        public static bool operator >(Score lhs, Score rhs) => lhs.CompareTo(rhs) > 0;
+
         public int CompareTo(Score other)
         {
             var length = _values.Length;
@@ -35,5 +42,13 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             return value;
         }
+
+        public override bool Equals(object obj)
+        {
+            var value = obj is Score other && CompareTo(other) == 0;
+            return value;
+        }
+
+        public override int GetHashCode() => Token;
     }
 }

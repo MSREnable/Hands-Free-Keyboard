@@ -172,13 +172,6 @@ namespace Microsoft.Research.SpeechWriter.Core
             return list;
         }
 
-        private static int CompareScores(Score lhs, Score rhs)
-        {
-            var comparison = lhs.CompareTo(rhs);
-
-            return comparison;
-        }
-
         private Func<string, string> GetEncaser(bool isFirstWord)
         {
             Func<string, string> encaser;
@@ -237,7 +230,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                                     lostPrediction = potentialLostPrediction;
                                     definiteImprovementFound = potentialLostPrediction == null;
                                 }
-                                else if (CompareScores(potentialLostPrediction.Score, lostPrediction.Score) < 0)
+                                else if (potentialLostPrediction.Score < lostPrediction.Score)
                                 {
                                     pairable = i - 1;
                                     lostPrediction = potentialLostPrediction;
@@ -246,7 +239,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                         }
 
                         if (pairable != -1 &&
-                            (lostPrediction == null || CompareScores(lostPrediction.Score, nextCorePrediction.Score) < 0))
+                            (lostPrediction == null || lostPrediction.Score < nextCorePrediction.Score))
                         {
                             _nascents[pairable].MergeWithNext(_nascents[pairable + 1]);
                             _nascents.RemoveAt(pairable + 1);
@@ -428,7 +421,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                         {
                             if (candidatePrediction.Text.StartsWith(longestPredictionText))
                             {
-                                if (followOn != null && CompareScores(candidatePrediction.Score, followOn.Score) < 0)
+                                if (followOn != null && candidatePrediction.Score < followOn.Score)
                                 {
                                     Debug.WriteLine($"\t-{candidatePrediction} less likely than {followOn}");
                                     improved = false;
