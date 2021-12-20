@@ -18,12 +18,22 @@ namespace Microsoft.Research.SpeechWriter.Core
         private readonly Dictionary<string, int> _stringToToken = new Dictionary<string, int>();
 
         /// <summary>
+        /// String representing the stop token.
+        /// </summary>
+        public const string StopString = "\0";
+
+        /// <summary>
+        /// Token representing the stop string.
+        /// </summary>
+        public const int StopToken = 0;
+
+        /// <summary>
         /// Default constructor.
         /// </summary>
         public StringTokens()
         {
-            _tokenToString.Add(string.Empty);
-            _stringToToken.Add(string.Empty, 0);
+            _tokenToString.Add(StopString);
+            _stringToToken.Add(StopString, StopToken);
             _tokenLimit = 1;
         }
 
@@ -104,6 +114,8 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <returns>The token.</returns>
         public int GetToken(string str)
         {
+            Debug.Assert(!string.IsNullOrEmpty(str));
+
             if (!_stringToToken.TryGetValue(str, out var token))
             {
                 token = _tokenLimit;
@@ -125,12 +137,16 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <returns>The token.</returns>
         public bool TryGetToken(string str, out int token)
         {
+            Debug.Assert(!string.IsNullOrEmpty(str));
+
             var value = _stringToToken.TryGetValue(str, out token);
             return value;
         }
 
         internal bool IsNewWord(string str)
         {
+            Debug.Assert(!string.IsNullOrEmpty(str));
+
             var result = !_stringToToken.ContainsKey(str);
 
             if (result)

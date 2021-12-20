@@ -366,7 +366,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             foreach (var pair in database)
             {
-                var key = pair.Key == 0 ? string.Empty : tokens.GetString(pair.Key);
+                var key = tokens.GetString(pair.Key);
                 var value = ToJsonDictionary(tokens, pair.Value);
                 json.Add(key, value);
             }
