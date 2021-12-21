@@ -463,9 +463,17 @@ namespace Microsoft.Research.SpeechWriter.Core
                 var headWord = headPrediction.RawText;
                 if (headWord[0] == '\0')
                 {
-                    var command = (TileCommand)Enum.Parse(typeof(TileCommand), headWord.Substring(1));
-                    var tile = new CommandItem(_source.Model.LastTile, _source, command);
-                    predictions.Add(tile);
+                    if (headWord == StringTokens.StopString)
+                    {
+                        var tile = new TailStopItem(_source.Model.LastTile, _source);
+                        predictions.Add(tile);
+                    }
+                    else
+                    {
+                        var command = (TileCommand)Enum.Parse(typeof(TileCommand), headWord.Substring(1));
+                        var tile = new CommandItem(_source.Model.LastTile, _source, command);
+                        predictions.Add(tile);
+                    }
                 }
                 else
                 {

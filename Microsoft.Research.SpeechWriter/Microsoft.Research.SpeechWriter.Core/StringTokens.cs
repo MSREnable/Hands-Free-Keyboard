@@ -60,7 +60,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         /// <summary>
         /// The minimum value for a valid token.
         /// </summary>
-        public int TokenStart => 1;
+        public int TokenStart => 0;
 
         /// <summary>
         /// The current limit value of the contiguos token values.

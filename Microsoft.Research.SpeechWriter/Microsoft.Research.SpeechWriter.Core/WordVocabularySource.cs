@@ -585,6 +585,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
             sortedWords.Sort((kv1, kv2) => Environment.Compare(kv1.Key, kv2.Key));
 
+            sortedWords.Insert(0, new KeyValuePair<string, int>(StringTokens.StopString, StringTokens.StopToken));
+
             var commandNames = Enum.GetNames(typeof(TileCommand));
             for (var i = 0; i < commandNames.Length; i++)
             {
@@ -595,7 +597,6 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             foreach (var pair in sortedWords)
             {
-                Debug.Assert(pair.Value != 0);
                 yield return pair.Value;
             }
         }
@@ -687,6 +688,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             {
                 value = base.CreateSuggestionList(index);
             }
+            else if (word == StringTokens.StopString)
+            {
+                var tile = new TailStopItem(LastTile, this);
+                value = new[] { tile };
+            }
             else
             {
                 var command = (TileCommand)Enum.Parse(typeof(TileCommand), word.Substring(1));
@@ -701,11 +707,11 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             int index;
 
-            if (token == 0)
-            {
-                index = -1;
-            }
-            else
+            //if (token == 0)
+            //{
+            //    index = -1;
+            //}
+            //else
             {
                 // TODO: This line will fail if the code breaks before the initial prediction is made (perhaps).
                 index = _tokenToIndex[token];
@@ -745,7 +751,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         {
             var maxListItemCount = Math.Max(1, Model.DisplayColumns / 2);
 
-            Debug.Assert(Context[0] == 0);
+            Debug.Assert(Context[0] == StringTokens.StopToken);
             var isFirstWord = true;
             var contextPosition = Context.Length - 1;
             while (isFirstWord && contextPosition != 0)

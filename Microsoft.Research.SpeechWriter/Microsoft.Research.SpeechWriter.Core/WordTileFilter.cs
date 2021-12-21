@@ -37,8 +37,15 @@ namespace Microsoft.Research.SpeechWriter.Core
                 switch (nullPosition)
                 {
                     case 0:
-                        var command = (TileCommand)Enum.Parse(typeof(TileCommand), word.Substring(1));
-                        value = _source.IsCommandVisible(command);
+                        if (word == StringTokens.StopString)
+                        {
+                            value = true;
+                        }
+                        else
+                        {
+                            var command = (TileCommand)Enum.Parse(typeof(TileCommand), word.Substring(1));
+                            value = _source.IsCommandVisible(command);
+                        }
                         break;
 
                     default:

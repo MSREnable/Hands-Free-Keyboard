@@ -391,6 +391,10 @@ namespace Microsoft.Research.SpeechWriter.Core.Automation
                 {
                     // TODO: We don't deal with these yet!
                 }
+                else if (firstItem is TailStopItem)
+                {
+                    // TODO: We don't deal with these, could use it or press the static stop!
+                }
                 else
                 {
                     Debug.Assert(firstItem is SuggestedUnicodeItem);

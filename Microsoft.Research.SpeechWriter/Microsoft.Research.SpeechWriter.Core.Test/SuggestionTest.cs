@@ -39,10 +39,12 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         {
             var model = CreateModel();
 
-            Assert.AreEqual(1, model.SuggestionLists.Count);
+            Assert.AreEqual(2, model.SuggestionLists.Count);
 
-            Assert.AreEqual(2, model.SuggestionInterstitials.Count);
-            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[1]);
+            Assert.AreEqual(3, model.SuggestionInterstitials.Count);
+            Assert.IsInstanceOf<InterstitialNonItem>(model.SuggestionInterstitials[0]);
+            Assert.IsInstanceOf<InterstitialNonItem>(model.SuggestionInterstitials[1]);
+            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[2]);
         }
 
         [Test]
@@ -50,17 +52,18 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         {
             var model = CreateModel("X");
 
-            Assert.AreEqual(2, model.SuggestionLists.Count);
-            Assert.AreEqual(1, model.SuggestionLists[1].Count());
-            var tile = model.SuggestionLists[1].First();
+            Assert.AreEqual(3, model.SuggestionLists.Count);
+            Assert.AreEqual(1, model.SuggestionLists[2].Count());
+            var tile = model.SuggestionLists[2].First();
             Assert.IsInstanceOf<SuggestedWordItem>(tile);
             var suggestedWordTile = (SuggestedWordItem)tile;
             Assert.AreEqual("X", suggestedWordTile.FormattedContent);
 
-            Assert.AreEqual(3, model.SuggestionInterstitials.Count);
+            Assert.AreEqual(4, model.SuggestionInterstitials.Count);
             Assert.IsInstanceOf<InterstitialNonItem>(model.SuggestionInterstitials[0]);
-            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[1]);
+            Assert.IsInstanceOf<InterstitialNonItem>(model.SuggestionInterstitials[1]);
             Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[2]);
+            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[3]);
         }
 
         [Test]
@@ -68,17 +71,18 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
         {
             var model = CreateModel("X", "x");
 
-            Assert.AreEqual(2, model.SuggestionLists.Count);
-            Assert.AreEqual(1, model.SuggestionLists[1].Count());
-            var tile = model.SuggestionLists[1].First();
+            Assert.AreEqual(3, model.SuggestionLists.Count);
+            Assert.AreEqual(1, model.SuggestionLists[2].Count());
+            var tile = model.SuggestionLists[2].First();
             Assert.IsInstanceOf<SuggestedWordItem>(tile);
             var suggestedWordTile = (SuggestedWordItem)tile;
             Assert.AreEqual("X", suggestedWordTile.FormattedContent);
 
-            Assert.AreEqual(3, model.SuggestionInterstitials.Count);
+            Assert.AreEqual(4, model.SuggestionInterstitials.Count);
             Assert.IsInstanceOf<InterstitialNonItem>(model.SuggestionInterstitials[0]);
-            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[1]);
+            Assert.IsInstanceOf<InterstitialNonItem>(model.SuggestionInterstitials[1]);
             Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[2]);
+            Assert.IsInstanceOf<InterstitialSpellingItem>(model.SuggestionInterstitials[3]);
         }
     }
 }
