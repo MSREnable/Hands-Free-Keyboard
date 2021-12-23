@@ -17,6 +17,7 @@ namespace Microsoft.Research.SpeechWriter.Core
         private readonly int _maxListCount;
         private readonly int _maxListItemCount;
 
+        private readonly bool _allowDuplicateStems;
         private readonly bool _findFollowOnPredictions;
         private readonly bool _combineCorePredictions;
         private readonly bool _findCorePredictionPrefixes;
@@ -49,6 +50,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             _maxListItemCount = maxListItemCount;
 
             var settings = source.Model.Environment.Settings;
+            _allowDuplicateStems = settings.AllowDuplicateStems;
             _findFollowOnPredictions = settings.FindFollowOnPredictions;
             _combineCorePredictions = settings.CombineCorePredictions;
             _findCorePredictionPrefixes = settings.FindCorePredictionPrefixes;

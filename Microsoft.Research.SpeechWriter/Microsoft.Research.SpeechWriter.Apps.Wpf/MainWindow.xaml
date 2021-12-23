@@ -102,10 +102,11 @@
                 <MenuItem IsCheckable="True" IsChecked="{Binding Settings.SpeakWordByWord}" Header="Speak words as they are selected"/>
                 <MenuItem IsCheckable="True" IsChecked="{Binding Settings.SpeakWholeUtterances}" Header="Speak utterances as they are completed"/>
                 <Separator/>
-                <MenuItem IsCheckable="True" IsChecked="{Binding Settings.FindFollowOnPredictions}" Header="Find follow-on words"/>
+                <MenuItem IsCheckable="True" IsChecked="{Binding Settings.AllowDuplicateStems, Mode=TwoWay}" Header="Allow prediction starts to be duplicates"/>
                 <MenuItem IsCheckable="True" IsChecked="{Binding Settings.CombineCorePredictions, Mode=TwoWay}" Header="Combine adjacent top-ranked predictions"/>
                 <MenuItem IsCheckable="True" IsChecked="{Binding Settings.FindCorePredictionPrefixes}" Header="Consider possible prediction prefixes"/>
                 <MenuItem IsCheckable="True" IsChecked="{Binding Settings.FindCorePredictionSuffixes}" Header="Consider possible prediction suffixes"/>
+                <MenuItem IsCheckable="True" IsChecked="{Binding Settings.FindFollowOnPredictions}" Header="Find follow-on words"/>
                 <Separator/>
                 <MenuItem IsCheckable="True" IsChecked="{Binding Settings.ShowSpellingInterstitials}" Header="Show spelling buttons between adjacent known words"/>
                 <MenuItem IsCheckable="True" IsChecked="{Binding Settings.ShowUnicodeInterstitials}" Header="Show Unicode buttons between non-adjacent symbols"/>

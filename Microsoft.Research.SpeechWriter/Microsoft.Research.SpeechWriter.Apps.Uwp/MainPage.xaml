@@ -106,6 +106,7 @@
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.SpeakWholeUtterances, Mode=TwoWay}" Text="Speak utterances as they are completed" IsEnabled="False"/>
                 <MenuFlyoutSeparator/>
                 <ToggleMenuFlyoutItem IsChecked="False" Text="Use third-party predictions first" IsEnabled="False"/>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.AllowDuplicateStems, Mode=TwoWay}" Text="Allow prediction starts to be duplicates"/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.CombineCorePredictions, Mode=TwoWay}" Text="Combine adjacent top-ranked predictions"/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.FindCorePredictionPrefixes, Mode=TwoWay}" Text="Consider possible prediction prefixes"/>
                 <ToggleMenuFlyoutItem IsChecked="{x:Bind Settings.FindCorePredictionSuffixes, Mode=TwoWay}" Text="Consider possible prediction suffixes"/>

@@ -4,6 +4,7 @@
     {
         SpeakWordByWord,
         SpeakWholeUtterances,
+        AllowDuplicateStems,
         FindFollowOnPredictions,
         CombineCorePredictions,
         FindCorePredictionPrefixes,

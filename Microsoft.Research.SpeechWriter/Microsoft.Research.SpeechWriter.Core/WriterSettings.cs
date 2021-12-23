@@ -27,6 +27,16 @@ namespace Microsoft.Research.SpeechWriter.Core
         private bool _speakWholeUtterances = false;
 
         /// <summary>
+        /// Allow predictor to produce predictions that have the same first few tokens.
+        /// </summary>
+        public bool AllowDuplicateStems
+        {
+            get => _allowDuplicateStems;
+            set => SetProperty(ref _allowDuplicateStems, value);
+        }
+        private bool _allowDuplicateStems = true;
+
+        /// <summary>
         /// Find words that are most likely to follow core prediction words.
         /// </summary>
         public bool FindFollowOnPredictions
@@ -148,6 +158,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                     break;
 
                 case WriterSettingName.SpeakWholeUtterances: SpeakWholeUtterances = value; break;
+                case WriterSettingName.AllowDuplicateStems: AllowDuplicateStems = value; break;
                 case WriterSettingName.FindFollowOnPredictions: FindFollowOnPredictions = value; break;
                 case WriterSettingName.CombineCorePredictions: CombineCorePredictions = value; break;
                 case WriterSettingName.FindCorePredictionPrefixes: FindCorePredictionPrefixes = value; break;
@@ -173,6 +184,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                     break;
 
                 case WriterSettingName.SpeakWholeUtterances: value = SpeakWholeUtterances; break;
+                case WriterSettingName.AllowDuplicateStems: value = AllowDuplicateStems; break;
                 case WriterSettingName.FindFollowOnPredictions: value = FindFollowOnPredictions; break;
                 case WriterSettingName.CombineCorePredictions: value = CombineCorePredictions; break;
                 case WriterSettingName.FindCorePredictionPrefixes: value = FindCorePredictionPrefixes; break;
