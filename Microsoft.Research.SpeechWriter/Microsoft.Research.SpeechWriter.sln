@@ -29,9 +29,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditBoxPrototype", "EditBox
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiPanel", "MultiPanel\MultiPanel.csproj", "{1D13349D-E31D-4AB7-86FA-D6E55A0AFD8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpubReader", "EpubReader\EpubReader.csproj", "{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EpubReader", "EpubReader\EpubReader.csproj", "{FB76568C-6B80-4A6A-A8D6-30B6AE29B1B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpubToUtterances", "EpubToUtterances\EpubToUtterances.csproj", "{5C8CACA5-D7CB-4397-8284-88AC721D16DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeSortish", "TreeSortish\TreeSortish.csproj", "{FAF7EAE1-0447-474D-B888-012C3F04945D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -343,6 +345,26 @@ Global
 		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|x64.Build.0 = Release|Any CPU
 		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|x86.ActiveCfg = Release|Any CPU
 		{5C8CACA5-D7CB-4397-8284-88AC721D16DE}.Release|x86.Build.0 = Release|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Debug|ARM.Build.0 = Debug|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Debug|x64.Build.0 = Debug|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Debug|x86.Build.0 = Debug|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|ARM.ActiveCfg = Release|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|ARM.Build.0 = Release|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|ARM64.Build.0 = Release|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|x64.ActiveCfg = Release|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|x64.Build.0 = Release|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|x86.ActiveCfg = Release|Any CPU
+		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
