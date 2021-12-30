@@ -36,7 +36,7 @@ namespace TreeSortish
             var seedEnumerator = database.GetEnumerator();
             if (seedEnumerator.MoveNext())
             {
-                var seedItem = new RealItem(new Node[0], seedEnumerator, database, 0, database[0].Count);
+                var seedItem = new RealItem(new Node[0], seedEnumerator);
                 var queue = new List<Item> { seedItem };
 
                 while (queue.Count != 0)
@@ -51,22 +51,14 @@ namespace TreeSortish
 
                         if (1 < realItem.Count)
                         {
-                            var newFake = new PotentialItem(realItem.Path, realItem.Tail, realItem.Container, realItem.Index, realItem.Count - 1);
+                            var newFake = new PotentialItem(realItem.Path, realItem.Tail, realItem.Count - 1);
                             AddSecondary(queue, newFake);
                         }
 
-                        var nextIndex = realItem.Index + 1;
-                        var moveNext = realItem.Enumerator.MoveNext();
-                        if (nextIndex < realItem.Container.Count)
+                        if (realItem.Enumerator.MoveNext())
                         {
-                            Debug.Assert(moveNext);
-                            var nextNode = realItem.Container[nextIndex];
-                            var newReal = new RealItem(realItem.Path, realItem.Enumerator, realItem.Container, nextIndex, nextNode.Count);
+                            var newReal = new RealItem(realItem.Path, realItem.Enumerator);
                             AddSecondary(queue, newReal);
-                        }
-                        else
-                        {
-                            Debug.Assert(!moveNext);
                         }
                     }
                     else
@@ -75,22 +67,38 @@ namespace TreeSortish
 
                         var newPath = new List<Node>(potentialItem.Path);
                         var node = potentialItem.Tail;
-                        if (node.Children.Count == 1)
-                        {
-                            newPath.Add(node);
-                            node = node.Children[0];
-                        }
 
-                        if (1 < node.Children.Count)
+                        var enumerator = node.Children.GetEnumerator();
+
+                        var done = false;
+                        while (!done)
                         {
-                            var enumerator=node.Children.GetEnumerator();
-                            var first=enumerator.MoveNext();
-                            Debug.Assert(first);
-                            var second = enumerator.MoveNext();
-                            Debug.Assert(second);
-                            newPath.Add(node);
-                            var newReal = new RealItem(newPath.ToArray(), enumerator, node.Children, 1, node.Count);
-                            AddSecondary(queue, newReal);
+                            if (enumerator.MoveNext())
+                            {
+                                newPath.Add(node);
+                                var firstNode = enumerator.Current;
+
+                                if (enumerator.MoveNext())
+                                {
+                                    var newReal = new RealItem(newPath.ToArray(), enumerator);
+                                    AddSecondary(queue, newReal);
+                                    done = true;
+                                }
+                                else
+                                {
+                                    // Walking down single branch.
+                                    enumerator.Dispose();
+
+                                    node = firstNode;
+                                    enumerator = firstNode.Children.GetEnumerator();
+                                }
+                            }
+                            else
+                            {
+                                // No potential next node.
+                                enumerator.Dispose();
+                                done = true;
+                            }
                         }
                     }
                 }
@@ -115,7 +123,7 @@ namespace TreeSortish
 
                 foreach (var node in database)
                 {
-                    Sort(node.Children);
+                    Sort(node.ChildList);
                 }
             }
         }
@@ -132,7 +140,7 @@ namespace TreeSortish
             return database;
         }
 
-        private static void DumpDatabase(string prefix, List<Node> database)
+        private static void DumpDatabase(string prefix, IEnumerable<Node> database)
         {
             using (var enumerator = database.GetEnumerator())
             {
@@ -176,7 +184,7 @@ namespace TreeSortish
                     database.Add(node);
                 }
 
-                Add(node.Children, words, index + 1, count);
+                Add(node.ChildList, words, index + 1, count);
             }
         }
     }

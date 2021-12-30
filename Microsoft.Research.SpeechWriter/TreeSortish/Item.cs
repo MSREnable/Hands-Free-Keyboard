@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace TreeSortish
 {
     internal abstract class Item
     {
-        internal Item(Node[] path, List<Node> container, int index, int count)
+        internal Item(Node[] path, int count)
         {
             Path = path;
-            Container = container;
-            Index = index;
             Count = count;
-
-            Debug.Assert(path.Length == 0 || !ReferenceEquals(path[path.Length - 1], Container[index]));
         }
 
         internal virtual RealItem Real => null;
@@ -22,22 +17,16 @@ namespace TreeSortish
 
         internal Node[] Path { get; }
 
-        internal List<Node> Container { get; }
-
-        internal int Index { get; }
-
         internal int Count { get; }
     }
 
     internal class RealItem : Item
     {
-        internal RealItem(Node[] path, IEnumerator<Node> enumerator, List<Node> container, int index, int count)
-            : base(path, container, index, count)
+        internal RealItem(Node[] path, IEnumerator<Node> enumerator)
+            : base(path, enumerator.Current.Count)
         {
             Enumerator = enumerator;
             Tail = enumerator.Current;
-
-            Debug.Assert(ReferenceEquals(Tail, Container[Index]));
         }
 
         internal override RealItem Real => this;
@@ -58,10 +47,20 @@ namespace TreeSortish
             text += " ...";
 
             var lastNode = Tail;
-            while (lastNode.Children.Count != 0)
+            while (lastNode != null)
             {
-                lastNode = lastNode.Children[0];
-                text += $" {lastNode.Word}";
+                using (var enumerator = lastNode.Children.GetEnumerator())
+                {
+                    if (enumerator.MoveNext())
+                    {
+                        lastNode = enumerator.Current;
+                        text += $" {lastNode.Word}";
+                    }
+                    else
+                    {
+                        lastNode = null;
+                    }
+                }
             }
 
             Console.WriteLine(text);
@@ -70,11 +69,10 @@ namespace TreeSortish
 
     internal class PotentialItem : Item
     {
-        internal PotentialItem(Node[] path, Node tail, List<Node> container, int index, int count)
-            : base(path, container, index, count)
+        internal PotentialItem(Node[] path, Node tail, int count)
+            : base(path, count)
         {
-            Debug.Assert(ReferenceEquals(tail, Container[Index]));
-            Tail = container[index];
+            Tail = tail;
         }
 
         internal override PotentialItem Potential => this;
