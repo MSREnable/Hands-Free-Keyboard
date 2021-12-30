@@ -46,12 +46,11 @@ namespace TreeSortish
                     {
                         yield return item;
 
-                        var index = item.Container.IndexOf(item.Tail);
-                        var nextIndex = index + 1;
+                        var nextIndex = item.Index + 1;
                         if (nextIndex < item.Container.Count)
                         {
-                            var nextItem = item.Container[nextIndex];
-                            var newReal = new Item(item.Path, item.Container, nextIndex, nextItem.Count, true);
+                            var nextNode = item.Container[nextIndex];
+                            var newReal = new Item(item.Path, item.Container, nextIndex, nextNode.Count, true);
                             AddSecondary(queue, newReal);
                         }
 
