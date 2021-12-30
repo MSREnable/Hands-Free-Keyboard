@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace TreeSortish
@@ -30,11 +31,12 @@ namespace TreeSortish
             }
         }
 
-        private static IEnumerable<Item> FindOrderedItems(List<Node> database)
+        private static IEnumerable<RealItem> FindOrderedItems(List<Node> database)
         {
-            if (database.Count != 0)
+            var seedEnumerator = database.GetEnumerator();
+            if (seedEnumerator.MoveNext())
             {
-                var seedItem = new Item(new Node[0], database, 0, database[0].Count, true);
+                var seedItem = new RealItem(new Node[0], seedEnumerator, database, 0, database[0].Count);
                 var queue = new List<Item> { seedItem };
 
                 while (queue.Count != 0)
@@ -42,28 +44,37 @@ namespace TreeSortish
                     var item = queue[0];
                     queue.RemoveAt(0);
 
-                    if (item.IsReal)
+                    var realItem = item.Real;
+                    if (realItem != null)
                     {
-                        yield return item;
+                        yield return realItem;
 
-                        var nextIndex = item.Index + 1;
-                        if (nextIndex < item.Container.Count)
+                        if (1 < realItem.Count)
                         {
-                            var nextNode = item.Container[nextIndex];
-                            var newReal = new Item(item.Path, item.Container, nextIndex, nextNode.Count, true);
-                            AddSecondary(queue, newReal);
+                            var newFake = new PotentialItem(realItem.Path, realItem.Tail, realItem.Container, realItem.Index, realItem.Count - 1);
+                            AddSecondary(queue, newFake);
                         }
 
-                        if (1 < item.Count)
+                        var nextIndex = realItem.Index + 1;
+                        var moveNext = realItem.Enumerator.MoveNext();
+                        if (nextIndex < realItem.Container.Count)
                         {
-                            var newFake = new Item(item.Path, item.Container, item.Index, item.Count - 1, false);
-                            AddSecondary(queue, newFake);
+                            Debug.Assert(moveNext);
+                            var nextNode = realItem.Container[nextIndex];
+                            var newReal = new RealItem(realItem.Path, realItem.Enumerator, realItem.Container, nextIndex, nextNode.Count);
+                            AddSecondary(queue, newReal);
+                        }
+                        else
+                        {
+                            Debug.Assert(!moveNext);
                         }
                     }
                     else
                     {
-                        var newPath = new List<Node>(item.Path);
-                        var node = item.Tail;
+                        var potentialItem = item.Potential;
+
+                        var newPath = new List<Node>(potentialItem.Path);
+                        var node = potentialItem.Tail;
                         if (node.Children.Count == 1)
                         {
                             newPath.Add(node);
@@ -72,8 +83,13 @@ namespace TreeSortish
 
                         if (1 < node.Children.Count)
                         {
+                            var enumerator=node.Children.GetEnumerator();
+                            var first=enumerator.MoveNext();
+                            Debug.Assert(first);
+                            var second = enumerator.MoveNext();
+                            Debug.Assert(second);
                             newPath.Add(node);
-                            var newReal = new Item(newPath.ToArray(), node.Children, 1, node.Count, true);
+                            var newReal = new RealItem(newPath.ToArray(), enumerator, node.Children, 1, node.Count);
                             AddSecondary(queue, newReal);
                         }
                     }
