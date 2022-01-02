@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace TreeSortish
 {
@@ -38,7 +39,33 @@ namespace TreeSortish
             var position = 0;
             foreach (var item in walk)
             {
-                var text = item.ToString();
+                var builder = new StringBuilder();
+                using (var enumerator = item.GetEnumerator())
+                {
+                    if (enumerator.MoveNext())
+                    {
+                        Node lastNode;
+                        do
+                        {
+                            lastNode = enumerator.Current;
+                            builder.Append($" {lastNode.Word}");
+                        }
+                        while (enumerator.MoveNext());
+
+                        builder.Insert(0, $"{lastNode.Count}:");
+
+                        builder.Append(" ...");
+
+                        for (var descendant = lastNode.GetChildren().FirstOrDefault();
+                            descendant != null;
+                            descendant = descendant.GetChildren().FirstOrDefault())
+                        {
+                            builder.Append($" {descendant.Word}");
+                        }
+                    }
+                }
+
+                var text = builder.ToString();
                 Console.WriteLine(text);
 
                 Debug.Assert(text == expected[position], $"Expected {expected[position]}");

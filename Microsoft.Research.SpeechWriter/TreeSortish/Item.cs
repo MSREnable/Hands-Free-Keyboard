@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace TreeSortish
 {
-    internal sealed class Item<TNode>
+    internal sealed class Item<TNode> : IEnumerable<TNode>
         where TNode : class, IPredictableNode<TNode>
     {
         private readonly Item<TNode> _parent;
@@ -17,7 +16,7 @@ namespace TreeSortish
 
         private bool _isReal;
 
-        internal Item(Item<TNode> parent, TNode node)
+        private Item(Item<TNode> parent, TNode node)
         {
             _parent = parent;
             _node = node;
@@ -31,7 +30,7 @@ namespace TreeSortish
             _enumerator = enumerator;
         }
 
-        internal static IEnumerable<Item<TNode>> FindOrderedItems(IEnumerable<TNode> database)
+        internal static IEnumerable<IEnumerable<TNode>> FindOrderedItems(IEnumerable<TNode> database)
         {
             var seedEnumerator = database.GetEnumerator();
             if (seedEnumerator.MoveNext())
@@ -128,44 +127,24 @@ namespace TreeSortish
             _count--;
         }
 
-        public override string ToString()
+        public IEnumerator<TNode> GetEnumerator()
         {
-            var builder = new StringBuilder($"{_count}:");
+            var list = new List<TNode>();
 
-            void AppendAncestors(Item<TNode> item)
+            var ancestor = this;
+            do
             {
-                if (item != null)
-                {
-                    AppendAncestors(item._parent);
-
-                    builder.Append($" {item._node.ToString()}");
-                }
+                list.Insert(0, ancestor._node);
+                ancestor = ancestor._parent;
             }
+            while (ancestor != null);
 
-            AppendAncestors(_parent);
-            builder.Append($" {_node.ToString()}");
+            return list.GetEnumerator();
+        }
 
-            builder.Append(" ...");
-
-            var lastNode = _node;
-            while (lastNode != null)
-            {
-                using (var enumerator = lastNode.GetChildren().GetEnumerator())
-                {
-                    if (enumerator.MoveNext())
-                    {
-                        lastNode = enumerator.Current;
-                        builder.Append($" {lastNode.ToString()}");
-                    }
-                    else
-                    {
-                        lastNode = null;
-                    }
-                }
-            }
-
-            var text = builder.ToString();
-            return text;
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

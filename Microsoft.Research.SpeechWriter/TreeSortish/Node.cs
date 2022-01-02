@@ -14,6 +14,6 @@ namespace TreeSortish
 
         public IEnumerable<Node> GetChildren() => ChildList;
 
-        public override string ToString() => Word;
+        public override string ToString() => $"{Word}*{Count}";
     }
 }
