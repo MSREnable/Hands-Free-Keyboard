@@ -1,27 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace TreeSortish
 {
     internal abstract class Item
     {
-        internal Item(RealItem parent, Node[] path, Node node, int count)
+        internal Item(RealItem parent, Node node, int count)
         {
             Parent = parent;
-            Path = path;
             Node = node;
             Count = count;
-
-            if (parent == null)
-            {
-                Debug.Assert(path.Length == 0);
-            }
-            else
-            {
-                Debug.Assert(path.Length != 0 && ReferenceEquals(parent.Node, path[path.Length - 1]));
-            }
         }
 
         internal virtual RealItem Real => null;
@@ -30,8 +18,6 @@ namespace TreeSortish
 
         internal RealItem Parent { get; }
 
-        internal Node[] Path { get; }
-
         internal Node Node { get; }
 
         internal int Count { get; }
@@ -39,33 +25,13 @@ namespace TreeSortish
 
     internal class RealItem : Item
     {
-        internal RealItem(RealItem parent, Node[] path, Node node)
-            : base(parent, path, node, node.Count)
+        internal RealItem(RealItem parent, Node node)
+            : base(parent, node, node.Count)
         {
-            var ancestorCount = 0;
-            for (var ancestorItem = parent; ancestorItem != null; ancestorItem = ancestorItem.Parent)
-            {
-                ancestorCount++;
-            }
-
-            Debug.Assert(ancestorCount == path.Length);
-
-            var ancestor = parent;
-            var expectedLimit = path.Length;
-
-            while (ancestor != null && expectedLimit != 0)
-            {
-                var expected = path[expectedLimit - 1];
-                var actual = ancestor.Node;
-                //Debug.Assert(ReferenceEquals(expected, actual));
-                ancestor = ancestor.Parent;
-                expectedLimit--;
-            }
-            Debug.Assert(ancestor == null && expectedLimit == 0);
         }
 
-        internal RealItem(RealItem parent, Node[] path, IEnumerator<Node> enumerator)
-            : this(parent, path, enumerator.Current)
+        internal RealItem(RealItem parent, IEnumerator<Node> enumerator)
+            : this(parent, enumerator.Current)
         {
             Enumerator = enumerator;
         }
@@ -87,11 +53,7 @@ namespace TreeSortish
         public override string ToString()
         {
             var builder = new StringBuilder($"{Count}:");
-            //AppendAncestors(builder, Parent);
-            foreach (var node in Path)
-            {
-                builder.Append($" {node.Word}");
-            }
+            AppendAncestors(builder, Parent);
             builder.Append($" {Node.Word}");
 
             builder.Append(" ...");
@@ -121,12 +83,12 @@ namespace TreeSortish
     internal class PotentialItem : Item
     {
         internal PotentialItem(RealItem parent, Node[] path, Node node, int count)
-            : base(parent, path, node, count)
+            : base(parent, node, count)
         {
         }
 
         internal PotentialItem(RealItem item)
-            : base(item.Parent, item.Path, item.Node, item.Count - 1)
+            : base(item.Parent, item.Node, item.Count - 1)
         {
         }
 

@@ -52,7 +52,7 @@ namespace TreeSortish
             var seedEnumerator = database.GetEnumerator();
             if (seedEnumerator.MoveNext())
             {
-                var seedItem = new RealItem(null, new Node[0], seedEnumerator);
+                var seedItem = new RealItem(null, seedEnumerator);
                 var queue = new List<Item> { seedItem };
 
                 while (queue.Count != 0)
@@ -73,7 +73,7 @@ namespace TreeSortish
 
                         if (realItem.Enumerator.MoveNext())
                         {
-                            var newReal = new RealItem(realItem.Parent, realItem.Path, realItem.Enumerator);
+                            var newReal = new RealItem(realItem.Parent, realItem.Enumerator);
                             AddSecondary(queue, newReal);
                         }
                     }
@@ -87,8 +87,7 @@ namespace TreeSortish
 
         private static void ExpandPotentialItem(List<Item> queue, Item potentialItem)
         {
-            var item = new RealItem(potentialItem.Parent, potentialItem.Path, potentialItem.Node);
-            var path = new List<Node>(item.Path);
+            var item = new RealItem(potentialItem.Parent, potentialItem.Node);
 
             var done = false;
             while (!done)
@@ -104,8 +103,7 @@ namespace TreeSortish
 
                     if (enumerator.MoveNext())
                     {
-                        path.Add(node);
-                        var newReal = new RealItem(item, path.ToArray(), enumerator);
+                        var newReal = new RealItem(item, enumerator);
 
                         AddSecondary(queue, newReal);
                         done = true;
@@ -115,8 +113,7 @@ namespace TreeSortish
                         // Walking down single branch.
                         enumerator.Dispose();
 
-                        path.Add(node);
-                        var newReal = new RealItem(item, path.ToArray(), firstNode);
+                        var newReal = new RealItem(item, firstNode);
 
                         item = newReal;
                     }
