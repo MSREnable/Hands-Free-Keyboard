@@ -25,10 +25,26 @@ namespace TreeSortish
         private static void Walk(List<Node> database)
         {
             var walk = FindOrderedItems(database);
+
+            var expected = new[]
+            {
+                "25: aardvarks ... are nice",
+                "24: hello ... mr charles esq",
+                "8: hello mr brian ... esq",
+                "7: zebras ... are stripy",
+                "6: hello mr adam ... esq"
+            };
+
+            var position = 0;
             foreach (var item in walk)
             {
-                item.Dump();
+                var text = item.ToString();
+                Console.WriteLine(text);
+
+                Debug.Assert(text == expected[position], $"Expected {expected[position]}");
+                position++;
             }
+            Debug.Assert(position == expected.Length);
         }
 
         private static IEnumerable<RealItem> FindOrderedItems(List<Node> database)
@@ -36,7 +52,7 @@ namespace TreeSortish
             var seedEnumerator = database.GetEnumerator();
             if (seedEnumerator.MoveNext())
             {
-                var seedItem = new RealItem(new Node[0], seedEnumerator);
+                var seedItem = new RealItem(null, new Node[0], seedEnumerator);
                 var queue = new List<Item> { seedItem };
 
                 while (queue.Count != 0)
@@ -51,56 +67,65 @@ namespace TreeSortish
 
                         if (1 < realItem.Count)
                         {
-                            var newFake = new PotentialItem(realItem.Path, realItem.Tail, realItem.Count - 1);
+                            var newFake = new PotentialItem(realItem);
                             AddSecondary(queue, newFake);
                         }
 
                         if (realItem.Enumerator.MoveNext())
                         {
-                            var newReal = new RealItem(realItem.Path, realItem.Enumerator);
+                            var newReal = new RealItem(realItem.Parent, realItem.Path, realItem.Enumerator);
                             AddSecondary(queue, newReal);
                         }
                     }
                     else
                     {
-                        var potentialItem = item.Potential;
-
-                        var newPath = new List<Node>(potentialItem.Path);
-                        var node = potentialItem.Tail;
-
-                        var enumerator = node.Children.GetEnumerator();
-
-                        var done = false;
-                        while (!done)
-                        {
-                            if (enumerator.MoveNext())
-                            {
-                                newPath.Add(node);
-                                var firstNode = enumerator.Current;
-
-                                if (enumerator.MoveNext())
-                                {
-                                    var newReal = new RealItem(newPath.ToArray(), enumerator);
-                                    AddSecondary(queue, newReal);
-                                    done = true;
-                                }
-                                else
-                                {
-                                    // Walking down single branch.
-                                    enumerator.Dispose();
-
-                                    node = firstNode;
-                                    enumerator = firstNode.Children.GetEnumerator();
-                                }
-                            }
-                            else
-                            {
-                                // No potential next node.
-                                enumerator.Dispose();
-                                done = true;
-                            }
-                        }
+                        ExpandPotentialItem(queue, item.Potential);
                     }
+                }
+            }
+        }
+
+        private static void ExpandPotentialItem(List<Item> queue, Item potentialItem)
+        {
+            var item = new RealItem(potentialItem.Parent, potentialItem.Path, potentialItem.Node);
+            var path = new List<Node>(item.Path);
+
+            var done = false;
+            while (!done)
+            {
+                var parent = item.Parent;
+                var node = item.Node;
+
+                var enumerator = node.Children.GetEnumerator();
+
+                if (enumerator.MoveNext())
+                {
+                    var firstNode = enumerator.Current;
+
+                    if (enumerator.MoveNext())
+                    {
+                        path.Add(node);
+                        var newReal = new RealItem(item, path.ToArray(), enumerator);
+
+                        AddSecondary(queue, newReal);
+                        done = true;
+                    }
+                    else
+                    {
+                        // Walking down single branch.
+                        enumerator.Dispose();
+
+                        path.Add(node);
+                        var newReal = new RealItem(item, path.ToArray(), firstNode);
+
+                        item = newReal;
+                    }
+                }
+                else
+                {
+                    // No potential next node.
+                    enumerator.Dispose();
+                    done = true;
                 }
             }
         }
