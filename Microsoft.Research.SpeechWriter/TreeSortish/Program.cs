@@ -47,12 +47,12 @@ namespace TreeSortish
             Debug.Assert(position == expected.Length);
         }
 
-        private static IEnumerable<RealItem> FindOrderedItems(List<Node> database)
+        private static IEnumerable<Item> FindOrderedItems(List<Node> database)
         {
             var seedEnumerator = database.GetEnumerator();
             if (seedEnumerator.MoveNext())
             {
-                var seedItem = new RealItem(null, seedEnumerator);
+                var seedItem = new Item(null, seedEnumerator);
                 var queue = new List<Item> { seedItem };
 
                 while (queue.Count != 0)
@@ -60,26 +60,29 @@ namespace TreeSortish
                     var item = queue[0];
                     queue.RemoveAt(0);
 
-                    var realItem = item.Real;
-                    if (realItem != null)
+                    if (item.IsReal)
                     {
-                        yield return realItem;
+                        yield return item;
 
-                        if (1 < realItem.Count)
+                        if (item.Enumerator.MoveNext())
                         {
-                            var newFake = new PotentialItem(realItem);
-                            AddSecondary(queue, newFake);
+                            var newReal = new Item(item.Parent, item.Enumerator);
+                            AddSecondary(queue, newReal);
+                        }
+                        else
+                        {
+                            item.Enumerator.Dispose();
                         }
 
-                        if (realItem.Enumerator.MoveNext())
+                        if (1 < item.Count)
                         {
-                            var newReal = new RealItem(realItem.Parent, realItem.Enumerator);
-                            AddSecondary(queue, newReal);
+                            item.MakePotential();
+                            AddSecondary(queue, item);
                         }
                     }
                     else
                     {
-                        ExpandPotentialItem(queue, item.Potential);
+                        ExpandPotentialItem(queue, item);
                     }
                 }
             }
@@ -87,7 +90,7 @@ namespace TreeSortish
 
         private static void ExpandPotentialItem(List<Item> queue, Item potentialItem)
         {
-            var item = new RealItem(potentialItem.Parent, potentialItem.Node);
+            var item = potentialItem;
 
             var done = false;
             while (!done)
@@ -103,7 +106,7 @@ namespace TreeSortish
 
                     if (enumerator.MoveNext())
                     {
-                        var newReal = new RealItem(item, enumerator);
+                        var newReal = new Item(item, enumerator);
 
                         AddSecondary(queue, newReal);
                         done = true;
@@ -113,7 +116,7 @@ namespace TreeSortish
                         // Walking down single branch.
                         enumerator.Dispose();
 
-                        var newReal = new RealItem(item, firstNode);
+                        var newReal = new Item(item, firstNode);
 
                         item = newReal;
                     }

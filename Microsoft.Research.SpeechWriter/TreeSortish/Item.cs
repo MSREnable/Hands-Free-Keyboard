@@ -1,32 +1,48 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace TreeSortish
 {
-    internal abstract class Item
+    internal sealed class Item
     {
-        internal Item(RealItem parent, Node node, int count)
+        internal Item(Item parent, Node node)
         {
             Parent = parent;
             Node = node;
-            Count = count;
+            Count = node.Count;
+            IsReal = true;
         }
 
-        internal virtual RealItem Real => null;
+        internal Item(Item parent, IEnumerator<Node> enumerator)
+            : this(parent, enumerator.Current)
+        {
+            Enumerator = enumerator;
+        }
 
-        internal virtual PotentialItem Potential => null;
-
-        internal RealItem Parent { get; }
+        internal Item Parent { get; }
 
         internal Node Node { get; }
 
-        internal int Count { get; }
+        internal int Count { get; private set; }
+
+        internal IEnumerator<Node> Enumerator { get; }
+
+        internal bool IsReal { get; private set; }
+
+        internal void MakePotential()
+        {
+            Debug.Assert(IsReal);
+
+            IsReal = false;
+            Count--;
+        }
 
         public override string ToString()
         {
             var builder = new StringBuilder($"{Count}:");
 
-            void AppendAncestors(RealItem item)
+            void AppendAncestors(Item item)
             {
                 if (item != null)
                 {
@@ -61,38 +77,5 @@ namespace TreeSortish
             var text = builder.ToString();
             return text;
         }
-    }
-
-    internal class RealItem : Item
-    {
-        internal RealItem(RealItem parent, Node node)
-            : base(parent, node, node.Count)
-        {
-        }
-
-        internal RealItem(RealItem parent, IEnumerator<Node> enumerator)
-            : this(parent, enumerator.Current)
-        {
-            Enumerator = enumerator;
-        }
-
-        internal override RealItem Real => this;
-
-        internal IEnumerator<Node> Enumerator { get; }
-    }
-
-    internal class PotentialItem : Item
-    {
-        internal PotentialItem(RealItem parent, Node[] path, Node node, int count)
-            : base(parent, node, count)
-        {
-        }
-
-        internal PotentialItem(RealItem item)
-            : base(item.Parent, item.Node, item.Count - 1)
-        {
-        }
-
-        internal override PotentialItem Potential => this;
     }
 }
