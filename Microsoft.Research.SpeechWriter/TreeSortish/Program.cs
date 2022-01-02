@@ -24,7 +24,7 @@ namespace TreeSortish
 
         private static void Walk(List<Node> database)
         {
-            var walk = FindOrderedItems(database);
+            var walk = Item.FindOrderedItems(database);
 
             var expected = new[]
             {
@@ -45,99 +45,6 @@ namespace TreeSortish
                 position++;
             }
             Debug.Assert(position == expected.Length);
-        }
-
-        private static IEnumerable<Item> FindOrderedItems(List<Node> database)
-        {
-            var seedEnumerator = database.GetEnumerator();
-            if (seedEnumerator.MoveNext())
-            {
-                var seedItem = new Item(null, seedEnumerator);
-                var queue = new List<Item> { seedItem };
-
-                while (queue.Count != 0)
-                {
-                    var item = queue[0];
-                    queue.RemoveAt(0);
-
-                    if (item.IsReal)
-                    {
-                        yield return item;
-
-                        if (item.Enumerator.MoveNext())
-                        {
-                            var newReal = new Item(item.Parent, item.Enumerator);
-                            AddSecondary(queue, newReal);
-                        }
-                        else
-                        {
-                            item.Enumerator.Dispose();
-                        }
-
-                        if (1 < item.Count)
-                        {
-                            item.MakePotential();
-                            AddSecondary(queue, item);
-                        }
-                    }
-                    else
-                    {
-                        ExpandPotentialItem(queue, item);
-                    }
-                }
-            }
-        }
-
-        private static void ExpandPotentialItem(List<Item> queue, Item potentialItem)
-        {
-            var item = potentialItem;
-
-            var done = false;
-            while (!done)
-            {
-                var parent = item.Parent;
-                var node = item.Node;
-
-                var enumerator = node.Children.GetEnumerator();
-
-                if (enumerator.MoveNext())
-                {
-                    var firstNode = enumerator.Current;
-
-                    if (enumerator.MoveNext())
-                    {
-                        var newReal = new Item(item, enumerator);
-
-                        AddSecondary(queue, newReal);
-                        done = true;
-                    }
-                    else
-                    {
-                        // Walking down single branch.
-                        enumerator.Dispose();
-
-                        var newReal = new Item(item, firstNode);
-
-                        item = newReal;
-                    }
-                }
-                else
-                {
-                    // No potential next node.
-                    enumerator.Dispose();
-                    done = true;
-                }
-            }
-        }
-
-        private static void AddSecondary(List<Item> secondarySource, Item newSecondary)
-        {
-            var position = 0;
-            while (position < secondarySource.Count && newSecondary.Count <= secondarySource[position].Count)
-            {
-                position++;
-            }
-            secondarySource.Insert(position, newSecondary);
         }
 
         private static void Sort(List<Node> database)
