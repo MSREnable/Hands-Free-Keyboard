@@ -24,7 +24,7 @@ namespace TreeSortish
 
         private static void Walk(List<Node> database)
         {
-            var walk = Item.FindOrderedItems(database);
+            var walk = Item<Node>.FindOrderedItems(database);
 
             var expected = new[]
             {

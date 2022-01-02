@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IPredictableNode.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />

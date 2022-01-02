@@ -4,19 +4,20 @@ using System.Text;
 
 namespace TreeSortish
 {
-    internal sealed class Item
+    internal sealed class Item<TNode>
+        where TNode : class, IPredictableNode<TNode>
     {
-        private readonly Item _parent;
+        private readonly Item<TNode> _parent;
 
-        private readonly Node _node;
+        private readonly TNode _node;
 
         private int _count;
 
-        private readonly IEnumerator<Node> _enumerator;
+        private readonly IEnumerator<TNode> _enumerator;
 
         private bool _isReal;
 
-        internal Item(Item parent, Node node)
+        internal Item(Item<TNode> parent, TNode node)
         {
             _parent = parent;
             _node = node;
@@ -24,19 +25,19 @@ namespace TreeSortish
             _isReal = true;
         }
 
-        internal Item(Item parent, IEnumerator<Node> enumerator)
+        internal Item(Item<TNode> parent, IEnumerator<TNode> enumerator)
             : this(parent, enumerator.Current)
         {
             _enumerator = enumerator;
         }
 
-        internal static IEnumerable<Item> FindOrderedItems(IEnumerable<Node> database)
+        internal static IEnumerable<Item<TNode>> FindOrderedItems(IEnumerable<TNode> database)
         {
             var seedEnumerator = database.GetEnumerator();
             if (seedEnumerator.MoveNext())
             {
-                var seedItem = new Item(null, seedEnumerator);
-                var queue = new List<Item> { seedItem };
+                var seedItem = new Item<TNode>(null, seedEnumerator);
+                var queue = new List<Item<TNode>> { seedItem };
 
                 while (queue.Count != 0)
                 {
@@ -49,7 +50,7 @@ namespace TreeSortish
 
                         if (item._enumerator.MoveNext())
                         {
-                            var nextItem = new Item(item._parent, item._enumerator);
+                            var nextItem = new Item<TNode>(item._parent, item._enumerator);
                             nextItem.Enqueue(queue);
                         }
                         else
@@ -71,7 +72,7 @@ namespace TreeSortish
             }
         }
 
-        private void ExpandPotentialParent(List<Item> queue)
+        private void ExpandPotentialParent(List<Item<TNode>> queue)
         {
             var item = this;
 
@@ -79,7 +80,7 @@ namespace TreeSortish
             while (!done)
             {
                 var node = item._node;
-                var enumerator = node.Children.GetEnumerator();
+                var enumerator = node.GetChildren().GetEnumerator();
 
                 if (enumerator.MoveNext())
                 {
@@ -87,7 +88,7 @@ namespace TreeSortish
 
                     if (enumerator.MoveNext())
                     {
-                        item = new Item(item, enumerator);
+                        item = new Item<TNode>(item, enumerator);
 
                         item.Enqueue(queue);
                         done = true;
@@ -97,7 +98,7 @@ namespace TreeSortish
                         // Walking down single branch.
                         enumerator.Dispose();
 
-                        item = new Item(item, firstNode);
+                        item = new Item<TNode>(item, firstNode);
                     }
                 }
                 else
@@ -109,7 +110,7 @@ namespace TreeSortish
             }
         }
 
-        private void Enqueue(List<Item> queue)
+        private void Enqueue(List<Item<TNode>> queue)
         {
             var position = 0;
             while (position < queue.Count && _count <= queue[position]._count)
@@ -131,30 +132,30 @@ namespace TreeSortish
         {
             var builder = new StringBuilder($"{_count}:");
 
-            void AppendAncestors(Item item)
+            void AppendAncestors(Item<TNode> item)
             {
                 if (item != null)
                 {
                     AppendAncestors(item._parent);
 
-                    builder.Append($" {item._node.Word}");
+                    builder.Append($" {item._node.ToString()}");
                 }
             }
 
             AppendAncestors(_parent);
-            builder.Append($" {_node.Word}");
+            builder.Append($" {_node.ToString()}");
 
             builder.Append(" ...");
 
             var lastNode = _node;
             while (lastNode != null)
             {
-                using (var enumerator = lastNode.Children.GetEnumerator())
+                using (var enumerator = lastNode.GetChildren().GetEnumerator())
                 {
                     if (enumerator.MoveNext())
                     {
                         lastNode = enumerator.Current;
-                        builder.Append($" {lastNode.Word}");
+                        builder.Append($" {lastNode.ToString()}");
                     }
                     else
                     {
