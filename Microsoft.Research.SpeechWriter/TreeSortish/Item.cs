@@ -21,39 +21,22 @@ namespace TreeSortish
         internal Node Node { get; }
 
         internal int Count { get; }
-    }
-
-    internal class RealItem : Item
-    {
-        internal RealItem(RealItem parent, Node node)
-            : base(parent, node, node.Count)
-        {
-        }
-
-        internal RealItem(RealItem parent, IEnumerator<Node> enumerator)
-            : this(parent, enumerator.Current)
-        {
-            Enumerator = enumerator;
-        }
-
-        internal override RealItem Real => this;
-
-        internal IEnumerator<Node> Enumerator { get; }
-
-        private static void AppendAncestors(StringBuilder builder, RealItem item)
-        {
-            if (item != null)
-            {
-                AppendAncestors(builder, item.Parent);
-
-                builder.Append($" {item.Node.Word}");
-            }
-        }
 
         public override string ToString()
         {
             var builder = new StringBuilder($"{Count}:");
-            AppendAncestors(builder, Parent);
+
+            void AppendAncestors(RealItem item)
+            {
+                if (item != null)
+                {
+                    AppendAncestors(item.Parent);
+
+                    builder.Append($" {item.Node.Word}");
+                }
+            }
+
+            AppendAncestors(Parent);
             builder.Append($" {Node.Word}");
 
             builder.Append(" ...");
@@ -78,6 +61,24 @@ namespace TreeSortish
             var text = builder.ToString();
             return text;
         }
+    }
+
+    internal class RealItem : Item
+    {
+        internal RealItem(RealItem parent, Node node)
+            : base(parent, node, node.Count)
+        {
+        }
+
+        internal RealItem(RealItem parent, IEnumerator<Node> enumerator)
+            : this(parent, enumerator.Current)
+        {
+            Enumerator = enumerator;
+        }
+
+        internal override RealItem Real => this;
+
+        internal IEnumerator<Node> Enumerator { get; }
     }
 
     internal class PotentialItem : Item
