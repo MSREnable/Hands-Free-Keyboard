@@ -587,8 +587,48 @@ namespace Microsoft.Research.SpeechWriter.Core
             predictions.Insert(position, prediction);
         }
 
+        internal static void PrototypeTreePredictions(ScoredTokenPredictionMaker maker,
+            StringTokens tokens,
+            int maxCount)
+        {
+            string ToText(TokenPredictorInfo info)
+            {
+                var text = tokens[info.Token];
+                var nullIndex = text.IndexOf('\0');
+                if (nullIndex != -1)
+                {
+                    text = text.Substring(0, nullIndex);
+                }
+
+                return text;
+            }
+
+            var roots = maker.GetContextRoots();
+
+            Debug.WriteLine(string.Empty);
+            Debug.WriteLine("Prototype tree prediction:");
+
+            var enumerable = TreePredictableItem<TokenPredictorInfo>.FindOrderedItems(roots.SortedEnumerable);
+            using (var enumerator = enumerable.GetEnumerator())
+            {
+                for (var count = 0; count < maxCount && enumerator.MoveNext(); count++)
+                {
+                    var text = string.Empty;
+                    foreach (var info in enumerator.Current)
+                    {
+                        text += $"{ToText(info)} ";
+                    }
+                    Debug.WriteLine(text);
+                }
+            }
+
+            Debug.WriteLine(string.Empty);
+        }
+
         private SortedList<int, IReadOnlyList<ITile>> Run()
         {
+            PrototypeTreePredictions(_maker, _tokens, 20);
+
             CreateCorePredictions();
 
             if (_findCorePredictionPrefixes)

@@ -1,8 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Microsoft.Research.SpeechWriter.Core
 {
-    internal class TokenPredictorInfo
+    internal class TokenPredictorInfo : IPredictableNode<TokenPredictorInfo>
     {
         private int _count;
 
@@ -41,6 +42,14 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
 
             return _children;
+        }
+
+        int IPredictableNode<TokenPredictorInfo>.Count => Count;
+
+        IEnumerable<TokenPredictorInfo> IPredictableNode<TokenPredictorInfo>.GetChildren()
+        {
+            var result = _children?.SortedEnumerable ?? new TokenPredictorInfo[0];
+            return result;
         }
 
         internal TokenPredictorDatabase TryGetChildren()

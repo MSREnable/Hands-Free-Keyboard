@@ -42,6 +42,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             return database;
         }
 
+        internal TokenPredictorDatabase GetContextRoots()
+        {
+            return _contextDatabases[_contextDatabases.Length - 1];
+        }
+
         private static TokenPredictorDatabase[] GetContextDatabases(TokenPredictorDatabase rootDatabase, int[] context)
         {
             var contextLength = context.Length;
