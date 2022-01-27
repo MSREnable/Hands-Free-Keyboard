@@ -63,7 +63,7 @@ namespace Microsoft.Research.SpeechWriter.Core.Test
 
             var predictor = source.Predictor;
             var maker = predictor.CreatePredictionMaker(source, ((ITokenTileFilter)source).IsTokenVisible, new int[] { 0, 1, 2 });
-            var scores = maker.GetTopScores(0, int.MaxValue, false, true);
+            var scores = maker.GetTopScores(0, int.MaxValue, true);
 
             using (var enumerator = scores.GetEnumerator())
             {

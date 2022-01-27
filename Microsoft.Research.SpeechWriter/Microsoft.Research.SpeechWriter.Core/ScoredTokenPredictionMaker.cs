@@ -247,10 +247,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             }
         }
 
-        internal IEnumerable<Score> GetTopScores(int minIndex, int limIndex, bool unfiltered, bool includeSpeculative)
+        internal IEnumerable<Score> GetTopScores(int minIndex, int limIndex, bool filtered)
         {
             Func<int, bool> tokenFilter;
-            if (unfiltered)
+            if (!filtered)
             {
                 tokenFilter = LimitsOnlyFilter;
             }
@@ -259,7 +259,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                 tokenFilter = ExtendedFilter;
             }
 
-            var scores = GetTopScores(tokenFilter, includeSpeculative);
+            var scores = GetTopScores(tokenFilter, filtered);
             return scores;
 
             bool LimitsOnlyFilter(int token)

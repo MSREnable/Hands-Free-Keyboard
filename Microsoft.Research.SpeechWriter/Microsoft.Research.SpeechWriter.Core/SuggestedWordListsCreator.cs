@@ -39,6 +39,8 @@ namespace Microsoft.Research.SpeechWriter.Core
             int maxListCount,
             int maxListItemCount)
         {
+            Debug.Assert(isTokenVisible != null);
+
             _source = source;
             _tokens = tokens;
             _maker = maker;
@@ -118,7 +120,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
             if (_findFollowOnPredictions)
             {
-                var topScores = maker.GetTopScores(0, _source.Count, true, false);
+                var topScores = maker.GetTopScores(0, _source.Count, false);
                 using (var enumerator = topScores.GetEnumerator())
                 {
                     value = GetNextCorePrediction(enumerator, isFirstWord);
@@ -193,7 +195,8 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private void CreateCorePredictions()
         {
-            var scores = _maker.GetTopScores(_lowerBound, _upperBound, _isTokenVisible == null, true);
+            Debug.Assert(_isTokenVisible != null);
+            var scores = _maker.GetTopScores(_lowerBound, _upperBound, true);
 
             using (var enumerator = scores.GetEnumerator())
             {
@@ -587,13 +590,11 @@ namespace Microsoft.Research.SpeechWriter.Core
             predictions.Insert(position, prediction);
         }
 
-        internal static void PrototypeTreePredictions(ScoredTokenPredictionMaker maker,
-            StringTokens tokens,
-            int maxCount)
+        internal void PrototypeTreePredictions(int maxCount)
         {
             string ToText(TokenPredictorInfo info)
             {
-                var text = tokens[info.Token];
+                var text = _tokens[info.Token];
                 var nullIndex = text.IndexOf('\0');
                 if (nullIndex != -1)
                 {
@@ -603,7 +604,9 @@ namespace Microsoft.Research.SpeechWriter.Core
                 return text;
             }
 
-            var roots = maker.GetContextRoots();
+            // var scores = _maker.GetTopScores(_lowerBound, _upperBound, _isTokenVisible == null, true);
+
+            var roots = _maker.GetContextRoots();
 
             Debug.WriteLine(string.Empty);
             Debug.WriteLine("Prototype tree prediction:");
@@ -627,7 +630,7 @@ namespace Microsoft.Research.SpeechWriter.Core
 
         private SortedList<int, IReadOnlyList<ITile>> Run()
         {
-            PrototypeTreePredictions(_maker, _tokens, 20);
+            PrototypeTreePredictions(20);
 
             CreateCorePredictions();
 
