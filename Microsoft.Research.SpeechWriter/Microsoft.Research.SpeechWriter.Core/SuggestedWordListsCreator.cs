@@ -439,7 +439,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                                     InsertPrediction(compoundPrediction, candidatePrediction);
                                     extendedPredictionText = candidatePrediction.Text;
 
-                                    var followOnMaker = _maker.CreateNextPredictionMaker(candidatePrediction.Token, null);
+                                    var followOnMaker = _maker.CreateNextPredictionMaker(candidatePrediction.Token);
                                     var followOnPrediction = GetTopPrediction(followOnMaker, longestPrediction.IsFollowOnFirstWord);
                                     _nascents[compoundPredictionIndex]._followOnMaker = followOnMaker;
                                     _nascents[compoundPredictionIndex]._followOn = followOnPrediction;
@@ -509,7 +509,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                         predictions.Add(firstCreatedItem);
 
                         var firstFollowOnMaker = _nascents[position]._followOnMaker;
-                        var followOnMaker = firstFollowOnMaker.CreateNextPredictionMaker(followOn.Token, null);
+                        var followOnMaker = firstFollowOnMaker.CreateNextPredictionMaker(followOn.Token);
                         var isFollowOnFirstWord = followOn.IsFollowOnFirstWord;
                         var done = newItem == null;
                         while (!done && predictions.Count < _maxListItemCount)
@@ -520,7 +520,7 @@ namespace Microsoft.Research.SpeechWriter.Core
                                 item = newItem;
                                 var createdItem = _source.GetNextItem(item, followOnPrediction.Token);
                                 newItem = createdItem as SuggestedWordItem;
-                                followOnMaker = followOnMaker.CreateNextPredictionMaker(followOnPrediction.Token, null);
+                                followOnMaker = followOnMaker.CreateNextPredictionMaker(followOnPrediction.Token);
                                 predictions.Add(createdItem);
                                 isFollowOnFirstWord = followOnPrediction.IsFollowOnFirstWord;
 
@@ -560,7 +560,7 @@ namespace Microsoft.Research.SpeechWriter.Core
             WordPrediction followOn;
             if (_findFollowOnPredictions && prediction.Text[0] != '\0')
             {
-                followOnMaker = _maker.CreateNextPredictionMaker(prediction.Token, null);
+                followOnMaker = _maker.CreateNextPredictionMaker(prediction.Token);
                 followOn = GetTopPrediction(followOnMaker, prediction.IsFollowOnFirstWord);
             }
             else

@@ -99,10 +99,10 @@ namespace Microsoft.Research.SpeechWriter.Core
             return databases.ToArray();
         }
 
-        internal ScoredTokenPredictionMaker CreateNextPredictionMaker(int token, Func<int, bool> tokenFilter)
+        internal ScoredTokenPredictionMaker CreateNextPredictionMaker(int token)
         {
             var databases = GetNextContextDatabases(_contextDatabases, token);
-            var maker = new ScoredTokenPredictionMaker(_source, tokenFilter, databases);
+            var maker = new ScoredTokenPredictionMaker(_source, null, databases);
             return maker;
         }
 
