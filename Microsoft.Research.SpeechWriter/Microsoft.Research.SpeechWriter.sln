@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpubToUtterances", "EpubToU
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeSortish", "TreeSortish\TreeSortish.csproj", "{FAF7EAE1-0447-474D-B888-012C3F04945D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unicoder", "Unicoder\Unicoder.csproj", "{87411CD1-7567-4DB8-9B35-AFA214B9B848}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -365,6 +367,26 @@ Global
 		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|x64.Build.0 = Release|Any CPU
 		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|x86.ActiveCfg = Release|Any CPU
 		{FAF7EAE1-0447-474D-B888-012C3F04945D}.Release|x86.Build.0 = Release|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Debug|ARM.Build.0 = Debug|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Debug|x64.Build.0 = Debug|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Debug|x86.Build.0 = Debug|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Release|ARM.ActiveCfg = Release|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Release|ARM.Build.0 = Release|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Release|ARM64.Build.0 = Release|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Release|x64.ActiveCfg = Release|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Release|x64.Build.0 = Release|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Release|x86.ActiveCfg = Release|Any CPU
+		{87411CD1-7567-4DB8-9B35-AFA214B9B848}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
