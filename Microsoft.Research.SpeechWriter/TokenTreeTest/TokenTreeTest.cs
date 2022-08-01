@@ -6,7 +6,7 @@ namespace TokenTreeTest
     {
         private static void Check(TokenTreeRoot root, params string[] expecteds)
         {
-            var actualsEnumerable = root.Expand();
+            var actualsEnumerable = TokenTreeFormatter.Expand(root);
 
             var actuals = actualsEnumerable.ToArray();
 
