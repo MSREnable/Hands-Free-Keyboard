@@ -1,12 +1,12 @@
 ﻿namespace TokenTreeTest
 {
-    public abstract class TokenTreeBase
+    public abstract class TokenTreeBase : ITokenTreeParent<string>
     {
         protected TokenTreeBase(params TokenTreeNode[] children)
         {
             Children = children;
         }
 
-        public TokenTreeNode[] Children { get; }
+        public ITokenTreeNode<string>[] Children { get; }
     }
 }

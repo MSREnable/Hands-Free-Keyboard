@@ -1,13 +1,13 @@
 ﻿namespace TokenTreeTest
 {
-    public class TokenTreeNode : TokenTreeBase
+    public class TokenTreeNode : TokenTreeBase, ITokenTreeNode<string>
     {
         public TokenTreeNode(string text, params TokenTreeNode[] children)
             : base(children)
         {
-            Text = text;
+            Payload = text;
         }
 
-        public string Text { get; }
+        public string Payload { get; }
     }
 }
