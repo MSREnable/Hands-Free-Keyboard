@@ -1,8 +1,9 @@
 ﻿namespace TokenTreeTest
 {
-    internal class TokenTreeRoot : TokenTreeBase
+    internal class TokenTreeRoot<TPayload> : TokenTreeBase<TPayload>, ITokenTreeRoot<TPayload>
+        where TPayload : ITreeToken<TPayload>
     {
-        public TokenTreeRoot(params TokenTreeNode[] children)
+        public TokenTreeRoot(params ITokenTreeNode<TPayload>[] children)
             : base(children)
         {
 

@@ -2,7 +2,8 @@
 {
     internal class TokenTreeFormatter
     {
-        private static void Expand(IList<string> expansion, string prefix, ITokenTreeParent<string> parent)
+        private static void Expand<TPayload>(IList<IList<TPayload>> expansion, IList<TPayload> prefix, ITokenTreeParent<TPayload> parent)
+            where TPayload : ITreeToken<TPayload>
         {
             var index = 0;
             while (index < parent.Children.Length)
@@ -10,27 +11,42 @@
                 var child = parent.Children[index];
                 index++;
 
-                string line;
-                if (prefix == String.Empty)
+                var line = new List<TPayload>(prefix);
+                if (index == 1 || line.Count == 0)
                 {
-                    line = $"[{child.Payload}]";
-                }
-                else if (index == 1)
-                {
-                    line = $"{prefix} [{child.Payload}]";
+                    line.Add(child.Payload);
                 }
                 else
                 {
-                    line = $"{prefix.Substring(0, prefix.Length - 1)} {child.Payload}]";
+                    var tail = line[line.Count - 1];
+                    var join = tail.Join(child.Payload);
+                    if (join != null)
+                    {
+                        line[line.Count - 1] = join;
+                    }
+                    else
+                    {
+                        line.Add(child.Payload);
+                    }
                 }
 
-                while (child.Children.Length == 0 &&
-                    index < parent.Children.Length &&
-                    parent.Children[index].Payload.StartsWith(child.Payload))
+                var isPrefix = true;
+                while (isPrefix &&
+                    child.Children.Length == 0 &&
+                    index < parent.Children.Length)
                 {
-                    line += $" ]{parent.Children[index].Payload.Substring(child.Payload.Length)}]";
-                    child = parent.Children[index];
-                    index++;
+                    var suffix = parent.Children[index].Payload.Suffix(child.Payload);
+                    if (suffix == null)
+                    {
+                        isPrefix = false;
+                    }
+                    else
+                    {
+                        line.Add(suffix);
+
+                        child = parent.Children[index];
+                        index++;
+                    }
                 }
 
                 if (child.Children.Length == 0)
@@ -44,11 +60,12 @@
             }
         }
 
-        public static IEnumerable<string> Expand(TokenTreeRoot root)
+        public static IEnumerable<IList<TPayload>> Expand<TPayload>(ITokenTreeRoot<TPayload> root)
+            where TPayload : ITreeToken<TPayload>
         {
-            var expansion = new List<string>();
+            var expansion = new List<IList<TPayload>>();
 
-            Expand(expansion, string.Empty, root);
+            Expand(expansion, new List<TPayload>(), root);
 
             return expansion;
         }
